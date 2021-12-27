@@ -1,0 +1,34 @@
+FROM python:3.7
+
+# Install dependencies
+RUN apt update -y && apt upgrade -y
+RUN apt update --fix-missing 
+RUN apt install -y vim rsync
+RUN apt update -y && apt upgrade -y
+RUN apt install -y libgit2-dev
+RUN apt update --fix-missing
+RUN apt install -y fastqc
+RUN apt install -y graphlan
+RUN apt clean
+
+######################
+## R and R PACKAGES ##
+######################
+RUN apt update -y
+RUN apt install -y r-base
+COPY rhea_packages_install.R crc/
+RUN Rscript crc/rhea_packages_install.R
+
+#############
+## Sources ##
+#############
+RUN mkdir cfm
+COPY . /cfm
+WORKDIR /cfm/
+
+# ENTRYPOINT ["./entrypoint.sh"]
+
+##############################
+## Adding IntegerRange.html ##
+##############################
+# RUN /bin/ln -s /crc/crc/templates/IntegerRange.html /usr/local/lib/python3.7/site-packages/django/forms/templates/django/forms/widgets/IntegerRange.html

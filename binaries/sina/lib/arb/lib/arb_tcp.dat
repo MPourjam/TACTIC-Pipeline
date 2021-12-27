@@ -1,0 +1,80 @@
+#*******************    Syntax ***********************************
+#
+#       [USER:]SERVER_ID                HOST:IP_NR      [programm       args]
+#       [USER:]SERVER_ID                :SOCKETPATH     [programm       args]
+#               [xxx] means optional field
+#               all $(enviroment_variable) are replaced by the value of the 'enviroment_variable'.
+#               if host is localhost then it is replaced by the result of `hostname`.
+#
+#   Specifying an username before the SERVER_ID makes the server user specific.
+#
+#   This file is searched at several locations:
+#       - in the current directory
+#       - in the $(HOME) (=home directory of the current user)
+#       - in $(ARBHOME)/lib
+#   The first occurrance found is taken.
+#
+#       Existing SERVER_IDs:
+#
+#               ARB_DB_SERVER               Your private database server. It is automatically started
+#               ARB_PT_SERVER               Default PT_SERVER for PB_RETRIEVE (privat TU_Munich server)
+#               ARB_PT_SERVERn              Global PT_SERVERs. Needed for fast database search (align seq, probe des.)
+#                                                   n starts from 0 to max, no number can be excluded !!!
+#               ARB_NAME_SERVER             Generates short names for species (using 'acc')
+#               ARB_NAME_SERVER_field   Generates short names for species (using 'acc' and 'field')
+#
+#*****************************************************************
+
+# version of arb_tcp.dat
+ARB_TCP_DAT_VERSION 2
+
+#***********    Test Servers  ******************
+
+ARB_TEST_PT_SERVER          :$(ARBHOME)/UNIT_TESTER/sockets/pt.socket       arb_pt_server -D$(ARBHOME)/UNIT_TESTER/run/TEST_pt.arb
+ARB_TEST_PT_SERVER_GENE     :$(ARBHOME)/UNIT_TESTER/sockets/ptgene.socket  arb_pt_server -D$(ARBHOME)/UNIT_TESTER/run/TEST_gpt.arb
+
+#***********    Private Servers (for each user) ******************
+#
+# This is a local server, running on one machine. Each user has his own socket:
+# ARB_PID is an Enviroment Variable which is set by the command 'arb' to its own process id
+# see programm $ARBHOME/SH/arb_clean to remove the sockets
+
+ARB_DB_SERVER           :/tmp/arb_db_$(USER)_$(ARB_PID)
+
+# If you want to run programs on a workstation cluster, you have to assign your arbdb server
+# and one ip-id for each user. To choose an ip_id choose any number between 1000 and 4000 and
+# examine /etc/services whether this ip-id has not yet been allocated by another programm
+#       smith:ARB_DB_SERVER     myhost:4011             // socket for smith ('arb' has to be started on 'myhost')
+#       ludwig:ARB_DB_SERVER    myhost:4012             // socket for ludwig
+#       ARB_DB_SERVER           :/tmp/arb_db_$(USER)_$(ARB_PID) // and sockets for all others
+
+#***********    Global Servers (for all users) ******************
+#
+#***********    Nameserver The server should run on the nfs server ******************
+# The primary nameserver (ARB_NAME_SERVER) uses the field 'acc' for species identification
+#
+# You may define additional nameservers, using one additional field for identification.
+# The defined nameserver 'ARB_NAME_SERVER_START' uses the fields 'acc' and 'start'.
+
+ARB_NAME_SERVER                 localhost:3020          arb_name_server -d$(ARBHOME)/lib/nas/names.dat
+ARB_NAME_SERVER_START           localhost:3021          arb_name_server -d$(ARBHOME)/lib/nas/names_start.dat -fstart=1
+# ARB_NAME_SERVER_STRAIN          localhost:3022          arb_name_server -d$(ARBHOME)/lib/nas/names_strain.dat -fstrain=
+# ARB_NAME_SERVER_POS_START       localhost:3023          arb_name_server -d$(ARBHOME)/lib/nas/names_pos_start.dat -fpos_start=1
+
+#***********    PT_SERVERS The server should run on the nfs server ******************
+#*******     You may add new pt_servers here: (numbers must be continued)   *********
+# Note: If the database name is '!ASSUME_RUNNING' (i.e. -D!ASSUME_RUNNING), ARB will not
+#       try to start/stop/update/... the server and will not check DB for existance.
+#       To use such a PT-Server you'll have to start it manually on the remote host
+
+ARB_PT_SERVER0          localhost:3030                       arb_pt_server   -D$(ARBHOME)/lib/pts/probe_server.arb
+ARB_PT_SERVER1          localhost:3031                       arb_pt_server   -D$(ARBHOME)/lib/pts/LSU_rRNA.arb
+ARB_PT_SERVER2          localhost:3032                       arb_pt_server   -D$(ARBHOME)/lib/pts/SSU_rRNA.arb
+ARB_PT_SERVER3          :$(HOME)/.arb_pts/$(USER)1.socket    arb_pt_server   -D$(HOME)/.arb_pts/$(USER)1.arb
+ARB_PT_SERVER4          :$(HOME)/.arb_pts/$(USER)2.socket    arb_pt_server   -D$(HOME)/.arb_pts/$(USER)2.arb
+ARB_PT_SERVER5          :$(HOME)/.arb_pts/$(USER)3.socket    arb_pt_server   -D$(HOME)/.arb_pts/$(USER)3.arb
+ARB_PT_SERVER6          localhost:3033                       arb_pt_server   -D$(ARBHOME)/lib/pts/user1.arb
+ARB_PT_SERVER7          localhost:3034                       arb_pt_server   -D$(ARBHOME)/lib/pts/user2.arb
+ARB_PT_SERVER8          localhost:3035                       arb_pt_server   -D$(ARBHOME)/lib/pts/user3.arb
+ARB_PT_SERVER9          localhost:3036                       arb_pt_server   -D$(ARBHOME)/lib/pts/user4.arb
+ARB_PT_SERVER10         localhost:3037                       arb_pt_server   -D$(ARBHOME)/lib/pts/user5.arb
