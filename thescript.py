@@ -10,10 +10,12 @@ import shutil
 import random
 import pickle as pk
 from collections import OrderedDict as OD
+from multi_process import main as process_multi
 
 os.chdir("/srv/cfm/inputs/")
 cwd = os.getcwd()
-fastqs = glob.glob("/srv/cfm/inputs/**/*Wasser*.fastq*")
+fastqs = glob.glob("/srv/cfm/inputs/**/DNAstab*.fastq*")
+print(fastqs)
 times = {}
 for pd in fastqs:
     stat = os.stat(pd)
@@ -46,8 +48,12 @@ for i in range(0,till):
     rev_file_abspath = os.path.join(output_dir_path, back_file_name)
     shutil.move(fors[i], for_file_abspath)
     shutil.move(backs[i], rev_file_abspath)
+    os.system("gunzip -f {}".format(for_file_abspath))
+    os.system("gunzip -f {}".format(rev_file_abspath))
     for_file = os.path.basename(for_file_abspath)
     rev_file = os.path.basename(rev_file_abspath)
+    for_file = for_file.replace(".gz", "")
+    rev_file = rev_file.replace(".gz", "")
     input_id_match = re.search("[0-9]+", forw_file_name)
     if input_id_match:
         input_id = int(forw_file_name[input_id_match.start():input_id_match.end()])
@@ -70,4 +76,5 @@ pickle_file = os.path.join("/srv/cfm/inputs/", "proc_dicts_{}.pk".format(timesta
 with open(pickle_file, 'wb') as dest:
     pk.dump(processing_dicts, dest, protocol=pk.HIGHEST_PROTOCOL)
 
+process_multi(pickle_file)
 pprint(processing_dicts)
