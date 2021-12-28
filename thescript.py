@@ -9,6 +9,7 @@ from processing_job import main_processing
 import shutil
 import random
 import pickle as pk
+from collections import OrderedDict as OD
 
 os.chdir("/srv/cfm/inputs/")
 cwd = os.getcwd()
@@ -23,8 +24,8 @@ times_sorted = sorted(times.items(), key=lambda x: x[1])
 # pprint(fastqs)
 # history_origin = times_sorted[0][1] - datetime.timedelta(days=1)
 
-fors = sorted([fq for fq in fastqs if re.search("_R1_", os.path.basename(fq))])
-backs = sorted([fq for fq in fastqs if re.search("_R2_", os.path.basename(fq))])
+fors = sorted([fq for fq in fastqs if re.search("R1", os.path.basename(fq))])
+backs = sorted([fq for fq in fastqs if re.search("R2", os.path.basename(fq))])
 
 till = min(len(fors), len(backs))
 
@@ -52,13 +53,14 @@ for i in range(0,till):
         input_id = int(forw_file_name[input_id_match.start():input_id_match.end()])
     else:
         input_id = random.randint(0, 99)
-    
-    process_dict = {"input_dir": output_dir_path,
-                    "paired": "Yes",
-                    "forward_file": for_file,
-                    "reverse_file": rev_file,
-                    "input_id": input_id,
-                    "spike_amount": 6}
+    process_dict = OD()
+    process_dict["input_dir"] = output_dir_path
+    process_dict["paired"] = "Yes"
+    process_dict["forward_file"] = for_file
+    process_dict["reverse_file"] = rev_file
+    process_dict["input_id"] = input_id
+    process_dict["spike_amount"] = 6
+
     processing_dicts.append(process_dict)
 
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M')
@@ -69,5 +71,3 @@ with open(pickle_file, 'wb') as dest:
     pk.dump(processing_dicts, dest, protocol=pk.HIGHEST_PROTOCOL)
 
 pprint(processing_dicts)
-
-# main_processing()
