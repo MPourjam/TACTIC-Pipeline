@@ -565,7 +565,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         with open("report.txt", 'w+') as report:
             to_w = "Start_mode\tEnd_mode\tActual_reads\tSpike_reads"
-            to_w += "\n{}\t{}\t{}\t{}".format(start_mode, end_mode, real_reads_c, spike_reads_c)
+            to_w += "\n{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c)
             print(to_w)
             report.write(to_w)
         create_zip(input_id)
