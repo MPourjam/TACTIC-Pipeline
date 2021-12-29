@@ -4,6 +4,7 @@ import pickle as pk
 from multiprocessing import Process, cpu_count, Pool
 import os
 import time
+import shutil
 import re
 from datetime import datetime as dt
 
@@ -12,8 +13,10 @@ def till_now(datetime_obj):
     return time_delta.total_seconds()
 
 def main(pickle_files_path=None):
-    pool_size = int(cpu_count() * 0.5)
-    batch_size = int(pool_size * 0.5)
+    max_pool = int(cpu_count() * 0.5)
+    pool_size = max_pool if max_pool > 0 else 1
+    max_batch = int(pool_size * 0.5)
+    batch_size = max_batch if max_batch > 0 else 1
     pickle_files_path = os.path.abspath(pickle_files_path) if pickle_files_path else "/srv/cfm/inputs/"
     if os.path.isdir(pickle_files_path):
         dir_path = pickle_files_path
@@ -44,12 +47,10 @@ def main(pickle_files_path=None):
             if not os.path.isfile(report_path):
                 p_list.append(tuple(argset.values()))
         print(p_list)
-        print(batch_size)
         with Pool(pool_size, maxtasksperchild=1) as pool:
             l = len(p_list)
             m = l // batch_size
             r = l - (m * batch_size)
-            print(r)
             if m > 0:
                 for i in range(1, m + 1):
                     print("Multiple of {}".format(batch_size))
@@ -57,22 +58,25 @@ def main(pickle_files_path=None):
                     e = i * batch_size
                     res_list = [pool.apply_async(main_processing, args=argset) for argset in p_list[s:e]]
                     for res in res_list:
-                        res.wait(300)
+                        res.wait()
 
                 if r > 0:
                     print("Doing the remaining {}.".format(r))
                     s = (m * batch_size) 
                     res_list = [pool.apply_async(main_processing, args=argset) for argset in p_list[s:]]
                     for res in res_list:
-                        res.wait(300)
+                        res.wait()
 
             elif r > 0:
                 print("Less than {} jobs.".format(batch_size))
                 res_list = [pool.apply_async(main_processing, args=argset) for argset in p_list]
                 for res in res_list:
-                        res.wait(300)
+                        res.wait()
             else:
                 print("All samples are processed in {} file.".format(file_path))
+                print("Deleting {}.".format(file_path))
+                os.remove(file_path)
+                
     else:
         msg = "The {} should be either a pickle file or a directory containing the pickle files.".format(pickle_files_path)
         raise FileNotFoundError(msg)
