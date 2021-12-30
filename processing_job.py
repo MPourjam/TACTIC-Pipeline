@@ -68,8 +68,8 @@ def calc_spikes(*fastq_files, spike_amount):
             spike_counter = 0
             for fi in [f for f in files_inspike if search(fastq_aligned, os.path.abspath(f))]:
                 with open(fi, 'r') as fastq_al:
-                        for _ in fastq_al:
-                            spike_counter += 1
+                    for _ in fastq_al:
+                        spike_counter += 1
             spike_counter = spike_counter // 4
             # Check if the unaligned file is empty
             if spike_counter != 0:
@@ -90,7 +90,7 @@ def seqFileStats(seqFileName):
     lengths = list()
     for i in range(len(seqfile_fh)):
         if seqfile_fh[i][0] == '@':
-            curr_len = len(seqfile_fh[i+1])
+            curr_len = len(seqfile_fh[i + 1])
             lengths.append(curr_len)
     mean_length = int(mean(lengths))
     st_dev = int(stdev(lengths))
@@ -201,6 +201,14 @@ def dereplicate_seqs():
     cmd_0 = USEARCH_11_bin + ' -fastx_uniques filtered2.fasta -fastaout derep.fasta'
     cmd_1 = ' -sizein -sizeout ' + USEARCH_TAIL
     system(cmd_0 + cmd_1)
+    line_n = 0
+    with open('derep.fasta') as derep:
+        line = derep.readline()
+        while line:
+            if line.startswith(">"):
+                line_n += 1
+            line = derep.readline()
+    return line_n
 
 
 def sort_seqs():
@@ -217,7 +225,7 @@ def trim_one_side(forward_file):
 
 def filter_merged_one_side(forward_file):
     curr_mean, curr_sd = seqFileStats(forward_file)
-    minLength = curr_mean - int(0.1*curr_mean) - 5  # remove the primer triming size plus 10% of the mean size
+    minLength = curr_mean - int(0.1 * curr_mean) - 5  # remove the primer triming size plus 10% of the mean size
     cmd_0 = USEARCH_8_BIN + ' -fastq_filter filtered1.fasta -fastq_truncqual 20'
     cmd_1 = ' -fastq_maxee_rate 0.005 -fastq_trunclen ' + str(minLength)
     cmd_2 = ' -fastaout filtered2.fasta >/dev/null 2>/dev/null'
@@ -279,7 +287,7 @@ def filter_zotu_abundance():
     out_file_2 = open('filtered_zotu_table_list.txt', 'w+')
     for line in contents:
         curr_size = float(line.split('\t')[1])
-        if (curr_size/unf_tot_size) >= 0:
+        if (curr_size / unf_tot_size) >= 0:
             out_file.write(line + '\n')
             out_file_2.write(line.split('\t')[0] + '\n')
     out_file.close()
@@ -342,7 +350,7 @@ def add_taxonomy_to_fasta():
     fasta_file = read_file('good_ZOTUs.fa')
     for i in range(0, len(fasta_file), 2):
         header = fasta_file[i]
-        sequence = fasta_file[i+1]
+        sequence = fasta_file[i + 1]
         OTU_found = header[1:]
         try:
             found_index = OTUS.index(OTU_found)
@@ -534,7 +542,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
             print('Trim One Side DONE')
             filter_merged_one_side(forward_file)
             print('Filter one DONE')
-        dereplicate_seqs()
+        dereped_read_n = dereplicate_seqs()
         print('Dereplication DONE')
         sort_seqs()
         print('Sorting DONE')
@@ -564,8 +572,8 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         with open("report.txt", 'w+') as report:
-            to_w = "Start_mode\tEnd_mode\tActual_reads\tSpike_reads"
-            to_w += "\n{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c)
+            to_w = "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
+            to_w += "\n{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
             print(to_w)
             report.write(to_w)
         create_zip(input_id)
