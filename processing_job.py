@@ -400,6 +400,7 @@ def cleanup(input_id):
     deleted_files += 'derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab '
     deleted_files += 'classifiedF.txt filtered_zotu_table_list.txt denoising.tab '
     deleted_files += 'matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta '
+    deleted_file += '*.fastq'
     deleted_dirs = ' -r kvdb out idx'
     system('rm ' + deleted_files + " 2> /dev/null")
     system('rm ' + deleted_dirs + " 2> /dev/null")
@@ -573,7 +574,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         with open("report.txt", 'w+') as report:
             to_w = "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
-            to_w += "\n{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
+            to_w += "\n{}\t{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
             print(to_w)
             report.write(to_w)
         create_zip(input_id)
