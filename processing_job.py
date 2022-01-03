@@ -526,7 +526,9 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
     try:
         chdir(input_dir)
         # only_keep_dataset_fastqs(forward_file, reverse_file)
+        prtin("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*[forward_file, reverse_file], spike_amount=spike_amount)
+        print("Actual_reads:{}\tSpike_reads:{}\n".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         print('fastQC DONE')
         chdir(input_dir)
