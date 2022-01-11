@@ -250,7 +250,7 @@ def filter16S():
     # (The program currently do not distinquish between 16S and 18S)
     system(cmd_0 + cmd_1 + cmd_2)
     system('mv out/aligned.fasta good_ZOTUs.fa')
-    # system('rm -r idx out kvdb')
+    system('rm -r idx out kvdb')
 
 
 def prepare_zotus():
@@ -526,7 +526,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
     try:
         chdir(input_dir)
         # only_keep_dataset_fastqs(forward_file, reverse_file)
-        prtin("Spike removal started.")
+        print("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*[forward_file, reverse_file], spike_amount=spike_amount)
         print("Actual_reads:{}\tSpike_reads:{}\n".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
@@ -579,8 +579,10 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
             to_w += "\n{}\t{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
             print(to_w)
             report.write(to_w)
-        create_zip(input_id)
         cleanup(input_id)
+        print("Cleaned up: {}".format(input_id))
+        create_zip(input_id)
+        print("Zipped!")
         # returning the start and end mode position as well as count of real and spike reads
     except BaseException:
         raise ValueError
