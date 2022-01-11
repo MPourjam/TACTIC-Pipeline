@@ -13,7 +13,7 @@ def till_now(datetime_obj):
     return time_delta.total_seconds()
 
 def main(pickle_files_path=None):
-    max_pool = int(cpu_count() * 0.5)
+    max_pool = int(cpu_count() * 0.3)
     pool_size = max_pool if max_pool > 0 else 1
     max_batch = int(pool_size * 0.5)
     batch_size = max_batch if max_batch > 0 else 1

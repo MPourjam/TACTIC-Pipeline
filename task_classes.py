@@ -89,9 +89,9 @@ class task_pickle:
 
     def args_complete(self):
         arg_d = self.task_dict["args"]
-        input_d = arg_d["input_d"]
+        input_d = arg_d["input_dir"]
         for k, v in arg_d.items():
-            if k == "input_d":
+            if k == "input_dir":
                 try:
                     p = Path(v)
                 except Exception as e:
@@ -107,7 +107,7 @@ class task_pickle:
                 if not p.exists():
                     return False
             elif k == "paired":
-                if v != "Yes" or v != "No":
+                if v not in ["Yes", "No"]:
                     return False
             elif k == "input_id":
                 if not v:

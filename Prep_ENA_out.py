@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 import os
 import re
 import argparse
@@ -59,7 +59,7 @@ def preparation_main(dir_path):
     if fastqs_dir.is_file():
         exit("Given path as directory is actually a file!!!")
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M')
-    pickle_file = Path(os.getcwd()) / "{}.pk".format(timestamp)
+    pickle_file = Path(os.getcwd()) / "{}_tasks_to_call.pk".format(timestamp)
     pks = fastqs_dir.rglob("./**/*.pk*")
     parents = OD()
     for pkfile in pks:
@@ -79,7 +79,7 @@ def preparation_main(dir_path):
         files.extend(fqfiles)
         files = sorted(list(set(files)))
         if len(files) == 2:
-            assert(re.search(forw_file_match, files[0])), "Incorrect order of forward and reverse files."
+            assert(re.search(forw_file_match, str(files[0]))), "Incorrect order of forward and reverse files."
         parents[p] = files
 
     processing_dicts = []
@@ -98,14 +98,14 @@ def preparation_main(dir_path):
             parents[p] = fqfiles
 
     with ThreadPool(pool_size) as pool:
-        proper_length_dict = {p: proper_length(p.joinpath(fs[0])) for p, fs in parents.items()}
+        proper_length_dict = {p: proper_length(p.joinpath(fs[0])) for p, fs in parents.items() if fs}
 
     for p, proper in proper_length_dict.items():
         if proper:
             acc_ = p.stem
             pkfile = p.joinpath("{}.pk".format(acc_))
             pkf_obj = task_pickle(str(pkfile.resolve()))
-            if len(parents[p]) == 1 and pkf_obj.task_dict["args"]["paried"] == "Yes":
+            if len(parents[p]) == 1 and pkf_obj.task_dict["args"]["paired"] == "Yes":
                 # TODO demultiplexing
                 print("Fastq file in {} need to get split!!!".format(p))
                 continue
@@ -113,10 +113,10 @@ def preparation_main(dir_path):
             if len(parents[p]) > 2:
                 print("More than two fastq files in {}!!!".format(p))
                 continue
-            pkf_obj.task_dict["args"]["forward_file"] = parents[p][0]
+            pkf_obj.task_dict["args"]["forward_file"] = parents[p][0].name
             pkf_obj.task_dict["args"]["reverse_file"] = ''
-            if pkf_obj.task_dict["args"]["paried"] == "Yes":
-                pkf_obj.task_dict["args"]["reverse_file"] = parents[p][1]
+            if pkf_obj.task_dict["args"]["paired"] == "Yes":
+                pkf_obj.task_dict["args"]["reverse_file"] = parents[p][1].name
             pkf_obj.task_dict["status"]["run"] = pkf_obj.scode_d["Started"]
             pkf_obj.write()
             if pkf_obj.args_complete():
@@ -143,4 +143,4 @@ if __name__ == "__main__":
     if not args.no_call:
         process_multi(pickle_file_path)
     else:
-        print(pickle_file_path)
+        print(str(pickle_file_path))

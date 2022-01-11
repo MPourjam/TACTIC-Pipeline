@@ -49,6 +49,7 @@ def download_fastq(inputdata):
     md5cheked = False
     while not md5cheked:
         listmd5 = []
+        print(row['fastq_ftp'])
         for pair, md5pair in zip(row['fastq_ftp'].split(';'),
                                  row['fastq_md5'].split(';')):
             # TODO replace the experiment_accession with tax_id if applicable
@@ -105,6 +106,9 @@ def urlretrieve_converter(url_path, attmp=0):
 def main(acc, outdir=None, threads=None):
     if not isinstance(acc, list):
         exit("acc argument must be a list of accession numbers")
+    if not threads or not isinstance(threads, int):
+        threads = int(cpu_count() * 0.3)
+    threads = threads if threads > 0 else 1
     outputpath = Path(outdir) if outdir else Path(getcwd())
     tmpoutputpath = outputpath/'tmp'
     tmpoutputpath.mkdir(exist_ok=True, parents=True)
@@ -112,20 +116,20 @@ def main(acc, outdir=None, threads=None):
     accout = [tmpoutputpath/(accid+'.tsv') for accid in acc]
     metadata = []
     multipleargs = [(u, a) for (u, a) in zip(accurl, accout) if not a.is_file()]
-    with ThreadPool(args.threads) as p:
+    with ThreadPool(threads) as p:
         for result in tqdm(p.imap_unordered(urlretrieve_converter, multipleargs),
                            total=len(multipleargs),
-                           desc='Downloading metadatas using {} threads'.format(args.threads),
+                           desc='Downloading metadatas using {} threads'.format(threads),
                            unit='metadatas'):
             metadata.append(result)
     frames = [pd.read_csv(tsv, sep='\t') for tsv in accout]  # , index_col=5
     concat_frames = pd.concat(frames, ignore_index=True)
     genome = []
-    with ThreadPool(args.threads) as p:
+    with ThreadPool(threads) as p:
         multipleargs = list(zip(concat_frames.iterrows(), repeat(outputpath)))
         for result in tqdm(p.imap_unordered(download_fastq, multipleargs),
                            total=len(multipleargs),
-                           desc='Downloading Genomes using {} threads'.format(args.threads),
+                           desc='Downloading Genomes using {} threads'.format(threads),
                            unit='Genomes'):
             genome.append(result)
     concat_frames.to_csv(tmpoutputpath/'metadata_{}.tsv'.format(datetime.today().strftime('%Y%m%d')),
