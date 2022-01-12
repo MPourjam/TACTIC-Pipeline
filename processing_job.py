@@ -3,6 +3,7 @@ from statistics import stdev, mean
 from re import search
 import os
 import re
+import random
 import shutil
 import glob
 
@@ -82,19 +83,28 @@ def calc_spikes(*fastq_files, spike_amount):
 
 
 def seqFileStats(seqFileName):
-    try:
-        seqfile_fh = read_file(seqFileName)
-    except BaseException:
-        print("Cannot open " + seqFileName + " to read from.")
-        exit()
-    lengths = list()
-    for i in range(len(seqfile_fh)):
-        if seqfile_fh[i][0] == '@':
-            curr_len = len(seqfile_fh[i + 1])
-            lengths.append(curr_len)
-    mean_length = int(mean(lengths))
-    st_dev = int(stdev(lengths))
-    return(mean_length, st_dev)
+    n_first_seqs = 10000
+    assess_coeff = 0.5
+    sample_range = round(assess_coeff * n_first_seqs)
+    to_assess = random.sample(range(1, n_first_seqs), sample_range)
+    seq_counter = 0
+    random_length = []
+    with open(seqFileName, 'r+') as fastqfile:
+        line = fastqfile.readline()[:-1]
+        lc = 0
+        if not line.startswith("@"):
+            raise TypeError("Faulty fastq file: {}".format(file_path))
+        while line and seq_counter <= n_first_seqs:
+            mod = lc % 4
+            if mod == 1:
+                seq_counter += 1
+                if seq_counter in to_assess:
+                    random_length.append(len(line))
+            lc += 1
+            line = fastqfile.readline()[:-1]
+    len_mean = mean(random_length)
+    len_stdev = int(stdev(random_length))
+    return(len_mean, len_stdev)
 
 
 def read_file(filename):
@@ -250,7 +260,7 @@ def filter16S():
     # (The program currently do not distinquish between 16S and 18S)
     system(cmd_0 + cmd_1 + cmd_2)
     system('mv out/aligned.fasta good_ZOTUs.fa')
-    system('rm -r idx out kvdb')
+    # system('rm -r idx out kvdb')
 
 
 def prepare_zotus():
@@ -384,23 +394,23 @@ def addKrona(KRONA_TOOL):
 
 
 def create_zip(input_id):
-    cmd_1 = 'zip ../' + str(input_id) + '_processed.zip ZOTUs-table.final.tab OTUs-table.final.tab '
+    cmd_1 = 'zip ../' + str(input_id) + '_processed.zip ZOTUs-table.final.tab '
     cmd_1 += 'taxed_ZOTUs.fasta *.png *.html'
     system(cmd_1)
 
 
 def create_udb(input_id):
-    cmd_0 = USEARCH_11_bin + ' -makeudb_ublast ' + str(input_id) + '.fasta -output ' + str(input_id) + '.udb'
+    cmd_0 = USEARCH_11_bin + ' -makeudb_ublast aligned_' + str(input_id) + '.fasta -output ' + str(input_id) + '.udb'
     system(cmd_0 + USEARCH_TAIL)
 
 
 def cleanup(input_id):
-    deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fasta filtered2.fasta '
-    deleted_files += 'aligned_' + str(input_id) + '.csv'
-    deleted_files += 'derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab '
-    deleted_files += 'classifiedF.txt filtered_zotu_table_list.txt denoising.tab '
-    deleted_files += 'matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta '
-    deleted_file += '*.fastq'
+    deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fasta filtered2.fasta'
+    deleted_files += ' aligned_' + str(input_id) + '.csv merged.fasta'
+    deleted_files += ' derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
+    deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab'
+    deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
+    deleted_files += '*.fastq'
     deleted_dirs = ' -r kvdb out idx'
     system('rm ' + deleted_files + " 2> /dev/null")
     system('rm ' + deleted_dirs + " 2> /dev/null")

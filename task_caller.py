@@ -15,7 +15,7 @@ def till_now(datetime_obj):
 def main(pickle_files_path=None):
     max_pool = int(cpu_count() * 0.3)
     pool_size = max_pool if max_pool > 0 else 1
-    max_batch = int(pool_size * 0.5)
+    max_batch = int(pool_size * 0.8)
     batch_size = max_batch if max_batch > 0 else 1
     pickle_files_path = os.path.abspath(pickle_files_path) if pickle_files_path else "/srv/cfm/inputs/"
     if os.path.isdir(pickle_files_path):
@@ -78,5 +78,6 @@ def main(pickle_files_path=None):
                 os.remove(file_path)
                 
     else:
-        msg = "The {} should be either a pickle file or a directory containing the pickle files.".format(pickle_files_path)
+        msg = "The {} should be either a pickle file".format(pickle_files_path)
+        msg += " or a directory containing the pickle files."
         raise FileNotFoundError(msg)

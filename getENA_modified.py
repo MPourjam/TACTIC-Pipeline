@@ -49,7 +49,6 @@ def download_fastq(inputdata):
     md5cheked = False
     while not md5cheked:
         listmd5 = []
-        print(row['fastq_ftp'])
         for pair, md5pair in zip(row['fastq_ftp'].split(';'),
                                  row['fastq_md5'].split(';')):
             # TODO replace the experiment_accession with tax_id if applicable

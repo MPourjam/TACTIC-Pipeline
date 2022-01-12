@@ -1,56 +1,52 @@
 #!/usr/bin/python3.7
 import os
 import re
+import time
 import glob
-from pprint import pprint
-import datetime
-from processing_job import main_processing
 import shutil
 import random
+import datetime
 import pickle as pk
+from pathlib import Path
+from pprint import pprint
+from random import randint
+from statistics import mean, stdev
 from collections import OrderedDict as OD
+from processing_job import main_processing
 from task_caller import main as process_multi
 
 os.chdir("/srv/cfm/inputs/")
 cwd = os.getcwd()
 
 def proper_length(forw_fastqfile):
-    from random import randint
-    from statistics import mean, stdev
-    from pathlib import Path
-    import re
-    import time
-    start = time.time()
-    seq_match = re.compile(r"^[ATCGUN]+$")
-    to_assess = [randint(1,1000) for i in range(1, 100)]
+    n_first_seqs = 10000
+    assess_coeff = 0.5
+    min_len = 150
+    max_len_std = 1
+    sample_range = round(assess_coeff * n_first_seqs)
+    to_assess = random.sample(range(1, n_first_seqs), sample_range)
     file_path = Path(forw_fastqfile)
     seq_counter = 0
     random_length = []
     with open(file_path, 'r+') as fastqfile:
         line = fastqfile.readline()[:-1]
+        lc = 0
         if not line.startswith("@"):
             raise TypeError("Faulty fastq file: {}".format(file_path))
-        while line:
-            if line.startswith("@"):
-                line = fastqfile.readline()
-            elif line.startswith("+"):
-                line = fastqfile.readline()
-            elif re.search(seq_match, line):
+        while line and seq_counter <= n_first_seqs:
+            mod = lc % 4
+            if mod == 1:
                 seq_counter += 1
                 if seq_counter in to_assess:
-                    random_length.append(len(line[:-1]))
-                line = fastqfile.readline()
-            else:
-                line = fastqfile.readline()
+                    random_length.append(len(line))
+            lc += 1
+            line = fastqfile.readline()[:-1]
     len_mean = mean(random_length)
     len_stdev = int(stdev(random_length))
-    end = time.time()
-    exe_time = end - start
-    # print(len(random_length))
-    if len_mean < 150 and len_stdev > 1:
-        return (False, seq_counter, exe_time)
+    if len_mean < min_len and len_stdev > max_len_std:
+        return False
     else:
-        return (True, seq_counter, exe_time)
+        return True
 
 fastqs = glob.glob("/srv/cfm/inputs/2021_12_27/DNAstab*.fastq*")
 print(fastqs)
