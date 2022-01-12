@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 import os
 import re
+import random
 import argparse
-from pprint import pprint as print
 import datetime
 import mimetypes
-from random import randint
 import pickle as pk
+from pathlib import Path
+from pprint import pprint as print
+from statistics import mean, stdev
+from task_classes import task_pickle
+from multiprocessing import cpu_count
 from collections import OrderedDict as OD
 from task_caller import main as process_multi
-from pathlib import Path
-from statistics import mean, stdev
-from multiprocessing import cpu_count
 from multiprocessing.pool import ThreadPool
-from task_classes import task_pickle
 
 max_pool = int(cpu_count() * 0.4)
 pool_size = max_pool if max_pool > 0 else 1
@@ -21,30 +21,27 @@ forw_file_match = re.compile(r"(_R1_|_1\.|_F)")
 
 
 def proper_length(forw_fastqfile):
-    n_first_lines = 10000
+    n_first_seqs = 10000
     assess_coeff = 0.5
     min_len = 150
     max_len_std = 1
-    sample_range = round(assess_coeff * n_first_lines)
-    to_assess = [randint(1, n_first_lines) for i in range(1, sample_range)]
+    sample_range = round(assess_coeff * n_first_seqs)
+    to_assess = random.sample(range(1, n_first_seqs), sample_range)
     file_path = Path(forw_fastqfile)
     seq_counter = 0
     random_length = []
     with open(file_path, 'r+') as fastqfile:
         line = fastqfile.readline()[:-1]
+        lc = 0
         if not line.startswith("@"):
             raise TypeError("Faulty fastq file: {}".format(file_path))
-
-        while line and seq_counter < n_first_lines:
-            # NOTE This is only to get quality line or seq line and assess the length
-            # NOTE (even some quality lines might be discarded if they start with @ or + signs.)
-            if line.startswith("@") or line.startswith("+"):
-                pass
-            else:
+        while line and seq_counter <= n_first_seqs:
+            mod = lc % 4
+            if mod == 1:
                 seq_counter += 1
                 if seq_counter in to_assess:
-                    length = len(line[:-1])
-                    random_length.append(length)
+                    random_length.append(len(line))
+            lc += 1
             line = fastqfile.readline()[:-1]
     len_mean = mean(random_length)
     len_stdev = int(stdev(random_length))
