@@ -137,9 +137,7 @@ def download_main(metadata_file,
         rem = 0
     starts = []
     for r in range(m):
-        start = int(r * chunk_size)
-        if start >= 0:
-            start += 1
+        start = int(r * chunk_size) + 1
         end = chunk_size
         starts.append((start, end))
     if rem > 0:
