@@ -44,7 +44,7 @@ def download_fastq(inputdata):
         for pair, md5pair in zip(row['fastq_ftp'].split(';'),
                                  row['fastq_md5'].split(';')):
             outfile = outpath.joinpath(row['study_accession'])
-            outfile = outfile.joinpath(str(row['host_tax_id']))
+            outfile = outfile.joinpath(str(row['tax_id']))
             outfile = outfile.joinpath(row['sample_accession'])
             outfile = outfile.joinpath(row['run_accession'])
             outfile.mkdir(exist_ok=True, parents=True)
@@ -129,7 +129,6 @@ def download_main(metadata_file,
             lc += 1
             line = metfile.readline()[:-1]
     chunk_size = chunk_size if chunk_size else lc
-    print(lc)
     # Spliting the tsv file to dfs
     m = lc // chunk_size
     rem = lc - (m * chunk_size)
@@ -138,29 +137,24 @@ def download_main(metadata_file,
         rem = 0
     starts = []
     for r in range(m):
-        start = int(r * chunk_size) + 1
+        start = int(r * chunk_size)
+        if start >= 0:
+            start += 1
         end = chunk_size
         starts.append((start, end))
     if rem > 0:
         start = int(m * chunk_size) + 1
         end = chunk_size
         starts.append((start, end))
-    print(starts)
-    print(chunk_size)
     for start, read_n in starts:
         arg_d = {"filepath_or_buffer": metadata_file,
                  "sep": "\t",
                  "skiprows": start,
                  "nrows": read_n,
+                 "header": None,
+                 "names": column_names
                  }
-        if start != 1:
-            nrow = arg_d["nrows"]
-            arg_d.update({
-                          "nrows": nrow + 1,
-                          "names": column_names})
         concat_frames = pd.read_csv(**arg_d)
-        print(concat_frames)
-        '''
         genome = []
         with ThreadPool(threads) as p:
             multipleargs = list(zip(concat_frames.iterrows(),
@@ -171,8 +165,7 @@ def download_main(metadata_file,
                                desc=tqdm_desc,
                                unit='Genomes'):
                 genome.append(result)
-    return str(outputpath)
-        '''
+
 
 def file_path(string):
     try:
