@@ -10,6 +10,8 @@ RUN apt update --fix-missing
 RUN apt install -y fastqc
 RUN apt install -y graphlan
 RUN apt clean
+RUN pip install tqdm pandas
+RUN apt update -y && apt upgrade -y
 
 ######################
 ## R and R PACKAGES ##
