@@ -17,7 +17,7 @@ from multiprocessing.pool import ThreadPool
 
 max_pool = int(cpu_count() * 0.4)
 pool_size = max_pool if max_pool > 0 else 1
-forw_file_match = re.compile(r"(_R1_|_1\.|_F)")
+forw_file_match = re.compile(r"(_R1_|_1\.|_F)?")
 
 
 def proper_length(forw_fastqfile):
@@ -56,7 +56,7 @@ def preparation_main(dir_path):
     if fastqs_dir.is_file():
         exit("Given path as directory is actually a file!!!")
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M')
-    pickle_file = Path(os.getcwd()) / "{}_tasks_to_call.pk".format(timestamp)
+    pickle_file = Path(__file__).parent / "{}_tasks_to_call.pk".format(timestamp)
     pks = fastqs_dir.rglob("./**/*.pk*")
     parents = OD()
     for pkfile in pks:
