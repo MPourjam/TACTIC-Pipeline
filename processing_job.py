@@ -586,7 +586,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
             filter_merged_one_side(forward_file)
             log.info('Filter one DONE')
         dereped_read_n = dereplicate_seqs()
-        read_report = write_reads_report(Actual_reads=real_reads_c,
+        read_report = write_reads_report(input_id, Actual_reads=real_reads_c,
                                          Spike_reads=spike_reads_c,
                                          Dereplicated_reads=dereped_read_n)
         log.debug(read_report)
