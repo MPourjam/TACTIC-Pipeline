@@ -413,7 +413,7 @@ def cleanup(input_id):
     deleted_files += ' derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
     deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab'
     deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
-    deleted_files += '*.fastq'
+    deleted_files += ' *.fastq'
     deleted_dirs = ' -r kvdb out idx'
     system('rm ' + deleted_files + " 2> /dev/null")
     system('rm ' + deleted_dirs + " 2> /dev/null")
