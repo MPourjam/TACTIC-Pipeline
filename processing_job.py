@@ -574,6 +574,10 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
             filter_merged_one_side(forward_file)
             log.info('Filter one DONE')
         dereped_read_n = dereplicate_seqs()
+        initial_report = "{}\n".format(str(input_id))
+        initial_report += "Actual_reads:{}\tSpike_reads:{}\tDereplicated_reads:{}\n"
+        init_rep = initial_report.format(real_reads_c, spike_reads_c, dereped_read_n)
+        log.info(init_rep)
         log.info('Dereplication DONE')
         sort_seqs()
         log.info('Sorting DONE')
