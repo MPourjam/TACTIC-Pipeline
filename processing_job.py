@@ -549,6 +549,18 @@ def gimmelogger(name, dir_path):
     return log
 
 
+def write_reads_report(input_id, **kwargs):
+    initial_report = "{}\n".format(str(input_id))
+    for i, v in enumerate(kwargs.items()):
+        k_v = "{}:{}".format(v[0], v[1])
+        initial_report += k_v
+        if i != len(kwargs) - 1:
+            initial_report += "\t"
+    with open('reads_report.txt', 'w+') as read_rep:
+        read_rep.write(initial_report + "\n")
+    return initial_report
+
+
 def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spike_amount=0):
     log = gimmelogger(input_id, input_dir)
     try:
@@ -574,10 +586,10 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
             filter_merged_one_side(forward_file)
             log.info('Filter one DONE')
         dereped_read_n = dereplicate_seqs()
-        initial_report = "{}\n".format(str(input_id))
-        initial_report += "Actual_reads:{}\tSpike_reads:{}\tDereplicated_reads:{}"
-        init_rep = initial_report.format(real_reads_c, spike_reads_c, dereped_read_n)
-        log.info(init_rep)
+        read_report = write_reads_report(Actual_reads=real_reads_c,
+                                         Spike_reads=spike_reads_c,
+                                         Dereplicated_reads=dereped_read_n)
+        log.debug(read_report)
         log.info('Dereplication DONE')
         sort_seqs()
         log.info('Sorting DONE')
@@ -605,12 +617,12 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         create_udb(input_id)
         log.info('UDB created')
         # update_s_flat(input_id, origin)
-        start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
-        with open("report.txt", 'w+') as report:
-            to_w = "{}\n".format(input_id)
-            to_w += "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
-            to_w += "\n{}\t{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
-            report.write(to_w)
+        # start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
+        # with open("report.txt", 'w+') as report:
+        #     to_w = "{}\n".format(input_id)
+        #     to_w += "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
+        #     to_w += "\n{}\t{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
+        #     report.write(to_w)
         cleanup(input_id)
         log.info("Cleaned up: {}".format(input_id))
         create_zip(input_id)

@@ -1,16 +1,16 @@
 #! /usr/bin/python3
 from processing_job import main_processing
 import pickle as pk
-from multiprocessing import Process, cpu_count, Pool
+from multiprocessing import cpu_count, Pool
 import os
-import time
-import shutil
 import re
 from datetime import datetime as dt
+
 
 def till_now(datetime_obj):
     time_delta = datetime_obj - dt.now()
     return time_delta.total_seconds()
+
 
 def main(pickle_files_path=None):
     max_pool = int(cpu_count() * 0.3)
@@ -43,14 +43,14 @@ def main(pickle_files_path=None):
         process_args_list = dicts_list[::]
         p_list = []
         for argset in process_args_list:
-            report_path = os.path.join(argset['input_dir'], "report.txt")
+            report_path = os.path.join(argset['input_dir'], "{}.udb".format(argset["input_id"]))
             if not os.path.isfile(report_path):
                 p_list.append(tuple(argset.values()))
         print(p_list)
         with Pool(pool_size, maxtasksperchild=1) as pool:
-            l = len(p_list)
-            m = l // batch_size
-            r = l - (m * batch_size)
+            p_num = len(p_list)
+            m = p_num // batch_size
+            r = p_num - (m * batch_size)
             if m > 0:
                 for i in range(1, m + 1):
                     print("Multiple of {}".format(batch_size))
@@ -62,7 +62,7 @@ def main(pickle_files_path=None):
 
                 if r > 0:
                     print("Doing the remaining {}.".format(r))
-                    s = (m * batch_size) 
+                    s = (m * batch_size)
                     res_list = [pool.apply_async(main_processing, args=argset) for argset in p_list[s:]]
                     for res in res_list:
                         res.wait()
@@ -71,12 +71,12 @@ def main(pickle_files_path=None):
                 print("Less than {} jobs.".format(batch_size))
                 res_list = [pool.apply_async(main_processing, args=argset) for argset in p_list]
                 for res in res_list:
-                        res.wait()
+                    res.wait()
             else:
                 print("All samples are processed in {} file.".format(file_path))
                 print("Deleting {}.".format(file_path))
                 os.remove(file_path)
-                
+
     else:
         msg = "The {} should be either a pickle file".format(pickle_files_path)
         msg += " or a directory containing the pickle files."
