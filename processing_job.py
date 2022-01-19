@@ -575,7 +575,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
             log.info('Filter one DONE')
         dereped_read_n = dereplicate_seqs()
         initial_report = "{}\n".format(str(input_id))
-        initial_report += "Actual_reads:{}\tSpike_reads:{}\tDereplicated_reads:{}\n"
+        initial_report += "Actual_reads:{}\tSpike_reads:{}\tDereplicated_reads:{}"
         init_rep = initial_report.format(real_reads_c, spike_reads_c, dereped_read_n)
         log.info(init_rep)
         log.info('Dereplication DONE')
@@ -607,9 +607,9 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         with open("report.txt", 'w+') as report:
-            to_w = "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
+            to_w = "{}\n".format(input_id)
+            to_w += "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
             to_w += "\n{}\t{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
-            log.info(to_w)
             report.write(to_w)
         cleanup(input_id)
         log.info("Cleaned up: {}".format(input_id))
