@@ -48,7 +48,7 @@ def proper_length(forw_fastqfile):
     else:
         return True
 
-fastqs = glob.glob("/srv/cfm/inputs/2021_12_27/DNAstab*.fastq*")
+fastqs = glob.glob("/srv/cfm/inputs/2022-01-11/*.fastq*")
 print(fastqs)
 times = {}
 for pd in fastqs:
@@ -60,8 +60,8 @@ times_sorted = sorted(times.items(), key=lambda x: x[1])
 # pprint(fastqs)
 # history_origin = times_sorted[0][1] - datetime.timedelta(days=1)
 
-fors = sorted([fq for fq in fastqs if re.search("R1", os.path.basename(fq))])
-backs = sorted([fq for fq in fastqs if re.search("R2", os.path.basename(fq))])
+fors = sorted([fq for fq in fastqs if re.search("_R1_", os.path.basename(fq))])
+backs = sorted([fq for fq in fastqs if re.search("_R2_", os.path.basename(fq))])
 
 till = min(len(fors), len(backs))
 
@@ -101,7 +101,7 @@ for i in range(0,till):
 
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M')
 
-pickle_file = os.path.join("/srv/cfm/inputs/", "proc_dicts_{}.pk".format(timestamp))
+pickle_file = os.path.join("/srv/cfm/outputs/", "proc_dicts_{}.pk".format(timestamp))
 
 with open(pickle_file, 'wb') as dest:
     pk.dump(processing_dicts, dest, protocol=pk.HIGHEST_PROTOCOL)
