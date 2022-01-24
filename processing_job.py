@@ -1,6 +1,7 @@
 from os import chdir, system, mkdir, listdir, makedirs
 from statistics import stdev, mean
 from re import search
+import mimetypes as mtypes
 import os
 import re
 import random
@@ -28,15 +29,20 @@ krona_importtext = "/cfm/binaries/Krona/KronaTools/scripts/ImportText.pl"
 
 
 def calc_spikes(*fastq_files, spike_amount):
+    '''
+    fastq_files must not be gzipped or zippped.
+    '''
     fastq_names = [f for f in fastq_files if bool(f)]
     fastqs_abs_paths = [os.path.abspath(os.path.join(os.getcwd(), f)) for f in fastq_names]
 
     if str(spike_amount) == "0":
-        line_count = 0
-        for f in fastqs_abs_paths:
-            with open(f, 'r') as fqfile:
-                for _ in fqfile:
-                    line_count += 1
+        f = fastqs_abs_paths[0]
+        with open(f, 'r') as fqfile:
+            line_count = 0
+            line = fqfile.readline()
+            while line:
+                line_count += 1
+                line = fqfile.readline()
         line_count = line_count // 4  # (total number of reads, spike reads)
         return line_count, 0  # non_spike_reads spike_reads
     else:
@@ -85,6 +91,31 @@ def calc_spikes(*fastq_files, spike_amount):
         return unaligned_reads, spike_counter
 
 
+def gzip_to_fastq(*files):
+    file_path = [os.path.abspath(f) for f in files]
+    fastq_paths = []
+    for f in file_path:
+        app, typ = mtypes.guess_type(f)
+        if 'zip' in str(typ):
+            asciifile = f.replace(".gz", "")
+            system("gunzip --stdout {} > {}".format(f, asciifile))
+            fastq_paths.append(asciifile)
+            system("rm -r {}".format(f))
+        elif 'zip' in str(app):  # For zipped files
+            pass
+            # asciifile = f.replace(".zip", "")
+            # system("unzip {} -d {}".format(f, asciifile))
+        else:
+            with open(f, "r+") as fi:
+                line = fi.readline()
+            if len(line) == len(line.encode()):  # If it's ascii
+                fastq_paths.append(f)
+    if len(file_path) != len(fastq_paths):
+        raise TypeError("Some files could not get converted or were not in ascii format!")
+    fastq_paths = [os.path.basename(f) for f in fastq_paths]
+    return fastq_paths
+
+
 def seqFileStats(seqFileName):
     n_first_seqs = 10000
     assess_coeff = 0.5
@@ -107,7 +138,7 @@ def seqFileStats(seqFileName):
             line = fastqfile.readline()[:-1]
     len_mean = mean(random_length)
     len_stdev = int(stdev(random_length))
-    return(len_mean, len_stdev)
+    return (len_mean, len_stdev)
 
 
 def read_file(filename):
@@ -140,30 +171,19 @@ def only_keep_dataset_fastqs(*args):
 
 
 def clean_FastQC(input_file, reverse_file=False):
-    part_F = ".".join(input_file.split('/')[-1].split('.')[:-1])
-    output = part_F + '_fastqc'
-    cmd_0 = 'unzip ' + output + '.zip > /dev/null 2>&1'
-    cmd_1 = 'mv ' + output + '/Images/per_base_quality.png ../R1-per_base_quality.png'
-    cmd_2 = 'rm -r ' + output + '.zip ' + output + '.html'
-    try:
-        system(cmd_0)
-        system(cmd_1)
-        system(cmd_2)
-    except BaseException:
-        pass
-
-    if reverse_file:
-        part_R = ".".join(reverse_file.split('/')[-1].split('.')[:-1])
-        output = part_R + '_fastqc'
-        cmd_0 = 'unzip ' + output + '.zip > /dev/null 2>&1'
-        cmd_1 = 'mv ' + output + '/Images/per_base_quality.png ../R2-per_base_quality.png'
-        cmd_2 = 'rm -r ' + output + '.zip ' + output + '.html'
+    zips = sorted(glob.glob('*.zip'))
+    for i, zipf in enumerate(zips):
+        dir_name = zipf.replace(".zip", "")
+        cmd_0 = 'unzip {} > /dev/null 2>&1'.format(zipf)
+        cmd_1 = 'mv ' + dir_name + '/Images/per_base_quality.png ../R{}-per_base_quality.png'.format(i + 1)
+        cmd_2 = 'rm -r {} {} {} > /dev/null 2>&1'.format(dir_name, "*.html", zipf)
         try:
             system(cmd_0)
             system(cmd_1)
             system(cmd_2)
         except BaseException:
             pass
+    system("cd ../ && rm -r fastqc_output")
 
 
 def mymkdir(input_dir):
@@ -177,6 +197,7 @@ def merge_pairs(forward_file, reverse_file):
     cmd_0 = USEARCH_11_bin + " -fastq_mergepairs " + forward_file + ' -reverse ' + reverse_file + ' -fastq_maxdiffs 50'
     cmd_1 = " -fastq_pctid 20 -fastqout merged.fasta -fastq_trunctail 20"
     cmd_2 = " -fastq_minmergelen 200 -fastq_maxmergelen 600 >/dev/null 2>/dev/null"
+    # print(cmd_0 + cmd_1 + cmd_2)
     system(cmd_0 + cmd_1 + cmd_2)
 
 
@@ -566,9 +587,10 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
     try:
         chdir(input_dir)
         # only_keep_dataset_fastqs(forward_file, reverse_file)
+        forward_file, reverse_file = gzip_to_fastq(forward_file, reverse_file)
         log.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*[forward_file, reverse_file], spike_amount=spike_amount)
-        log.debug("Actual_reads:{}\tSpike_reads:{}\n".format(real_reads_c, spike_reads_c))
+        log.debug("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         log.info('fastQC DONE')
         chdir(input_dir)
@@ -618,11 +640,6 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         log.info('UDB created')
         # update_s_flat(input_id, origin)
         # start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
-        # with open("report.txt", 'w+') as report:
-        #     to_w = "{}\n".format(input_id)
-        #     to_w += "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
-        #     to_w += "\n{}\t{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
-        #     report.write(to_w)
         cleanup(input_id)
         log.info("Cleaned up: {}".format(input_id))
         create_zip(input_id)
