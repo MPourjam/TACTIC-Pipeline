@@ -21,7 +21,7 @@ def is_good_fastq(file_path):
     return False
 
 
-def zip_them(file_list, dest_file):
+def zip_them(file_list, dest_file, flat=False):
     dest_file = Path(dest_file)
     dir_path = dest_file.parent
     if not dir_path.is_dir():
@@ -32,7 +32,10 @@ def zip_them(file_list, dest_file):
     with ZipFile(str(dest_file), "w") as dest_zip:
         for f in file_list:
             f_path = Path(f)
-            arc_name = f_path.relative_to(dest_file.parent)  # it may overwriet
+            arc_name = f_path.relative_to(dest_file.parent)
+            if flat:
+                print("When the flat flag is given, some files with the same name could get overwritten.")
+                arc_name = f_path.name
             dest_zip.write(f_path, arcname=arc_name)
 
 
