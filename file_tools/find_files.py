@@ -93,7 +93,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
         y_files = []
         for dirpath, dirnames, files_c in os.walk(search_dir, topdown=False):
             for fi in files_c:
-                fi_path = os.path.join(dirpath, fi)
+                fi_path = Path(dirpath).joinpath(fi)
                 add_f = False
                 if use_match_score:
                     max_match_list = [match_score(n.lower(), fi.lower()) for n in names_pats]
