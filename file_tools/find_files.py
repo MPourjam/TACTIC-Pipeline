@@ -78,7 +78,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True):
                 files.append(str(yf))
 
     if zip_b:
-        des_fi = search_dir.parent.joinpath(name_file.stem + "_files.zip")
+        des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
         zip_them(files, des_fi)
     else:
         file_paths = name_file.parent.joinpath(name_file.stem + "_paths.txt")
