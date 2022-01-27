@@ -108,7 +108,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
                     y_files.append(fi_path)
         for yf in y_files:
             if is_good_fastq(yf):
-                files.append(str(yf))
+                files.append(yf)
     files = list(set(files))
     # Handling duplicated files. Keeping the most recent one
     files_dict = {}
@@ -119,7 +119,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
         sub_list.append((f, os.stat(f).st_mtime))
         sub_list = sorted(sub_list, key=lambda x: x[1])
         files_dict[f.name] = sub_list[0][0]  # getting the filepath
-    files = list(files_dict.values())
+    files = [str(fil) for fil in list(files_dict.values())]
     if zip_b:
         des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
         zip_them(files, des_fi, flat=flat_zip)
