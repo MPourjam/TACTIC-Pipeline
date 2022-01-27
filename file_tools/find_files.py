@@ -46,21 +46,21 @@ def match_score(query, subject):
     if not isinstance(query, str) or not isinstance(subject, str):
         raise("Query and match must be strings.")
     delim = re.compile(r"(\.|-|_)")
-    q = delim.split(query) if len(delim.split(query)) > 1 else query
-    s = delim.split(subject) if len(delim.split(subject)) > 1 else subject
+    # TODO It needs refinement
+    q = delim.split(query) #if len(delim.split(query)) > 1 else query
+    s = delim.split(subject) #if len(delim.split(subject)) > 1 else subject
     q_m_score = 0
     for qu in q:
-        for su in s:
-            if qu in s:
-                q_m_score += 1
+        # for su in s:
+        if qu in s:
+            q_m_score += 1
     s_m_score = 0
     if q_m_score == 0:
         for su in s:
-            for qu in q:
-                if su in q:
-                    s_m_score += 1
+            # for qu in q:
+            if su in q:
+                s_m_score += 1
     return max(s_m_score, q_m_score)
-
 
 
 def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True):
