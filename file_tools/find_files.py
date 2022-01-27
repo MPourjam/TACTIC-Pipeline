@@ -114,6 +114,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
     files_dict = {}
     for f in files:
         sub_list_val = files_dict.get(f.name, [])
+        sub_list = sub_list_val
         if not isinstance(sub_list_val, list):
             sub_list = [sub_list_val]
         sub_list.append((f, os.stat(f).st_mtime))
