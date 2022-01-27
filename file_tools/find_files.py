@@ -63,7 +63,7 @@ def match_score(query, subject):
     return max(s_m_score, q_m_score)
 
 
-def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat_zip=False):
+def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat_zip=False, use_match_score=False):
     '''
     name_file must have desired search terms per line.
     '''
@@ -93,16 +93,19 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
         y_files = []
         for dirpath, dirnames, files_c in os.walk(search_dir, topdown=False):
             for fi in files_c:
-                max_match_list = [match_score(n.lower(), fi.lower()) for n in names_pats]
-                max_sim = max(max_match_list)
-                if max_sim > 0:
-                    for i, ma in enumerate(max_match_list):
-                        if ma == max_sim:
-                            fi_path = os.path.join(dirpath, fi)
-                            y_files.append(fi_path)
-                # if any([True for n in names_pats if str(n).lower() in str(fi).lower()]):
-                    # fi_path = os.path.join(dirpath, fi)
-                    # y_files.append(fi_path)
+                fi_path = os.path.join(dirpath, fi)
+                add_f = False
+                if use_match_score:
+                    max_match_list = [match_score(n.lower(), fi.lower()) for n in names_pats]
+                    max_sim = max(max_match_list)
+                    if max_sim > 0:
+                        for i, ma in enumerate(max_match_list):
+                            add_f = True if ma == max_sim else False
+                else:
+                    if any([True for n in names_pats if str(n).lower() in str(fi).lower()]):
+                        add_f = True
+                if add_f:
+                    y_files.append(fi_path)
         for yf in y_files:
             if is_good_fastq(yf):
                 files.append(str(yf))
