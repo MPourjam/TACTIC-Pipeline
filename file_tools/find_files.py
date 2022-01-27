@@ -47,8 +47,8 @@ def match_score(query, subject):
         raise("Query and match must be strings.")
     delim = re.compile(r"(\.|-|_)")
     # TODO It needs refinement
-    q = delim.split(query) #if len(delim.split(query)) > 1 else query
-    s = delim.split(subject) #if len(delim.split(subject)) > 1 else subject
+    q = delim.split(query)  # if len(delim.split(query)) > 1 else query
+    s = delim.split(subject)  # if len(delim.split(subject)) > 1 else subject
     q_m_score = 0
     for qu in q:
         # for su in s:
