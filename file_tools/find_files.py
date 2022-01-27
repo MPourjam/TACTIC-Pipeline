@@ -129,8 +129,14 @@ if __name__ == "__main__":
     parser.add_argument("-z", "--zip",
                         help="Boolean to zip them in the directroy of name_file.",
                         default=False, action='store_true')
+    parser.add_argument("-flat", "--flat",
+                        help="Boolean to zip files without hierarchy.",
+                        default=False, action='store_true')
     args = parser.parse_args()
     lookup_dir = Path(args.directory).resolve()
     name_file_path = Path(args.name_file).resolve()
     zip_it = args.zip
-    main(name_file_path, lookup_dir, zip_b=zip_it)
+    flat_zip = args.flat
+    if flat_zip:
+        print("Files with duplicated name but different path would get overwritten.")
+    main(name_file_path, lookup_dir, zip_b=zip_it, flat=flat_zip)
