@@ -110,6 +110,16 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
             if is_good_fastq(yf):
                 files.append(str(yf))
     files = list(set(files))
+    # Handling duplicated files. Keeping the most recent one
+    files_dict = {}
+    for f in files:
+        sub_list_val = files_dict(f.name, [])
+        if not isinstance(sub_list_val, list):
+            sub_list = [sub_list_val]
+        sub_list.append((f, os.stat(f).st_mtime))
+        sub_list = sorted(sub_list, key=lambda x: x[1])
+        files_dict[f.name] = sub_list[0][0]  # getting the filepath
+    files = list(files_dict.values())
     if zip_b:
         des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
         zip_them(files, des_fi, flat=flat_zip)
