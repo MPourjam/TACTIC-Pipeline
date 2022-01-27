@@ -39,6 +39,30 @@ def zip_them(file_list, dest_file, flat=False):
             dest_zip.write(f_path, arcname=arc_name)
 
 
+def match_score(query, subject):
+    '''
+    It splits the query by -,_, and . and tries to find number of matched segments
+    '''
+    if not isinstance(query, str) or not isinstance(subject, str):
+        raise("Query and match must be strings.")
+    delim = re.compile(r"(\.|-|_)")
+    q = delim.split(query) if len(delim.split(query)) > 1 else query
+    s = delim.split(subject) if len(delim.split(subject)) > 1 else subject
+    q_m_score = 0
+    for qu in q:
+        for su in s:
+            if qu in s:
+                q_m_score += 1
+    s_m_score = 0
+    if q_m_score == 0:
+        for su in s:
+            for qu in q:
+                if su in q:
+                    s_m_score += 1
+    return max(s_m_score, q_m_score)
+
+
+
 def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True):
     '''
     name_file must have desired search terms per line.
@@ -69,10 +93,16 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True):
         y_files = []
         for dirpath, dirnames, files_c in os.walk(search_dir, topdown=False):
             for fi in files_c:
-                if any([True for n in names_pats if str(n).lower() in str(fi).lower()]):
-                    fi_path = os.path.join(dirpath, fi)
-                    y_files.append(fi_path)
-
+                max_match_list = [match_score(n.lower(), fi.lower()) for n in names_pats]
+                max_sim = max(max_match_list)
+                if max_sim > 0:
+                    for i, ma in enumerate(max_match_list):
+                        if ma == max_sim:
+                            fi_path = os.path.join(dirpath, fi)
+                            y_files.append(fi_path)
+                # if any([True for n in names_pats if str(n).lower() in str(fi).lower()]):
+                    # fi_path = os.path.join(dirpath, fi)
+                    # y_files.append(fi_path)
         for yf in y_files:
             if is_good_fastq(yf):
                 files.append(str(yf))
