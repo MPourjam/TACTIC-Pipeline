@@ -21,6 +21,26 @@ def is_good_fastq(file_path):
     return False
 
 
+def latest_files(files_list):
+    '''
+    Choosing the latest files from files with the same name(not path)
+    '''
+    if not isinstance(files_list, list):
+        raise TypeError("latest_files function gets list of file paths!")
+    files = [Path(f) for f in files_list]
+    files_dict = {}
+    for f in files:
+        sub_list_val = files_dict.get(f.name, [])
+        sub_list = sub_list_val
+        if not isinstance(sub_list_val, list):
+            sub_list = [sub_list_val]
+        sub_list.append((f, os.stat(f).st_mtime))
+        sub_list = sorted(sub_list, key=lambda x: x[1])
+        files_dict[f.name] = sub_list[0]
+    files = [str(fil[0]) for fil in list(files_dict.values())]
+    return files
+
+
 def zip_them(file_list, dest_file, flat=False):
     dest_file = Path(dest_file)
     dir_path = dest_file.parent
@@ -29,6 +49,12 @@ def zip_them(file_list, dest_file, flat=False):
     if not isinstance(file_list, list) or not file_list:
         raise TypeError("file_list must be a list and not empty!")
     print("Writing zip to: {}".format(dest_file))
+    # Handling duplicated files. Keeping the most recent one
+    if flat:
+        msg = "Flat optin implies choosing tve latest files amongst "
+        msg += "files with the same names while writing to the zip file!"
+        print(msg)
+        file_list = latest_files(file_list)
     with ZipFile(str(dest_file), "w") as dest_zip:
         for f in file_list:
             f_path = Path(f)
@@ -108,19 +134,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
         for yf in y_files:
             if is_good_fastq(yf):
                 files.append(yf)
-    files = list(set(files))
-    # Handling duplicated files. Keeping the most recent one
-    files_dict = {}
-    for f in files:
-        sub_list_val = files_dict.get(f.name, [])
-        sub_list = sub_list_val
-        if not isinstance(sub_list_val, list):
-            sub_list = [sub_list_val]
-        sub_list.append((f, os.stat(f).st_mtime))
-        print(sub_list)
-        sub_list = sorted(sub_list, key=lambda x: x[1])
-        files_dict[f.name] = sub_list[0]
-    files = [str(fil[0]) for fil in list(files_dict.values())]
+    # files = list(set(files))
     if zip_b:
         des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
         zip_them(files, des_fi, flat=flat_zip)
