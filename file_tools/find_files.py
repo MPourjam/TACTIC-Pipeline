@@ -63,7 +63,7 @@ def match_score(query, subject):
     return max(s_m_score, q_m_score)
 
 
-def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True):
+def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat_zip=False):
     '''
     name_file must have desired search terms per line.
     '''
@@ -139,4 +139,4 @@ if __name__ == "__main__":
     flat_zip = args.flat
     if flat_zip:
         print("Files with duplicated name but different path would get overwritten.")
-    main(name_file_path, lookup_dir, zip_b=zip_it, flat=flat_zip)
+    main(name_file_path, lookup_dir, zip_b=zip_it, flat_zip=flat_zip)
