@@ -69,7 +69,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True):
         y_files = []
         for dirpath, dirnames, files_c in os.walk(search_dir, topdown=False):
             for fi in files_c:
-                if any([True for n in names_pats if str(n) in str(fi)]):
+                if any([True for n in names_pats if str(n).lower() in str(fi).lower()]):
                     fi_path = os.path.join(dirpath, fi)
                     y_files.append(fi_path)
 
