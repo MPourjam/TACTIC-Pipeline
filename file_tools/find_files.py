@@ -34,7 +34,6 @@ def zip_them(file_list, dest_file, flat=False):
             f_path = Path(f)
             arc_name = f_path.relative_to(dest_file.parent)
             if flat:
-                print("When the flat flag is given, some files with the same name could get overwritten.")
                 arc_name = f_path.name
             dest_zip.write(f_path, arcname=arc_name)
 
@@ -118,9 +117,10 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
         if not isinstance(sub_list_val, list):
             sub_list = [sub_list_val]
         sub_list.append((f, os.stat(f).st_mtime))
+        print(sub_list)
         sub_list = sorted(sub_list, key=lambda x: x[1])
-        files_dict[f.name] = sub_list[0][0]  # getting the filepath
-    files = [str(fil) for fil in list(files_dict.values())]
+        files_dict[f.name] = sub_list[0]
+    files = [str(fil[0]) for fil in list(files_dict.values())]
     if zip_b:
         des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
         zip_them(files, des_fi, flat=flat_zip)
