@@ -106,10 +106,10 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
         for yf in y_files:
             if is_good_fastq(yf):
                 files.append(str(yf))
-
+    files = list(set(files))
     if zip_b:
         des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
-        zip_them(files, des_fi)
+        zip_them(files, des_fi, flat=flat_zip)
     else:
         file_paths = name_file.parent.joinpath(name_file.stem + "_paths.txt")
         with open(file_paths, "w+") as out_file:
