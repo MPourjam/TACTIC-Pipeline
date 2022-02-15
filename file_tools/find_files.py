@@ -139,6 +139,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
         des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
         zip_them(files, des_fi, flat=flat_zip)
     else:
+        # TODO Returning a file containing all names for which a file was not found would be grear.
         file_paths = name_file.parent.joinpath(name_file.stem + "_paths.txt")
         with open(file_paths, "w+") as out_file:
             for f in files:
