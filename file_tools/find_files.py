@@ -101,10 +101,10 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
 
     names_pats = []
     with open(name_file, 'r') as names:
-        name = names.readline()[:-1]
+        name = str(names.readline()).strip()
         while name:
             names_pats.append(name)
-            name = names.readline()[:-1]
+            name = str(names.readline()).strip()
 
     files = []
     if use_glob:
@@ -127,7 +127,10 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
                         for i, ma in enumerate(max_match_list):
                             add_f = True if ma == max_sim else False
                 else:
-                    if any([True for n in names_pats if str(n).lower() in str(fi).lower()]):
+                    # Splitting the fi into word list to prevent inclusion of small numbers in bigger numbers.
+                    word_reg = re.compile(r"[-_\.\\ ]+")
+                    fi_word_list = re.split(word_reg, fi.lower())
+                    if any([True for n in names_pats if str(n).lower() in fi_word_list]):
                         add_f = True
                 if add_f:
                     y_files.append(fi_path)
