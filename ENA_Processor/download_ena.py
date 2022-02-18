@@ -35,49 +35,71 @@ def md5sum(filename, blocksize=65536):
 
 
 def download_fastq(inputdata):
+    attmps = 4
     df, outpath = inputdata
     index, row = df
     codename = row.name
-    md5cheked = False
-    while not md5cheked:
-        listmd5 = []
-        for pair, md5pair in zip(row['fastq_ftp'].split(';'),
-                                 row['fastq_md5'].split(';')):
-            outfile = outpath.joinpath(row['study_accession'])
-            outfile = outfile.joinpath(str(row['tax_id']))
-            outfile = outfile.joinpath(row['sample_accession'])
-            outfile = outfile.joinpath(row['run_accession'])
-            outfile.mkdir(exist_ok=True, parents=True)
-            # Creating the Args dictionary an storing it as pickle
-            paired = "Yes" if row["library_layout"] == "PAIRED" else "No"
-            pk_name = "{}.pk".format(row['run_accession'])
-            pickle_file_path = outfile.joinpath(pk_name)
-            pk_obj = task_pickle(pickle_file_path)
-            pk_obj.task_dict["args"]["input_dir"] = str(outfile.resolve())
-            pk_obj.task_dict["args"]["paired"] = paired
-            pk_obj.task_dict["args"]["input_id"] = str(row['run_accession'])
-            pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Started"]
-            pk_obj.write()
-            outfile = outfile.joinpath(pair.split('/')[-1])
-            if outfile.is_file() and md5sum(outfile) == md5pair:
-                listmd5.append(1)
+    outfile_dir = outpath.joinpath(row['study_accession'])
+    outfile_dir = outfile_dir.joinpath(str(row['tax_id']))
+    outfile_dir = outfile_dir.joinpath(row['sample_accession'])
+    outfile_dir = outfile_dir.joinpath(row['run_accession'])
+    outfile_dir.mkdir(exist_ok=True, parents=True)
+    paired = "Yes" if row["library_layout"] == "PAIRED" else "No"
+    pk_name = "{}.pk".format(row['run_accession'])
+    pickle_file_path = outfile_dir.joinpath(pk_name)
+    pk_obj = task_pickle(pickle_file_path)
+    # Creating the Args dictionary an storing it as pickle
+    pk_obj.task_dict["args"]["input_dir"] = str(outfile_dir.resolve())
+    pk_obj.task_dict["args"]["paired"] = paired
+    pk_obj.task_dict["args"]["input_id"] = str(row['run_accession'])
+    fastq_ftps = str(row['fastq_ftp']) if str(row['fastq_ftp']) != 'nan' else False
+    fastq_md5s = str(row['fastq_md5']) if str(row['fastq_md5']) != 'nan' else False
+    if not all([fastq_ftps, fastq_md5s]):
+        pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Error"]
+        pk_obj.write()
+        return '[ERROR] {}'.format(codename)
+    # Download started
+    pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Started"]
+    pk_obj.write()
+    listmd5 = []
+    fastq_files_path = []
+    for pair, md5pair in zip(fastq_ftps.split(';'),
+                             fastq_md5s.split(';')):
+        outfile = outfile_dir.joinpath(pair.split('/')[-1])
+        fastq_files_path.append(outfile)
+        md5cheked = 0
+        progress_code = pk_obj.scode_d["Progress"]
+        pk_obj.task_dict["status"]["download"] = progress_code
+        pk_obj.write()
+        if outfile.is_file() and md5sum(outfile) == md5pair:
+            listmd5.append(1)
+            continue
+        while md5cheked < attmps:
+            md5cheked += 1
+            try:
+                urlretrieve('ftp://' + pair, outfile)
+            except Exception:
+                if md5cheked == attmps - 1:
+                    listmd5.append(0)
             else:
-                try:
-                    progress_code = pk_obj.scode_d["Progress"]
-                    pk_obj.task_dict["status"]["download"] = progress_code
-                    pk_obj.write()
-                    urlretrieve('ftp://' + pair, outfile)
-                except Exception:
-                    listmd5.append(0)
-                    break
-                if md5sum(outfile) == md5pair:
-                    listmd5.append(1)
-                else:
-                    listmd5.append(0)
-        if all(listmd5):
-            pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Done"]
-            pk_obj.write()
-            md5cheked = True
+                md5cheked == attmps
+                listmd5.append(int(md5sum(outfile) == md5pair))
+    if all(listmd5):
+        pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Done"]
+        pk_obj.write()
+        sorted_files = sorted(fastq_files_path)
+        if len(sorted_files) == 1:
+            sorted_files.append('')
+        # Sometimes the there are more than 2 files
+        pk_obj.task_dict["args"]["forward_file"] = str(sorted_files[-2])
+        pk_obj.task_dict["args"]["reverse_file"] = str(sorted_files[-1])
+        pk_obj.write()
+    else:
+        pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Error"]
+        pk_obj.write()
+        for fi in fastq_files_path:
+            os.remove(fi)
+        return '[ERROR] {}'.format(codename)
     return '[OK] {}'.format(codename)
 
 
