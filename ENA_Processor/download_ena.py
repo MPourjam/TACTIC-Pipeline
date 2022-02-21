@@ -6,7 +6,7 @@ from multiprocessing.pool import ThreadPool
 from tqdm import tqdm  # pip3 install tqdm
 from hashlib import md5
 from itertools import repeat
-from os import getcwd, cpu_count
+from os import getcwd, cpu_count, remove
 from task_classes import task_pickle
 if version_info[0] < 3:
     from pathlib2 import Path  # pip2 install pathlib2
@@ -66,7 +66,7 @@ def download_fastq(inputdata):
     for pair, md5pair in zip(fastq_ftps.split(';'),
                              fastq_md5s.split(';')):
         outfile = outfile_dir.joinpath(pair.split('/')[-1])
-        fastq_files_path.append(outfile)
+        fastq_files_path.append(outfile.name)
         md5cheked = 0
         progress_code = pk_obj.scode_d["Progress"]
         pk_obj.task_dict["status"]["download"] = progress_code
@@ -98,7 +98,8 @@ def download_fastq(inputdata):
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Error"]
         pk_obj.write()
         for fi in fastq_files_path:
-            os.remove(fi)
+            abs_dir_path = Path(pk_obj.task_dict["args"]["input_dir"])
+            remove(str(abs_dir_path.join(fi)))
         return '[ERROR] {}'.format(codename)
     return '[OK] {}'.format(codename)
 

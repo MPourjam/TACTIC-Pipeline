@@ -8,6 +8,18 @@ from collections import OrderedDict as OD
 
 class task_pickle:
     path = getcwd()
+    status_keys_num = ["download",
+                       "run"]
+    status_keys_str = ["msg"]
+    status_keys = status_keys_num + status_keys_str
+    args_keys = ["input_dir",
+                 "paired",
+                 "forward_file",
+                 "reverse_file",
+                 "input_id",
+                 "spike_amount"]
+    task_keys = ["args",
+                 "status"]
     scode_d = {"Done": 0,
                "Queue": 1,
                "Started": 2,
@@ -21,18 +33,15 @@ class task_pickle:
                     "input_id": "",
                     "spike_amount": 6
                     })
-    status_dict = {"download": scode_d["Queue"], "run": scode_d["Queue"]}
+    status_dict = {k: scode_d["Queue"] for k in status_keys_num}
+    for str_k in status_keys_str:
+        status_dict[str_k] = ""
     task_dict = {"args": args_dict, "status": status_dict}
 
     def check_args_dict(self, args_dict):
         if not isinstance(args_dict, dict):
             return False
-        keys = ["input_dir",
-                "paired",
-                "forward_file",
-                "reverse_file",
-                "input_id",
-                "spike_amount"]
+        keys = self.args_keys
         has_key_list = [True for k in keys if k not in args_dict]
         if any(has_key_list):
             return False
@@ -41,7 +50,7 @@ class task_pickle:
     def check_status_dict(self, status_dict):
         if not isinstance(status_dict, dict):
             return False
-        keys = ["download", "run"]
+        keys = self.status_keys
         has_key_list = [True for k in keys if k not in status_dict]
         if any(has_key_list):
             return False
@@ -49,15 +58,18 @@ class task_pickle:
 
     def set_task_dict(self, task_dict):
         if isinstance(task_dict, dict):
-            keys = ["args", "status"]
+            keys = self.task_keys
             if any([True for k in keys if k not in task_dict]):
-                msg = "Task dict must have dictionaries 'args' and 'status'."
+                keys_txt = ", ".join(keys)
+                msg = "Task dict must have dictionaries: " + keys_txt
                 raise TypeError(msg)
-            if not self.check_args_dict(task_dict["args"]):
-                msg = "Argument dictionary is not formatted correclty."
+            elif not self.check_args_dict(task_dict["args"]):
+                keys_txt = ", ".join(self.args_keys)
+                msg = "Argument dictionary must have arguments: " + keys_txt
                 raise TypeError(msg)
-            if not self.check_status_dict(task_dict["status"]):
-                msg = "Status dictionary is not formatted correclty."
+            elif not self.check_status_dict(task_dict["status"]):
+                keys_txt = ", ".join(self.status_keys)
+                msg = "Status dictionary is must have keys: " + keys_txt
                 raise TypeError(msg)
         else:
             msg = "Given object as task dictionary is not a dictionary."
@@ -94,7 +106,7 @@ class task_pickle:
             if k == "input_dir":
                 try:
                     p = Path(v)
-                except Exception as e:
+                except Exception:
                     return False
                 if not p.exists():
                     return False
@@ -115,7 +127,7 @@ class task_pickle:
             elif k == "spike_amount":
                 try:
                     v = int(v)
-                except Exception as e:
+                except Exception:
                     return False
             else:  # Existence of any other arguments
                 return False

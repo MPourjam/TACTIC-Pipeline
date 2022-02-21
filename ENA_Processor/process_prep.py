@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-import os
 import re
 import random
 import argparse
 import datetime
-import mimetypes
 import pickle as pk
 from pathlib import Path
 from pprint import pprint as print
@@ -51,7 +49,11 @@ def proper_length(forw_fastqfile):
         return True
 
 
-def preparation_main(dir_path):
+def preparation_main(dir_path, res_pk=False):
+    '''
+    if res_pk is false then it returns a lis containing the paths to
+    run pickle files.
+    '''
     fastqs_dir = Path(dir_path)
     if fastqs_dir.is_file():
         exit("Given path as directory is actually a file!!!")
@@ -59,15 +61,17 @@ def preparation_main(dir_path):
     pickle_file = Path(__file__).parent / "{}_tasks_to_call.pk".format(timestamp)
     pks = fastqs_dir.rglob("./**/*.pk*")
     parents = OD()
+    # Getting only those that are finished with download.
     for pkfile in pks:
-        # print(fq)
         try:
             pkf_obj = task_pickle(pkfile)
-        except Exception as e:
+        except Exception:
             continue
         if pkf_obj.task_dict["status"]["download"] != pkf_obj.scode_d["Done"]:
             continue
         p = Path(pkf_obj.task_dict["args"]["input_dir"])
+        '''
+        # There is no need to add forward and reverse as it is already added.
         files = parents.get(p, [])
         fqfiles = p.glob("*.fastq*")
         if not fqfiles:
@@ -77,53 +81,69 @@ def preparation_main(dir_path):
         files = sorted(list(set(files)))
         if len(files) == 2:
             assert(re.search(forw_file_match, str(files[0]))), "Incorrect order of forward and reverse files."
-        parents[p] = files
+        '''
+        parents[p] = pkf_obj
 
     processing_dicts = []
-    with ThreadPool(pool_size) as p:
-        for p, fs in parents.items():
-            for f in fs:
-                full_path = p.joinpath(f)
-                assert(full_path.is_file()), "File {} does not exist.".format(full_path)
-                typ, enc = mimetypes.guess_type(str(full_path))
-                if enc == 'gzip':
-                    os.system("gunzip -f {}".format(full_path))
-                elif typ == "application/zip":
-                    os.system("unzip {}".format(full_path))
-            fqfiles = p.glob("*.fastq")
-            fqfiles = sorted(list(set(fqfiles)))
-            parents[p] = fqfiles
-
-    with ThreadPool(pool_size) as pool:
-        proper_length_dict = {p: proper_length(p.joinpath(fs[0])) for p, fs in parents.items() if fs}
-
-    for p, proper in proper_length_dict.items():
-        if proper:
+    with ThreadPool(pool_size) as pool:  # TODO use the pool
+        for p, pkfo in parents.items():
+            dir_path = Path(pkfo.task_dict["args"]["input_dir"])
+            fastqs_files = []
+            f_path = dir_path.joinpath(pkfo.task_dict["args"]["forward_file"])
+            r_path = dir_path.joinpath(pkfo.task_dict["args"]["reverse_file"])
+            if not f_path.is_file():
+                pkfo.task_dict["args"]["forward_file"] = ""
+                pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
+                pkfo.task_dict["status"]["msg"] = "Forward file does not exist."
+                pkfo.write()
+                continue
+            fastqs_files.append(f_path)
+            paired = True if pkfo.task_dict["args"]["paired"] == "Yes" else False
+            if paired and not r_path.is_file():
+                pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
+                pkfo.task_dict["status"]["msg"] = "Reverse file does not exist."
+                pkfo.write()
+                continue
+            elif not paired:
+                pkfo.task_dict["args"]["reverse_file"] = ""
+                r_path = ""
+            pkfo.write()
+            if r_path:
+                fastqs_files.append(r_path)
+            # Checking if the fastq file has proper length
+            prop_len = [proper_length(fi) for fi in fastqs_files]
+            if prop_len and not all(prop_len):
+                pkfo.task_dict["status"]["run"] = pkfo.scode_d["Error"]
+                pkfo.task_dict["status"]["msg"] = "Not a proper length for fastq file(s)."
+                pkfo.write()
+                continue
+    # Demultiplexing
             acc_ = p.stem
-            pkfile = p.joinpath("{}.pk".format(acc_))
-            pkf_obj = task_pickle(str(pkfile.resolve()))
-            if len(parents[p]) == 1 and pkf_obj.task_dict["args"]["paired"] == "Yes":
+            if len(fastqs_files) == 1 and paired:
                 # TODO demultiplexing
-                print("Fastq file in {} need to get split!!!".format(p))
+                pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
+                msg = "Fastq file in {} need to get split!!!".format(p)
+                pkfo.task_dict["status"]["msg"] = msg
                 continue
                 # Get the updated fastq files names
-            if len(parents[p]) > 2:
-                print("More than two fastq files in {}!!!".format(p))
-                continue
-            pkf_obj.task_dict["args"]["forward_file"] = parents[p][0].name
-            pkf_obj.task_dict["args"]["reverse_file"] = ''
-            if pkf_obj.task_dict["args"]["paired"] == "Yes":
-                pkf_obj.task_dict["args"]["reverse_file"] = parents[p][1].name
-            pkf_obj.task_dict["status"]["run"] = pkf_obj.scode_d["Started"]
-            pkf_obj.write()
-            if pkf_obj.args_complete():
-                processing_dicts.append(pkf_obj.task_dict["args"])
+            # TODO Checking if the forward and reverse file are correctly assigned.
+            pkfo.task_dict["args"]["forward_file"] = parents[p][0].name
+            pkfo.task_dict["args"]["reverse_file"] = ''
+            if pkfo.task_dict["args"]["paired"] == "Yes":
+                pkfo.task_dict["args"]["reverse_file"] = parents[p][1].name
+            pkfo.task_dict["status"]["run"] = pkfo.scode_d["Started"]
+            pkfo.write()
+            if pkfo.args_complete():
+                processing_dicts.append(pkfo.task_dict)
             else:
                 print("Incomplete task arguments in {}".format(p))
-
-    with open(pickle_file, 'wb') as dest:
-        pk.dump(processing_dicts, dest, protocol=pk.HIGHEST_PROTOCOL)
-    return pickle_file
+    if res_pk:
+        processing_args_list = [pk_c["args"] for pk_c in processing_dicts]
+        with open(pickle_file, 'wb') as dest:
+            pk.dump(processing_args_list, dest, protocol=pk.HIGHEST_PROTOCOL)
+        return pickle_file
+    else:
+        return processing_dicts
 
 
 if __name__ == "__main__":
@@ -138,6 +158,6 @@ if __name__ == "__main__":
     fastqs_dir = Path(args.directory).resolve()
     pickle_file_path = preparation_main(fastqs_dir)
     if not args.no_call:
-        process_multi(pickle_file_path)
+        process_multi(pickle_file_path, res_pk=True)
     else:
         print(str(pickle_file_path))
