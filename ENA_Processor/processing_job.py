@@ -1,6 +1,7 @@
 from os import chdir, system, mkdir, listdir, makedirs
 from statistics import stdev, mean
 from re import search
+import mimetypes as mtypes
 import os
 import re
 import random
@@ -83,6 +84,31 @@ def calc_spikes(*fastq_files, spike_amount):
         unaligned_reads, _ = calc_spikes(*fastqs_abs_paths, spike_amount=0)
         # to pass it as reads_number and spike number to seq_met model
         return unaligned_reads, spike_counter
+
+
+def gzip_to_fastq(*files):
+    file_path = [os.path.abspath(f) for f in files]
+    fastq_paths = []
+    for f in file_path:
+        app, typ = mtypes.guess_type(f)
+        if 'zip' in str(typ):
+            asciifile = f.replace(".gz", "")
+            system("gunzip --stdout {} > {}".format(f, asciifile))
+            fastq_paths.append(asciifile)
+            system("rm -r {}".format(f))
+        elif 'zip' in str(app):  # For zipped files
+            pass
+            # asciifile = f.replace(".zip", "")
+            # system("unzip {} -d {}".format(f, asciifile))
+        else:
+            with open(f, "r+") as fi:
+                line = fi.readline()
+            if len(line) == len(line.encode()):  # If it's ascii
+                fastq_paths.append(f)
+    if len(file_path) != len(fastq_paths):
+        raise TypeError("Some files could not get converted or were not in ascii format!")
+    fastq_paths = [os.path.basename(f) for f in fastq_paths]
+    return fastq_paths
 
 
 def seqFileStats(seqFileName):
@@ -554,6 +580,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
     try:
         chdir(input_dir)
         # only_keep_dataset_fastqs(forward_file, reverse_file)
+        forward_file, reverse_file = gzip_to_fastq(forward_file, reverse_file)
         log.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*[forward_file, reverse_file], spike_amount=spike_amount)
         log.debug("Actual_reads:{}\tSpike_reads:{}\n".format(real_reads_c, spike_reads_c))
@@ -595,6 +622,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         add_taxonomy_to_fasta()
         addKrona(krona_importtext)
         log.info("Krona graph added.")
+        # TODO Add the processing_stats
         system('Rscript /crc/crc/crcapp/jobs/processing_stats.R >/dev/null 2>/dev/null')
         log.info('Relabing DONE')
         # udb for both similarity queries
