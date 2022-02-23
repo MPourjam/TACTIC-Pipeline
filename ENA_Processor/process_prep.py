@@ -5,7 +5,7 @@ import argparse
 import datetime
 import pickle as pk
 from pathlib import Path
-from pprint import pprint as print
+# from pprint import pprint as print
 from statistics import mean, stdev
 from task_classes import task_pickle
 from multiprocessing import cpu_count
@@ -160,8 +160,7 @@ def preparation_main(dir_path, res_pk=False):
     if res_pk:
         with open(pickle_file, 'wb') as dest:
             pk.dump(final_ppks, dest, protocol=pk.HIGHEST_PROTOCOL)
-        # TODO Change every downstream function using this pickle file as
-        # its structure has changed
+        print(pickle_file)
         return pickle_file
     else:
         return (final_ppks, err_pks)
@@ -178,8 +177,14 @@ if __name__ == "__main__":
                         default=False, action='store_true')
     args = parser.parse_args()
     fastqs_dir = Path(args.directory).resolve()
-    pickle_file_path = preparation_main(fastqs_dir)
     if not args.no_call:
-        process_multi(pickle_file_path, res_pk=True)
+        pickle_files_path = preparation_main(fastqs_dir, res_pk=True)
+        process_multi(pickle_files_path)
     else:
-        print(str(pickle_file_path))
+        pickle_files_path, err_pks = preparation_main(fastqs_dir)
+        good_pks = "\t" + "\n\t".join(pickle_files_path)
+        inproper_pks = "\t" + "\n\t".join(err_pks)
+        msg_prop = "Proper Task Pickles:\n{}".format(good_pks)
+        msg_inprop = "Inproper Task Pickles:\n{}".format(inproper_pks)
+        msg = str(msg_prop) + "\n" + str(msg_inprop)
+        print(msg)
