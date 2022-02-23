@@ -9,7 +9,6 @@ from pprint import pprint as print
 from statistics import mean, stdev
 from task_classes import task_pickle
 from multiprocessing import cpu_count
-from collections import OrderedDict as OD
 from task_caller import main as process_multi
 from multiprocessing.pool import ThreadPool
 
@@ -49,6 +48,78 @@ def proper_length(forw_fastqfile):
         return True
 
 
+def proper_pkarg_o(task_pk_path):
+    '''
+    It gets a the path to a task_pickle file (file of task_pickle obj)
+    and checks the forward and reverse file. Then updated the pickle
+    file of the dataset.
+    '''
+    task_path = Path(task_pk_path)
+    if not task_path.is_file():
+        raise TypeError("Input should be path to a task_pickle object.")
+    try:
+        pkfo = task_pickle(str(task_path))
+    except Exception as e:
+        print(e)
+        return False
+    if pkfo.task_dict["status"]["download"] != pkfo.scode_d["Done"]:
+        return False
+    dir_path = Path(pkfo.task_dict["args"]["input_dir"])
+    if not dir_path.is_dir():
+        pkfo.task_dict["status"]["run"] = pkfo.scode_d["Error"]
+        msg = "Input_dir should be path to a directory."
+        pkfo.task_dict["status"]["msg"] = msg
+        pkfo.write()
+        return False
+    fastqs_files = []
+    f_path = dir_path.joinpath(pkfo.task_dict["args"]["forward_file"])
+    r_path = dir_path.joinpath(pkfo.task_dict["args"]["reverse_file"])
+    # Checking existence of forward file
+    if not f_path.is_file():
+        pkfo.task_dict["args"]["forward_file"] = ""
+        pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
+        pkfo.task_dict["status"]["msg"] = "Forward file does not exist."
+        pkfo.write()
+        return False
+    fastqs_files.append(f_path)
+    # Checking existence of reverse file
+    paired = True if pkfo.task_dict["args"]["paired"] == "Yes" else False
+    if paired and not r_path.is_file():
+        pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
+        pkfo.task_dict["status"]["msg"] = "Reverse file does not exist."
+        pkfo.write()
+        return False
+    elif not paired:
+        pkfo.task_dict["args"]["reverse_file"] = ""
+        r_path = ""
+    if r_path:
+        fastqs_files.append(r_path)
+    # Demultiplexing
+    if len(fastqs_files) == 1 and paired:
+        # TODO demultiplexing
+        pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
+        msg = "Fastq file in {} need to get split!!!".format(pkfo)
+        pkfo.task_dict["status"]["msg"] = msg
+        pkfo.write()
+        print(pkfo.task_dict)
+        return False
+        # Get the updated fastq files names
+    # TODO Checking if the forward and reverse file are correctly assigned.
+    pkfo.task_dict["args"]["forward_file"] = f_path.name if f_path else ""
+    pkfo.task_dict["args"]["reverse_file"] = r_path.name if r_path else ""
+    if not pkfo.args_complete():
+        print("Incomplete argument(s) for {}".format(pkfo))
+        pkfo.task_dict["status"]["run"] = pkfo.scode_d["Error"]
+        pkfo.task_dict["status"]["msg"] = "Argument(s) missing."
+        pkfo.write()
+        return False
+    pkfo.task_dict["status"]["run"] = pkfo.scode_d["Queue"]
+    # Making sure the download status is correctly saved
+    pkfo.task_dict["status"]["download"] = pkfo.scode_d["Done"]
+    pkfo.write()
+    return pkfo
+
+
 def preparation_main(dir_path, res_pk=False):
     '''
     if res_pk is false then it returns a lis containing the paths to
@@ -58,98 +129,49 @@ def preparation_main(dir_path, res_pk=False):
     if fastqs_dir.is_file():
         exit("Given path as directory is actually a file!!!")
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M')
-    pickle_file = Path(__file__).parent / "{}_tasks_to_call.pk".format(timestamp)
-    pks = fastqs_dir.rglob("./**/*.pk*")
-    parents = OD()
+    pickle_file = Path(__file__).parent/"{}_tasks_to_call.pk".format(timestamp)
+    pks = fastqs_dir.rglob("./**/*.pk")
     # Getting only those that are finished with download.
-    for pkfile in pks:
-        try:
-            pkf_obj = task_pickle(pkfile)
-        except Exception:
-            continue
-        if pkf_obj.task_dict["status"]["download"] != pkf_obj.scode_d["Done"]:
-            continue
-        p = Path(pkf_obj.task_dict["args"]["input_dir"])
-        '''
-        # There is no need to add forward and reverse as it is already added.
-        files = parents.get(p, [])
-        fqfiles = p.glob("*.fastq*")
-        if not fqfiles:
-            continue
-        fqfiles = sorted(fqfiles)
-        files.extend(fqfiles)
-        files = sorted(list(set(files)))
-        if len(files) == 2:
-            assert(re.search(forw_file_match, str(files[0]))), "Incorrect order of forward and reverse files."
-        '''
-        parents[p] = pkf_obj
+    with ThreadPool(pool_size) as pool:
+            pks_list = list(pks)
+            pfiles_res_list = pool.map(proper_pkarg_o, pks_list)
+            ppks_list = []
+            err_pks = []
+            for pk_path, pk_o in zip(pks_list, pfiles_res_list):
+                if not pk_o:
+                    err_pks.append(str(pk_path))
+                    continue
+                ppks_list.append(pk_o)
+            ppks_forw_files = []
+            for pk_o in ppks_list:
+                dir_path = Path(pk_o.task_dict["args"]["input_dir"])
+                f_path = dir_path.joinpath(pk_o.task_dict["args"]["forward_file"])
+                ppks_forw_files.append(str(f_path))
+            final_ppks = []
+            if ppks_forw_files:
+                plen_res_list = pool.map(proper_length, ppks_forw_files)
+                for i in range(0, len(plen_res_list)):
+                    pk_o = ppks_list[i]
+                    if not plen_res_list[i]:
+                        err_pks.append(pk_o.path)
+                        continue
+                    final_ppks.append(pk_o.path)
 
-    processing_dicts = []
-    with ThreadPool(pool_size) as pool:  # TODO use the pool
-        for p, pkfo in parents.items():
-            dir_path = Path(pkfo.task_dict["args"]["input_dir"])
-            fastqs_files = []
-            f_path = dir_path.joinpath(pkfo.task_dict["args"]["forward_file"])
-            r_path = dir_path.joinpath(pkfo.task_dict["args"]["reverse_file"])
-            if not f_path.is_file():
-                pkfo.task_dict["args"]["forward_file"] = ""
-                pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
-                pkfo.task_dict["status"]["msg"] = "Forward file does not exist."
-                pkfo.write()
-                continue
-            fastqs_files.append(f_path)
-            paired = True if pkfo.task_dict["args"]["paired"] == "Yes" else False
-            if paired and not r_path.is_file():
-                pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
-                pkfo.task_dict["status"]["msg"] = "Reverse file does not exist."
-                pkfo.write()
-                continue
-            elif not paired:
-                pkfo.task_dict["args"]["reverse_file"] = ""
-                r_path = ""
-            pkfo.write()
-            if r_path:
-                fastqs_files.append(r_path)
-            # Checking if the fastq file has proper length
-            prop_len = [proper_length(fi) for fi in fastqs_files]
-            if prop_len and not all(prop_len):
-                pkfo.task_dict["status"]["run"] = pkfo.scode_d["Error"]
-                pkfo.task_dict["status"]["msg"] = "Not a proper length for fastq file(s)."
-                pkfo.write()
-                continue
-    # Demultiplexing
-            acc_ = p.stem
-            if len(fastqs_files) == 1 and paired:
-                # TODO demultiplexing
-                pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
-                msg = "Fastq file in {} need to get split!!!".format(p)
-                pkfo.task_dict["status"]["msg"] = msg
-                continue
-                # Get the updated fastq files names
-            # TODO Checking if the forward and reverse file are correctly assigned.
-            pkfo.task_dict["args"]["forward_file"] = parents[p][0].name
-            pkfo.task_dict["args"]["reverse_file"] = ''
-            if pkfo.task_dict["args"]["paired"] == "Yes":
-                pkfo.task_dict["args"]["reverse_file"] = parents[p][1].name
-            pkfo.task_dict["status"]["run"] = pkfo.scode_d["Started"]
-            pkfo.write()
-            if pkfo.args_complete():
-                processing_dicts.append(pkfo.task_dict)
-            else:
-                print("Incomplete task arguments in {}".format(p))
     if res_pk:
-        processing_args_list = [pk_c["args"] for pk_c in processing_dicts]
         with open(pickle_file, 'wb') as dest:
-            pk.dump(processing_args_list, dest, protocol=pk.HIGHEST_PROTOCOL)
+            pk.dump(final_ppks, dest, protocol=pk.HIGHEST_PROTOCOL)
+        # TODO Change every downstream function using this pickle file as
+        # its structure has changed
         return pickle_file
     else:
-        return processing_dicts
+        return (final_ppks, err_pks)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    help_text = "The directory to find recursively all process pk files inside"
     parser.add_argument("-d", "--directory",
-                        help="The directory to find recursively all process pk files inside",
+                        help=help_text,
                         default=".")
     parser.add_argument("-nc", "--no-call",
                         help="If call the tasks from pickle files.",
