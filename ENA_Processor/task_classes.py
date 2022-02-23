@@ -36,8 +36,8 @@ class task_pickle:
                     "spike_amount": 6
                     })
 
-    def check_args_dict(self):
-        args_dict = self.task_dict["args"]
+    def check_args_dict(self, args_d=None):
+        args_dict = self.task_dict["args"] if not args_d else args_d
         if not isinstance(args_dict, dict):
             return False
         keys = self.args_keys
@@ -46,8 +46,8 @@ class task_pickle:
             return False
         return True
 
-    def check_status_dict(self):
-        status_dict = self.task_dict["status"]
+    def check_status_dict(self, status_d=None):
+        status_dict = self.task_dict["status"] if not status_d else status_d
         if not isinstance(status_dict, dict):
             return False
         keys = self.status_keys_ess
@@ -56,18 +56,19 @@ class task_pickle:
             return False
         return True
 
-    def set_task_dict(self, task_dict):
+    def set_task_dict(self, task_d=None):
+        task_dict = self.task_dict if not task_d else task_d
         if isinstance(task_dict, dict):
             keys = self.task_keys
             if any([True for k in keys if k not in task_dict]):
                 keys_txt = ", ".join(keys)
                 msg = "Task dict must have dictionaries: " + keys_txt
                 raise TypeError(msg)
-            elif not self.check_args_dict():
+            elif not self.check_args_dict(task_dict["args"]):
                 keys_txt = ", ".join(self.args_keys)
                 msg = "Argument dictionary must have arguments: " + keys_txt
                 raise TypeError(msg)
-            elif not self.check_status_dict():
+            elif not self.check_status_dict(task_dict["status"]):
                 keys_txt = ", ".join(self.status_keys)
                 msg = "Status dictionary must have keys: " + keys_txt
                 raise TypeError(msg)
@@ -146,6 +147,8 @@ class task_pickle:
         elif not self.check_args_dict():
             return False
         elif not self.check_status_dict():
+            return False
+        elif not self.args_complete():
             return False
         return True
 
