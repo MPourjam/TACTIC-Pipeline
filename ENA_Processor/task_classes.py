@@ -11,6 +11,7 @@ class task_pickle:
     status_keys_num = ["download",
                        "run"]
     status_keys_str = ["msg"]
+    status_keys_ess = status_keys_num
     status_keys = status_keys_num + status_keys_str
     args_keys = ["input_dir",
                  "paired",
@@ -26,6 +27,7 @@ class task_pickle:
                "Progress": 3,
                "Error": -1
                }
+    # TODO Create the args_dict according to args_keys
     args_dict = OD({"input_dir": "",
                     "paired": "",
                     "forward_file": "",
@@ -33,12 +35,9 @@ class task_pickle:
                     "input_id": "",
                     "spike_amount": 6
                     })
-    status_dict = {k: scode_d["Queue"] for k in status_keys_num}
-    for str_k in status_keys_str:
-        status_dict[str_k] = ""
-    task_dict = {"args": args_dict, "status": status_dict}
 
-    def check_args_dict(self, args_dict):
+    def check_args_dict(self):
+        args_dict = self.task_dict["args"]
         if not isinstance(args_dict, dict):
             return False
         keys = self.args_keys
@@ -47,10 +46,11 @@ class task_pickle:
             return False
         return True
 
-    def check_status_dict(self, status_dict):
+    def check_status_dict(self):
+        status_dict = self.task_dict["status"]
         if not isinstance(status_dict, dict):
             return False
-        keys = self.status_keys
+        keys = self.status_keys_ess
         has_key_list = [True for k in keys if k not in status_dict]
         if any(has_key_list):
             return False
@@ -63,13 +63,13 @@ class task_pickle:
                 keys_txt = ", ".join(keys)
                 msg = "Task dict must have dictionaries: " + keys_txt
                 raise TypeError(msg)
-            elif not self.check_args_dict(task_dict["args"]):
+            elif not self.check_args_dict():
                 keys_txt = ", ".join(self.args_keys)
                 msg = "Argument dictionary must have arguments: " + keys_txt
                 raise TypeError(msg)
-            elif not self.check_status_dict(task_dict["status"]):
+            elif not self.check_status_dict():
                 keys_txt = ", ".join(self.status_keys)
-                msg = "Status dictionary is must have keys: " + keys_txt
+                msg = "Status dictionary must have keys: " + keys_txt
                 raise TypeError(msg)
         else:
             msg = "Given object as task dictionary is not a dictionary."
@@ -78,13 +78,17 @@ class task_pickle:
         return True
 
     def __init__(self, filepath=None, task_dict=None):
+        self.status_dict = {k: self.scode_d["Queue"] for k in self.status_keys_num}
+        for str_k in self.status_keys_str:
+            self.status_dict[str_k] = ""
+        self.task_dict = {"args": self.args_dict, "status": self.status_dict}
         timestamp = dt.now().strftime('%Y%m%d_%H%M%S')
         path = Path(filepath) if filepath else Path(self.path)
         if path.is_dir():
             path = path.joinpath("{}_proc_task_d.pk".format(str(timestamp)))
-        self.path = path.resolve()
+        self.path = str(path.resolve())
 
-        if self.path.exists():
+        if Path(self.path).exists():
             f_type, f_enc = guess_type(str(self.path))
             if "x-tex-pk" not in f_type:
                 raise FileExistsError("File is not a pickle file.")
@@ -102,6 +106,7 @@ class task_pickle:
     def args_complete(self):
         arg_d = self.task_dict["args"]
         input_d = arg_d["input_dir"]
+        paired = True if str(arg_d["paired"]).lower() == "yes" else False
         for k, v in arg_d.items():
             if k == "input_dir":
                 try:
@@ -110,13 +115,15 @@ class task_pickle:
                     return False
                 if not p.exists():
                     return False
+                if not p.is_dir():
+                    return False
             elif k == "forward_file":
                 p = Path(input_d)/str(v)
                 if not p.exists():
                     return False
             elif k == "reverse_file":
                 p = Path(input_d)/str(v)
-                if not p.exists():
+                if paired and not p.is_file():
                     return False
             elif k == "paired":
                 if v not in ["Yes", "No"]:
@@ -132,3 +139,18 @@ class task_pickle:
             else:  # Existence of any other arguments
                 return False
         return True
+
+    def __bool__(self):
+        if not Path(self.path).is_file():
+            return False
+        elif not self.check_args_dict():
+            return False
+        elif not self.check_status_dict():
+            return False
+        return True
+
+    def __repr__(self):
+        return str(self.path)
+
+    def __str__(self):
+        return self.__repr__()
