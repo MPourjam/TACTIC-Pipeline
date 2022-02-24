@@ -1,8 +1,10 @@
-from os import chdir, system, mkdir, listdir, makedirs
+from os import (chdir, system, mkdir, listdir,
+                makedirs, path, stat, getcwd,
+                )
 from statistics import stdev, mean
+from task_classes import task_pickle
 from re import search
 import mimetypes as mtypes
-import os
 import re
 import random
 import shutil
@@ -29,32 +31,38 @@ krona_importtext = "/cfm/binaries/Krona/KronaTools/scripts/ImportText.pl"
 
 
 def calc_spikes(*fastq_files, spike_amount):
+    '''
+    fastq_files must not be gzipped or zippped.
+    '''
+    print("fastq_names")
     fastq_names = [f for f in fastq_files if bool(f)]
-    fastqs_abs_paths = [os.path.abspath(os.path.join(os.getcwd(), f)) for f in fastq_names]
+    fastqs_abs_paths = [path.abspath(path.join(getcwd(), f)) for f in fastq_names]
 
     if str(spike_amount) == "0":
-        line_count = 0
-        for f in fastqs_abs_paths:
-            with open(f, 'r') as fqfile:
-                for _ in fqfile:
-                    line_count += 1
+        f = fastqs_abs_paths[0]
+        with open(f, 'r') as fqfile:
+            line_count = 0
+            line = fqfile.readline()
+            while line:
+                line_count += 1
+                line = fqfile.readline()
         line_count = line_count // 4  # (total number of reads, spike reads)
         return line_count, 0  # non_spike_reads spike_reads
     else:
         spike_amount = float("{}e-9".format(spike_amount))  # ng to g
         name_regx = r"[a-zA-Z0-9\-]+"
-        spike_res_dir = os.path.split(fastqs_abs_paths[0])[0] + "/spike_result/"
+        spike_res_dir = path.split(fastqs_abs_paths[0])[0] + "/spike_result/"
         makedirs(spike_res_dir, mode=777, exist_ok=True)
-        _, forw_name = os.path.split(fastqs_abs_paths[0])
+        _, forw_name = path.split(fastqs_abs_paths[0])
         fastq_aligned = forw_name[search(name_regx, forw_name).start():search(name_regx, forw_name).end()]
-        fastq_aligned = os.path.join(spike_res_dir, fastq_aligned)
+        fastq_aligned = path.join(spike_res_dir, fastq_aligned)
         fastq_unaligned = fastq_aligned + "_unal"
 
         if len(fastq_names) == 2:
             cmd = [bowtie2, "-x", spikeidx, "-1", fastqs_abs_paths[0], "-2",
                    fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
                    fastq_unaligned, USEARCH_TAIL]
-            os.system(" ".join(cmd))
+            system(" ".join(cmd))
             spike_counter = 0
             for fi in [fastq_aligned + ".1", fastq_aligned + ".2"]:
                 with open(fi, 'r') as fastq_al:
@@ -68,10 +76,10 @@ def calc_spikes(*fastq_files, spike_amount):
         elif len(fastq_names) == 1:
             cmd = [bowtie2, "-x", spikeidx, "-U", fastqs_abs_paths[0], "--al-conc",
                    fastq_aligned, "--un-conc", fastq_unaligned, USEARCH_TAIL]
-            os.system(" ".join(cmd))
+            system(" ".join(cmd))
             files_inspike = listdir(spike_res_dir)
             spike_counter = 0
-            for fi in [f for f in files_inspike if search(fastq_aligned, os.path.abspath(f))]:
+            for fi in [f for f in files_inspike if search(fastq_aligned, path.abspath(f))]:
                 with open(fi, 'r') as fastq_al:
                     for _ in fastq_al:
                         spike_counter += 1
@@ -87,7 +95,10 @@ def calc_spikes(*fastq_files, spike_amount):
 
 
 def gzip_to_fastq(*files):
-    file_path = [os.path.abspath(f) for f in files]
+    file_path = [path.abspath(f) for f in files if f]
+    file_path = [f for f in file_path if path.isfile(f)]
+    if len(files) != len(file_path):
+        raise TypeError("Some given arguments are not files.")
     fastq_paths = []
     for f in file_path:
         app, typ = mtypes.guess_type(f)
@@ -97,7 +108,7 @@ def gzip_to_fastq(*files):
             fastq_paths.append(asciifile)
             system("rm -r {}".format(f))
         elif 'zip' in str(app):  # For zipped files
-            pass
+            fastq_paths.append(f)
             # asciifile = f.replace(".zip", "")
             # system("unzip {} -d {}".format(f, asciifile))
         else:
@@ -107,7 +118,7 @@ def gzip_to_fastq(*files):
                 fastq_paths.append(f)
     if len(file_path) != len(fastq_paths):
         raise TypeError("Some files could not get converted or were not in ascii format!")
-    fastq_paths = [os.path.basename(f) for f in fastq_paths]
+    # returns absolute paths
     return fastq_paths
 
 
@@ -133,7 +144,7 @@ def seqFileStats(seqFileName):
             line = fastqfile.readline()[:-1]
     len_mean = mean(random_length)
     len_stdev = int(stdev(random_length))
-    return(len_mean, len_stdev)
+    return (len_mean, len_stdev)
 
 
 def read_file(filename):
@@ -147,49 +158,20 @@ def unzip():
     system('unzip upload.zip')
 
 
-def only_keep_dataset_fastqs(*args):
-    mkdir('uploadedfastqs')
-    system('mv upload.zip ./uploadedfastqs/')
-    chdir("./uploadedfastqs/")
-    unzip()
-    fastqs = glob.glob('*')
-    lose = []
-    for i, fq in enumerate(fastqs):
-        if fq not in list(args):
-            lose.append(fq)
-    system('rm -rf {}'.format(" ".join(lose)))
-    system('zip upload.zip *')
-    system('mv upload.zip ../upload.zip')
-    chdir("../")
-    system('rm -rf uploadedfastqs')
-    unzip()
-
-
 def clean_FastQC(input_file, reverse_file=False):
-    part_F = ".".join(input_file.split('/')[-1].split('.')[:-1])
-    output = part_F + '_fastqc'
-    cmd_0 = 'unzip ' + output + '.zip > /dev/null 2>&1'
-    cmd_1 = 'mv ' + output + '/Images/per_base_quality.png ../R1-per_base_quality.png'
-    cmd_2 = 'rm -r ' + output + '.zip ' + output + '.html'
-    try:
-        system(cmd_0)
-        system(cmd_1)
-        system(cmd_2)
-    except BaseException:
-        pass
-
-    if reverse_file:
-        part_R = ".".join(reverse_file.split('/')[-1].split('.')[:-1])
-        output = part_R + '_fastqc'
-        cmd_0 = 'unzip ' + output + '.zip > /dev/null 2>&1'
-        cmd_1 = 'mv ' + output + '/Images/per_base_quality.png ../R2-per_base_quality.png'
-        cmd_2 = 'rm -r ' + output + '.zip ' + output + '.html'
+    zips = sorted(glob.glob('*.zip'))
+    for i, zipf in enumerate(zips):
+        dir_name = zipf.replace(".zip", "")
+        cmd_0 = 'unzip {} > /dev/null 2>&1'.format(zipf)
+        cmd_1 = 'mv ' + dir_name + '/Images/per_base_quality.png ../R{}-per_base_quality.png'.format(i + 1)
+        cmd_2 = 'rm -r {} {} {} > /dev/null 2>&1'.format(dir_name, "*.html", zipf)
         try:
             system(cmd_0)
             system(cmd_1)
             system(cmd_2)
         except BaseException:
             pass
+    system("cd ../ && rm -r fastqc_output")
 
 
 def mymkdir(input_dir):
@@ -203,6 +185,7 @@ def merge_pairs(forward_file, reverse_file):
     cmd_0 = USEARCH_11_bin + " -fastq_mergepairs " + forward_file + ' -reverse ' + reverse_file + ' -fastq_maxdiffs 50'
     cmd_1 = " -fastq_pctid 20 -fastqout merged.fasta -fastq_trunctail 20"
     cmd_2 = " -fastq_minmergelen 200 -fastq_maxmergelen 600 >/dev/null 2>/dev/null"
+    # print(cmd_0 + cmd_1 + cmd_2)
     system(cmd_0 + cmd_1 + cmd_2)
 
 
@@ -439,7 +422,7 @@ def cleanup(input_id):
     deleted_files += ' derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
     deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab'
     deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
-    deleted_files += '*.fastq'
+    deleted_files += ' *.fastq'
     deleted_dirs = ' -r kvdb out idx'
     system('rm ' + deleted_files + " 2> /dev/null")
     system('rm ' + deleted_dirs + " 2> /dev/null")
@@ -466,9 +449,9 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
     wirte = path to write the new alignment header with start and end of each sequence
     or not, Default won't write anything and just return the tuple of (start_mode, end_mode)
     '''
-    if os.path.isfile(os.path.abspath(fasta_file)):
-        filedir, filepath = os.path.split(os.path.abspath(fasta_file))
-        os.chdir(filedir)
+    if path.isfile(path.abspath(fasta_file)):
+        filedir, filepath = path.split(path.abspath(fasta_file))
+        chdir(filedir)
     else:
         raise FileNotFoundError("Fasta file not found!")
     try:
@@ -479,9 +462,9 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
     # Handling output
     if bool(write):
         try:
-            outdir, outpath = os.path.split(os.path.abspath(write))
+            outdir, outpath = path.split(path.abspath(write))
             if outdir != filedir:
-                print(f"Writing output to {os.path.abspath(write)}")
+                print(f"Writing output to {path.abspath(write)}")
             else:
                 if outpath == filepath:
                     msg = '''Writing output to the same file!!
@@ -542,8 +525,8 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
 
     # Adding start and end position to the end of file
     if write:
-        print(f"Writing output to {os.path.abspath(write)}")
-        with open(os.path.abspath(write), "w+") as silvout_st_en:
+        print(f"Writing output to {path.abspath(write)}")
+        with open(path.abspath(write), "w+") as silvout_st_en:
             for i, idx in enumerate(zotu_names_idx):  # + 1 because user finds the bp 1-based
                 if i in range(max_seq):
                     start_end = " " + ":".join([str(se + 1) if isinstance(se, int)
@@ -561,12 +544,45 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
     return start_mode, end_mode
 
 
+def update_task_pko(status, msg):
+    '''
+    It takes a run status and a message and updates the task_pickle of
+    current process.
+    status would be ["Started", "Progress", "Error", "Done"]
+    '''
+    files = glob.rglob("./*.pk")
+    files = [path.abspath(fi) for fi in files]
+    for fi in files:
+        try:
+            pko = task_pickle(fi)
+        except Exception:
+            files.remove(fi)
+    latest_pks = sorted([(fi, stat(fi)) for fi in files], key=lambda x: x[1].st_ctime)
+    latest_pk = task_pickle(latest_pks[0][0]) if latest_pks else ''
+    print(msg)
+    if latest_pk and path.isfile(latest_pk):
+        st_code = latest_pk.scode_d.get(status)
+        latest_pk.task_dict["status"]["run"] = st_code
+        latest_pk.task_dict["status"]["msg"] = msg
+        latest_pk.write()
+
+
+class Filehanlder_pk(logging.FileHandler):
+    '''
+    Regular file handler with option to update pk file
+    '''
+    def emit(self, record):
+        print(record.msg)
+        super().emit(record)
+        update_task_pko("Progress", record.msg)
+
+
 def gimmelogger(name, dir_path):
-    dir_path = os.path.abspath(dir_path)
+    dir_path = path.abspath(dir_path)
     log = logging.getLogger(str(name))
     log.setLevel(logging.DEBUG)
-    log_file = os.path.join(dir_path, "{}_logs.txt".format(str(name)))
-    FH = logging.FileHandler(log_file)
+    log_file = path.join(dir_path, "{}_logs.txt".format(str(name)))
+    FH = Filehanlder_pk(log_file)
     FH.setLevel(logging.INFO)
     log.addHandler(FH)
     SH = logging.StreamHandler(sys.stdout)
@@ -575,18 +591,32 @@ def gimmelogger(name, dir_path):
     return log
 
 
+def write_reads_report(input_id, **kwargs):
+    initial_report = "{}\n".format(str(input_id))
+    for i, v in enumerate(kwargs.items()):
+        k_v = "{}:{}".format(v[0], v[1])
+        initial_report += k_v
+        if i != len(kwargs) - 1:
+            initial_report += "\t"
+    with open('reads_report.txt', 'w+') as read_rep:
+        read_rep.write(initial_report + "\n")
+    return initial_report
+
+
 def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spike_amount=0):
     log = gimmelogger(input_id, input_dir)
     try:
+        print(input_dir)
         chdir(input_dir)
-        # only_keep_dataset_fastqs(forward_file, reverse_file)
+        # Grabbing the task_pickle for update
         forward_file, reverse_file = gzip_to_fastq(forward_file, reverse_file)
+        forward_file, reverse_file = path.basename(forward_file), path.basename(reverse_file)
         log.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*[forward_file, reverse_file], spike_amount=spike_amount)
-        log.debug("Actual_reads:{}\tSpike_reads:{}\n".format(real_reads_c, spike_reads_c))
+        log.debug("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         log.info('fastQC DONE')
-        chdir(input_dir)
+        # chdir(input_dir)
         system("rm -r fastqc_output")
         if reverse_file:
             merge_pairs(forward_file, reverse_file)
@@ -601,6 +631,10 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
             filter_merged_one_side(forward_file)
             log.info('Filter one DONE')
         dereped_read_n = dereplicate_seqs()
+        read_report = write_reads_report(input_id, Actual_reads=real_reads_c,
+                                         Spike_reads=spike_reads_c,
+                                         Dereplicated_reads=dereped_read_n)
+        log.debug(read_report)
         log.info('Dereplication DONE')
         sort_seqs()
         log.info('Sorting DONE')
@@ -622,7 +656,6 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         add_taxonomy_to_fasta()
         addKrona(krona_importtext)
         log.info("Krona graph added.")
-        # TODO Add the processing_stats
         system('Rscript /crc/crc/crcapp/jobs/processing_stats.R >/dev/null 2>/dev/null')
         log.info('Relabing DONE')
         # udb for both similarity queries
@@ -630,15 +663,20 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         log.info('UDB created')
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
-        with open("report.txt", 'w+') as report:
-            to_w = "Start_mode\tEnd_mode\tActual_Raw_reads\tSpike_reads\tDereplicated_reads"
-            to_w += "\n{}\t{}\t{}\t{}\t{}\n".format(start_mode, end_mode, real_reads_c, spike_reads_c, dereped_read_n)
-            log.info(to_w)
-            report.write(to_w)
         cleanup(input_id)
         log.info("Cleaned up: {}".format(input_id))
         create_zip(input_id)
         log.info("Zipped!")
         system("rm {}_logs.txt".format(input_id))
-    except BaseException:
+    except BaseException as e:
+        update_task_pko("Error", str(e))
         raise ValueError
+    else:
+        up_dir, _ = path.split(path.abspath(input_dir))
+        zip_file = path.join(up_dir, '{}_processed.zip'.format(str(input_id)))
+        status_code = "Done"
+        status_msg = ""
+        if not path.isfile(zip_file):
+            status_code = "Error"
+            status_msg = "Process Failed!"
+        update_task_pko(status_code, status_msg)

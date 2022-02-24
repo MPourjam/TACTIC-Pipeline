@@ -11,6 +11,7 @@ from task_classes import task_pickle
 from multiprocessing import cpu_count
 from task_caller import main as process_multi
 from multiprocessing.pool import ThreadPool
+from processing_job import gzip_to_fastq
 
 max_pool = int(cpu_count() * 0.4)
 pool_size = max_pool if max_pool > 0 else 1
@@ -94,6 +95,14 @@ def proper_pkarg_o(task_pk_path):
         r_path = ""
     if r_path:
         fastqs_files.append(r_path)
+    # Checking if the file can get opened
+    for fi_path in fastqs_files:
+        if fi_path:
+            try:
+                fi_cont = open(fi_path)
+                fi_cont.close()
+            except Exception:
+                return False
     # Demultiplexing
     if len(fastqs_files) == 1 and paired:
         # TODO demultiplexing
@@ -120,6 +129,20 @@ def proper_pkarg_o(task_pk_path):
     return pkfo
 
 
+def decompress(task_pko):
+    dir_path = Path(task_pko.task_dict["args"]["input_dir"])
+    f_path = dir_path.joinpath(task_pko.task_dict["args"]["forward_file"])
+    f_path = gzip_to_fastq(f_path) if f_path else ""
+    f_path = Path(f_path[0]).name if f_path else ""
+    r_path = dir_path.joinpath(task_pko.task_dict["args"]["reverse_file"])
+    r_path = gzip_to_fastq(r_path) if r_path else ""
+    r_path = Path(r_path[0]).name if r_path else ""
+    task_pko.task_dict["args"]["forward_file"] = f_path
+    task_pko.task_dict["args"]["reverse_file"] = r_path
+    task_pko.write()
+    return task_pko
+
+
 def preparation_main(dir_path, res_pk=False):
     '''
     if res_pk is false then it returns a lis containing the paths to
@@ -135,6 +158,7 @@ def preparation_main(dir_path, res_pk=False):
     with ThreadPool(pool_size) as pool:
             pks_list = list(pks)
             pfiles_res_list = pool.map(proper_pkarg_o, pks_list)
+            print(pfiles_res_list)
             ppks_list = []
             err_pks = []
             for pk_path, pk_o in zip(pks_list, pfiles_res_list):
@@ -143,6 +167,8 @@ def preparation_main(dir_path, res_pk=False):
                     continue
                 ppks_list.append(pk_o)
             ppks_forw_files = []
+            # TODO Check if waits for the resutls
+            ppks_list = pool.map(decompress, ppks_list)
             for pk_o in ppks_list:
                 dir_path = Path(pk_o.task_dict["args"]["input_dir"])
                 f_path = dir_path.joinpath(pk_o.task_dict["args"]["forward_file"])
