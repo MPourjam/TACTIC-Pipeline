@@ -53,6 +53,7 @@ def main(pickle_files_path=None):
             except Exception:
                 msg = "{} is not formatted corrected. Skipped!".format(pk_path)
                 print(msg)
+        os.remove(pickle_files_path)
         p_list = []
         for argset in process_args_list:
             report_path = os.path.join(argset['input_dir'], "report.txt")

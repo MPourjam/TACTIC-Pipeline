@@ -99,7 +99,7 @@ def download_fastq(inputdata):
         pk_obj.write()
         for fi in fastq_files_path:
             abs_dir_path = Path(pk_obj.task_dict["args"]["input_dir"])
-            remove(str(abs_dir_path.join(fi)))
+            remove(str(abs_dir_path.joinpath(fi)))
         return '[ERROR] {}'.format(codename)
     return '[OK] {}'.format(codename)
 
