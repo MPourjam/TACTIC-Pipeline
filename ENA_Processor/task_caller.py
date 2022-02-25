@@ -59,7 +59,6 @@ def main(pickle_files_path=None):
             report_path = os.path.join(argset['input_dir'], "report.txt")
             if not os.path.isfile(report_path):
                 p_list.append(tuple(argset.values()))
-        print(p_list)
         with Pool(pool_size, maxtasksperchild=1) as pool:
             le = len(p_list)
             m = le // batch_size
