@@ -1,6 +1,7 @@
 from os import (chdir, system, mkdir, listdir,
-                makedirs, path, stat, getcwd,
+                makedirs, path, stat,
                 )
+from os import getcwd
 from statistics import stdev, mean
 from task_classes import task_pickle
 from re import search
@@ -34,10 +35,9 @@ def calc_spikes(*fastq_files, spike_amount):
     '''
     fastq_files must not be gzipped or zippped.
     '''
-    print("fastq_names")
+    cur_dir = getcwd()
     fastq_names = [f for f in fastq_files if bool(f)]
-    fastqs_abs_paths = [path.abspath(path.join(getcwd(), f)) for f in fastq_names]
-
+    fastqs_abs_paths = [path.abspath(path.join(cur_dir, f)) for f in fastq_names]
     if str(spike_amount) == "0":
         f = fastqs_abs_paths[0]
         with open(f, 'r') as fqfile:
@@ -102,12 +102,15 @@ def gzip_to_fastq(*files):
     fastq_paths = []
     for f in file_path:
         app, typ = mtypes.guess_type(f)
+        file_dir, file_name = path.split(f)
+        asciifile_name = str(file_name.split(".")[0]) + ".fastq"
+        asciifile = path.join(file_dir, asciifile_name)
         if 'zip' in str(typ):
-            asciifile = f.replace(".gz", "")
             system("gunzip --stdout {} > {}".format(f, asciifile))
             fastq_paths.append(asciifile)
             system("rm -r {}".format(f))
         elif 'zip' in str(app):  # For zipped files
+            # TODO
             fastq_paths.append(f)
             # asciifile = f.replace(".zip", "")
             # system("unzip {} -d {}".format(f, asciifile))
@@ -550,7 +553,7 @@ def update_task_pko(status, msg):
     current process.
     status would be ["Started", "Progress", "Error", "Done"]
     '''
-    files = glob.rglob("./*.pk")
+    files = glob.glob("./*.pk")
     files = [path.abspath(fi) for fi in files]
     for fi in files:
         try:
@@ -559,9 +562,8 @@ def update_task_pko(status, msg):
             files.remove(fi)
     latest_pks = sorted([(fi, stat(fi)) for fi in files], key=lambda x: x[1].st_ctime)
     latest_pk = task_pickle(latest_pks[0][0]) if latest_pks else ''
-    print(msg)
-    if latest_pk and path.isfile(latest_pk):
-        st_code = latest_pk.scode_d.get(status)
+    if bool(latest_pk):
+        st_code = latest_pk.scode_d.get(status, "")
         latest_pk.task_dict["status"]["run"] = st_code
         latest_pk.task_dict["status"]["msg"] = msg
         latest_pk.write()
@@ -572,7 +574,6 @@ class Filehanlder_pk(logging.FileHandler):
     Regular file handler with option to update pk file
     '''
     def emit(self, record):
-        print(record.msg)
         super().emit(record)
         update_task_pko("Progress", record.msg)
 
@@ -606,13 +607,17 @@ def write_reads_report(input_id, **kwargs):
 def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spike_amount=0):
     log = gimmelogger(input_id, input_dir)
     try:
-        print(input_dir)
         chdir(input_dir)
         # Grabbing the task_pickle for update
-        forward_file, reverse_file = gzip_to_fastq(forward_file, reverse_file)
-        forward_file, reverse_file = path.basename(forward_file), path.basename(reverse_file)
+        f_path = path.join(input_dir, forward_file) if forward_file else ""
+        r_path = path.join(input_dir, reverse_file) if reverse_file else ""
+        files_paths = [f_path, r_path]
+        files_names = [path.basename(gzip_to_fastq(fi)[0]) for fi in files_paths if path.isfile(fi)]
+        if len(files_names) == 1:
+            files_names.append("")
+        forward_file, reverse_file = files_names
         log.info("Spike removal started.")
-        real_reads_c, spike_reads_c = calc_spikes(*[forward_file, reverse_file], spike_amount=spike_amount)
+        real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=spike_amount)
         log.debug("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         log.info('fastQC DONE')

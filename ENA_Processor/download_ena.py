@@ -2,7 +2,7 @@
 import argparse
 from sys import version_info
 import pandas as pd
-from multiprocessing.pool import ThreadPool
+from multiprocessing.pool import Pool
 from tqdm import tqdm  # pip3 install tqdm
 from hashlib import md5
 from itertools import repeat
@@ -177,7 +177,7 @@ def download_main(metadata_file,
                  }
         concat_frames = pd.read_csv(**arg_d)
         genome = []
-        with ThreadPool(threads) as p:
+        with Pool(threads) as p:
             multipleargs = list(zip(concat_frames.iterrows(),
                                     repeat(outputpath)))
             tqdm_desc = 'Downloading Genomes using {} threads'.format(threads)
