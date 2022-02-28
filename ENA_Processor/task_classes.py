@@ -108,6 +108,7 @@ class task_pickle:
         arg_d = self.task_dict["args"]
         input_d = arg_d["input_dir"]
         paired = True if str(arg_d["paired"]).lower() == "yes" else False
+        is_running = True if self.task_dict["status"]["run"] in [0, 2, 3] else False
         for k, v in arg_d.items():
             if k == "input_dir":
                 try:
@@ -120,11 +121,13 @@ class task_pickle:
                     return False
             elif k == "forward_file":
                 p = Path(input_d)/str(v)
-                if not p.exists():
+                # This is for when the processing is close to finish and fastqs are deleted.
+                if not p.is_file() and not is_running:
                     return False
             elif k == "reverse_file":
                 p = Path(input_d)/str(v)
-                if paired and not p.is_file():
+                # This is for when the processing is close to finish and fastqs are deleted.
+                if paired and not p.is_file() and not is_running:
                     return False
             elif k == "paired":
                 if v not in ["Yes", "No"]:

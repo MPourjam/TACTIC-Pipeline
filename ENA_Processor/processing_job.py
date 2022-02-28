@@ -1,7 +1,6 @@
 from os import (chdir, system, mkdir, listdir,
-                makedirs, path, stat,
+                makedirs, path, stat, getcwd
                 )
-from os import getcwd
 from statistics import stdev, mean
 from task_classes import task_pickle
 from re import search
@@ -29,6 +28,7 @@ USEARCH_TAIL = '> /dev/null 2>&1'
 bowtie2 = "/cfm/binaries/bowtie2/bowtie2"
 spikeidx = "/cfm/binaries/bowtie2/spikesidx/spike"
 krona_importtext = "/cfm/binaries/Krona/KronaTools/scripts/ImportText.pl"
+R_processing_stat = "/cfm/ENA_Processor/processing_stats.R"
 
 
 def calc_spikes(*fastq_files, spike_amount):
@@ -547,13 +547,16 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
     return start_mode, end_mode
 
 
-def update_task_pko(status, msg):
+def update_task_pko(status, msg, pk_dir=None):
     '''
     It takes a run status and a message and updates the task_pickle of
     current process.
     status would be ["Started", "Progress", "Error", "Done"]
     '''
-    files = glob.glob("./*.pk")
+    if not pk_dir:
+        pk_dir = getcwd()
+        pk_dir = path.abspath(pk_dir)
+    files = glob.glob("{}/*.pk".format(pk_dir))
     files = [path.abspath(fi) for fi in files]
     for fi in files:
         try:
@@ -567,6 +570,7 @@ def update_task_pko(status, msg):
         latest_pk.task_dict["status"]["run"] = st_code
         latest_pk.task_dict["status"]["msg"] = msg
         latest_pk.write()
+    return True
 
 
 class Filehanlder_pk(logging.FileHandler):
@@ -620,9 +624,8 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=spike_amount)
         log.debug("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
+        chdir(input_dir)  # This is crucial to be here
         log.info('fastQC DONE')
-        # chdir(input_dir)
-        system("rm -r fastqc_output")
         if reverse_file:
             merge_pairs(forward_file, reverse_file)
             log.info('Merging Pairs DONE')
@@ -646,7 +649,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         clusterZOTUs()
         log.info('Cluster ZOTUs DONE')
         filter16S()
-        log.info('Filtering our non 16S ZOTUs')
+        log.info('Filtering out non 16S ZOTUs')
         prepare_zotus()
         log.info('Prepared Zotus Done')
         build_ZOTU_table()
@@ -661,7 +664,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         add_taxonomy_to_fasta()
         addKrona(krona_importtext)
         log.info("Krona graph added.")
-        system('Rscript /crc/crc/crcapp/jobs/processing_stats.R >/dev/null 2>/dev/null')
+        system('Rscript {} >/dev/null 2>/dev/null'.format(R_processing_stat))
         log.info('Relabing DONE')
         # udb for both similarity queries
         create_udb(input_id)
@@ -677,6 +680,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         update_task_pko("Error", str(e))
         raise ValueError
     else:
+        chdir(input_dir)
         up_dir, _ = path.split(path.abspath(input_dir))
         zip_file = path.join(up_dir, '{}_processed.zip'.format(str(input_id)))
         status_code = "Done"
