@@ -22,7 +22,6 @@ def proper_length(forw_fastqfile):
     n_first_seqs = 10000
     assess_coeff = 0.5
     min_len = 150
-    max_len_std = 1
     sample_range = round(assess_coeff * n_first_seqs)
     to_assess = random.sample(range(1, n_first_seqs), sample_range)
     file_path = Path(forw_fastqfile)
@@ -43,7 +42,9 @@ def proper_length(forw_fastqfile):
             line = fastqfile.readline()[:-1]
     len_mean = mean(random_length)
     len_stdev = int(stdev(random_length))
-    if len_mean < min_len and len_stdev > max_len_std:
+    # Upper Bound of length mean of min_len, It's not possible to have varying lenght but only to get assured.
+    len_limit = min_len + int(2.33 * len_stdev)
+    if len_mean < len_limit:
         return False
     else:
         return True
@@ -65,7 +66,8 @@ def proper_pkarg_o(task_pk_path):
         return False
     dir_path = Path(pkfo.task_dict["args"]["input_dir"])
     down_status = pkfo.task_dict["status"]["download"]
-    if pkfo.task_dict["status"]["download"] != pkfo.scode_d["Done"]:
+    run_status = pkfo.task_dict["status"]["run"]
+    if down_status != pkfo.scode_d["Done"]:
         print("Download not finished: {}".format(dir_path))
         return False
     if not dir_path.is_dir():
@@ -81,25 +83,23 @@ def proper_pkarg_o(task_pk_path):
     # Checking existence of forward file
     if not f_path.is_file():
         pkfo.task_dict["args"]["forward_file"] = ""
-        pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
-        pkfo.task_dict["status"]["msg"] = "Forward file does not exist."
-        pkfo.write()
+        pkfo.task_dict["status"]["download"] = pkfo.scode_d["Queue"]
         print("File does not exit: {}".format(f_path))
-        return False
     fastqs_files.append(f_path)
     # Checking existence of reverse file
     paired = True if "yes" in str(pkfo.task_dict["args"]["paired"]).lower() else False
     if paired and not r_path.is_file():
-        pkfo.task_dict["status"]["download"] = pkfo.scode_d["Error"]
-        pkfo.task_dict["status"]["msg"] = "Reverse file does not exist."
-        pkfo.write()
+        pkfo.task_dict["status"]["download"] = pkfo.scode_d["Queue"]
         print("File does not exit: {}".format(r_path))
-        return False
     elif not paired:
         pkfo.task_dict["args"]["reverse_file"] = ""
         r_path = ""
     if r_path:
         fastqs_files.append(r_path)
+    if not fastqs_files:
+        pkfo.task_dict["status"]["msg"] = "No fastq file(s)"
+        pkfo.write()
+        return False
     # Checking if the file can get opened
     for fi_path in fastqs_files:
         if fi_path:
@@ -120,11 +120,14 @@ def proper_pkarg_o(task_pk_path):
         print("Demultiplexing needed for: {}".format(fastq_file))
         return False
         # Get the updated fastq files names
+    # Excluding finished and failed samples from process list. Keeping the status unchanged
+    if run_status in [pkfo.scode_d["Done"], pkfo.scode_d["Error"]]:
+        return False
     # TODO Checking if the forward and reverse file are correctly assigned.
     pkfo.task_dict["args"]["forward_file"] = f_path.name if f_path else ""
     pkfo.task_dict["args"]["reverse_file"] = r_path.name if r_path else ""
     if not pkfo.args_complete():
-        pkfo.task_dict["status"]["run"] = pkfo.scode_d["Error"]
+        pkfo.task_dict["status"]["run"] = pkfo.scode_d["Queue"]
         pkfo.task_dict["status"]["msg"] = "Argument(s) missing."
         pkfo.write()
         print("Incomplete argument(s) for {}".format(pkfo))
@@ -188,6 +191,9 @@ def preparation_main(dir_path, res_pk=False):
                 for i in range(0, len(plen_res_list)):
                     pk_o = ppks_list[i]
                     if not plen_res_list[i]:
+                        pk_o.task_dict["status"]["run"] = pk_o.scode_d["Error"]
+                        pk_o.task_dict["status"]["msg"] = "Imroper Sequence Length"
+                        pk_o.write()
                         err_pks.append(pk_o.path)
                         continue
                     final_ppks.append(pk_o.path)
@@ -217,9 +223,17 @@ if __name__ == "__main__":
         process_multi(pickle_files_path)
     else:
         pickle_files_path, err_pks = preparation_main(fastqs_dir)
+        done_pkos = []
+        for err_pk in err_pks:
+            pko = task_pickle(err_pk)
+            if pko.task_dict["status"]["run"] == pko.scode_d["Done"]:
+                done_pkos.append(err_pk)
+                err_pks.remove(err_pk)
         good_pks = "\t" + "\n\t".join(pickle_files_path)
-        inproper_pks = "\t" + "\n\t".join(err_pks)
+        done_pks = "\t" + "\n\t".join(done_pkos)
+        improper_pks = "\t" + "\n\t".join(err_pks)
         msg_prop = "Proper Task Pickles:\n{}".format(good_pks)
-        msg_inprop = "Inproper Task Pickles:\n{}".format(inproper_pks)
-        msg = str(msg_prop) + "\n" + str(msg_inprop)
+        msg_done = "Finished Task Pickles:\n{}".format(done_pks)
+        msg_inprop = "Improper Task Pickles:\n{}".format(improper_pks)
+        msg = str(msg_prop) + "\n" + str(msg_done) + "\n" + str(msg_inprop)
         print(msg)
