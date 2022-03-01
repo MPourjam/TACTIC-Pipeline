@@ -63,8 +63,15 @@ def download_fastq(inputdata):
     pk_obj.write()
     listmd5 = []
     fastq_files_path = []
+    if pk_obj.task_dict["status"]["run"] == pk_obj.scode_d["Done"]:
+        print("{} is Done.".format(pk_obj))
+        pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Queue"]
+        pk_obj.write()
+        return '[OK] {}'.format(codename)
     for pair, md5pair in zip(fastq_ftps.split(';'),
                              fastq_md5s.split(';')):
+        pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Started"]
+        pk_obj.write()
         outfile = outfile_dir.joinpath(pair.split('/')[-1])
         fastq_files_path.append(outfile.name)
         md5cheked = 0
@@ -86,6 +93,7 @@ def download_fastq(inputdata):
                 listmd5.append(int(md5sum(outfile) == md5pair))
     if all(listmd5):
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Done"]
+        pk_obj.task_dict["status"]["run"] = pk_obj.scode_d["Queue"]
         pk_obj.write()
         sorted_files = sorted(fastq_files_path)
         if len(sorted_files) == 1:
