@@ -64,7 +64,7 @@ def download_fastq(inputdata):
     listmd5 = []
     fastq_files_path = []
     if pk_obj.task_dict["status"]["run"] == pk_obj.scode_d["Done"]:
-        print("{} is done.".format(pk_obj.split("/")[-1]))
+        # print("{} is done.".format(pk_obj.path.split("/")[-1]))
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Queue"]
         pk_obj.write()
         return '[OK] {}'.format(codename)

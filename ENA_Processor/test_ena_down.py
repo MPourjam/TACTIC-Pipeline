@@ -14,8 +14,8 @@ act = {
        "down": 0,
        "prep": 0,
        "proc": 0,
-       "repo": 1,
-       "allp": 0,
+       "repo": 0,
+       "allp": 1,
        }
 
 if act["down"]:
@@ -76,5 +76,6 @@ if act["repo"]:
 if act["allp"]:
        fq_file = "/srv/cfm/outputs/ENA_out/PRJNA526458/410658/SAMN11100353/SRR8744172"
        fq_file += "/SRR8744172.pk"
-       # print(proper_length(fq_file))
-       print(proper_pkarg_o(fq_file))
+       pko = TaskPickle(fq_file)
+       # print(pko.check_args_dict())
+       print(TaskPickle.__dict__)

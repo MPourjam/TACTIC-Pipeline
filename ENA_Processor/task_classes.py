@@ -3,7 +3,6 @@ from os import getcwd
 from pathlib import Path
 from mimetypes import guess_type
 from datetime import datetime as dt
-from collections import OrderedDict as OD
 
 
 class TaskPickle:
@@ -28,19 +27,19 @@ class TaskPickle:
                "Error": -1
                }
     # TODO Create the args_dict according to args_keys
-    args_dict = OD({"input_dir": "",
-                    "paired": "",
-                    "forward_file": "",
-                    "reverse_file": "",
-                    "input_id": "",
-                    "spike_amount": 6
-                    })
+    args_dict = {"input_dir": "",
+                 "paired": "",
+                 "forward_file": "",
+                 "reverse_file": "",
+                 "input_id": "",
+                 "spike_amount": 6
+                 }
 
     def check_args_dict(self, args_d=None):
         args_dict = self.task_dict["args"] if not args_d else args_d
         if not isinstance(args_dict, dict):
             return False
-        keys = self.args_keys
+        keys = TaskPickle.args_keys
         has_key_list = [True for k in keys if k not in args_dict]
         if any(has_key_list):
             return False
@@ -50,7 +49,7 @@ class TaskPickle:
         status_dict = self.task_dict["status"] if not status_d else status_d
         if not isinstance(status_dict, dict):
             return False
-        keys = self.status_keys_ess
+        keys = TaskPickle.status_keys_ess
         has_key_list = [True for k in keys if k not in status_dict]
         if any(has_key_list):
             return False
@@ -59,17 +58,17 @@ class TaskPickle:
     def set_task_dict(self, task_d=None):
         task_dict = self.task_dict if not task_d else task_d
         if isinstance(task_dict, dict):
-            keys = self.task_keys
+            keys = TaskPickle.task_keys
             if any([True for k in keys if k not in task_dict]):
                 keys_txt = ", ".join(keys)
                 msg = "Task dict must have dictionaries: " + keys_txt
                 raise TypeError(msg)
             elif not self.check_args_dict(task_dict["args"]):
-                keys_txt = ", ".join(self.args_keys)
+                keys_txt = ", ".join(TaskPickle.args_keys)
                 msg = "Argument dictionary must have arguments: " + keys_txt
                 raise TypeError(msg)
             elif not self.check_status_dict(task_dict["status"]):
-                keys_txt = ", ".join(self.status_keys)
+                keys_txt = ", ".join(TaskPickle.status_keys)
                 msg = "Status dictionary must have keys: " + keys_txt
                 raise TypeError(msg)
         else:
@@ -79,14 +78,13 @@ class TaskPickle:
         return True
 
     def __init__(self, filepath=None, task_dict=None):
-        self.status_dict = {k: self.scode_d["Queue"] for k in self.status_keys_num}
-        for str_k in self.status_keys_str:
-            self.status_dict[str_k] = ""
-        self.task_dict = {"args": self.args_dict, "status": self.status_dict}
+        status_dict = {k: TaskPickle.scode_d["Queue"] for k in TaskPickle.status_keys_num}
+        for str_k in TaskPickle.status_keys_str:
+            status_dict[str_k] = ""
+        self.task_dict = {"args": TaskPickle.args_dict, "status": status_dict}
         timestamp = dt.now().strftime('%Y%m%d_%H%M%S')
-        path = Path(filepath) if filepath else Path(self.path)
-        if path.is_dir():
-            path = path.joinpath("{}_proc_task_d.pk".format(str(timestamp)))
+        file_placeholder = "{}_proc_task_d.pk".format(str(timestamp))
+        path = Path(filepath) if filepath else Path(getcwd()).joinpath(file_placeholder)
         self.path = str(path.resolve())
 
         if Path(self.path).exists():
@@ -160,9 +158,3 @@ class TaskPickle:
 
     def __str__(self):
         return self.__repr__()
-
-
-class db_feeder(TaskPickle):
-
-    def __init__(self, pk_path):
-        super().__init__()
