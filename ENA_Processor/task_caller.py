@@ -3,7 +3,7 @@ import os
 import re
 import pickle as pk
 from datetime import datetime as dt
-from task_classes import task_pickle
+from task_classes import TaskPickle
 from processing_job import main_processing
 from multiprocessing import cpu_count, Pool
 
@@ -16,7 +16,7 @@ def till_now(datetime_obj):
 def main(pickle_files_path=None):
     '''
     pickle_files_path is the path to a pickle file storing
-    a list of task_pickle paths ready to get preprocessed.
+    a list of TaskPickle paths ready to get preprocessed.
     '''
     max_pool = int(cpu_count() * 0.3)
     pool_size = max_pool if max_pool > 0 else 1
@@ -48,7 +48,7 @@ def main(pickle_files_path=None):
         process_args_list = []
         for pk_path in pk_path_list:
             try:
-                pk_o = task_pickle(pk_path)
+                pk_o = TaskPickle(pk_path)
                 process_args_list.append(pk_o.task_dict["args"])
             except Exception:
                 msg = "{} is not formatted corrected. Skipped!".format(pk_path)
