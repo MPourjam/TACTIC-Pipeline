@@ -6,7 +6,6 @@ from datetime import datetime as dt
 
 
 class TaskPickle:
-    path = getcwd()
     status_keys_num = ["download",
                        "run"]
     status_keys_str = ["msg"]
@@ -85,13 +84,13 @@ class TaskPickle:
         timestamp = dt.now().strftime('%Y%m%d_%H%M%S')
         file_placeholder = "{}_proc_task_d.pk".format(str(timestamp))
         path = Path(filepath) if filepath else Path(getcwd()).joinpath(file_placeholder)
-        self.path = str(path.resolve())
+        self.__path = str(path.resolve())
 
-        if Path(self.path).exists():
-            f_type, f_enc = guess_type(str(self.path))
+        if Path(self.__path).exists():
+            f_type, f_enc = guess_type(str(self.__path))
             if "x-tex-pk" not in f_type:
                 raise FileExistsError("File is not a pickle file.")
-            with open(self.path, "rb") as pkfile:
+            with open(self.__path, "rb") as pkfile:
                 file_content = pk.load(pkfile)
             self.set_task_dict(file_content)
 
@@ -99,7 +98,7 @@ class TaskPickle:
             self.set_task_dict(task_dict)
 
     def write(self):
-        with open(self.path, 'wb') as pkfile:
+        with open(self.__path, 'wb') as pkfile:
             pk.dump(self.task_dict, pkfile, protocol=pk.HIGHEST_PROTOCOL)
 
     def args_complete(self):
@@ -143,7 +142,7 @@ class TaskPickle:
         return True
 
     def __bool__(self):
-        if not Path(self.path).is_file():
+        if not Path(self.__path).is_file():
             return False
         elif not self.check_args_dict():
             return False
@@ -154,7 +153,11 @@ class TaskPickle:
         return True
 
     def __repr__(self):
-        return str(self.path)
+        return str(self.__path)
 
     def __str__(self):
         return self.__repr__()
+
+    @property
+    def path(self):
+        return str(self.__path)
