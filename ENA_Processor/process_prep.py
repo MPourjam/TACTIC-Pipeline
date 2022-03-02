@@ -7,7 +7,7 @@ import pickle as pk
 from pathlib import Path
 # from pprint import pprint as print
 from statistics import mean, stdev
-from task_classes import task_pickle
+from task_classes import TaskPickle
 from multiprocessing import cpu_count
 from task_caller import main as process_multi
 from multiprocessing.pool import Pool
@@ -52,29 +52,30 @@ def proper_length(forw_fastqfile):
 
 def proper_pkarg_o(task_pk_path):
     '''
-    It gets a the path to a task_pickle file (file of task_pickle obj)
+    It gets a the path to a TaskPickle file (file of TaskPickle obj)
     and checks the forward and reverse file. Then updated the pickle
     file of the dataset.
     '''
     task_path = Path(task_pk_path)
     if not task_path.is_file():
-        raise TypeError("Input should be path to a task_pickle object.")
+        raise TypeError("Input should be path to a TaskPickle object.")
     try:
-        pkfo = task_pickle(str(task_path))
+        pkfo = TaskPickle(str(task_path))
     except Exception as e:
         print(e)
         return False
     dir_path = Path(pkfo.task_dict["args"]["input_dir"])
     down_status = pkfo.task_dict["status"]["download"]
     run_status = pkfo.task_dict["status"]["run"]
-    if down_status != pkfo.scode_d["Done"]:
-        print("Download not finished: {}".format(dir_path))
-        return False
     # Excluding finished and failed samples from process list. Keeping the status unchanged
     if run_status == pkfo.scode_d["Done"]:
         pk_name = Path(pkfo.path).name
         print("Processed Successfully: {}".format(str(pk_name)))
         return False
+    if down_status != pkfo.scode_d["Done"]:
+        print("Download not finished: {}".format(dir_path.name))
+        return False
+    # Checking existence of the directory
     if not dir_path.is_dir():
         pkfo.task_dict["status"]["run"] = pkfo.scode_d["Error"]
         msg = "Input_dir should be path to a directory."
@@ -227,7 +228,7 @@ if __name__ == "__main__":
         pickle_files_path, err_pks = preparation_main(fastqs_dir)
         done_pkos = []
         for err_pk in err_pks:
-            pko = task_pickle(err_pk)
+            pko = TaskPickle(err_pk)
             if pko.task_dict["status"]["run"] == pko.scode_d["Done"]:
                 done_pkos.append(err_pk)
         for dpkos in done_pkos:

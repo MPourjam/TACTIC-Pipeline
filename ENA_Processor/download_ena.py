@@ -7,7 +7,7 @@ from tqdm import tqdm  # pip3 install tqdm
 from hashlib import md5
 from itertools import repeat
 from os import getcwd, cpu_count, remove
-from task_classes import task_pickle
+from task_classes import TaskPickle
 if version_info[0] < 3:
     from pathlib2 import Path  # pip2 install pathlib2
 else:
@@ -47,7 +47,7 @@ def download_fastq(inputdata):
     paired = "Yes" if row["library_layout"] == "PAIRED" else "No"
     pk_name = "{}.pk".format(row['run_accession'])
     pickle_file_path = outfile_dir.joinpath(pk_name)
-    pk_obj = task_pickle(pickle_file_path)
+    pk_obj = TaskPickle(pickle_file_path)
     # Creating the Args dictionary an storing it as pickle
     pk_obj.task_dict["args"]["input_dir"] = str(outfile_dir.resolve())
     pk_obj.task_dict["args"]["paired"] = paired
@@ -64,7 +64,7 @@ def download_fastq(inputdata):
     listmd5 = []
     fastq_files_path = []
     if pk_obj.task_dict["status"]["run"] == pk_obj.scode_d["Done"]:
-        print("{} is Done.".format(pk_obj))
+        print("{} is done.".format(pk_obj.split("/")[-1]))
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Queue"]
         pk_obj.write()
         return '[OK] {}'.format(codename)

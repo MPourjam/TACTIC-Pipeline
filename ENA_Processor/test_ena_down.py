@@ -2,7 +2,7 @@
 from download_ena import download_main
 from process_prep import preparation_main, proper_length, proper_pkarg_o
 from task_caller import main as main_caller
-from task_classes import task_pickle
+from task_classes import TaskPickle
 # from pprint import pprint as print
 from pathlib import Path
 from os import stat
@@ -29,7 +29,7 @@ if act["prep"]:
        ready_ms = ""
        other_ms = ""
        for ppk in ppks_path:
-              pko = task_pickle(ppk)
+              pko = TaskPickle(ppk)
               in_dir = pko.task_dict["args"]["input_dir"]
               forw_fi = pko.task_dict["args"]["forward_file"]
               run_st = pko.task_dict["status"]["run"]
@@ -37,7 +37,7 @@ if act["prep"]:
               pri_li = [str(el) for el in pri_li]
               ready_ms += "\t" + "\t".join(pri_li) + "\n"
        for err_p in err_ppks:
-              pko = task_pickle(err_p)
+              pko = TaskPickle(err_p)
               in_dir = pko.task_dict["args"]["input_dir"]
               msg = pko.task_dict["status"]["msg"]
               run_st = pko.task_dict["status"]["run"]
@@ -60,7 +60,7 @@ if act["proc"]:
 
 if act["repo"]:
        pks = Path(ena_out).rglob("./**/*.pk")
-       pkolist = [task_pickle(str(tpkf)) for tpkf in pks]
+       pkolist = [TaskPickle(str(tpkf)) for tpkf in pks]
        for pko in pkolist:
               in_dir = pko.task_dict["args"]["input_dir"]
               for_fi = pko.task_dict["args"]["forward_file"]

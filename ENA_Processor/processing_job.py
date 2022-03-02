@@ -2,7 +2,7 @@ from os import (chdir, system, mkdir, listdir,
                 makedirs, path, stat, getcwd
                 )
 from statistics import stdev, mean
-from task_classes import task_pickle
+from task_classes import TaskPickle
 from re import search
 import mimetypes as mtypes
 import re
@@ -549,7 +549,7 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
 
 def update_task_pko(status, msg, pk_dir=None):
     '''
-    It takes a run status and a message and updates the task_pickle of
+    It takes a run status and a message and updates the TaskPickle of
     current process.
     status would be ["Started", "Progress", "Error", "Done"]
     '''
@@ -560,11 +560,11 @@ def update_task_pko(status, msg, pk_dir=None):
     files = [path.abspath(fi) for fi in files]
     for fi in files:
         try:
-            pko = task_pickle(fi)
+            pko = TaskPickle(fi)
         except Exception:
             files.remove(fi)
     latest_pks = sorted([(fi, stat(fi)) for fi in files], key=lambda x: x[1].st_ctime)
-    latest_pk = task_pickle(latest_pks[0][0]) if latest_pks else ''
+    latest_pk = TaskPickle(latest_pks[0][0]) if latest_pks else ''
     if bool(latest_pk):
         st_code = latest_pk.scode_d.get(status, "")
         latest_pk.task_dict["status"]["run"] = st_code
@@ -612,7 +612,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
     log = gimmelogger(input_id, input_dir)
     try:
         chdir(input_dir)
-        # Grabbing the task_pickle for update
+        # Grabbing the TaskPickle for update
         f_path = path.join(input_dir, forward_file) if forward_file else ""
         r_path = path.join(input_dir, reverse_file) if reverse_file else ""
         files_paths = [f_path, r_path]

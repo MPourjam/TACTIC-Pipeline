@@ -6,7 +6,7 @@ from datetime import datetime as dt
 from collections import OrderedDict as OD
 
 
-class task_pickle:
+class TaskPickle:
     path = getcwd()
     status_keys_num = ["download",
                        "run"]
@@ -160,3 +160,9 @@ class task_pickle:
 
     def __str__(self):
         return self.__repr__()
+
+
+class db_feeder(TaskPickle):
+
+    def __init__(self, pk_path):
+        super().__init__()
