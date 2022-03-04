@@ -9,12 +9,12 @@ from os import stat
 
 met_file = "/srv/cfm/outputs/extracted_metadata.tab"
 ena_out = "/srv/cfm/outputs/ENA_out/"
-chunk_s = 15
+chunk_s = 10
 act = {
        "down": 0,
        "prep": 0,
        "proc": 0,
-       "repo": 0,
+       "repo": 1,
        "allp": 1,
        }
 
@@ -63,6 +63,8 @@ if act["repo"]:
        pkolist = [TaskPickle(str(tpkf)) for tpkf in pks]
        for pko in pkolist:
               in_dir = pko.task_dict["args"]["input_dir"]
+              if str(Path(pko.path).parent) != in_dir:
+                     print(f"ERRROOOOORRR {pko}")
               for_fi = pko.task_dict["args"]["forward_file"]
               pk_msg = pko.task_dict["status"]["msg"]
               spike = pko.task_dict["args"]["spike_amount"]
@@ -74,8 +76,11 @@ if act["repo"]:
               print(msg)
 
 if act["allp"]:
-       fq_file = "/srv/cfm/outputs/ENA_out/PRJNA526458/410658/SAMN11100353/SRR8744172"
-       fq_file += "/SRR8744172.pk"
+       fq_file = "/srv/cfm/outputs/ENA_out/PRJNA449565/410658/SAMN08911735/SRR7004509"
+       fq_file += "/SRR7004509.pk"
        pko = TaskPickle(fq_file)
-       # print(pko.check_args_dict())
-       print(TaskPickle.__dict__)
+       # pko.task_dict["status"]["run"] = pko.scode_d["Queue"]
+       # pko.write()
+       # print(bool(pko))
+       print(pko.__dict__)
+

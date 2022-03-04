@@ -9,9 +9,9 @@ from itertools import repeat
 from os import getcwd, cpu_count, remove
 from task_classes import TaskPickle
 if version_info[0] < 3:
-    from pathlib2 import Path  # pip2 install pathlib2
+    from pathlib2 import Path, PosixPath  # pip2 install pathlib2
 else:
-    from pathlib import Path
+    from pathlib import Path, PosixPath
 try:
     from urllib.request import urlretrieve
     from urllib.error import (ContentTooShortError, URLError)
@@ -32,6 +32,40 @@ def md5sum(filename, blocksize=65536):
         for block in iter(lambda: f.read(blocksize), b''):
             hash.update(block)
     return hash.hexdigest()
+
+
+def find_fastq(ftp_path,
+               md5_val,
+               dir_path: PosixPath,
+               ) -> str:
+    """
+    Checks if there are already fastq files in the directory.
+    First tries to find the gzipped file of ftp_path in the directory.
+    In case of existence checks the MD5 value of the file.
+    If the MD5 is not true then return False.
+    If fastq files exist it checks if it's ascii and returns the file name.
+    """
+    # ftp path to PosixPath!!!
+    read_files = [el.name for el in list(dir_path.iterdir())
+                  if el.is_file()]
+    fq_gz_name = Path(ftp_path).name
+    is_there = any([True for name in read_files if name == fq_gz_name])
+    md5_ok = False
+    fq_there = False
+    if is_there:
+        file_md5 = md5sum(dir_path.joinpath(fq_gz_name))
+        md5_ok = file_md5 == md5_val
+        if md5:
+            return fq_gz_name
+    else:
+        fq_name = fq_gz_name.rstrip(".gz")
+        fq_there = any([fi for fi in read_files if fi == fq_name])
+        if fq_there:
+            with open(dir_path.joinpath(fq_name), "r+") as fi:
+                line = fi.readline()
+            if len(line) == len(line.encode()):  # If it's ascii
+                return fq_name
+    return ""
 
 
 def download_fastq(inputdata):
@@ -72,15 +106,17 @@ def download_fastq(inputdata):
                              fastq_md5s.split(';')):
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Started"]
         pk_obj.write()
+        file_exists = find_fastq(pair, md5pair, outfile_dir)
+        if file_exists:
+            fastq_files_path.append(file_exists)
+            listmd5.append(1)
+            continue
         outfile = outfile_dir.joinpath(pair.split('/')[-1])
         fastq_files_path.append(outfile.name)
         md5cheked = 0
         progress_code = pk_obj.scode_d["Progress"]
         pk_obj.task_dict["status"]["download"] = progress_code
         pk_obj.write()
-        if outfile.is_file() and md5sum(outfile) == md5pair:
-            listmd5.append(1)
-            continue
         while md5cheked < attmps:
             md5cheked += 1
             try:
@@ -96,6 +132,9 @@ def download_fastq(inputdata):
         pk_obj.task_dict["status"]["run"] = pk_obj.scode_d["Queue"]
         pk_obj.write()
         sorted_files = sorted(fastq_files_path)
+        # Sometimes the record is tagged as SINGLE but it's paired actually
+        if len(listmd5) > 1:
+            pk_obj.task_dict["args"]["paired"] = "Yes"
         if len(sorted_files) == 1:
             sorted_files.append('')
         # Sometimes the there are more than 2 files
