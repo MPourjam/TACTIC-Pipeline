@@ -7,6 +7,8 @@ from task_classes import TaskPickle
 from processing_job import main_processing
 from multiprocessing import cpu_count, Pool
 
+input_dir_path = os.path.abspath("/srv/crc/docs/inputs/")
+
 
 def till_now(datetime_obj):
     time_delta = datetime_obj - dt.now()
@@ -22,7 +24,7 @@ def main(pickle_files_path=None):
     pool_size = max_pool if max_pool > 0 else 1
     max_batch = int(pool_size * 0.8)
     batch_size = max_batch if max_batch > 0 else 1
-    pickle_files_path = os.path.abspath(pickle_files_path) if pickle_files_path else "/srv/cfm/inputs/"
+    pickle_files_path = os.path.abspath(pickle_files_path) if pickle_files_path else input_dir_path
     if os.path.isdir(pickle_files_path):
         dir_path = pickle_files_path
         pk_files = os.scandir(dir_path)
@@ -37,7 +39,7 @@ def main(pickle_files_path=None):
             latest_pk_file = sorted(list(times_dict.items()), key=lambda x: x[1], reverse=True)[0][0]
         else:
             raise FileNotFoundError("No pickle file in {}.".format(dir_path))
-        main(pickle_files_path=os.path.join("/srv/cfm/inputs/", latest_pk_file))
+        main(pickle_files_path=os.path.join(input_dir_path, latest_pk_file))
     elif os.path.isfile(pickle_files_path):
         file_path = pickle_files_path
         try:
@@ -86,8 +88,6 @@ def main(pickle_files_path=None):
                         res.wait()
             else:
                 print("All samples are processed in {} file.".format(file_path))
-                print("Deleting {}.".format(file_path))
-                os.remove(file_path)
 
     else:
         msg = "The {} should be either a pickle file".format(pickle_files_path)
