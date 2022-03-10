@@ -26,9 +26,9 @@ ref16RNAdb_1 = "/srv/cfm/databases/silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = "/srv/cfm/databases/silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
 bowtie2 = "/cfm/binaries/bowtie2/bowtie2"
-spikeidx = "/cfm/binaries/bowtie2/spikesidx/spike"
+spikeidx = "/crc/crc/crcapp/jobs/spikesidx/spike"
 krona_importtext = "/cfm/binaries/Krona/KronaTools/scripts/ImportText.pl"
-R_processing_stat = "/cfm/ENA_Processor/processing_stats.R"
+R_processing_stat = "/crc/crawler/ENA_Processor/processing_stats.R"
 
 
 def calc_spikes(*fastq_files, spike_amount):
@@ -419,14 +419,21 @@ def create_udb(input_id):
     system(cmd_0 + USEARCH_TAIL)
 
 
-def cleanup(input_id):
-    deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fasta filtered2.fasta'
-    deleted_files += ' aligned_' + str(input_id) + '.csv merged.fasta'
-    deleted_files += ' derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
-    deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab'
-    deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
-    deleted_files += ' *.fastq'
-    deleted_dirs = ' -r kvdb out idx'
+def cleanup(input_id, full_clean=False):
+    """
+    NOTE Be careful where you run this command.
+    """
+    if full_clean:
+        deleted_files = "$(ls | grep -v *.pk)"
+        deleted_dirs = ""
+    else:
+        deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fasta filtered2.fasta'
+        deleted_files += ' aligned_' + str(input_id) + '.csv merged.fasta'
+        deleted_files += ' derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
+        deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab'
+        deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
+        deleted_files += ' *.fastq*'
+        deleted_dirs = ' -r kvdb out idx'
     system('rm ' + deleted_files + " 2> /dev/null")
     system('rm ' + deleted_dirs + " 2> /dev/null")
 
@@ -569,6 +576,9 @@ def update_task_pko(status, msg, pk_dir=None):
         st_code = latest_pk.scode_d.get(status, "")
         latest_pk.task_dict["status"]["run"] = st_code
         latest_pk.task_dict["status"]["msg"] = msg
+        if status == "Error":
+            latest_pk.task_dict["args"]["forward_file"] = ""
+            latest_pk.task_dict["args"]["reverse_file"] = ""
         latest_pk.write()
     return True
 
@@ -677,7 +687,9 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         log.info("Zipped!")
         system("rm {}_logs.txt".format(input_id))
     except BaseException as e:
-        update_task_pko("Error", str(e))
+        err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
+        update_task_pko("Error", str(err_msg).strip())
+        cleanup(input_id, full_clean=True)
         raise ValueError
     else:
         chdir(input_dir)
