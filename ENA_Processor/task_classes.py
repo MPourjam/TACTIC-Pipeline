@@ -161,3 +161,15 @@ class TaskPickle:
     @property
     def path(self):
         return str(self.__path)
+
+    @path.setter
+    def path(self, new_path):
+        new_path = Path(new_path)
+        old_path = Path(self.path)
+        if old_path == new_path:
+            return
+        if new_path.is_dir():
+            raise TypeError("Path of task pk object must point to a directory")
+        self.__path = str(new_path)
+        self.write()
+        old_path.unlink()

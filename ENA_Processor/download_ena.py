@@ -55,7 +55,7 @@ def find_fastq(ftp_path,
     if is_there:
         file_md5 = md5sum(dir_path.joinpath(fq_gz_name))
         md5_ok = file_md5 == md5_val
-        if md5:
+        if md5_ok:
             return fq_gz_name
     else:
         fq_name = fq_gz_name.rstrip(".gz")
@@ -70,7 +70,7 @@ def find_fastq(ftp_path,
 
 def download_fastq(inputdata):
     attmps = 4
-    df, outpath = inputdata
+    df, outpath, redownload_faileds = inputdata
     index, row = df
     codename = row.name
     outfile_dir = outpath.joinpath(row['study_accession'])
@@ -90,22 +90,22 @@ def download_fastq(inputdata):
     fastq_md5s = str(row['fastq_md5']) if str(row['fastq_md5']) != 'nan' else False
     if not all([fastq_ftps, fastq_md5s]):
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Error"]
+        pk_obj.task_dict["status"]["msg"] = "Download URL Error"
         pk_obj.write()
         return '[ERROR] {}'.format(codename)
-    # Download started
-    pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Started"]
     pk_obj.write()
     listmd5 = []
     fastq_files_path = []
     if pk_obj.task_dict["status"]["run"] == pk_obj.scode_d["Done"]:
-        # print("{} is done.".format(pk_obj.path.split("/")[-1]))
+        # NOTE If the processing is done it adds the sample to download queue
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Queue"]
         pk_obj.write()
         return '[OK] {}'.format(codename)
+    if pk_obj.task_dict["status"]["run"] == pk_obj.scode_d["Error"] and not redownload_faileds:
+        # NOTE If the processing has errors and not asked for redownload then it exits.
+        return '[OK] {}'.format(codename)
     for pair, md5pair in zip(fastq_ftps.split(';'),
                              fastq_md5s.split(';')):
-        pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Started"]
-        pk_obj.write()
         file_exists = find_fastq(pair, md5pair, outfile_dir)
         if file_exists:
             fastq_files_path.append(file_exists)
@@ -115,21 +115,22 @@ def download_fastq(inputdata):
         fastq_files_path.append(outfile.name)
         md5cheked = 0
         progress_code = pk_obj.scode_d["Progress"]
-        pk_obj.task_dict["status"]["download"] = progress_code
-        pk_obj.write()
         while md5cheked < attmps:
             md5cheked += 1
             try:
+                pk_obj.task_dict["status"]["download"] = progress_code
+                pk_obj.write()
                 urlretrieve('ftp://' + pair, outfile)
             except Exception:
                 if md5cheked == attmps - 1:
                     listmd5.append(0)
             else:
-                md5cheked == attmps
+                md5cheked = attmps
                 listmd5.append(int(md5sum(outfile) == md5pair))
     if all(listmd5):
         pk_obj.task_dict["status"]["download"] = pk_obj.scode_d["Done"]
         pk_obj.task_dict["status"]["run"] = pk_obj.scode_d["Queue"]
+        pk_obj.task_dict["status"]["msg"] = ""
         pk_obj.write()
         sorted_files = sorted(fastq_files_path)
         # Sometimes the record is tagged as SINGLE but it's paired actually
@@ -146,7 +147,9 @@ def download_fastq(inputdata):
         pk_obj.write()
         for fi in fastq_files_path:
             abs_dir_path = Path(pk_obj.task_dict["args"]["input_dir"])
-            remove(str(abs_dir_path.joinpath(fi)))
+            abs_fi_path = abs_dir_path.joinpath(fi)
+            if abs_fi_path.is_file():
+                remove(abs_fi_path)
         return '[ERROR] {}'.format(codename)
     return '[OK] {}'.format(codename)
 
@@ -169,7 +172,8 @@ def download_main(metadata_file,
                   outdir=None,
                   threads=None,
                   chunk_size=0,
-                  ndf=0):
+                  ndf=0,
+                  redownload_faileds=True):
     # if not isinstance(acc, list):
         # exit("acc argument must be a list of accession numbers")
     if not threads or not isinstance(threads, int):
@@ -226,7 +230,8 @@ def download_main(metadata_file,
         genome = []
         with Pool(threads) as p:
             multipleargs = list(zip(concat_frames.iterrows(),
-                                    repeat(outputpath)))
+                                    repeat(outputpath),
+                                    repeat(redownload_faileds)))
             tqdm_desc = 'Downloading Genomes using {} threads'.format(threads)
             for result in tqdm(p.imap_unordered(download_fastq, multipleargs),
                                total=len(multipleargs),
