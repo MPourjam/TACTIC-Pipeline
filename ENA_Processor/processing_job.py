@@ -26,9 +26,9 @@ ref16RNAdb_1 = "/srv/cfm/databases/silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = "/srv/cfm/databases/silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
 bowtie2 = "/cfm/binaries/bowtie2/bowtie2"
-spikeidx = "/crc/crc/crcapp/jobs/spikesidx/spike"
+spikeidx = "/cfm/binaries/bowtie2/spikesidx/spike"
 krona_importtext = "/cfm/binaries/Krona/KronaTools/scripts/ImportText.pl"
-R_processing_stat = "/crc/crawler/ENA_Processor/processing_stats.R"
+R_processing_stat = "/cfm/ENA_Processor/processing_stats.R"
 
 
 def calc_spikes(*fastq_files, spike_amount):

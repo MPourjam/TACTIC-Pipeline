@@ -15,12 +15,13 @@ ena_out = output_dir_path + "ENA_out/"
 one_file = ena_out + "PRJNA400115/9606/SAMN09410203/SRR7582793"
 one_file += "/SRR7582793.pk"
 
-argv_1 = str(sys.argv[1]) if len(sys.argv) == 2 else str("00010")
+argv_1 = str(sys.argv[1]) if len(sys.argv) > 1 else str("00010")
+argv_2 = int(sys.argv[2]) if len(sys.argv) > 2 else 0
 if len(argv_1) < 5:
     argv_1 = argv_1.zfill(5)
 argv_1 = argv_1[:5]
 argv_list = [int(i) for i in argv_1]
-rand_size = 0  # If 0 then no random sample is taken from the met_fiel_all
+rand_size = argv_2 if argv_2 else 0  # If 0 then no random sample is taken from the met_fiel_all
 seed_val = 250  # If 0 then no seed is set in random sampling
 chunk_s = 18 if rand_size == 0 else 0  # If 0 then the whole metadata file gets downladed
 num_df = 1 if rand_size == 0 else 2
@@ -76,7 +77,7 @@ if act["down"]:
           outdir=output_dir_path,
           chunk_size=chunk_s,
           ndf=num_df,
-          redownload_faileds=False))
+          redownload_faileds=True))
 if act["prep"]:
     ppks_path, err_ppks = preparation_main(ena_out)
     err_ms = ""
