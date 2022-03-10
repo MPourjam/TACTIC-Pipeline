@@ -12,5 +12,6 @@ services:
       - /media/adminuser/CFM/inputs:/srv/cfm/inputs
       - /media/adminuser/CFM/outputs:/srv/cfm/outputs
       - /media/adminuser/MSD-Storage/databases:/srv/cfm/databases
+      - /media/adminuser/imngs2/crc/docs/:/srv/cfm/docs
     env_file:
       - ./.env.prod
