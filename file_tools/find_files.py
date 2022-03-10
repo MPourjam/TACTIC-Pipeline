@@ -7,7 +7,7 @@ import re
 import os
 
 
-names_f = "/home/mohsen/CRC1371/Tasks/CFM/Erik_Files/Erik_barIDs.txt"
+names_f = "/srv/cfm/inputs/20220309-Asp-missing.txt"
 
 
 def is_good_fastq(file_path):
@@ -51,7 +51,7 @@ def zip_them(file_list, dest_file, flat=False):
     print("Writing zip to: {}".format(dest_file))
     # Handling duplicated files. Keeping the most recent one
     if flat:
-        msg = "Flat optin implies choosing tve latest files amongst "
+        msg = "Flat option implies choosing tve latest files amongst "
         msg += "files with the same names while writing to the zip file!"
         print(msg)
         file_list = latest_files(file_list)
@@ -139,7 +139,7 @@ def main(name_file, search_dir, zip_b=False, use_glob=False, use_walk=True, flat
                 files.append(yf)
     # files = list(set(files))
     if zip_b:
-        des_fi = search_dir.joinpath(name_file.stem + "_files.zip")
+        des_fi = name_file.parent.joinpath(name_file.stem + "_files.zip")
         zip_them(files, des_fi, flat=flat_zip)
     else:
         # TODO Returning a file containing all names for which a file was not found would be grear.
