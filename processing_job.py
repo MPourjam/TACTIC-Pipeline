@@ -1,8 +1,11 @@
-from os import chdir, system, mkdir, listdir, makedirs
+from os import (chdir, system, mkdir, listdir,
+                makedirs, path, getcwd
+                )
 from statistics import stdev, mean
+from task_classes import TaskPickle
+from collections import namedtuple
 from re import search
 import mimetypes as mtypes
-import os
 import re
 import random
 import shutil
@@ -12,29 +15,70 @@ import sys
 
 
 BIN_DIR = "/cfm/binaries/"
-USEARCH_8_BIN = BIN_DIR + "usearch8.1"
-USEARCH_11_bin = BIN_DIR + "usearch_11_64"
-SORT_ME_RNA_BIN = '/cfm/binaries/sortmerna'
-# USEARCH8_1 = 'usearch8.1 -threads 4'
+DBS_DIR = "/srv/cfm/databases/"
+JOBS_DIR = "/cfm/ENA_Processor/"
+USEARCH_8_BIN = BIN_DIR + "usearch8.1 -strand both"
+USEARCH_11_bin = BIN_DIR + "usearch_11_64 -strand both"
+SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
 USEARCH8_1 = USEARCH_8_BIN + " -threads 4"
-# GOLD_REFDB_USEARCH = '/srv/cfm/databases/silva_700K.udb'
-GOLD_REFDB_USEARCH = '/srv/cfm/databases/SILVA-bac-16s-90.udb'
-SINA_ARB = '/srv/cfm/databases/SILVA_138_SSURef_NR99_05_01_20_opt.arb'
-ref16RNAdb_1 = "/srv/cfm/databases/silva-bac-16s-id90.fasta"
-ref16RNAdb_2 = "/srv/cfm/databases/silva-arc-16s-id95.fasta"
+SINA_BIN = BIN_DIR + 'sina/sina'
+GOLD_REFDB_USEARCH = DBS_DIR + 'SILVA-bac-16s-90.udb'
+SINA_ARB = DBS_DIR + 'SILVA_138.1_SSURef_NR99_12_06_20_opt.arb'
+ref16RNAdb_1 = DBS_DIR + "silva-bac-16s-id90.fasta"
+ref16RNAdb_2 = DBS_DIR + "silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
-bowtie2 = "/cfm/binaries/bowtie2/bowtie2"
-spikeidx = "/cfm/binaries/bowtie2/spikesidx/spike"
-krona_importtext = "/cfm/binaries/Krona/KronaTools/scripts/ImportText.pl"
+bowtie2 = BIN_DIR + "bowtie2/bowtie2"
+krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
+spikeidx = BIN_DIR + "bowtie2/spikesidx/spike"
+R_processing_stat = JOBS_DIR + "processing_stats.R"
+S_FLAT_LOCATION = JOBS_DIR + 's_flat.txt'
+
+os_16S = namedtuple("pos_16S", "start end")
+# pos_sil = namedtuple("pos_sil", "start end")
+regions_dict = {"V1": [os_16S(69, 99),
+                       [1159, 1772]],
+                "V2": [os_16S(137, 242),
+                       [2083, 5291]],
+                "V3": [os_16S(433, 497),
+                       [9817, 10302]],
+                "V4": [os_16S(986, 1043),
+                       [31188, 32827]],
+                "V5": [os_16S(576, 682),
+                       [15643, 21773]],
+                "V6": [os_16S(822, 879),
+                       [25499, 26987]],
+                "V7": [os_16S(1117, 1173),
+                       [35463, 37685]],
+                "V8": [os_16S(1243, 1294),
+                       [40315, 40874]],
+                "V9": [os_16S(1435, 1465),
+                       [42608, 43016]],
+                }
+
+def calc_covered_regions(start_pos: int, end_pos: int) -> str:
+    """
+    Gets the start and end position covered region in silva alignment and calculates over which region
+    of 16S gene the covered sequence is spanned.
+    """
+    covered_regions = {k[1:] for k, v in regions_dict.items()
+                       if (start_pos <= v[1][0] and end_pos >= v[1][1])}
+    if covered_regions:
+        regions_coved = "V{}{}".format(min(covered_regions),
+                                       ['-V%s' % (max(covered_regions))
+                                        if (len(covered_regions) > 1)
+                                        else ''][0])
+    else:
+        regions_coved = ""
+    return regions_coved
 
 
 def calc_spikes(*fastq_files, spike_amount):
     '''
     fastq_files must not be gzipped or zippped.
     '''
+    cur_dir = getcwd()
     fastq_names = [f for f in fastq_files if bool(f)]
-    fastqs_abs_paths = [os.path.abspath(os.path.join(os.getcwd(), f)) for f in fastq_names]
-
+    fastqs_abs_paths = [path.abspath(path.join(cur_dir, f)) for f in fastq_names]
     if str(spike_amount) == "0":
         f = fastqs_abs_paths[0]
         with open(f, 'r') as fqfile:
@@ -48,18 +92,18 @@ def calc_spikes(*fastq_files, spike_amount):
     else:
         spike_amount = float("{}e-9".format(spike_amount))  # ng to g
         name_regx = r"[a-zA-Z0-9\-]+"
-        spike_res_dir = os.path.split(fastqs_abs_paths[0])[0] + "/spike_result/"
+        spike_res_dir = path.split(fastqs_abs_paths[0])[0] + "/spike_result/"
         makedirs(spike_res_dir, mode=777, exist_ok=True)
-        _, forw_name = os.path.split(fastqs_abs_paths[0])
+        _, forw_name = path.split(fastqs_abs_paths[0])
         fastq_aligned = forw_name[search(name_regx, forw_name).start():search(name_regx, forw_name).end()]
-        fastq_aligned = os.path.join(spike_res_dir, fastq_aligned)
+        fastq_aligned = path.join(spike_res_dir, fastq_aligned)
         fastq_unaligned = fastq_aligned + "_unal"
 
         if len(fastq_names) == 2:
             cmd = [bowtie2, "-x", spikeidx, "-1", fastqs_abs_paths[0], "-2",
                    fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
                    fastq_unaligned, USEARCH_TAIL]
-            os.system(" ".join(cmd))
+            system(" ".join(cmd))
             spike_counter = 0
             for fi in [fastq_aligned + ".1", fastq_aligned + ".2"]:
                 with open(fi, 'r') as fastq_al:
@@ -73,10 +117,10 @@ def calc_spikes(*fastq_files, spike_amount):
         elif len(fastq_names) == 1:
             cmd = [bowtie2, "-x", spikeidx, "-U", fastqs_abs_paths[0], "--al-conc",
                    fastq_aligned, "--un-conc", fastq_unaligned, USEARCH_TAIL]
-            os.system(" ".join(cmd))
+            system(" ".join(cmd))
             files_inspike = listdir(spike_res_dir)
             spike_counter = 0
-            for fi in [f for f in files_inspike if search(fastq_aligned, os.path.abspath(f))]:
+            for fi in [f for f in files_inspike if search(fastq_aligned, path.abspath(f))]:
                 with open(fi, 'r') as fastq_al:
                     for _ in fastq_al:
                         spike_counter += 1
@@ -92,27 +136,36 @@ def calc_spikes(*fastq_files, spike_amount):
 
 
 def gzip_to_fastq(*files):
-    file_path = [os.path.abspath(f) for f in files]
+    file_path = [path.abspath(f) for f in files if f]
+    file_path = [f for f in file_path if path.isfile(f)]
+    if len(files) != len(file_path):
+        raise TypeError("Some given arguments are not files.")
     fastq_paths = []
     for f in file_path:
         app, typ = mtypes.guess_type(f)
+        file_dir, file_name = path.split(f)
+        asciifile_name = str(file_name.split(".")[0]) + ".fastq"
+        asciifile = path.join(file_dir, asciifile_name)
         if 'zip' in str(typ):
-            asciifile = f.replace(".gz", "")
             system("gunzip --stdout {} > {}".format(f, asciifile))
             fastq_paths.append(asciifile)
             system("rm -r {}".format(f))
         elif 'zip' in str(app):  # For zipped files
-            pass
-            # asciifile = f.replace(".zip", "")
-            # system("unzip {} -d {}".format(f, asciifile))
+            system("unzip {} -d {}".format(f, asciifile))
+            fastq_paths.append(asciifile)
+            system("rm -r {}".format(f))
         else:
-            with open(f, "r+") as fi:
-                line = fi.readline()
-            if len(line) == len(line.encode()):  # If it's ascii
-                fastq_paths.append(f)
+            try:
+                with open(f, "r+") as fi:
+                    line = fi.readline()
+                if len(line) == len(line.encode()):  # If it's ascii
+                    fastq_paths.append(f)
+            except Exception as e:
+                print("{}\t{}".format(f, e))
+                raise
     if len(file_path) != len(fastq_paths):
-        raise TypeError("Some files could not get converted or were not in ascii format!")
-    fastq_paths = [os.path.basename(f) for f in fastq_paths]
+        raise TypeError("Some files could not get converted or were not in utf-8 format!")
+    # returns absolute paths
     return fastq_paths
 
 
@@ -152,24 +205,6 @@ def unzip():
     system('unzip upload.zip')
 
 
-def only_keep_dataset_fastqs(*args):
-    mkdir('uploadedfastqs')
-    system('mv upload.zip ./uploadedfastqs/')
-    chdir("./uploadedfastqs/")
-    unzip()
-    fastqs = glob.glob('*')
-    lose = []
-    for i, fq in enumerate(fastqs):
-        if fq not in list(args):
-            lose.append(fq)
-    system('rm -rf {}'.format(" ".join(lose)))
-    system('zip upload.zip *')
-    system('mv upload.zip ../upload.zip')
-    chdir("../")
-    system('rm -rf uploadedfastqs')
-    unzip()
-
-
 def clean_FastQC(input_file, reverse_file=False):
     zips = sorted(glob.glob('*.zip'))
     for i, zipf in enumerate(zips):
@@ -183,7 +218,7 @@ def clean_FastQC(input_file, reverse_file=False):
             system(cmd_2)
         except BaseException:
             pass
-    system("cd ../ && rm -r fastqc_output")
+    system("cd ../ && rm -r fastqc_output > /dev/null 2>&1")
 
 
 def mymkdir(input_dir):
@@ -268,6 +303,8 @@ def filter_merged_one_side(forward_file):
 
 # cluster sequences to OTUs
 def clusterZOTUs():
+    # NOTE We should keep the size of clusters to one (-minsize 1) to preserve diversity for later analysis.
+    # If we do not want to run analysis (comparing samples together) we keep it 4
     cmd_part_0 = USEARCH_11_bin + ' -unoise3 sorted.fasta -minsize 4 -zotus zotus.fasta'
     cmd_part_1 = ' -tabbedout denoising.tab'
     cmd_part_2 = ' ' + USEARCH_TAIL
@@ -335,13 +372,12 @@ def select_zotu_seqs():
 
 
 def addTax(input_id):
-    classifier_dir = '/cfm/binaries/sina/'
     filebasename = 'aligned_' + str(input_id)
-    cmd_part_0 = 'sina --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv '
+    cmd_part_0 = SINA_BIN + ' --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
+    cmd_part_1 = '--threads 4 --lca-fields tax_slv --turn '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out ' + filebasename + '.fasta'
     cmd_part_3 = ' >/dev/null 2>/dev/null'
-    system(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
+    system(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     out_file = open('classifiedF.txt', 'w+')
     silva_contents_header = read_file(filebasename + '.csv')
     silva_contents = silva_contents_header[1:]
@@ -414,28 +450,43 @@ def addKrona(KRONA_TOOL):
         krona_text.write(str(size) + '\t' + tax + '\n')
     krona_text.close()
     system("{} ./krona.txt".format(KRONA_TOOL))
-    # system("rm ./krona.txt")
+    system("rm krona.txt")
 
 
 def create_zip(input_id):
     cmd_1 = 'zip ../' + str(input_id) + '_processed.zip ZOTUs-table.final.tab '
     cmd_1 += 'taxed_ZOTUs.fasta *.png *.html'
-    system(cmd_1)
+    # system(cmd_1)
+    # gziping the silva alignment to save space
+    cmd_2 = "tar -czf aligned_" + str(input_id) + ".fasta.tar.gz aligned_" + str(input_id) + ".fasta"
+    cmd_3 = "tar -czf derep.fasta.tar.gz derep.fasta"
+    system(cmd_2)
+    system(cmd_3)
 
 
 def create_udb(input_id):
-    cmd_0 = USEARCH_11_bin + ' -makeudb_ublast aligned_' + str(input_id) + '.fasta -output ' + str(input_id) + '.udb'
+    cmd_0 = USEARCH_11_bin + ' -makeudb_ublast taxed_ZOTUs.fasta -output ' + str(input_id) + '.udb'
     system(cmd_0 + USEARCH_TAIL)
 
 
-def cleanup(input_id):
-    deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fasta filtered2.fasta'
-    deleted_files += ' aligned_' + str(input_id) + '.csv merged.fasta'
-    deleted_files += ' derep.fasta sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
-    deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab'
-    deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
-    deleted_files += ' *.fastq'
-    deleted_dirs = ' -r kvdb out idx'
+def cleanup(input_id, full_clean=False, dir_path=None):
+    """
+    NOTE Be careful where you run this command.
+    """
+    if dir_path:
+        chdir(dir_path)
+    if full_clean:
+        deleted_files = "$(ls | grep -v *.pk)"
+        deleted_dirs = "-r " + deleted_files
+    else:
+        deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fasta filtered2.fasta'
+        deleted_files += ' aligned_' + str(input_id) + '.csv aligned_' + str(input_id) + '.fasta merged.fasta'
+        deleted_files += ' sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
+        # derep.fasta get deleted and we keep the gzipped one according to Ilias, preserve it for diversity analysis
+        deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab derep.fasta'
+        deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
+        deleted_files += ' *.fastq*'
+        deleted_dirs = ' -r kvdb out idx'
     system('rm ' + deleted_files + " 2> /dev/null")
     system('rm ' + deleted_dirs + " 2> /dev/null")
 
@@ -448,8 +499,8 @@ def update_s_flat(input_id, origin):
         size = int(line.split('\t')[1])
         sizes.append(size)
     phrase += str(len(sizes)) + ',' + str(sum(sizes)) + '\n'
-    out_file_name = '/crc/crc/crcapp/jobs/s_flat.txt'
-    out_file = open(out_file_name, 'a+')
+    print(S_FLAT_LOCATION)
+    out_file = open(S_FLAT_LOCATION, 'a+')
     out_file.write(phrase)
     out_file.close()
 
@@ -461,9 +512,9 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
     wirte = path to write the new alignment header with start and end of each sequence
     or not, Default won't write anything and just return the tuple of (start_mode, end_mode)
     '''
-    if os.path.isfile(os.path.abspath(fasta_file)):
-        filedir, filepath = os.path.split(os.path.abspath(fasta_file))
-        os.chdir(filedir)
+    if path.isfile(path.abspath(fasta_file)):
+        filedir, filepath = path.split(path.abspath(fasta_file))
+        chdir(filedir)
     else:
         raise FileNotFoundError("Fasta file not found!")
     try:
@@ -474,9 +525,9 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
     # Handling output
     if bool(write):
         try:
-            outdir, outpath = os.path.split(os.path.abspath(write))
+            outdir, outpath = path.split(path.abspath(write))
             if outdir != filedir:
-                print(f"Writing output to {os.path.abspath(write)}")
+                print("Writing output to {}".format(path.abspath(write)))
             else:
                 if outpath == filepath:
                     msg = '''Writing output to the same file!!
@@ -485,38 +536,45 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
         except Exception as e:
             write = False
             return e
-
+    # Getting the index of headers
     with open(filepath) as f:
-        content = f.readlines()
-        silvout_lines = [x.strip() for x in content]
-    zotu_names_idx = []
-    for i, l in enumerate(silvout_lines):
-        if l[0] == ">":
-            zotu_names_idx.append(i)
-    seq_reg_start = re.compile(r'^-*[ACGTU]')
-    seq_reg_end = re.compile(r'[ACGTU]-*$')
+        zotu_names_idx = []
+        counter = 0
+        line = f.readline()
+        while line:  # or counter < max_seq:
+            if line.startswith(">"):
+                zotu_names_idx.append(counter)
+            counter += 1
+            line = f.readline()
+
+    seq_reg_start = re.compile(r'^-*[NACGTU]')
+    seq_reg_end = re.compile(r'[NACGTU]-*$')
     s_e = []
     # Calclating start and end
     # Trying to do it for only the first 20 reads
-    try:
-        divi = len(zotu_names_idx) // int(max_seq)
-        if not divi:
-            max_seq = len(zotu_names_idx)
-        else:
-            max_seq = int(max_seq) + 1
-            msg = "Calculating number start and end position mode "
-            msg += f"for thefor the first {str(max_seq - 1)} sequences"
-            print(msg)
-    except Exception:
-        max_seq = len(zotu_names_idx)
-
-    for zi in zotu_names_idx[:max_seq]:
-        seque = str(silvout_lines[zi + 1])
-        m_start = seq_reg_start.match(seque)
-        m_end = seq_reg_end.search(seque)
-        start = m_start.end()
-        end = m_end.start()
-        s_e.append((start - 1, end))
+    if max_seq == 0:
+        max_seq = max(zotu_names_idx)
+    with open(filepath) as f:
+        counter = 0
+        line = f.readline()
+        seque = ""
+        while line and counter <= max_seq * 2:
+            if counter in zotu_names_idx:
+                if seque:
+                    m_start = seq_reg_start.match(seque)
+                    m_end = seq_reg_end.search(seque)
+                    start = m_start.end()
+                    end = m_end.start()
+                    s_e.append((start - 1, end))
+                    seque = ""
+                line = f.readline()
+                counter += 1
+                continue
+            else:
+                seque += line.strip()
+            counter += 1
+            line = f.readline()
+    # Finding the modes
     start_set = {s[0] for s in s_e}
     end_set = {s[1] for s in s_e}
     start_dict = dict(zip(start_set, [0 for i in range(len(start_set))]))
@@ -537,8 +595,8 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
 
     # Adding start and end position to the end of file
     if write:
-        print(f"Writing output to {os.path.abspath(write)}")
-        with open(os.path.abspath(write), "w+") as silvout_st_en:
+        print("Writing output to {}".format(path.abspath(write)))
+        with open(path.abspath(write), "w+") as silvout_st_en:
             for i, idx in enumerate(zotu_names_idx):  # + 1 because user finds the bp 1-based
                 if i in range(max_seq):
                     start_end = " " + ":".join([str(se + 1) if isinstance(se, int)
@@ -552,16 +610,46 @@ def find_silva_start_end(fasta_file, max_seq=None, write=None):
                 else:
                     silvout_st_en.write(silvout_lines[idx + 1] + "\n")
 
-    # print(str(start_mode) +  " " +str(end_mode))
     return start_mode, end_mode
 
 
+def update_task_pko(status, msg, pk_dir=None) -> bool:
+    '''
+    It takes a run status and a message and updates the TaskPickle of
+    current process.
+    status would be ["Started", "Progress", "Error", "Done"]
+    '''
+    try:
+        latest_pk = pko  # pko is available in global scope
+        st_code = latest_pk.scode_d.get(status, "")
+        latest_pk.task_dict["status"]["run"] = st_code
+        latest_pk.task_dict["status"]["msg"] = msg
+        if status == "Error":
+            latest_pk.task_dict["args"]["forward_file"] = ""
+            latest_pk.task_dict["args"]["reverse_file"] = ""
+        latest_pk.write()
+        return True
+    except Exception as e:
+        latest_pk.task_dict["status"]["msg"] = "Could not update the status: " + str(e)
+        # We do not change the run status as lack of logging is better not to stop the process
+        return False
+
+
+class Filehanlder_pk(logging.FileHandler):
+    '''
+    Regular file handler with option to update pk file
+    '''
+    def emit(self, record):
+        super().emit(record)
+        update_task_pko("Progress", record.msg)
+
+
 def gimmelogger(name, dir_path):
-    dir_path = os.path.abspath(dir_path)
+    dir_path = path.abspath(dir_path)
     log = logging.getLogger(str(name))
     log.setLevel(logging.DEBUG)
-    log_file = os.path.join(dir_path, "{}_logs.txt".format(str(name)))
-    FH = logging.FileHandler(log_file)
+    log_file = path.join(dir_path, "{}_logs.txt".format(str(name)))
+    FH = Filehanlder_pk(log_file)
     FH.setLevel(logging.INFO)
     log.addHandler(FH)
     SH = logging.StreamHandler(sys.stdout)
@@ -584,17 +672,57 @@ def write_reads_report(input_id, **kwargs):
 
 def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spike_amount=0):
     log = gimmelogger(input_id, input_dir)
+    # We define the related TaskPickle object here and make it available globally as we need the
+    # TaskPickle file to stay closed while processing
+    global pko
+    pk_dir = path.abspath(input_dir)
+    pk_file = path.join(pk_dir, "{}.pk".format(input_id))
     try:
+        if not path.exists(pk_file):
+            # Creation of TaskPickle instance for the run
+            pko = TaskPickle(pk_file)
+            pko.task_dict["args"]["input_dir"] = input_dir
+            pko.task_dict["args"]["paired"] = paired
+            pko.task_dict["args"]["forward_file"] = forward_file
+            pko.task_dict["args"]["reverse_file"] = reverse_file
+            pko.task_dict["args"]["input_id"] = input_id
+            pko.task_dict["args"]["spike_amount"] = spike_amount
+            pko.task_dict["status"]["run"] = pko.scode_d["Started"]
+            abs_path_forw = path.exists(path.abspath(path.join(input_dir, forward_file)))
+            if reverse_file:
+                abs_path_reve = path.exists(path.abspath(path.join(input_dir, reverse_file)))
+                if path.exists(abs_path_forw) and path.exists(abs_path_reve):
+                    pko.task_dict["status"]["download"] = pko.scode_d["Done"]
+                else:
+                    pko.task_dict["status"]["download"] = pko.scode_d["Error"]
+                    pko.write()
+                    raise ValueError("Fastq Files Error.")
+            else:
+                if path.exists(abs_path_forw):
+                    pko.task_dict["status"]["download"] = pko.scode_d["Done"]
+                else:
+                    pko.task_dict["status"]["download"] = pko.scode_d["Error"]
+                    pko.write()
+                    raise ValueError("Fastq Files Error.")
+            # pko.task_dict["status"]["download"] = pko.scode_d["Started"]
+            pko.write()
+        else:
+            pko = TaskPickle(pk_file)
         chdir(input_dir)
-        # only_keep_dataset_fastqs(forward_file, reverse_file)
-        forward_file, reverse_file = gzip_to_fastq(forward_file, reverse_file)
+        # Grabbing the TaskPickle for update
+        f_path = path.join(input_dir, forward_file) if forward_file else ""
+        r_path = path.join(input_dir, reverse_file) if reverse_file else ""
+        files_paths = [f_path, r_path]
+        files_names = [path.basename(gzip_to_fastq(fi)[0]) for fi in files_paths if path.isfile(fi)]
+        if len(files_names) == 1:
+            files_names.append("")
+        forward_file, reverse_file = files_names
         log.info("Spike removal started.")
-        real_reads_c, spike_reads_c = calc_spikes(*[forward_file, reverse_file], spike_amount=spike_amount)
+        real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=spike_amount)
         log.debug("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
+        chdir(input_dir)  # This is crucial to be here
         log.info('fastQC DONE')
-        chdir(input_dir)
-        system("rm -r fastqc_output")
         if reverse_file:
             merge_pairs(forward_file, reverse_file)
             log.info('Merging Pairs DONE')
@@ -618,7 +746,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         clusterZOTUs()
         log.info('Cluster ZOTUs DONE')
         filter16S()
-        log.info('Filtering our non 16S ZOTUs')
+        log.info('Filtering out non 16S ZOTUs')
         prepare_zotus()
         log.info('Prepared Zotus Done')
         build_ZOTU_table()
@@ -633,17 +761,38 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, spi
         add_taxonomy_to_fasta()
         addKrona(krona_importtext)
         log.info("Krona graph added.")
-        system('Rscript /crc/crc/crcapp/jobs/processing_stats.R >/dev/null 2>/dev/null')
+        system('Rscript {} >/dev/null 2>/dev/null'.format(R_processing_stat))
         log.info('Relabing DONE')
         # udb for both similarity queries
         create_udb(input_id)
         log.info('UDB created')
-        # update_s_flat(input_id, origin)
-        # start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
+        # update_s_flat(input_id, origin)  # We will populate the db with origin upon metadat feed
+        start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
+        read_report = write_reads_report(input_id, Actual_reads=real_reads_c,
+                                         Spike_reads=spike_reads_c,
+                                         Dereplicated_reads=dereped_read_n,
+                                         Covered_Regions=calc_covered_regions(start_mode, end_mode))
+        create_zip(input_id)
+        # log.info('Zipped!')
         cleanup(input_id)
         log.info("Cleaned up: {}".format(input_id))
-        create_zip(input_id)
-        log.info("Zipped!")
         system("rm {}_logs.txt".format(input_id))
-    except BaseException:
-        raise ValueError
+    except BaseException as e:
+        err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
+        print(err_msg)
+        update_task_pko("Error", str(err_msg).strip())
+        # cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
+        pko.close()
+        raise e
+    else:
+        chdir(input_dir)
+        udb_file = path.join(input_dir, '{}.udb'.format(str(input_id)))
+        status_code = "Done"
+        status_msg = ""
+        if not path.isfile(udb_file):
+            status_code = "Error"
+            status_msg = "Process Failed! no UDB!"
+        update_task_pko(status_code, status_msg)
+        pko.close()
+        if not path.isfile(udb_file):
+            raise FileNotFoundError("No UDB created for {}".format(input_dir))
