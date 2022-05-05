@@ -5,7 +5,7 @@ RUN apt update -y && apt upgrade -y
 RUN apt update --fix-missing 
 RUN apt install -y vim rsync
 RUN apt update -y && apt upgrade -y
-RUN apt install -y libgit2-dev r-cran-nloptr
+#RUN apt install -y libgit2-dev r-cran-nloptr
 RUN apt update --fix-missing
 RUN apt install -y fastqc
 RUN apt install -y graphlan
@@ -25,8 +25,8 @@ COPY . /cfm
 ######################
 RUN apt update -y
 RUN apt install -y r-base
-COPY rhea_packages_install.R cfm/
-RUN Rscript cfm/rhea_packages_install.R
+COPY worker_packages_install.R cfm/
+RUN Rscript cfm/worker_packages_install.R
 
 
 WORKDIR /cfm/
