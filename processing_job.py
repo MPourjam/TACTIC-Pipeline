@@ -33,6 +33,7 @@ spikeidx = BIN_DIR + "bowtie2/spikesidx/spike"
 R_processing_stat = JOBS_DIR + "processing_stats.R"
 S_FLAT_LOCATION = JOBS_DIR + 's_flat.txt'
 
+# The Start and end positions are according to reference Escherichia Coli K12 subst. MG1655
 os_16S = namedtuple("pos_16S", "start end")
 # pos_sil = namedtuple("pos_sil", "start end")
 regions_dict = {"V1": [os_16S(69, 99),
@@ -41,12 +42,12 @@ regions_dict = {"V1": [os_16S(69, 99),
                        [2083, 5291]],
                 "V3": [os_16S(433, 497),
                        [9817, 10302]],
-                "V4": [os_16S(986, 1043),
-                       [31188, 32827]],
-                "V5": [os_16S(576, 682),
+                "V4": [os_16S(576, 682),
                        [15643, 21773]],
-                "V6": [os_16S(822, 879),
+                "V5": [os_16S(822, 879),
                        [25499, 26987]],
+                "V6": [os_16S(986, 1043),
+                       [31188, 32827]],
                 "V7": [os_16S(1117, 1173),
                        [35463, 37685]],
                 "V8": [os_16S(1243, 1294),
@@ -54,6 +55,7 @@ regions_dict = {"V1": [os_16S(69, 99),
                 "V9": [os_16S(1435, 1465),
                        [42608, 43016]],
                 }
+
 
 def calc_covered_regions(start_pos: int, end_pos: int) -> str:
     """
@@ -295,7 +297,7 @@ def trim_one_side(forward_file):
 def filter_merged_one_side(forward_file):
     curr_mean, curr_sd = seqFileStats(forward_file)
     minLength = curr_mean - int(0.1 * curr_mean) - 5  # remove the primer triming size plus 10% of the mean size
-    cmd_0 = USEARCH_8_BIN + ' -fastq_filter filtered1.fasta -fastq_truncqual 20'
+    cmd_0 = USEARCH_8_BIN + ' -fastq_filter filtered1.fasta -fastq_truncqual 20 -fastq_qmax 93'
     cmd_1 = ' -fastq_maxee_rate 0.005 -fastq_trunclen ' + str(minLength)
     cmd_2 = ' -fastaout filtered2.fasta >/dev/null 2>/dev/null'
     system(cmd_0 + cmd_1 + cmd_2)
