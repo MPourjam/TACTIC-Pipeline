@@ -5,7 +5,6 @@ RUN apt update -y && apt upgrade -y
 RUN apt update --fix-missing 
 RUN apt install -y vim rsync
 RUN apt update -y && apt upgrade -y
-#RUN apt install -y libgit2-dev r-cran-nloptr
 RUN apt update --fix-missing
 RUN apt install -y fastqc
 RUN apt install -y graphlan
@@ -17,22 +16,16 @@ RUN apt update -y && apt upgrade -y
 #############
 ## Sources ##
 #############
-RUN mkdir cfm
-COPY . /cfm
+RUN mkdir base
+COPY . /base
 
 ######################
 ## R and R PACKAGES ##
 ######################
 RUN apt update -y
 RUN apt install -y r-base
-COPY worker_packages_install.R cfm/
-RUN Rscript cfm/worker_packages_install.R
+RUN Rscript base/worker_packages_install.R
 
 
-WORKDIR /cfm/
+WORKDIR /base/
 # ENTRYPOINT ["./entrypoint.sh"]
-
-##############################
-## Adding IntegerRange.html ##
-##############################
-# RUN /bin/ln -s /crc/crc/templates/IntegerRange.html /usr/local/lib/python3.7/site-packages/django/forms/templates/django/forms/widgets/IntegerRange.html
