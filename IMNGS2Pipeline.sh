@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
 
-printf "\t  _____ ______ __  __ \n"
-printf "\t / ____|  ____|  \/  |\n"
-printf "\t| |    | |__  | \  / |\n"
-printf "\t| |    |  __| | |\/| |\n"
-printf "\t| |____| |    | |  | |\n"
-printf "\t \_____|_|    |_|  |_|\n"
-printf "\t                      \n"
+
+printf "\t╦╔╦╗╔╗╔╔═╗╔═╗  ___  ╔═╗┬┌─┐┌─┐┬  ┬┌┐┌┌─┐\n"
+printf "\t║║║║║║║║ ╦╚═╗  ___| ╠═╝│├─┘├┤ │  ││││├┤ \n"
+printf "\t╩╩ ╩╝╚╝╚═╝╚═╝ |___  ╩  ┴┴  └─┘┴─┘┴┘└┘└─┘\n"
 
 # validateAction checks if the actions if one of the known actions
 function validateAction {

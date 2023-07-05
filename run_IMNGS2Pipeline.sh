@@ -3,6 +3,6 @@
 # wait for PSQL server to start
 # sleep 10
 
-cd cfm
+cd base
 
 tail -F CFM.sh

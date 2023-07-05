@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  IMNGS2Pipeline:
+    container_name: IMNGS2Pipeline
+    build:
+      context: .
+      dockerfile: Dockerfile.IMNGS2Pipeline
+    hostname: IMNGS2Pipeline
+    command: ./run_IMNGS2Pipeline.sh
+    volumes:
+      - /media/adminuser/CFM/inputs:/srv/base/inputs
+      - /media/adminuser/CFM/outputs:/srv/base/outputs
+      - /media/adminuser/MSD-Storage/databases:/srv/base/databases
+      - /media/adminuser/imngs2/crc/docs/:/srv/base/docs
+    env_file:
+      - ./.env.prod
