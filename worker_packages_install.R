@@ -1,6 +1,0 @@
-install.packages('vegan')
-install.packages('GUniFrac')
-install.packages('ggplot2')
-install.packages('devtools')
-library(devtools)
-install.packages('iNEXT')

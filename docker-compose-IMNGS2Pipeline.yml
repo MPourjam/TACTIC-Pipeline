@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  IMNGS2Pipeline:
+  imngs2pipeline:
     container_name: IMNGS2Pipeline
     build:
       context: .

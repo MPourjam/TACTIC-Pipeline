@@ -57,9 +57,9 @@ done
 
 validateAction $action
 
-compose_file="docker-compose-CFM.yml"
+compose_file="docker-compose-IMNGS2Pipeline.yml"
 
-
+echo ${compose_file}
 case $action in
     build)
         docker-compose -f $compose_file build
