@@ -1,0 +1,38 @@
+merge_pairs:
+  fastq_maxdiffs: 50
+  fastq_pctid: 50
+  fastq_minmergelen: 200
+  fastq_maxmergelen: 600
+trim_both_sides:
+  stripleft: 5
+  stripright: 5
+trim_one_side:
+  stripleft: 5
+filter_merged:
+  fastq_maxee_rate: 0.002
+filter_one_side:
+  fastq_maxee_rate: 0.002
+  fastq_truncqual: 10
+  fastq_trunclen: lambda x: mean(x) - 0.1 * mean(x) - 5
+dereplication:
+  sizein: true
+  sizeout: true
+# sort_sequences:
+clusterZOTUs:
+  minsize: 2
+filter16S:
+  e: 0.1
+  num_alignments: 1
+# prepare_zotus:
+build_ZOTU_table:
+  id: 0.97
+filter_zotu_abundance:
+  abundance_cutoff: 0.0
+# select_zotu_seqs:
+addTax:
+  turn: all
+# create_final_ZOTU_table:
+
+
+
+  
