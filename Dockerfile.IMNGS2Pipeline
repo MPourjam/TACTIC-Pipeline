@@ -24,7 +24,7 @@ COPY . /base
 ######################
 RUN apt update -y
 RUN apt install -y r-base
-RUN Rscript base/worker_packages_install.R
+RUN Rscript base/R_packages_install.R
 
 
 WORKDIR /base/
