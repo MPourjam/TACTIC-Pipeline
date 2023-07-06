@@ -13,7 +13,6 @@ filter_merged:
 filter_one_side:
   fastq_maxee_rate: 0.002
   fastq_truncqual: 10
-  fastq_trunclen: "lambda x: mean(x) - 0.1 * mean(x) - 5"
 dereplication:
   sizein: true
   sizeout: true
