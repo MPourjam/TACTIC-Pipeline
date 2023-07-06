@@ -15,13 +15,13 @@ import sys
 import time
 
 
-BIN_DIR = "/crc/crc/binaries/"
+BIN_DIR = "/base/ENA_Processor/binaries/"
 USEARCH_8_BIN = BIN_DIR + "usearch8.1"
 USEARCH_11_BIN = BIN_DIR + "usearch_11_64 -strand both"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
 USEARCH8_1 = USEARCH_8_BIN + " -threads 4"
 SINA_BIN = BIN_DIR + 'sina/sina'
-DBS_DIR = "/srv/crc/databases/"
+DBS_DIR = "/srv/base/databases/"
 GOLD_REFDB_USEARCH = DBS_DIR + 'SILVA-bac-16s-90.udb'
 SINA_ARB = DBS_DIR + 'SILVA_138.1_SSURef_NR99_12_06_20_opt.arb'
 ref16RNAdb_1 = DBS_DIR + "silva-bac-16s-id90.fasta"
@@ -29,10 +29,9 @@ ref16RNAdb_2 = DBS_DIR + "silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
 bowtie2 = BIN_DIR + "bowtie2/bowtie2"
 krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
-Jobs_DIR = "/crc/crc/crcapp/jobs/"
-spikeidx = Jobs_DIR + "spikesidx/spike"
-R_processing_stat = Jobs_DIR + "processing_stats.R"
-S_FLAT_LOCATION = Jobs_DIR + 's_flat.txt'
+SPIKESIDX = "/base/spikesidx/spike"
+R_processing_stat = "/base/ENA_Processor/processing_stats.R"
+S_FLAT_LOCATION = '/base/s_flat.txt'
 
 
 def calc_spikes(*fastq_files, spike_amount):
@@ -63,7 +62,7 @@ def calc_spikes(*fastq_files, spike_amount):
         fastq_unaligned = fastq_aligned + "_unal"
 
         if len(fastq_names) == 2:
-            cmd = [bowtie2, "-x", spikeidx, "-1", fastqs_abs_paths[0], "-2",
+            cmd = [bowtie2, "-x", SPIKESIDX, "-1", fastqs_abs_paths[0], "-2",
                    fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
                    fastq_unaligned, USEARCH_TAIL]
             system(" ".join(cmd))
@@ -78,7 +77,7 @@ def calc_spikes(*fastq_files, spike_amount):
                 shutil.copy(fastq_unaligned + ".2", fastqs_abs_paths[1])
 
         elif len(fastq_names) == 1:
-            cmd = [bowtie2, "-x", spikeidx, "-U", fastqs_abs_paths[0], "--al-conc",
+            cmd = [bowtie2, "-x", SPIKESIDX, "-U", fastqs_abs_paths[0], "--al-conc",
                    fastq_aligned, "--un-conc", fastq_unaligned, USEARCH_TAIL]
             system(" ".join(cmd))
             files_inspike = listdir(spike_res_dir)
