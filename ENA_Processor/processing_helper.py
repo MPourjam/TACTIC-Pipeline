@@ -1,4 +1,5 @@
 import pickle as pk
+import yaml
 from os import getcwd
 from pathlib import Path
 from mimetypes import guess_type
@@ -173,3 +174,52 @@ class TaskPickle:
         self.__path = str(new_path)
         self.write()
         old_path.unlink()
+
+
+class YamlArgs:
+    prep_args_dict = {
+        # merge_pairs
+        "fastq_maxdiffs": (int, 50),
+        "fastq_pctid": (int, 50),
+        "fastq_minmergelen": (int, 200),
+        "fastq_maxmergelen": (int, 600),
+        # trim_both_sides
+        "stripleft": (int, 5),
+        "stripright": (int, 5),
+        # trim_one_side
+        "stripleft": (int, 5),
+        # filter_merged:
+        "fastq_maxee_rate": (float, 0.002),
+        # filter_one_side
+        "fastq_truncqual": (int, 10),
+        # "fastq_trunclen": "lambda x: mean(x) - 0.1 * mean(x) - 5"
+        # dereplication
+        "sizein": (bool, True),
+        "sizeout": (bool, True),
+        # sort_sequences:
+        # clusterZOTUs
+        "minsize": 2,
+        # filter16S
+        "e": (float, 0.1),
+        "num_alignments": (int, 1),
+        # prepare_zotus:
+        # build_ZOTU_table:
+        "id": (float, 0.97),
+        # filter_zotu_abundance
+        "abundance_cutoff": (float, 0.0),
+        # select_zotu_seqs
+        # addTax
+        "turn": (str, "all"),
+        # create_final_ZOTU_table:
+    }
+
+
+    def __init__(self,
+                 preproc_arg_filepath: str = None,
+                 analysis_arg_filepath: str = None,
+                 args_dict: dict = None):
+        """
+        Cool Class :)
+        """
+        pass
+        
