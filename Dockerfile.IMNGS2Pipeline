@@ -19,6 +19,15 @@ RUN apt update -y && apt upgrade -y
 RUN mkdir base
 COPY . /base
 
+
+######################
+## PIP DEPENDENCIES ##
+######################
+RUN pip install --upgrade pip
+COPY requirements.txt base/
+RUN pip install --upgrade -r base/requirements.txt
+
+
 ######################
 ## R and R PACKAGES ##
 ######################

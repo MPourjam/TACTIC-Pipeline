@@ -9,7 +9,7 @@ from pathlib import Path
 # from pprint import pprint as print
 from shutil import rmtree
 from statistics import mean, stdev
-from task_classes import TaskPickle
+from processing_helper import TaskPickle
 from multiprocessing import cpu_count
 from task_caller import main as process_multi
 from multiprocessing.pool import Pool

@@ -7,7 +7,7 @@ from tqdm import tqdm  # pip3 install tqdm
 from hashlib import md5
 from itertools import repeat
 from os import getcwd, cpu_count, remove
-from task_classes import TaskPickle
+from processing_helper import TaskPickle
 if version_info[0] < 3:
     from pathlib2 import Path, PosixPath  # pip2 install pathlib2
 else:
