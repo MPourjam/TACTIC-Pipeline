@@ -3,7 +3,7 @@ from os import (chdir, system, mkdir, listdir,
                 )
 from collections import Counter
 from statistics import stdev, mean
-from crcapp.task_classes import TaskPickle
+from processing_helper import TaskPickle
 from re import search
 import mimetypes as mtypes
 import re
@@ -716,3 +716,5 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, ori
         pko.close()
         if not path.isfile(udb_file):
             raise FileNotFoundError("No UDB created for {}".format(input_dir))
+
+

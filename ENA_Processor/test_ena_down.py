@@ -4,7 +4,7 @@ import sys
 from download_ena import download_main
 from process_prep import preparation_main
 from task_caller import main as main_caller
-from task_classes import TaskPickle
+from processing_helper import TaskPickle
 # from pprint import pprint as print
 from pathlib import Path
 

@@ -3,7 +3,7 @@ import os
 import re
 import pickle as pk
 from datetime import datetime as dt
-from task_classes import TaskPickle
+from processing_helper import TaskPickle
 from processing_job import main_processing
 from multiprocessing import cpu_count, Pool
 

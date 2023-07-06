@@ -2,7 +2,7 @@ from os import (chdir, system, mkdir, listdir,
                 makedirs, path, getcwd
                 )
 from statistics import stdev, mean
-from task_classes import TaskPickle
+from processing_helper import TaskPickle
 from collections import namedtuple
 from re import search
 import mimetypes as mtypes
