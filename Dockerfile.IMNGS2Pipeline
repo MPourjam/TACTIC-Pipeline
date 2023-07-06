@@ -2,7 +2,11 @@ FROM python:3.7-buster
 
 # Install dependencies
 RUN apt update -y && apt upgrade -y
-RUN apt update --fix-missing 
+RUN apt update --fix-missing
+RUN apt install -y libharfbuzz-dev libfribidi-dev
+RUN apt update --fix-missing
+RUN apt install -y r-cran-rcppeigen
+RUN apt update --fix-missing
 RUN apt install -y vim rsync
 RUN apt update -y && apt upgrade -y
 RUN apt update --fix-missing
@@ -33,7 +37,7 @@ RUN pip install --upgrade -r base/requirements.txt
 ######################
 RUN apt update -y
 RUN apt install -y r-base
-RUN Rscript base/R_packages_install.R
+# RUN Rscript base/R_packages_install.R
 
 
 WORKDIR /base/
