@@ -176,7 +176,147 @@ class TaskPickle:
         old_path.unlink()
 
 
-class YamlArgs:
+class ArgsParserUtil:
+
+    def __init__(self,
+                 args_d: dict = {}):
+        """
+        Initializing
+        """
+        if not isinstance(args_d, dict):
+            raise ValueError(f"args_d must be a non-empty dictionary. {str(type(args_d))} is given.")
+        if not args_d:
+            args_d = self.default_args
+        for key, val in args_d.items():
+            if key in self.default_args \
+                    and isinstance(val, type(self.default_args.get(key, None))):
+                setattr(self, key, val)
+
+
+class MergePairsArgs(ArgsParserUtil):
+    default_args = {
+        # "fastq_mergepairs": [FORWARD_FILE],
+        # "reverse": [REVERSE_FILE],
+        # "fastqout": merged.fasta,
+        "fasq_maxdiffs": 50,
+        "fastq_pctid": 50,
+        "fastq_minmergelen": 200,
+        "fastq_maxmergelen": 600,
+    }
+
+
+class TrimBothSidesArgs(ArgsParserUtil):
+    default_args = {
+        # "fastq_truncate": "merged.fasta",
+        # "fastqout": "filtered1.fasta",
+        "stripleft": 5,
+        "stripright": 5,
+    }
+
+
+class TrimOneSideArgs(ArgsParserUtil):
+    default_args = {
+        "stripleft": 5,
+    }
+
+
+class FilterBothSidesArgs(ArgsParserUtil):
+    default_args = {
+        "fastq_filter": "filtered1.fasta",
+        "fastaout": "filtered2.fasta",
+        "fastq_maxee_rate": 0.002,
+    }
+
+
+class FilterOneSideArgs(ArgsParserUtil):
+    default_args = {
+        # "fastq_filter": "filtered1.fasta",
+        # "fastaout": "filtered2.fasta",
+        # "fastq_trunclen": "[MINLEN-0.1MINLEN-5]",
+        "fastq_truncqual": 10,
+        "fastq_maxee_rate": 0.002,
+        "fastq_maxee_rate": 0.002,
+    }
+
+
+class DereplicationArgs(ArgsParserUtil):
+    default_args = {
+        # "fastx_uniques": "filtered2.fasta",
+        # "fsataout": "derep.fasta",
+        "sizein": True,
+        "sizeou": True,
+    }
+
+
+class SortArgs(ArgsParserUtil):
+    default_args = {
+        # "sortbysize": "derep.fasta",
+        # "fastaout": "sorted.fasta",
+    }
+
+
+class ClusterZOTUsArgs(ArgsParserUtil):
+    default_args = {
+        # "unoise3": sorted.fasta,
+        # "zotus": zotus.fasta,
+        # "tabbedout": denoising.tab,
+        "minsize": 2,
+    }
+
+
+class Filter16SArgs(ArgsParserUtil):
+    default_args = {
+        # "fastx": good-ZOTUs[.fasta],
+        "ref90": "silva-bac-16s-id90.fasta",
+        "ref95": "silva-arc-16s-id95.fasta",
+        # "reads": "zotus.fasta",
+        "other": "other.non16rRNA",
+        "num_alignments": 1,
+        "workdir": ".",
+        "e": 0.1,
+    }
+
+
+class BuildZOTUTableArgs(ArgsParserUtil):
+    default_args = {
+        # "otutab": "filtered2.fasta",
+        # "zotus": "ZOTUs.fasta",
+        # "otutabout": "zotu_table.txt",
+        "id": 0.97,
+    }
+
+
+class FilterZOTUAbundanceArgs(ArgsParserUtil):
+    default_args = {
+        # "otutab": "filtered2.fasta",
+        # "zotus": "ZOTUs.fasta",
+        # "otutabout": "zotu_table.txt",
+        "abundance_cutoff": 0.0025,
+    }
+
+
+class SelectZOTUsSeqsArgs(ArgsParserUtil):
+    default_args = {
+        # "fastx_getseqs": "good_ZOTUs.fa",
+        # "labels": "filtered_zotu_table_list.txt",
+        # "fastaout": "ZOTUs-Seqs.fasta",
+    }
+
+
+class AddTaxArgs(ArgsParserUtil):
+    default_args = {
+        # "in": "ZOTUs-Seqs.fasta",
+        # "threads": 10,
+        # "db": "<SINA_ARB>",
+        # "out": "<FASTA_FILE>",
+        "search": True,
+        "meta-fmt": "csv",
+        "lca-fields": "tax_slv",
+        "turn": "all",
+    }
+
+
+class PreprocessingArgs(ArgsParserUtil):
     prep_args_dict = {
         # merge_pairs
         "fastq_maxdiffs": (int, 50),
@@ -214,12 +354,28 @@ class YamlArgs:
     }
 
 
+class YamlArgs:
+
+    analysis_args_dict = {
+        "somekey": "someattr"
+    }
+
+    @staticmethod
+    def config_file_parser(confile_path: str) -> dict:
+        """
+        Parses and flatten the config file to a dictionary.
+        """
+        confile_path = Path(confile_path)
+
     def __init__(self,
                  preproc_arg_filepath: str = None,
                  analysis_arg_filepath: str = None,
                  args_dict: dict = None):
         """
-        Cool Class :)
+        Initializing
+        ============
+
+        By giving the address to yml files containing arguments and their values
+        it parses the arguments and sets them as attributes of classes.
         """
         pass
-        
