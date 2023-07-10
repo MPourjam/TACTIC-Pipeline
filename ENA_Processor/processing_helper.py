@@ -424,20 +424,21 @@ class AddTaxArgs(ArgsParserUtil):
     }
 
 
-class PreprocessingArgs:
+class PreprocessingArgsParser:
 
     def __init__(
             self,
-            config_yaml: str,
+            config_yaml: str = "",
             config_dict: dict = {},
             *args,
             **kwargs):
         """
-        This class reads a yaml file and parse it to a dictionary. If additional
-        config_dict is given, this dictionary items gets added to the the dictionary
-        created from yaml file without updating the yaml dictionary.
+        This class reads a yaml file and parse it to a dictionary and finally arguments
+        of preprocessing arguments needed for IMNGS2 Pipeline. If additional config_dict
+        is given, this dictionary items gets added to the the dictionary created from
+        yaml file without updating the yaml dictionary.
         """
-        yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml)
+        yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml) if config_yaml else {}
         yml_args_dict = flatten_dict(yml_args_dict, sep=ArgsParserUtil.dict_flatt_sep)
         try:
             config_dict.update(yml_args_dict)
@@ -472,28 +473,53 @@ class PreprocessingArgs:
         )
 
 
+class AnalysisArgsParser:
+
+    def __init__(
+            self,
+            config_yaml: str = "",
+            config_dict: dict = {},
+            *args,
+            **kwargs):
+        """
+        This class reads a yaml file and parse it to a dictionary and finally arguments
+        of analysis needed for IMNGS2 Pipeline. If additional config_dict is given, this
+        dictionary items gets added to the the dictionary created from yaml file without
+        updating the yaml dictionary.
+        """
+        yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml) if config_yaml else {}
+        yml_args_dict = flatten_dict(yml_args_dict, sep=ArgsParserUtil.dict_flatt_sep)
+        try:
+            config_dict.update(yml_args_dict)
+        except Exception as e:
+            argparse_logger.warning(e)
+
+        # TODO add the argument parser classes of Analysis here.
+
+
 class YamlArgs:
 
-    analysis_args_dict = {
-        "somekey": "someattr"
-    }
+    def __init__(
+            self,
+            config_yaml: str = "",
+            config_dict: dict = {},
+            *args,
+            **kwargs):
+        """
+        Parses all arguments needed for IMNGS2 Pipeline
+        """
+        self.preproc_args = PreprocessingArgsParser(config_yaml, config_dict)
+        self.analysis_args = AnalysisArgsParser(config_yaml, config_dict)
 
-    @staticmethod
-    def config_file_parser(confile_path: str) -> dict:
-        """
-        Parses and flatten the config file to a dictionary.
-        """
-        confile_path = Path(confile_path)
+    def __str__(self):
+        dict_print = {}
+        for ky, vl in self.__dict__.items():
+            dict_print.update({ky: str(vl)})
+        return str(dict_print)
 
-    def __init__(self,
-                 preproc_arg_filepath: str = None,
-                 analysis_arg_filepath: str = None,
-                 args_dict: dict = None):
-        """
-        Initializing
-        ============
-
-        By giving the address to yml files containing arguments and their values
-        it parses the arguments and sets them as attributes of classes.
-        """
-        pass
+    def __repr__(self):
+        return '<%s.%s object at %s>' % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            hex(id(self))
+        )
