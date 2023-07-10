@@ -1,9 +1,60 @@
 import pickle as pk
 import yaml
+import logging
 from os import getcwd
-from pathlib import Path
+from pathlib import Path, PurePath
 from mimetypes import guess_type
 from datetime import datetime as dt
+from collections.abc import MutableMapping
+
+
+def gimmelogger(logger_name: str, log_file: Path = None):
+    # Logger
+    logger_dir = Path(PurePath(getcwd())).name.stem
+    log_file_path = logger_dir.joinpath(f"{logger_name}_log.txt")
+    if log_file:
+        custom_log_file = Path(str(log_file))
+        if not custom_log_file.parent.is_dir():
+            custom_log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_file_path = custom_log_file
+
+    logger = logging.getLogger(logger_name)
+    # set the logging level
+    logger.setLevel(logging.DEBUG)
+
+    # create a console and file handler
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    fh = logging.FileHandler(log_file_path)
+    fh.setLevel(logging.WARNING)
+    # create a formatter
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # set the formatter to the console handler
+    ch.setFormatter(formatter)
+    fh.setFormatter(formatter)
+    # add the console handler to the logger
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+
+    return logger
+
+
+global argparse_logger
+argparse_logger = gimmelogger("ArgumentParser")
+
+
+def flatten_dict(
+        d: MutableMapping,
+        parent_key: str = '',
+        sep: str = ".") -> MutableMapping:
+        items = []
+        for k, v in d.items():
+            new_key = parent_key + sep + k if parent_key else k
+            if isinstance(v, MutableMapping):
+                items.extend(ArgsParserUtil.flatten_dict(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
 
 
 class TaskPickle:
@@ -177,20 +228,72 @@ class TaskPickle:
 
 
 class ArgsParserUtil:
+    dict_flatt_sep = "__"
 
     def __init__(self,
-                 args_d: dict = {}):
+                 args_d: dict = {},
+                 parent_key_sep: str = "__"):
         """
         Initializing
         """
         if not isinstance(args_d, dict):
             raise ValueError(f"args_d must be a non-empty dictionary. {str(type(args_d))} is given.")
-        if not args_d:
-            args_d = self.default_args
-        for key, val in args_d.items():
-            if key in self.default_args \
-                    and isinstance(val, type(self.default_args.get(key, None))):
+        # if not args_d:
+        #     args_d = self.default_args
+        for key, val in self.default_args.items():
+            setattr(self, key, val)
+            # addTaxUpdating the argument value if it exists in args_d
+            arg_val_to_put = None
+            # All args_d is supposed to be flattend with "__" as parent_key seperator
+            for ky, vl in args_d.items():
+                arg_parser_class_name = ky.split(ArgsParserUtil.dict_flatt_sep)[0:1]
+                """
+                NOTE
+                If the argument parser part of key matches the class name of current object
+                then the argument and it's value is put as an attribute.
+                e.g: MergePairsArgs<dict_flatt_sep>fastq_maxdiffs will be only set as an
+                attribute to a class parser with the name 'MergePairsArgs'
+                """
+                if key in ky and str(self.__class__.__name__) in arg_parser_class_name:
+                    arg_val_to_put = vl
+            if arg_val_to_put and isinstance(arg_val_to_put, type(val)):
+                setattr(self, key, arg_val_to_put)
+
+    def update_attrs(self, args_dict: dict = {}):
+        """
+        It takes a dictionary and updates the class instance attributes if
+        a key of dictionary matches the class instance attributes.
+        """
+        for key, val in args_dict.items():
+            # keys might be preceded by argument parser class name (e.g: MergePairsArgs)
+            # TODO Taking key should follow the same logic as __ini__
+            if hasattr(self, key) and isinstance(val, type(getattr(self, key, None))):
                 setattr(self, key, val)
+
+    @staticmethod
+    def parse_yaml(yaml_path: str):
+        """
+        Parses a yaml to dictionary
+        """
+        yml_args_d = {}
+        yaml_path = Path(yaml_path)
+        with open(yaml_path, "r") as yaml_stream:
+            try:
+                yml_args_d = yaml.safe_load(yaml_stream)
+            except yaml.YAMLError as e:
+                argparse_logger.warning(e)
+
+        return yml_args_d
+
+    def __repr__(self):
+        return '<%s.%s object at %s>' % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            hex(id(self))
+        )
+
+    def __str__(self):
+        return self.__repr__()
 
 
 class MergePairsArgs(ArgsParserUtil):
@@ -316,42 +419,39 @@ class AddTaxArgs(ArgsParserUtil):
     }
 
 
-class PreprocessingArgs(ArgsParserUtil):
-    prep_args_dict = {
-        # merge_pairs
-        "fastq_maxdiffs": (int, 50),
-        "fastq_pctid": (int, 50),
-        "fastq_minmergelen": (int, 200),
-        "fastq_maxmergelen": (int, 600),
-        # trim_both_sides
-        "stripleft": (int, 5),
-        "stripright": (int, 5),
-        # trim_one_side
-        "stripleft": (int, 5),
-        # filter_merged:
-        "fastq_maxee_rate": (float, 0.002),
-        # filter_one_side
-        "fastq_truncqual": (int, 10),
-        # "fastq_trunclen": "lambda x: mean(x) - 0.1 * mean(x) - 5"
-        # dereplication
-        "sizein": (bool, True),
-        "sizeout": (bool, True),
-        # sort_sequences:
-        # clusterZOTUs
-        "minsize": 2,
-        # filter16S
-        "e": (float, 0.1),
-        "num_alignments": (int, 1),
-        # prepare_zotus:
-        # build_ZOTU_table:
-        "id": (float, 0.97),
-        # filter_zotu_abundance
-        "abundance_cutoff": (float, 0.0),
-        # select_zotu_seqs
-        # addTax
-        "turn": (str, "all"),
-        # create_final_ZOTU_table:
-    }
+class PreprocessingArgs:
+
+    def __init__(
+            self,
+            config_yaml: str,
+            config_dict: dict = {},
+            *args,
+            **kwargs):
+        """
+        This class reads a yaml file and parse it to a dictionary. If additional
+        config_dict is given, this dictionary items gets added to the the dictionary
+        created from yaml file without updating the yaml dictionary.
+        """
+        yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml)
+        yml_args_dict = flatten_dict(yml_args_dict, ArgsParserUtil.dict_flatt_sep)
+        try:
+            config_dict.update(yml_args_dict)
+        except Exception as e:
+            argparse_logger.warning(e)
+
+        # Updating attributes of class instance
+        self.merge_pairs = MergePairsArgs(config_dict)
+        self.trim_both_sides = TrimBothSidesArgs(config_dict)
+        self.trim_one_side = TrimOneSideArgs(config_dict)
+        self.filter_merged = FilterBothSidesArgs(config_dict)
+        self.filter_single_reads = FilterOneSideArgs(config_dict)
+        self.dereplication = DereplicationArgs(config_dict)
+        self.sort_seq = SortArgs(config_dict)
+        self.cluster_zotus = ClusterZOTUsArgs(config_dict)
+        self.filter_16S = Filter16SArgs(config_dict)
+        self.build_zotus_table = BuildZOTUTableArgs(config_dict)
+        self.filter_zotu_abundance = FilterZOTUAbundanceArgs(config_dict)
+        self.add_tax = AddTaxArgs(config_dict)
 
 
 class YamlArgs:
