@@ -10,7 +10,7 @@ from collections.abc import MutableMapping
 
 def gimmelogger(logger_name: str, log_file: Path = None):
     # Logger
-    logger_dir = Path(PurePath(getcwd())).name.stem
+    logger_dir = Path(PurePath(getcwd())).parent
     log_file_path = logger_dir.joinpath(f"{logger_name}_log.txt")
     if log_file:
         custom_log_file = Path(str(log_file))
@@ -51,7 +51,7 @@ def flatten_dict(
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k
             if isinstance(v, MutableMapping):
-                items.extend(ArgsParserUtil.flatten_dict(v, new_key, sep=sep).items())
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))
         return dict(items)
@@ -169,12 +169,12 @@ class TaskPickle:
                 if not p.is_dir():
                     return False
             elif k == "forward_file":
-                p = Path(input_d)/str(v)
+                p = Path(input_d) / str(v)
                 # This is for when the processing is close to finish and fastqs are deleted.
                 if not p.is_file() and not is_running:
                     return False
             elif k == "reverse_file":
-                p = Path(input_d)/str(v)
+                p = Path(input_d) / str(v)
                 # This is for when the processing is close to finish and fastqs are deleted.
                 if paired and not p.is_file() and not is_running:
                     return False
@@ -238,8 +238,6 @@ class ArgsParserUtil:
         """
         if not isinstance(args_d, dict):
             raise ValueError(f"args_d must be a non-empty dictionary. {str(type(args_d))} is given.")
-        # if not args_d:
-        #     args_d = self.default_args
         for key, val in self.default_args.items():
             setattr(self, key, val)
             # addTaxUpdating the argument value if it exists in args_d
@@ -267,6 +265,10 @@ class ArgsParserUtil:
         for key, val in args_dict.items():
             # keys might be preceded by argument parser class name (e.g: MergePairsArgs)
             # TODO Taking key should follow the same logic as __ini__
+            key_class = str(key).split(ArgsParserUtil.dict_flatt_sep)[0:1]
+            key_class = key_class[0] if key_class else str(None)
+            key_ = str(key).split(ArgsParserUtil.dict_flatt_sep)[1:2]
+            key_ = key_[0] if key_ and str(self.__class__.__name__) in key_class else str(None)
             if hasattr(self, key) and isinstance(val, type(getattr(self, key, None))):
                 setattr(self, key, val)
 
@@ -293,7 +295,10 @@ class ArgsParserUtil:
         )
 
     def __str__(self):
-        return self.__repr__()
+        dict_print = {}
+        for ky, vl in self.__dict__.items():
+            dict_print.update({ky: str(vl)})
+        return str(dict_print)
 
 
 class MergePairsArgs(ArgsParserUtil):
@@ -433,7 +438,7 @@ class PreprocessingArgs:
         created from yaml file without updating the yaml dictionary.
         """
         yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml)
-        yml_args_dict = flatten_dict(yml_args_dict, ArgsParserUtil.dict_flatt_sep)
+        yml_args_dict = flatten_dict(yml_args_dict, sep=ArgsParserUtil.dict_flatt_sep)
         try:
             config_dict.update(yml_args_dict)
         except Exception as e:
@@ -452,6 +457,19 @@ class PreprocessingArgs:
         self.build_zotus_table = BuildZOTUTableArgs(config_dict)
         self.filter_zotu_abundance = FilterZOTUAbundanceArgs(config_dict)
         self.add_tax = AddTaxArgs(config_dict)
+
+    def __str__(self):
+        dict_print = {}
+        for ky, vl in self.__dict__.items():
+            dict_print.update({ky: str(vl)})
+        return str(dict_print)
+
+    def __repr__(self):
+        return '<%s.%s object at %s>' % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            hex(id(self))
+        )
 
 
 class YamlArgs:
