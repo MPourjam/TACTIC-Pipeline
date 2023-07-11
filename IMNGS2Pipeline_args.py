@@ -2,6 +2,9 @@
 # name of pipeline step (CamelCase) and the arguments added as indentaion to.
 # If an argument parser exists with the same name of pipeline step (e.g: MergePairsArgs),
 # then the arguments would be implemented in processing.
+#####################
+### Preprocessing ###
+#####################
 MergePairsArgs:
   fastq_maxdiffs: 50
   fastq_pctid: 50
@@ -34,8 +37,13 @@ FilterZOTUAbundanceArgs:
 # select_zotu_seqs:
 AddTaxArgs:
   turn: all
-# create_final_ZOTU_table:
-
-
-
-  
+################
+### Analysis ###
+################
+TrimSidesArgs:
+  stripleft: 5
+  stripright: 5
+ComplexTICArgs:
+  family_sim: 0.90
+  genus_sim: 0.95
+  species_sim: 0.97
