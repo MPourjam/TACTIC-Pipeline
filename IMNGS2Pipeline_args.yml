@@ -41,9 +41,12 @@ AddTaxArgs:
 ### Analysis ###
 ################
 TrimSidesArgs:
-  stripleft: 5
-  stripright: 5
+  stripleft: 10
+  stripright: 10
 ComplexTICArgs:
   family_sim: 0.90
   genus_sim: 0.95
   species_sim: 0.97
+CreateTableTICArgs:
+  abund_limit: 0.0025
+  sample_wise_correction: true
