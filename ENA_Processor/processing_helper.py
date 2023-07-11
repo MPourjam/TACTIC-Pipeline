@@ -227,7 +227,23 @@ class TaskPickle:
         old_path.unlink()
 
 
-class ArgsParserUtil:
+class ArgsParserDunderUtil:
+
+    def __repr__(self):
+        return '<%s.%s object at %s>' % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            hex(id(self))
+        )
+
+    def __str__(self):
+        dict_print = {}
+        for ky, vl in self.__dict__.items():
+            dict_print.update({ky: str(vl)})
+        return str(dict_print)
+
+
+class ArgsParserUtil(ArgsParserDunderUtil):
     dict_flatt_sep = "__"
 
     def __init__(self,
@@ -286,19 +302,6 @@ class ArgsParserUtil:
                 argparse_logger.warning(e)
 
         return yml_args_d
-
-    def __repr__(self):
-        return '<%s.%s object at %s>' % (
-            self.__class__.__module__,
-            self.__class__.__name__,
-            hex(id(self))
-        )
-
-    def __str__(self):
-        dict_print = {}
-        for ky, vl in self.__dict__.items():
-            dict_print.update({ky: str(vl)})
-        return str(dict_print)
 
 
 class MergePairsArgs(ArgsParserUtil):
@@ -424,7 +427,31 @@ class AddTaxArgs(ArgsParserUtil):
     }
 
 
-class PreprocessingArgsParser:
+class TrimSidesArgs(ArgsParserUtil):
+    default_args = {
+        # "fastq_truncate": "analysis.fasta",
+        # "fastaout": "filtered1.fasta",
+        "stripleft": 0,
+        "stripright": 0,
+    }
+
+
+class ComplexTICArgs(ArgsParserUtil):
+    default_args = {
+        "family_sim": 0.90,
+        "genus_sim": 0.95,
+        "species_sim": 0.97,
+    }
+
+
+class CreateTableTICArgs(ArgsParserUtil):
+    default_args = {
+        "abund_limit": 0.0025,
+        "sample_wise_correction": True,
+    }
+
+
+class PreprocessingArgsParser(ArgsParserDunderUtil):
 
     def __init__(
             self,
@@ -459,21 +486,8 @@ class PreprocessingArgsParser:
         self.filter_zotu_abundance = FilterZOTUAbundanceArgs(config_dict)
         self.add_tax = AddTaxArgs(config_dict)
 
-    def __str__(self):
-        dict_print = {}
-        for ky, vl in self.__dict__.items():
-            dict_print.update({ky: str(vl)})
-        return str(dict_print)
 
-    def __repr__(self):
-        return '<%s.%s object at %s>' % (
-            self.__class__.__module__,
-            self.__class__.__name__,
-            hex(id(self))
-        )
-
-
-class AnalysisArgsParser:
+class AnalysisArgsParser(ArgsParserDunderUtil):
 
     def __init__(
             self,
@@ -495,9 +509,12 @@ class AnalysisArgsParser:
             argparse_logger.warning(e)
 
         # TODO add the argument parser classes of Analysis here.
+        self.trimsides = TrimSidesArgs(config_dict)
+        self.complex_tic = ComplexTICArgs(config_dict)
+        self.create_table = CreateTableTICArgs(config_dict)
 
 
-class YamlArgs:
+class YamlArgs(ArgsParserDunderUtil):
 
     def __init__(
             self,
@@ -510,16 +527,3 @@ class YamlArgs:
         """
         self.preproc_args = PreprocessingArgsParser(config_yaml, config_dict)
         self.analysis_args = AnalysisArgsParser(config_yaml, config_dict)
-
-    def __str__(self):
-        dict_print = {}
-        for ky, vl in self.__dict__.items():
-            dict_print.update({ky: str(vl)})
-        return str(dict_print)
-
-    def __repr__(self):
-        return '<%s.%s object at %s>' % (
-            self.__class__.__module__,
-            self.__class__.__name__,
-            hex(id(self))
-        )
