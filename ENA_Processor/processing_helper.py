@@ -514,7 +514,7 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
         self.create_table = CreateTableTICArgs(config_dict)
 
 
-class YamlArgs(ArgsParserDunderUtil):
+class IMNGS2ArgsParser(ArgsParserDunderUtil):
 
     def __init__(
             self,
