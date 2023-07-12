@@ -636,8 +636,6 @@ def main_processing(
         forward_file,
         reverse_file,
         input_id,
-        origin,
-        spike_amount=0,
         args_file_path: str = ""):
     global log
     log = gimmelogger(input_id, input_dir)
@@ -740,7 +738,7 @@ def main_processing(
         # udb for both similarity queries
         create_udb(input_id)
         log.info('UDB created')
-        update_s_flat(input_id, origin)
+        # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         create_zip(input_id)
         log.info('Zipped!')
