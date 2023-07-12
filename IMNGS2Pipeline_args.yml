@@ -5,6 +5,8 @@
 #####################
 ### Preprocessing ###
 #####################
+SpikeRemovalArgs:
+  spike_amount: 0  # unit: ng
 MergePairsArgs:
   fastq_maxdiffs: 50
   fastq_pctid: 50
