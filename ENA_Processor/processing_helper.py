@@ -352,7 +352,6 @@ class FilterOneSideArgs(ArgsParserUtil):
         # "fastq_trunclen": "[MINLEN-0.1MINLEN-5]",
         "fastq_truncqual": 10,
         "fastq_maxee_rate": 0.002,
-        "fastq_maxee_rate": 0.002,
     }
 
 
@@ -361,7 +360,7 @@ class DereplicationArgs(ArgsParserUtil):
         # "fastx_uniques": "filtered2.fasta",
         # "fsataout": "derep.fasta",
         "sizein": True,
-        "sizeou": True,
+        "sizeout": True,
     }
 
 
@@ -479,7 +478,7 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             argparse_logger.warning(e)
 
         # Updating attributes of class instance
-        self.spikeremoval = SpikeRemovalArgs(config_dict)
+        self.spike_removal = SpikeRemovalArgs(config_dict)
         self.merge_pairs = MergePairsArgs(config_dict)
         self.trim_both_sides = TrimBothSidesArgs(config_dict)
         self.trim_one_side = TrimOneSideArgs(config_dict)
