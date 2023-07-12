@@ -304,6 +304,12 @@ class ArgsParserUtil(ArgsParserDunderUtil):
         return yml_args_d
 
 
+class SpikeRemovalArgs(ArgsParserUtil):
+    default_args = {
+        "spike_amount": 0,  # unit: ng
+    }
+
+
 class MergePairsArgs(ArgsParserUtil):
     default_args = {
         # "fastq_mergepairs": [FORWARD_FILE],
@@ -473,6 +479,7 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             argparse_logger.warning(e)
 
         # Updating attributes of class instance
+        self.spikeremoval = SpikeRemovalArgs(config_dict)
         self.merge_pairs = MergePairsArgs(config_dict)
         self.trim_both_sides = TrimBothSidesArgs(config_dict)
         self.trim_one_side = TrimOneSideArgs(config_dict)
