@@ -1,10 +1,12 @@
-from os import (chdir, system, mkdir, listdir,
+from os import (chdir, mkdir, listdir,
                 makedirs, path, getcwd
                 )
 from collections import Counter
 from statistics import stdev, mean
 from processing_helper import TaskPickle
 from re import search
+from processing_helper import IMNGS2ArgsParser
+import subprocess
 import mimetypes as mtypes
 import re
 import random
@@ -32,6 +34,32 @@ krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
 SPIKESIDX = "/base/spikesidx/spike"
 R_processing_stat = "/base/ENA_Processor/processing_stats.R"
 S_FLAT_LOCATION = '/base/s_flat.txt'
+
+
+# overwriting system() to run it with subprocess.run
+def system(cmd):
+    cmd_list = str(cmd).split(" ")
+    cmds_to_write_log = ["usearch", "sina", "sortmerna"]
+    capture_output_bool = any([True for el in cmds_to_write_log if el in str(cmd_list[0])])
+    where_to_cut = len(cmd_list)
+    if capture_output_bool:
+        for ind, arg_ in enumerate(cmd_list):
+            if ">" in arg_:
+                where_to_cut = ind
+                break
+    # If capture_output_bool is true then do not redirect to /dev/null
+    cmd_list = cmd_list[:where_to_cut]
+    run_output = subprocess.run(
+        cmd_list,
+        capture_output=capture_output_bool,
+        text=capture_output_bool
+    )
+    # logging
+    if capture_output_bool:
+        if run_output.stderr:
+            log.warning(run_output.stderr)
+        if run_output.stdout:
+            log.info(run_output.stdout)
 
 
 def calc_spikes(*fastq_files, spike_amount):
@@ -200,21 +228,23 @@ def mymkdir(input_dir):
 
 
 def merge_pairs(forward_file, reverse_file):
-    cmd_0 = USEARCH_11_BIN + " -fastq_mergepairs " + forward_file + ' -reverse ' + reverse_file + ' -fastq_maxdiffs 50'
-    cmd_1 = " -fastq_pctid 50 -fastqout merged.fasta"
-    cmd_2 = " -fastq_minmergelen 200 -fastq_maxmergelen 600 >/dev/null 2>/dev/null"
+    cmd_0 = USEARCH_11_BIN + " -fastq_mergepairs " + forward_file + ' -reverse ' + reverse_file
+    cmd_1 = " -fastq_maxdiffs " + str(ARGS_CLS.merge_pairs.fasq_maxdiffs)
+    cmd_1 += " -fastq_pctid " + str(ARGS_CLS.merge_pairs.fastq_pctid) + " -fastqout merged.fasta"
+    cmd_2 = " -fastq_minmergelen " + str(ARGS_CLS.merge_pairs.fastq_minmergelen)
+    cmd_2 += " -fastq_maxmergelen " + str(ARGS_CLS.merge_pairs.fastq_maxmergelen) + " >/dev/null 2>/dev/null"
     # print(cmd_0 + cmd_1 + cmd_2)
     system(cmd_0 + cmd_1 + cmd_2)
 
 
 def trim_sides():
-    cmd_0 = USEARCH_11_BIN + " -fastx_truncate merged.fasta -stripright 5"
-    cmd_1 = " -stripleft 5 -fastqout filtered1.fasta >/dev/null 2>/dev/null"
+    cmd_0 = USEARCH_11_BIN + " -fastx_truncate merged.fasta -stripright " + str(ARGS_CLS.trim_both_sides.stripright)
+    cmd_1 = " -stripleft " + str(ARGS_CLS.trim_both_sides.stripleft) + " -fastqout filtered1.fasta >/dev/null 2>/dev/null"
     system(cmd_0 + cmd_1)
 
 
 def filter_merged_reads():
-    cmd_0 = USEARCH_11_BIN + ' -fastq_filter filtered1.fasta -fastq_maxee_rate 0.002'
+    cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fasta -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
     cmd_1 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
     system(cmd_0 + cmd_1)
 
@@ -238,8 +268,10 @@ def run_FastQC(forward_file, reverse_file):
 
 
 def dereplicate_seqs():
-    cmd_0 = USEARCH_11_BIN + ' -fastx_uniques filtered2.fasta -fastaout derep.fasta'
-    cmd_1 = ' -sizein -sizeout ' + USEARCH_TAIL
+    SIZE_ARGS = "-sizein " if ARGS_CLS.dereplication.sizein else ""
+    SIZE_ARGS += "-sizeout " if ARGS_CLS.dereplication.sizeout else ""
+    cmd_0 = USEARCH_11_BIN + " -fastx_uniques filtered2.fasta -fastaout derep.fasta "
+    cmd_1 = SIZE_ARGS + USEARCH_TAIL
     system(cmd_0 + cmd_1)
     line_n = 0
     with open('derep.fasta') as derep:
@@ -258,7 +290,7 @@ def sort_seqs():
 
 
 def trim_one_side(forward_file):
-    cmd_0 = USEARCH_11_BIN + " -fastx_truncate " + forward_file + " -stripleft 5"
+    cmd_0 = USEARCH_11_BIN + " -fastx_truncate " + forward_file + " -stripleft " + str(ARGS_CLS.trim_one_side.stripleft)
     cmd_1 = " -fastqout filtered1.fasta >/dev/null 2>/dev/null"
     system(cmd_0 + cmd_1)
 
@@ -266,15 +298,15 @@ def trim_one_side(forward_file):
 def filter_merged_one_side(forward_file):
     curr_mean, curr_sd = seqFileStats(forward_file)
     minLength = curr_mean - int(0.1 * curr_mean) - 5  # remove the primer triming size plus 10% of the mean size
-    cmd_0 = USEARCH_11_BIN + ' -fastq_filter filtered1.fasta -fastq_truncqual 10'
-    cmd_1 = ' -fastq_maxee_rate 0.002 -fastq_trunclen ' + str(minLength)
-    cmd_2 = ' -fastaout filtered2.fasta >/dev/null 2>/dev/null'
+    cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fasta -fastq_truncqual " + str(ARGS_CLS.filter_single_reads.fastq_truncqual)
+    cmd_1 = " -fastq_maxee_rate " + str(ARGS_CLS.filter_single_reads.fastq_maxee_rate) + " -fastq_trunclen " + str(minLength)
+    cmd_2 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
     system(cmd_0 + cmd_1 + cmd_2)
 
 
 # cluster sequences to OTUs
 def clusterZOTUs():
-    cmd_part_0 = USEARCH_11_BIN + ' -unoise3 sorted.fasta -minsize 2 -zotus zotus.fasta'
+    cmd_part_0 = USEARCH_11_BIN + " -unoise3 sorted.fasta -minsize " + str(ARGS_CLS.cluster_zotus.minsize) + " -zotus zotus.fasta"
     cmd_part_1 = ' -tabbedout denoising.tab'
     cmd_part_2 = ' ' + USEARCH_TAIL
     # clusering of seq in OTUs (clustered)
@@ -284,8 +316,9 @@ def clusterZOTUs():
 # Filter non 16S sequences
 def filter16S():
     cmd_0 = SORT_ME_RNA_BIN + " --ref " + ref16RNAdb_1 + " --ref " + ref16RNAdb_2 + " --reads "
-    cmd_1 = " zotus.fasta --fastx good-ZOTUs --other other.non16rRNA  --workdir . -e 0.1 --num_alignments 1"
-    cmd_2 = " > /dev/null 2>&1"
+    cmd_1 = " zotus.fasta --fastx good-ZOTUs --other " + str(ARGS_CLS.filter_16S.other) + "  --workdir ."
+    cmd_2 = " -e " + str(ARGS_CLS.filter_16S.e) + " --num_alignments " + str(ARGS_CLS.filter_16S.num_alignments)
+    cmd_2 += " >/dev/null 2>&1"
     # run a RNA filtering step
     # (The program currently do not distinquish between 16S and 18S)
     system(cmd_0 + cmd_1 + cmd_2)
@@ -307,7 +340,7 @@ def prepare_zotus():
 
 def build_ZOTU_table():
     cmd_0 = USEARCH_11_BIN + ' -otutab filtered2.fasta -zotus ZOTUs.fasta '
-    cmd_1 = ' -otutabout zotu_table.txt -id 0.97'
+    cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id)
     system(cmd_0 + cmd_1 + USEARCH_TAIL)
 
 
@@ -569,12 +602,17 @@ class Filehanlder_pk(logging.FileHandler):
 def gimmelogger(name, dir_path):
     dir_path = path.abspath(dir_path)
     log = logging.getLogger(str(name))
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     log.setLevel(logging.DEBUG)
     log_file = path.join(dir_path, "{}_logs.txt".format(str(name)))
+    # File logger
     FH = Filehanlder_pk(log_file)
+    FH.setFormatter(formatter)
     FH.setLevel(logging.INFO)
     log.addHandler(FH)
+    # Stream logger
     SH = logging.StreamHandler(sys.stdout)
+    SH.setFormatter(formatter)
     SH.setLevel(logging.DEBUG)
     log.addHandler(SH)
     return log
@@ -592,13 +630,27 @@ def write_reads_report(input_id, **kwargs):
     return initial_report
 
 
-def main_processing(input_dir, paired, forward_file, reverse_file, input_id, origin, spike_amount=0):
+def main_processing(
+        input_dir,
+        paired,
+        forward_file,
+        reverse_file,
+        input_id,
+        origin,
+        spike_amount=0,
+        args_file_path: str = ""):
+    global log
     log = gimmelogger(input_id, input_dir)
-    # We define the related TaskPickle object here and make it avialbel globally as we need the
+    # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
     pk_dir = path.abspath(input_dir)
     pk_file = path.join(pk_dir, "{}.pk".format(input_id))
+    # Parsing arguments from args_file_path
+    # if args_file_path is empty then default values in processing_helper.py
+    # are loaded
+    global ARGS_CLS
+    ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path)
     try:
         if not path.exists(pk_file):
             # Creation of TaskPickle instance for the run
@@ -640,7 +692,7 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, ori
             files_names.append("")
         forward_file, reverse_file = files_names
         log.info("Spike removal started.")
-        real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=spike_amount)
+        real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=ARGS_CLS.spike_removal.spike_amount)
         log.debug("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is crucial to be here
@@ -715,5 +767,3 @@ def main_processing(input_dir, paired, forward_file, reverse_file, input_id, ori
         pko.close()
         if not path.isfile(udb_file):
             raise FileNotFoundError("No UDB created for {}".format(input_dir))
-
-
