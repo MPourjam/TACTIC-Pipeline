@@ -5,7 +5,7 @@ from collections import Counter
 from statistics import stdev, mean
 from processing_helper import TaskPickle
 from re import search
-from processing_helper import IMNGS2ArgsParser
+from processing_helper import IMNGS2ArgsParser, gimmelogger
 import subprocess
 import mimetypes as mtypes
 import re
@@ -13,7 +13,6 @@ import random
 import shutil
 import glob
 import logging
-import sys
 import time
 
 
@@ -37,7 +36,7 @@ S_FLAT_LOCATION = '/base/s_flat.txt'
 
 
 # overwriting system() to run it with subprocess.run
-def system(cmd):
+def system(cmd, logger):
     cmd_list = str(cmd).split(" ")
     cmds_to_write_log = ["usearch", "sina", "sortmerna"]
     capture_output_bool = any([True for el in cmds_to_write_log if el in str(cmd_list[0])])
@@ -599,25 +598,6 @@ class Filehanlder_pk(logging.FileHandler):
         update_task_pko("Progress", record.msg)
 
 
-def gimmelogger(name, dir_path):
-    dir_path = path.abspath(dir_path)
-    log = logging.getLogger(str(name))
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    log.setLevel(logging.DEBUG)
-    log_file = path.join(dir_path, "{}_logs.txt".format(str(name)))
-    # File logger
-    FH = Filehanlder_pk(log_file)
-    FH.setFormatter(formatter)
-    FH.setLevel(logging.INFO)
-    log.addHandler(FH)
-    # Stream logger
-    SH = logging.StreamHandler(sys.stdout)
-    SH.setFormatter(formatter)
-    SH.setLevel(logging.DEBUG)
-    log.addHandler(SH)
-    return log
-
-
 def write_reads_report(input_id, **kwargs):
     initial_report = "{}\n".format(str(input_id))
     for i, v in enumerate(kwargs.items()):
@@ -638,7 +618,8 @@ def main_processing(
         input_id,
         args_file_path: str = ""):
     global log
-    log = gimmelogger(input_id, input_dir)
+    logger_file_path = path.join(path.abspath(input_dir), "preprocessing_logs.txt")
+    log = gimmelogger(input_id, logger_file_path)
     # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
@@ -658,7 +639,7 @@ def main_processing(
             pko.task_dict["args"]["forward_file"] = forward_file
             pko.task_dict["args"]["reverse_file"] = reverse_file
             pko.task_dict["args"]["input_id"] = input_id
-            pko.task_dict["args"]["spike_amount"] = spike_amount
+            pko.task_dict["args"]["spike_amount"] = ARGS_CLS.spike_removal.spike_amount
             pko.task_dict["status"]["run"] = pko.scode_d["Started"]
             abs_path_forw = path.exists(path.abspath(path.join(input_dir, forward_file)))
             if reverse_file:
