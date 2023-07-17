@@ -1,21 +1,12 @@
-import argparse
-import shlex
+import os
 from ENA_Processor.processing_job import main_processing as preprocessing
 from ENA_Processor.analyze_sample_job import main as analyze
-from ENA_Processor.processing_helper import gimmelogger
+import ENA_Processor.processing_helper as proc_helper
 from sys import version_info
 if version_info[0] < 3:
-    from pathlib2 import Path, PosixPath, PurePath  # pip2 install pathlib2
+    from pathlib2 import Path, PurePath  # pip2 install pathlib2
 else:
-    from pathlib import Path, PosixPath, PurePath
-
-
-def is_fastq(fastq_file_path):
-    """
-    If a file is ascii then it checks if it's a fastq file.
-    """
-    # check if it's ascii
-    pass
+    from pathlib import Path, PurePath
 
 
 def gather_files_in_pairs(targ_dir: str):
@@ -58,7 +49,7 @@ def run_imngs2(
     assert args_yml_file.is_file(), "args_yml_file must be a path to a file"
     assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
     # Preparing the logger
-    prep_log = gimmelogger("preparion_logger", fastq_file_dir.joinpath("preparation_logs.txt"))
+    prep_log = proc_helper.gimmelogger("preparion_logger", fastq_file_dir.joinpath("preparation_logs.txt"))
     # TODO
     gather_files_in_pairs()
     split_files_to_directories()

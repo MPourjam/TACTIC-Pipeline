@@ -4,9 +4,9 @@ import shutil
 from os import chdir, system
 from zipfile import ZipFile
 from pprint import pprint as print
-from TIC.complex_TIC import main_complex_TIC
-from TIC.split_based_on_taxonomy import split_based_on_taxonomy
-from crcapp.models_job import job_anaquery
+from .TIC.complex_TIC import main_complex_TIC
+from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
+# from crcapp.models_job import job_anaquery
 
 
 ORIGINAL_DIR = '/srv/crc/projects/'
