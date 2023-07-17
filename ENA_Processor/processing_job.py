@@ -3,9 +3,9 @@ from os import (chdir, mkdir, listdir,
                 )
 from collections import Counter
 from statistics import stdev, mean
-from processing_helper import TaskPickle
+from .processing_helper import TaskPickle
 from re import search
-from processing_helper import IMNGS2ArgsParser, gimmelogger
+from .processing_helper import IMNGS2ArgsParser, gimmelogger
 import subprocess
 import mimetypes as mtypes
 import re
