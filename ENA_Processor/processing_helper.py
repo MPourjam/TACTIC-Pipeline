@@ -1,11 +1,202 @@
 import pickle as pk
 import yaml
 import logging
+import subprocess
+import time
+import gzip
+import zipfile
 from os import getcwd
-from pathlib import Path, PurePath
 from mimetypes import guess_type
 from datetime import datetime as dt
 from collections.abc import MutableMapping
+import mimetypes as mtypes
+from sys import version_info
+if version_info[0] < 3:
+    from pathlib2 import Path, PurePath  # pip2 install pathlib2
+else:
+    from pathlib import Path, PurePath
+
+
+forw_file_indicators = [
+    "_R1_",
+    "_F_",
+    "@F"
+]
+
+reve_file_indicators = [
+    "_R2_",
+    "_R_",
+    "@R"
+]
+
+
+def get_base_name(file_path):
+    file_path = Path(PurePath(file_path))
+    return file_path.stem
+
+
+def is_seq_file(file_path, seq_file_format="fasta"):
+    seq_head_tag = ">" if seq_file_format == "fasta" else "@" if seq_file_format == "fastq" else ""
+    file_path = Path(PurePath(file_path))
+    app, typ = mtypes.guess_type(str(file_path))
+    try:
+        if 'zip' in str(typ):  # gzipped
+            with gzip.open(file_path, 'rt') as f:
+                return f.readline().startswith(seq_head_tag)
+        elif 'zip' in str(app):  # For zipped files
+            with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                first_file = zip_ref.namelist()[0]
+                with zip_ref.open(first_file) as f:
+                    return f.readline().decode().startswith(seq_head_tag)
+        else:  # Text
+            try:
+                with open(f, "r+") as fi:
+                    line = fi.readline()
+                    return len(line) == len(line.encode()) and line.startswith(seq_head_tag)
+            except Exception as exc:
+                raise exc
+    except Exception:
+        pass
+
+    return False
+
+
+def pair_seq_files(directory):
+    direcotry_path = Path(PurePath)
+    paired_files = []
+    if not direcotry_path.is_dir():
+        return paired_files
+    skip_reverses = []
+    for file_path in Path(directory).rglob("*"):
+        isSeqFile = is_seq_file(file_path, "fasta") or is_seq_file(file_path, "fastq")
+        if isSeqFile and str(file_path) not in skip_reverses:
+            if is_forward_file(file_path.name):
+                forw_file = str(file_path)
+                reve_file = str(find_reverse_file(file_path))
+                paired_file = (forw_file, reve_file)
+                paired_files.append(paired_file)
+                if reve_file:
+                    skip_reverses.append(reve_file)
+
+    return paired_files
+
+
+def is_forward_file(file_name):
+    return any([True for indi in forw_file_indicators if indi in file_name])
+
+
+def find_reverse_file(file_path):
+    """
+    It assumes that reverse file exists in the same directory
+    as forward file and the naming convention follows the same
+    logic. i.e: _R2_ is the reverse of _R1_ and not of @F
+    """
+    file_path = Path(PurePath(file_path))
+    reverse_name = [
+        file_path.name.replace(str(forw_file_indicators[i]), str(reve_file_indicators[i]))
+        for i in enumerate(forw_file_indicators) if forw_file_indicators[i] in file_path.name]
+    reverse_name = str(reverse_name[0]) if reverse_name[0:1] else ""
+    reverse_file_path = file_path.parent.joinpath(reverse_name)
+    if reverse_file_path.is_file():
+        return str(reverse_file_path)
+    else:
+        return ""
+
+
+def gzip_to_fastq(*files):
+    '''
+    It takes files gunzip or zip them and returns the name with proper fastq fuffix.
+    '''
+    file_path = [Path(PurePath(f)) for f in files if f]
+    file_path = [f for f in file_path if f.is_file()]
+    if len(files) != len(file_path):
+        raise TypeError("Some given arguments are not files.")
+    fastq_paths = []
+    for f in file_path:
+        tstmp = str(time.time()).replace(".", "_")
+        app, typ = mtypes.guess_type(f)
+        file_dir, file_name = f.parent, str(f.name)
+        file_name = file_name.replace(".", "_").replace("_gz", "").replace("_bz2", "")
+        asciifile_name = file_name.replace(" ", "").replace("_fastq", "") + ".fastq"
+        asciifile = str(file_dir.joinpath(asciifile_name))
+        tmp_file = str(file_dir.joinpath("_{}_".format(tstmp)))
+        f = str(f)
+        if 'zip' in str(typ):
+            run_output = subprocess.run(
+                [
+                    "gunzip",
+                    "--stdout",
+                    f"{f}",
+                    ">",
+                    f"{tmp_file}"
+                ],
+                capture_output=True,
+                text=True)
+            run_output = subprocess.run(
+                [
+                    "rm",
+                    "-r",
+                    "{}".format(f)
+                ],
+                capture_output=True,
+                text=True)
+            run_output = subprocess.run(
+                [
+                    "mv",
+                    f"{tmp_file}",
+                    f"{asciifile}"
+                ],
+                capture_output=True,
+                text=True)
+            fastq_paths.append(asciifile)
+        elif 'zip' in str(app):  # For zipped files
+            run_output = subprocess.run(
+                [
+                    "unzip",
+                    f"{f}",
+                    "-d",
+                    f"{tmp_file}"
+                ],
+                capture_output=True,
+                text=True)
+            run_output = subprocess.run(
+                [
+                    "rm",
+                    "-r",
+                    f"{f}"
+                ],
+                capture_output=True,
+                text=True)
+            run_output = subprocess.run(
+                [
+                    "mv",
+                    f"{tmp_file}",
+                    f"{asciifile}"
+                ],
+                capture_output=True,
+                text=True)
+            fastq_paths.append(asciifile)
+        else:
+            try:
+                with open(f, "r+") as fi:
+                    line = fi.readline()
+                if len(line) == len(line.encode()):  # If it's ascii
+                    run_output = subprocess.run(
+                        [
+                            "mv",
+                            f"{f}",
+                            f"{asciifile}"
+                        ],
+                        capture_output=True,
+                        text=True)
+                    fastq_paths.append(asciifile)
+            except Exception as e:
+                print("{}\t{}".format(f, e))
+                raise e
+    if len(file_path) != len(fastq_paths):
+        raise TypeError("Some files could not get converted or were not in utf-8 format!")
+    # returns absolute paths
+    return fastq_paths
 
 
 def gimmelogger(logger_name: str, log_file: Path = None):
