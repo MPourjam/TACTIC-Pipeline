@@ -34,8 +34,16 @@ reve_file_indicators = [
 
 
 def get_base_name(file_path):
-    file_path = Path(PurePath(file_path))
-    return file_path.stem
+    file_path = Path(PurePath(file_path)).absolute()
+    while file_path.suffixes:
+        file_path = Path(PurePath(file_path.stem)).absolute()
+    base_name = file_path.name
+    for ind in forw_file_indicators + reve_file_indicators:
+        if ind in file_path.name:
+            base_name = str(file_path.name.split(ind)[0])
+            break
+
+    return base_name
 
 
 def is_seq_file(file_path, seq_file_format="any"):
