@@ -36,30 +36,43 @@ def get_base_name(file_path):
     return file_path.stem
 
 
-def is_seq_file(file_path, seq_file_format="fasta"):
-    seq_head_tag = ">" if seq_file_format == "fasta" else "@" if seq_file_format == "fastq" else ""
+def is_seq_file(file_path, seq_file_format="any"):
+    """
+    It checks if a file is FASTA or FASTQ sequence file.
+    seq_file_format could be 'fasta', 'fastq' or 'any'
+    """
+    format_opts = [
+        "fasta",
+        "fastq",
+        "any"
+    ]
+    if seq_file_format not in format_opts:
+        raise ValueError("seq_file_format must be 'fasta', 'fastq' or 'any'")
+    seq_head_tag_list = [">"] if seq_file_format == "fasta" else ["@"] if seq_file_format == "fastq" else [">", "@"]
     file_path = Path(PurePath(file_path))
     app, typ = mtypes.guess_type(str(file_path))
-    try:
-        if 'zip' in str(typ):  # For gzipped files
-            with gzip.open(file_path, 'rt') as f:
-                return f.readline().startswith(seq_head_tag)
-        elif 'zip' in str(app):  # For zipped files
-            with zipfile.ZipFile(file_path, 'r') as zip_ref:
-                first_file = zip_ref.namelist()[0]
-                with zip_ref.open(first_file) as f:
-                    return f.readline().decode().startswith(seq_head_tag)
-        else:  # Text
-            try:
-                with open(f, "r+") as fi:
-                    line = fi.readline()
-                    return len(line) == len(line.encode()) and line.startswith(seq_head_tag)
-            except Exception as exc:
-                raise exc
-    except Exception:
-        pass
+    return_bool = []
+    for seq_head_tag in seq_head_tag_list:
+        try:
+            if 'zip' in str(typ):  # For gzipped files
+                with gzip.open(file_path, 'rt') as f:
+                    return_bool.append(f.readline().startswith(seq_head_tag))
+            elif 'zip' in str(app):  # For zipped files
+                with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                    first_file = zip_ref.namelist()[0]
+                    with zip_ref.open(first_file) as f:
+                        return_bool.append(f.readline().decode().startswith(seq_head_tag))
+            else:  # Text
+                try:
+                    with open(f, "r+") as fi:
+                        line = fi.readline()
+                        return_bool.append(len(line) == len(line.encode()) and line.startswith(seq_head_tag))
+                except Exception as exc:
+                    raise exc
+        except Exception:
+            return_bool.append(False)
 
-    return False
+    return any(return_bool)
 
 
 def is_forward_file(file_name):
@@ -85,12 +98,12 @@ def find_reverse_file(file_path):
 
 
 def pair_seq_files(directory):
-    direcotry_path = Path(PurePath)
+    direcotry_path = Path(PurePath(directory))
     paired_files = []
     if not direcotry_path.is_dir():
         return paired_files
     skip_reverses = []
-    for file_path in Path(directory).rglob("*"):
+    for file_path in direcotry_path.rglob("*"):
         isSeqFile = is_seq_file(file_path, "fasta") or is_seq_file(file_path, "fastq")
         if isSeqFile and str(file_path) not in skip_reverses:
             if is_forward_file(file_path.name):
