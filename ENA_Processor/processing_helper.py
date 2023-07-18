@@ -36,7 +36,7 @@ reve_file_indicators = [
 def get_base_name(file_path):
     file_path = Path(PurePath(file_path)).absolute()
     while file_path.suffixes:
-        file_path = Path(PurePath(file_path.stem)).absolute()
+        file_path = Path(PurePath(file_path.parent)).absolute().joinpath(file_path.stem)
     base_name = file_path.name
     for ind in forw_file_indicators + reve_file_indicators:
         if ind in file_path.name:
