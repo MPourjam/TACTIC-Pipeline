@@ -220,7 +220,7 @@ def gzip_to_fastq(*files):
 def gimmelogger(logger_name: str = "", log_file: bool = True):
     # finding caller file name and setting logger file path
     caller_frame = inspect.currentframe().f_back
-    logger_name = caller_frame.f_code.co_filename if not logger_name else str(logger_name)
+    logger_name = str(caller_frame.f_code.co_filename).split(".")[0] if not logger_name else str(logger_name)
     caller_file_path = Path(PurePath(inspect.getframeinfo(caller_frame).filename))
     # Setting logger
     logger = logging.getLogger(logger_name)
