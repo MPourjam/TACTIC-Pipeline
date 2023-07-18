@@ -21,12 +21,14 @@ else:
 forw_file_indicators = [
     "_R1_",
     "_F_",
+    "_R1",
     "@F"
 ]
 
 reve_file_indicators = [
     "_R2_",
     "_R_",
+    "_R2",
     "@R"
 ]
 
@@ -50,6 +52,8 @@ def is_seq_file(file_path, seq_file_format="any"):
         raise ValueError("seq_file_format must be 'fasta', 'fastq' or 'any'")
     seq_head_tag_list = [">"] if seq_file_format == "fasta" else ["@"] if seq_file_format == "fastq" else [">", "@"]
     file_path = Path(PurePath(file_path))
+    if not file_path.is_file():
+        return False
     app, typ = mtypes.guess_type(str(file_path))
     return_bool = []
     for seq_head_tag in seq_head_tag_list:
@@ -64,14 +68,14 @@ def is_seq_file(file_path, seq_file_format="any"):
                         return_bool.append(f.readline().decode().startswith(seq_head_tag))
             else:  # Text
                 try:
-                    with open(f, "r+") as fi:
+                    with open(file_path, "r+") as fi:
                         line = fi.readline()
                         return_bool.append(len(line) == len(line.encode()) and line.startswith(seq_head_tag))
                 except Exception as exc:
                     raise exc
         except Exception:
             return_bool.append(False)
-
+    # print(file_path, return_bool)
     return any(return_bool)
 
 
@@ -87,8 +91,8 @@ def find_reverse_file(file_path):
     """
     file_path = Path(PurePath(file_path))
     reverse_name = [
-        file_path.name.replace(str(forw_file_indicators[i]), str(reve_file_indicators[i]))
-        for i in enumerate(forw_file_indicators) if forw_file_indicators[i] in file_path.name]
+        file_path.name.replace(str(indic), str(reve_file_indicators[i]))
+        for i, indic in enumerate(forw_file_indicators) if indic in file_path.name]
     reverse_name = str(reverse_name[0]) if reverse_name[0:1] else ""
     reverse_file_path = file_path.parent.joinpath(reverse_name)
     if reverse_file_path.is_file():
@@ -104,7 +108,7 @@ def pair_seq_files(directory):
         return paired_files
     skip_reverses = []
     for file_path in direcotry_path.rglob("*"):
-        isSeqFile = is_seq_file(file_path, "fasta") or is_seq_file(file_path, "fastq")
+        isSeqFile = is_seq_file(file_path)
         if isSeqFile and str(file_path) not in skip_reverses:
             if is_forward_file(file_path.name):
                 forw_file = str(file_path)
