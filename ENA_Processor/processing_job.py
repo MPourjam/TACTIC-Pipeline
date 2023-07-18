@@ -34,9 +34,13 @@ SPIKESIDX = "/base/spikesidx/spike"
 R_processing_stat = "/base/ENA_Processor/processing_stats.R"
 S_FLAT_LOCATION = '/base/s_flat.txt'
 
+# Getting logger
+global log
+log = gimmelogger()
+
 
 # overwriting system() to run it with subprocess.run
-def system(cmd, logger):
+def system(cmd):
     cmd_list = str(cmd).split(" ")
     cmds_to_write_log = ["usearch", "sina", "sortmerna"]
     capture_output_bool = any([True for el in cmds_to_write_log if el in str(cmd_list[0])])
@@ -617,9 +621,9 @@ def main_processing(
         reverse_file,
         input_id,
         args_file_path: str = ""):
-    global log
-    logger_file_path = path.join(path.abspath(input_dir), "preprocessing_logs.txt")
-    log = gimmelogger(input_id, logger_file_path)
+    # global log
+    # logger_file_path = path.join(path.abspath(input_dir), "preprocessing_logs.txt")
+    log = gimmelogger(input_id)
     # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
@@ -629,7 +633,7 @@ def main_processing(
     # if args_file_path is empty then default values in processing_helper.py
     # are loaded
     global ARGS_CLS
-    ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path)
+    ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).preproc_args
     try:
         if not path.exists(pk_file):
             # Creation of TaskPickle instance for the run
