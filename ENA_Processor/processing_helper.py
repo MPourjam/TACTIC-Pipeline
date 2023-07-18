@@ -62,26 +62,6 @@ def is_seq_file(file_path, seq_file_format="fasta"):
     return False
 
 
-def pair_seq_files(directory):
-    direcotry_path = Path(PurePath)
-    paired_files = []
-    if not direcotry_path.is_dir():
-        return paired_files
-    skip_reverses = []
-    for file_path in Path(directory).rglob("*"):
-        isSeqFile = is_seq_file(file_path, "fasta") or is_seq_file(file_path, "fastq")
-        if isSeqFile and str(file_path) not in skip_reverses:
-            if is_forward_file(file_path.name):
-                forw_file = str(file_path)
-                reve_file = str(find_reverse_file(file_path))
-                paired_file = (forw_file, reve_file)
-                paired_files.append(paired_file)
-                if reve_file:
-                    skip_reverses.append(reve_file)
-
-    return paired_files
-
-
 def is_forward_file(file_name):
     return any([True for indi in forw_file_indicators if indi in file_name])
 
@@ -102,6 +82,26 @@ def find_reverse_file(file_path):
         return str(reverse_file_path)
     else:
         return ""
+
+
+def pair_seq_files(directory):
+    direcotry_path = Path(PurePath)
+    paired_files = []
+    if not direcotry_path.is_dir():
+        return paired_files
+    skip_reverses = []
+    for file_path in Path(directory).rglob("*"):
+        isSeqFile = is_seq_file(file_path, "fasta") or is_seq_file(file_path, "fastq")
+        if isSeqFile and str(file_path) not in skip_reverses:
+            if is_forward_file(file_path.name):
+                forw_file = str(file_path)
+                reve_file = str(find_reverse_file(file_path))
+                paired_file = (forw_file, reve_file)
+                paired_files.append(paired_file)
+                if reve_file:
+                    skip_reverses.append(reve_file)
+
+    return paired_files
 
 
 def gzip_to_fastq(*files):
@@ -211,7 +211,7 @@ def gimmelogger(logger_name: str = "", log_file: bool = True):
     logger.setLevel(logging.DEBUG)
     # create a console and file handler
     ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
+    ch.setLevel(logging.DEBUG)
     # create a formatter
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     # set the formatter to the console handler
@@ -224,7 +224,7 @@ def gimmelogger(logger_name: str = "", log_file: bool = True):
         if not log_file_path.parent.is_dir():
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
         fh = logging.FileHandler(log_file_path)
-        fh.setLevel(logging.WARNING)
+        fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
 
