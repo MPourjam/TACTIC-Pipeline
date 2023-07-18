@@ -35,8 +35,8 @@ R_processing_stat = "/base/ENA_Processor/processing_stats.R"
 S_FLAT_LOCATION = '/base/s_flat.txt'
 
 # Getting logger
-global log
-log = gimmelogger()
+global mod_log
+mod_log = gimmelogger()
 
 
 # overwriting system() to run it with subprocess.run
@@ -60,9 +60,9 @@ def system(cmd):
     # logging
     if capture_output_bool:
         if run_output.stderr:
-            log.warning(run_output.stderr)
+            mod_log.warning(run_output.stderr)
         if run_output.stdout:
-            log.info(run_output.stdout)
+            mod_log.info(run_output.stdout)
 
 
 def calc_spikes(*fastq_files, spike_amount):
@@ -622,8 +622,8 @@ def main_processing(
         input_id,
         args_file_path: str = ""):
     # global log
-    # logger_file_path = path.join(path.abspath(input_dir), "preprocessing_logs.txt")
-    log = gimmelogger(input_id)
+    logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
+    log = gimmelogger(input_id, logger_file_path)
     # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
