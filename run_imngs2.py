@@ -19,7 +19,7 @@ max_pool = int(cpu_count() * 0.3)
 POOL_SIZE = max_pool if max_pool > 0 else 1
 max_batch = int(POOL_SIZE * 0.8)
 # Preparing the logger
-PREP_LOG = proc_helper.gimmelogger()
+PREP_LOG = proc_helper.gimmelogger("run_imngs2", only_file=False)
 
 
 def split_files_to_directories():
@@ -41,10 +41,8 @@ def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
             raise ValueError(msg)
         # Creating the preprocessing directory
         seq_files_t = [Path(PurePath(sfi)).absolute() for sfi in seq_files_t]
-        # print(seq_files_t)
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         new_dir = seq_files_t[0]
-        # print(new_dir)
         # Getting initial stem
         while new_dir.suffixes:
             new_dir = Path(new_dir).absolute().parent.joinpath(new_dir.stem)
@@ -52,7 +50,7 @@ def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
         new_dir.mkdir(parents=True, exist_ok=True)
         for ind, sfi in enumerate(seq_files_t):
             new_path = new_dir.joinpath(sfi.name)
-            new_paths.append(new_path)
+            new_paths[ind] = new_path
             # Copying files
             shutil.copy2(str(sfi), str(new_path))
         preprocessing(
@@ -101,7 +99,7 @@ def run_imngs2(
                         for file_pair in seq_file_pairs[:2]]  # TODO REMOVE slicing
             for res in res_list:
                 res.wait()
-        exit()
+        # exit()
         # TODO gathering and running analysis
 
     except Exception as exc:
