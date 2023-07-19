@@ -39,7 +39,7 @@ S_FLAT_LOCATION = '/base/s_flat.txt'
 def system_sub(cmd):
     cmd_list = [el for el in str(cmd).split(" ") if bool(el)]  # To reomove extra spaces in a command
     cmds_to_write_log = ["usearch", "sina", "sortmerna"]
-    capture_output_bool = any([True for el in cmds_to_write_log[:1] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
+    capture_output_bool = True  # any([True for el in cmds_to_write_log[:1] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
     where_to_cut = len(cmd_list)
     if capture_output_bool:
         for ind, arg_ in enumerate(cmd_list):
@@ -272,7 +272,7 @@ def run_FastQC(forward_file, reverse_file):
 def dereplicate_seqs():
     SIZE_ARGS = "-sizein " if ARGS_CLS.dereplication.sizein else ""
     SIZE_ARGS += "-sizeout " if ARGS_CLS.dereplication.sizeout else ""
-    cmd_0 = USEARCH_11_BIN + " -strand both -fastx_uniques filtered2.fasta -fastaout derep.fasta "
+    cmd_0 = USEARCH_11_BIN + " -fastx_uniques filtered2.fasta -fastaout derep.fasta "
     cmd_1 = SIZE_ARGS + USEARCH_TAIL
     system_sub(cmd_0 + cmd_1)
     line_n = 0
@@ -308,7 +308,7 @@ def filter_merged_one_side(forward_file):
 
 # cluster sequences to OTUs
 def clusterZOTUs():
-    cmd_part_0 = USEARCH_11_BIN + " -strand both -unoise3 sorted.fasta -minsize " + str(ARGS_CLS.cluster_zotus.minsize) + " -zotus zotus.fasta"
+    cmd_part_0 = USEARCH_11_BIN + " -unoise3 sorted.fasta -minsize " + str(ARGS_CLS.cluster_zotus.minsize) + " -zotus zotus.fasta"
     cmd_part_1 = ' -tabbedout denoising.tab'
     cmd_part_2 = ' ' + USEARCH_TAIL
     # clusering of seq in OTUs (clustered)
@@ -364,7 +364,7 @@ def filter_zotu_abundance():
         curr_size = float(line.split('\t')[1])
         if round(float(curr_size / unf_tot_size), 4) >= round(0.0, 4):
             out_file.write(line + '\n')
-            out_file_2.write(line.split('\t')[0] + '\n')
+            out_file_2.write(line.split('\t')[0] + '\n')  # only the zotu ID is written to this file
     out_file.close()
     out_file_2.close()
 
@@ -385,6 +385,7 @@ def addTax(input_id):
     cmd_part_1 = '--threads 4 --lca-fields tax_slv --turn all '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out ' + filebasename + '.fasta'
     cmd_part_3 = ' >/dev/null 2>/dev/null'
+    # print(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     out_file = open('classifiedF.txt', 'w+')
     silva_contents_header = read_file(filebasename + '.csv')
