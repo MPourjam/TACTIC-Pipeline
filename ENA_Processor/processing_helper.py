@@ -11,11 +11,40 @@ from mimetypes import guess_type
 from datetime import datetime as dt
 from collections.abc import MutableMapping
 import mimetypes as mtypes
+from os import path as ospath
+from os import remove
 from sys import version_info
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # pip2 install pathlib2
 else:
     from pathlib import Path, PurePath
+try:
+    # Posix based file locking (Linux, Ubuntu, MacOS, etc.)
+    #   Only allows locking on writable files, might cause
+    #   strange results for reading.
+    import fcntl
+    import os
+
+    def lock_file(f):
+        if f.writable():
+            fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+    def unlock_file(f):
+        if f.writable():
+            fcntl.lockf(f, fcntl.LOCK_UN)
+except ModuleNotFoundError:
+    # Windows file locking
+    import msvcrt
+    import os
+
+    def file_size(f):
+        return os.path.getsize(os.path.realpath(f.name))
+
+    def lock_file(f):
+        msvcrt.locking(f.fileno(), msvcrt.LK_RLCK, file_size(f))
+
+    def unlock_file(f):
+        msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, file_size(f))
 
 
 forw_file_indicators = [
@@ -248,7 +277,7 @@ def gimmelogger(logger_name: str = "", log_file: str = ""):
         log_file_path = caller_file_path.parent.joinpath(f"{logger_name}_log.txt")
         if not log_file_path.parent.is_dir():
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
-        fh = logging.FileHandler(log_file_path)
+        fh = logging.FileHandler(log_file_path, mode='w')
         fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
@@ -292,7 +321,7 @@ class TaskPickle:
                "Queue": 1,
                "Started": 2,
                "Progress": 3,
-               "Error": -1
+               "Error": 4
                }
     # TODO Create the args_dict according to args_keys
     args_dict = {"input_dir": "",
@@ -303,7 +332,15 @@ class TaskPickle:
                  "spike_amount": 6
                  }
 
-    def check_args_dict(self, args_d=None):
+    def check_args_dict(self, args_d=None) -> bool:
+        """
+        Checks if the arguments dictionary have all the arguments
+        necessary for running the main() in processing_job.py
+        if args_d is provided then the keys of provided dictionary
+        get checked against the class-level args_keys dictionary
+        otherwise the class instance's task_dict["args"] gets checked
+        against class-level args_keys dictionary.
+        """
         args_dict = self.task_dict["args"] if not args_d else args_d
         if not isinstance(args_dict, dict):
             return False
@@ -313,7 +350,15 @@ class TaskPickle:
             return False
         return True
 
-    def check_status_dict(self, status_d=None):
+    def check_status_dict(self, status_d=None) -> bool:
+        """
+        Checks if the status dictionary have all the essential keys
+        (TaskPickle.status_keys_ess).
+        if status_d is provided then the keys of provided dictionary
+        get checked against the class-level status_keys_ess dictionary
+        otherwise the class instance's task_dict["status"] gets checked
+        against class-level status_keys_ess dictionary.
+        """
         status_dict = self.task_dict["status"] if not status_d else status_d
         if not isinstance(status_dict, dict):
             return False
@@ -323,7 +368,18 @@ class TaskPickle:
             return False
         return True
 
-    def set_task_dict(self, task_d=None):
+    def set_task_dict(self, task_d=None) -> bool:
+        """
+        Checks the structure of task_dict to be like:
+        task_dict = {"args": {TaskPicle.args_keys: ...},
+                     "status": {TaskPicle.status_keys_ess +
+                                TaskPickle.status_keys_str: ...}
+                     }
+        and also performs the check_args_dict() and check_status_dict()
+        If task_d is given then it checks whether the task_d complies with
+        the aforementioned structure or not otherwise it checks the instance
+        task_dict.
+        """
         task_dict = self.task_dict if not task_d else task_d
         if isinstance(task_dict, dict):
             keys = TaskPickle.task_keys
@@ -345,32 +401,72 @@ class TaskPickle:
         self.task_dict = task_dict
         return True
 
-    def __init__(self, filepath=None, task_dict=None):
+    def __init__(self, filepath=None, task_dict=None) -> None:
+        """
+        Initialize the TaskPickle instance.
+        If filepath is given it checks it to be a pickle file and it contents
+        be according to the class task_dict structure usint set_task_dict().
+        If task_dict is given it does the content check using set_task_dict() and
+        sets the instance's task_dict to given task_dict
+        """
         status_dict = {k: TaskPickle.scode_d["Queue"] for k in TaskPickle.status_keys_num}
         for str_k in TaskPickle.status_keys_str:
             status_dict[str_k] = ""
         self.task_dict = {"args": TaskPickle.args_dict, "status": status_dict}
         timestamp = dt.now().strftime('%Y%m%d_%H%M%S')
         file_placeholder = "{}_proc_task_d.pk".format(str(timestamp))
-        path = Path(filepath) if filepath else Path(getcwd()).joinpath(file_placeholder)
-        self.__path = str(path.resolve())
+        self.__path = ospath.realpath(filepath) if filepath else ospath.realpath(getcwd()).join(file_placeholder)
 
-        if Path(self.__path).exists():
+        if ospath.isfile(self.__path):
             f_type, f_enc = guess_type(str(self.__path))
             if "x-tex-pk" not in f_type:
                 raise FileExistsError("File is not a pickle file.")
-            with open(self.__path, "rb") as pkfile:
-                file_content = pk.load(pkfile)
+            # with open(self.__path, "rb") as pkfile:
+            _file = self.__open_n_lock(mode="rb")
+            file_content = pk.load(_file)
+            _file.close()
             self.set_task_dict(file_content)
+            self.__file = self.__open_n_lock(mode="w+b")
+            self.write()
+        else:
+            self.__file = self.__open_n_lock(mode="wb")
+            self.write()
 
         if task_dict:
             self.set_task_dict(task_dict)
 
-    def write(self):
-        with open(self.__path, 'wb') as pkfile:
-            pk.dump(self.task_dict, pkfile, protocol=pk.HIGHEST_PROTOCOL)
+    def __del__(self):
+        # Closing the file will also opens the lock on the file
+        try:
+            self.__file.close()
+            self.__file = False
+        except Exception:
+            pass
 
-    def args_complete(self):
+    def close(self):
+        self.__del__()
+
+    def write(self) -> None:
+        """
+        Writes the task_dict of instance to the instance path.
+        """
+        self.__file.seek(0)  # Setting the position to begining to overwrite
+        pk.dump(self.task_dict, self.__file, protocol=pk.HIGHEST_PROTOCOL)
+        self.__file.truncate(self.__file.tell())  # To get sure of EOF in correct position
+
+    # @staticmethod
+    def __open_n_lock(self, mode: str = "wb"):
+        file_path = ospath.realpath(self.__path)
+        file_o = open(file_path, mode)
+        # Locking the pickle file to prevent other processes changing the file
+        lock_file(file_o)
+        return file_o
+
+    def args_complete(self) -> bool:
+        """
+        Performs a set of checks and return boolean value indicating
+        the completeness of task_dict["args"]
+        """
         arg_d = self.task_dict["args"]
         input_d = arg_d["input_dir"]
         paired = True if str(arg_d["paired"]).lower() == "yes" else False
@@ -378,22 +474,22 @@ class TaskPickle:
         for k, v in arg_d.items():
             if k == "input_dir":
                 try:
-                    p = Path(v)
+                    p = ospath.realpath(v)
                 except Exception:
                     return False
-                if not p.exists():
+                if not ospath.exists(p):
                     return False
-                if not p.is_dir():
+                if not ospath.isdir(p):
                     return False
             elif k == "forward_file":
-                p = Path(input_d) / str(v)
+                p = ospath.join(ospath.realpath(input_d), str(v))
                 # This is for when the processing is close to finish and fastqs are deleted.
-                if not p.is_file() and not is_running:
+                if not ospath.isfile(p) and not is_running:
                     return False
             elif k == "reverse_file":
-                p = Path(input_d) / str(v)
+                p = ospath.join(ospath.realpath(input_d), str(v))
                 # This is for when the processing is close to finish and fastqs are deleted.
-                if paired and not p.is_file() and not is_running:
+                if paired and not ospath.isfile(p) and not is_running:
                     return False
             elif k == "paired":
                 if v not in ["Yes", "No"]:
@@ -410,8 +506,11 @@ class TaskPickle:
                 return False
         return True
 
-    def __bool__(self):
-        if not Path(self.__path).is_file():
+    def __bool__(self) -> bool:
+        """
+        Magic method for boolean checks.
+        """
+        if not ospath.isfile(self.__path):
             return False
         elif not self.check_args_dict():
             return False
@@ -421,10 +520,10 @@ class TaskPickle:
             return False
         return True
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self.__path)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
     @property
@@ -433,15 +532,19 @@ class TaskPickle:
 
     @path.setter
     def path(self, new_path):
-        new_path = Path(new_path)
-        old_path = Path(self.path)
+        """
+        Sets the path attribute of an instance and
+        writes the task_dict to the new path.
+        """
+        new_path = ospath.realpath(new_path)
+        old_path = ospath.realpath(self.path)
         if old_path == new_path:
             return
-        if new_path.is_dir():
-            raise TypeError("Path of task pk object must point to a directory")
+        if not ospath.isfile(new_path):
+            raise TypeError("Path of task pk object must point to a file")
         self.__path = str(new_path)
         self.write()
-        old_path.unlink()
+        remove(old_path)
 
 
 class ArgsParserDunderUtil:
