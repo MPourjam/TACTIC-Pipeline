@@ -254,33 +254,36 @@ def gzip_to_fastq(*files):
     return fastq_paths
 
 
-def gimmelogger(logger_name: str = "", log_file: str = ""):
+def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = True):
     # finding caller file name and setting logger file path
     caller_frame = inspect.currentframe().f_back
-    logger_name = str(caller_frame.f_code.co_filename).split(".")[0] if not logger_name else str(logger_name)
-    caller_file_path = Path(PurePath(inspect.getframeinfo(caller_frame).filename)) if not log_file else Path(PurePath(log_file)).absolute()
+    logger_name = Path(PurePath(caller_frame.f_code.co_filename)).stem if not logger_name else str(logger_name)
+    if not log_file:
+        log_file_path = Path(PurePath(inspect.getframeinfo(caller_frame).filename)).parent.joinpath(f"{logger_name}_log.txt")
+    else:
+        log_file_path = Path(PurePath(log_file)).absolute()
+
     # Setting logger
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(logger_name)
     # set the logging level
     logger.setLevel(logging.DEBUG)
     # create a console and file handler
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    # create a formatter
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    # set the formatter to the console handler
-    ch.setFormatter(formatter)
-    # add the console handler to the logger
-    logger.addHandler(ch)
+    if not only_file:
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+        # create a formatter
+        # set the formatter to the console handler
+        ch.setFormatter(formatter)
+        # add the console handler to the logger
+        logger.addHandler(ch)
     # Logger
-    if log_file:
-        log_file_path = caller_file_path.parent.joinpath(f"{logger_name}_log.txt")
-        if not log_file_path.parent.is_dir():
-            log_file_path.parent.mkdir(parents=True, exist_ok=True)
-        fh = logging.FileHandler(log_file_path, mode='w')
-        fh.setLevel(logging.INFO)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
+    if not log_file_path.parent.is_dir():
+        log_file_path.parent.mkdir(parents=True, exist_ok=True)
+    fh = logging.FileHandler(log_file_path, mode='w')
+    fh.setLevel(logging.INFO)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
 
     return logger
 
