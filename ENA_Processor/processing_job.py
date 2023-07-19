@@ -1,4 +1,4 @@
-from os import (chdir, mkdir, listdir,
+from os import (chdir, mkdir, listdir, system,
                 makedirs, path, getcwd
                 )
 from collections import Counter
@@ -16,7 +16,7 @@ import logging
 import time
 
 
-BIN_DIR = "/base/ENA_Processor/binaries/"
+BIN_DIR = "/base/binaries/"
 USEARCH_8_BIN = BIN_DIR + "usearch8.1"
 USEARCH_11_BIN = BIN_DIR + "usearch_11_64 -strand both"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
@@ -34,16 +34,12 @@ SPIKESIDX = "/base/spikesidx/spike"
 R_processing_stat = "/base/ENA_Processor/processing_stats.R"
 S_FLAT_LOCATION = '/base/s_flat.txt'
 
-# Getting logger
-global mod_log
-mod_log = gimmelogger()
-
 
 # overwriting system() to run it with subprocess.run
-def system(cmd):
-    cmd_list = str(cmd).split(" ")
+def system_sub(cmd):
+    cmd_list = [el for el in str(cmd).split(" ") if bool(el)]  # To reomove extra spaces in a command
     cmds_to_write_log = ["usearch", "sina", "sortmerna"]
-    capture_output_bool = any([True for el in cmds_to_write_log if el in str(cmd_list[0])])
+    capture_output_bool = any([True for el in cmds_to_write_log[:1] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
     where_to_cut = len(cmd_list)
     if capture_output_bool:
         for ind, arg_ in enumerate(cmd_list):
@@ -55,14 +51,17 @@ def system(cmd):
     run_output = subprocess.run(
         cmd_list,
         capture_output=capture_output_bool,
-        text=capture_output_bool
+        text=capture_output_bool,
+        shell=False,
     )
     # logging
     if capture_output_bool:
+        msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
         if run_output.stderr:
-            mod_log.warning(run_output.stderr)
-        if run_output.stdout:
-            mod_log.info(run_output.stdout)
+            msg += str(run_output.stderr)
+            log.warning(msg)
+        # if run_output.stdout:
+        # log.info(run_output.stdout)
 
 
 def calc_spikes(*fastq_files, spike_amount):
@@ -237,19 +236,19 @@ def merge_pairs(forward_file, reverse_file):
     cmd_2 = " -fastq_minmergelen " + str(ARGS_CLS.merge_pairs.fastq_minmergelen)
     cmd_2 += " -fastq_maxmergelen " + str(ARGS_CLS.merge_pairs.fastq_maxmergelen) + " >/dev/null 2>/dev/null"
     # print(cmd_0 + cmd_1 + cmd_2)
-    system(cmd_0 + cmd_1 + cmd_2)
+    system_sub(cmd_0 + cmd_1 + cmd_2)
 
 
 def trim_sides():
     cmd_0 = USEARCH_11_BIN + " -fastx_truncate merged.fasta -stripright " + str(ARGS_CLS.trim_both_sides.stripright)
     cmd_1 = " -stripleft " + str(ARGS_CLS.trim_both_sides.stripleft) + " -fastqout filtered1.fasta >/dev/null 2>/dev/null"
-    system(cmd_0 + cmd_1)
+    system_sub(cmd_0 + cmd_1)
 
 
 def filter_merged_reads():
     cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fasta -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
     cmd_1 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
-    system(cmd_0 + cmd_1)
+    system_sub(cmd_0 + cmd_1)
 
 
 def run_FastQC(forward_file, reverse_file):
@@ -273,9 +272,9 @@ def run_FastQC(forward_file, reverse_file):
 def dereplicate_seqs():
     SIZE_ARGS = "-sizein " if ARGS_CLS.dereplication.sizein else ""
     SIZE_ARGS += "-sizeout " if ARGS_CLS.dereplication.sizeout else ""
-    cmd_0 = USEARCH_11_BIN + " -fastx_uniques filtered2.fasta -fastaout derep.fasta "
+    cmd_0 = USEARCH_11_BIN + " -strand both -fastx_uniques filtered2.fasta -fastaout derep.fasta "
     cmd_1 = SIZE_ARGS + USEARCH_TAIL
-    system(cmd_0 + cmd_1)
+    system_sub(cmd_0 + cmd_1)
     line_n = 0
     with open('derep.fasta') as derep:
         line = derep.readline()
@@ -289,13 +288,13 @@ def dereplicate_seqs():
 def sort_seqs():
     cmd_0 = USEARCH_11_BIN + ' -sortbysize derep.fasta -fastaout sorted.fasta'
     cmd_1 = ' ' + USEARCH_TAIL
-    system(cmd_0 + cmd_1)
+    system_sub(cmd_0 + cmd_1)
 
 
 def trim_one_side(forward_file):
     cmd_0 = USEARCH_11_BIN + " -fastx_truncate " + forward_file + " -stripleft " + str(ARGS_CLS.trim_one_side.stripleft)
     cmd_1 = " -fastqout filtered1.fasta >/dev/null 2>/dev/null"
-    system(cmd_0 + cmd_1)
+    system_sub(cmd_0 + cmd_1)
 
 
 def filter_merged_one_side(forward_file):
@@ -304,28 +303,28 @@ def filter_merged_one_side(forward_file):
     cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fasta -fastq_truncqual " + str(ARGS_CLS.filter_single_reads.fastq_truncqual)
     cmd_1 = " -fastq_maxee_rate " + str(ARGS_CLS.filter_single_reads.fastq_maxee_rate) + " -fastq_trunclen " + str(minLength)
     cmd_2 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
-    system(cmd_0 + cmd_1 + cmd_2)
+    system_sub(cmd_0 + cmd_1 + cmd_2)
 
 
 # cluster sequences to OTUs
 def clusterZOTUs():
-    cmd_part_0 = USEARCH_11_BIN + " -unoise3 sorted.fasta -minsize " + str(ARGS_CLS.cluster_zotus.minsize) + " -zotus zotus.fasta"
+    cmd_part_0 = USEARCH_11_BIN + " -strand both -unoise3 sorted.fasta -minsize " + str(ARGS_CLS.cluster_zotus.minsize) + " -zotus zotus.fasta"
     cmd_part_1 = ' -tabbedout denoising.tab'
     cmd_part_2 = ' ' + USEARCH_TAIL
     # clusering of seq in OTUs (clustered)
-    system(cmd_part_0 + cmd_part_1 + cmd_part_2)
+    system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2)
 
 
 # Filter non 16S sequences
 def filter16S():
     cmd_0 = SORT_ME_RNA_BIN + " --ref " + ref16RNAdb_1 + " --ref " + ref16RNAdb_2 + " --reads "
-    cmd_1 = " zotus.fasta --fastx good-ZOTUs --other " + str(ARGS_CLS.filter_16S.other) + "  --workdir ."
+    cmd_1 = " zotus.fasta --fastx good-ZOTUs --other " + str(ARGS_CLS.filter_16S.other) + " --workdir ."
     cmd_2 = " -e " + str(ARGS_CLS.filter_16S.e) + " --num_alignments " + str(ARGS_CLS.filter_16S.num_alignments)
     cmd_2 += " >/dev/null 2>&1"
     # run a RNA filtering step
     # (The program currently do not distinquish between 16S and 18S)
-    system(cmd_0 + cmd_1 + cmd_2)
-    system('mv out/aligned.fasta good_ZOTUs.fa')
+    system_sub(cmd_0 + cmd_1 + cmd_2)
+    system_sub('mv out/aligned.fasta good_ZOTUs.fa')
     # system('rm -r idx out kvdb')
 
 
@@ -342,9 +341,9 @@ def prepare_zotus():
 
 
 def build_ZOTU_table():
-    cmd_0 = USEARCH_11_BIN + ' -otutab filtered2.fasta -zotus ZOTUs.fasta '
-    cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id)
-    system(cmd_0 + cmd_1 + USEARCH_TAIL)
+    cmd_0 = USEARCH_11_BIN + ' -otutab filtered2.fasta -zotus ZOTUs.fasta'
+    cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id) + " "
+    system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
 
 
 def get_sample_size(input_file):
@@ -363,17 +362,17 @@ def filter_zotu_abundance():
     out_file_2 = open('filtered_zotu_table_list.txt', 'w+')
     for line in contents:
         curr_size = float(line.split('\t')[1])
-        if (curr_size / unf_tot_size) >= 0:
+        if round(float(curr_size / unf_tot_size), 4) >= round(0.0, 4):
             out_file.write(line + '\n')
             out_file_2.write(line.split('\t')[0] + '\n')
     out_file.close()
     out_file_2.close()
 
 
-def select_zotu_seqs():
-    cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs good_ZOTUs.fa -labels filtered_zotu_table_list.txt '
+def select_zotu_seqs():  # TODO Problem is here
+    cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs good_ZOTUs.fa -labels filtered_zotu_table_list.txt'
     cmd_1 = ' -fastaout ZOTUs-Seqs.fasta '
-    system(cmd_0 + cmd_1 + USEARCH_TAIL)
+    system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
 
 
 def addTax(input_id):
@@ -386,7 +385,7 @@ def addTax(input_id):
     cmd_part_1 = '--threads 4 --lca-fields tax_slv --turn all '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out ' + filebasename + '.fasta'
     cmd_part_3 = ' >/dev/null 2>/dev/null'
-    system(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
+    system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     out_file = open('classifiedF.txt', 'w+')
     silva_contents_header = read_file(filebasename + '.csv')
     silva_contents = silva_contents_header[1:]
@@ -474,8 +473,8 @@ def create_zip(input_id):
 
 
 def create_udb(input_id):
-    cmd_0 = USEARCH_11_BIN + ' -makeudb_ublast taxed_ZOTUs.fasta -output ' + str(input_id) + '.udb'
-    system(cmd_0 + USEARCH_TAIL)
+    cmd_0 = USEARCH_11_BIN + ' -makeudb_ublast taxed_ZOTUs.fasta -output ' + str(input_id) + '.udb '
+    system_sub(cmd_0 + USEARCH_TAIL)
 
 
 def cleanup(input_id, full_clean=False, dir_path=None):
@@ -621,9 +620,13 @@ def main_processing(
         reverse_file,
         input_id,
         args_file_path: str = ""):
-    # global log
+    global log
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
-    log = gimmelogger(input_id, logger_file_path)
+    log = gimmelogger(
+        logger_name=f"run_imngs2.preprocessing_{str(input_id)}",
+        log_file=logger_file_path,
+        only_file=True
+    )
     # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
@@ -676,7 +679,7 @@ def main_processing(
         forward_file, reverse_file = files_names
         log.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=ARGS_CLS.spike_removal.spike_amount)
-        log.debug("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
+        log.info("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is crucial to be here
         log.info('fastQC DONE')
