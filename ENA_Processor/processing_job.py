@@ -39,7 +39,7 @@ S_FLAT_LOCATION = '/base/s_flat.txt'
 def system_sub(cmd):
     cmd_list = [el for el in str(cmd).split(" ") if bool(el)]  # To reomove extra spaces in a command
     cmds_to_write_log = ["usearch", "sina", "sortmerna"]
-    capture_output_bool = True  # any([True for el in cmds_to_write_log[:1] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
+    capture_output_bool = any([True for el in cmds_to_write_log[:1] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
     where_to_cut = len(cmd_list)
     if capture_output_bool:
         for ind, arg_ in enumerate(cmd_list):
@@ -241,12 +241,12 @@ def merge_pairs(forward_file, reverse_file):
 
 def trim_sides():
     cmd_0 = USEARCH_11_BIN + " -fastx_truncate merged.fasta -stripright " + str(ARGS_CLS.trim_both_sides.stripright)
-    cmd_1 = " -stripleft " + str(ARGS_CLS.trim_both_sides.stripleft) + " -fastqout filtered1.fasta >/dev/null 2>/dev/null"
+    cmd_1 = " -stripleft " + str(ARGS_CLS.trim_both_sides.stripleft) + " -fastqout filtered1.fastq >/dev/null 2>/dev/null"
     system_sub(cmd_0 + cmd_1)
 
 
 def filter_merged_reads():
-    cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fasta -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
+    cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
     cmd_1 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
     system_sub(cmd_0 + cmd_1)
 
@@ -293,14 +293,14 @@ def sort_seqs():
 
 def trim_one_side(forward_file):
     cmd_0 = USEARCH_11_BIN + " -fastx_truncate " + forward_file + " -stripleft " + str(ARGS_CLS.trim_one_side.stripleft)
-    cmd_1 = " -fastqout filtered1.fasta >/dev/null 2>/dev/null"
+    cmd_1 = " -fastqout filtered1.fastq >/dev/null 2>/dev/null"
     system_sub(cmd_0 + cmd_1)
 
 
 def filter_merged_one_side(forward_file):
     curr_mean, curr_sd = seqFileStats(forward_file)
     minLength = curr_mean - int(0.1 * curr_mean) - 5  # remove the primer triming size plus 10% of the mean size
-    cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fasta -fastq_truncqual " + str(ARGS_CLS.filter_single_reads.fastq_truncqual)
+    cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_truncqual " + str(ARGS_CLS.filter_single_reads.fastq_truncqual)
     cmd_1 = " -fastq_maxee_rate " + str(ARGS_CLS.filter_single_reads.fastq_maxee_rate) + " -fastq_trunclen " + str(minLength)
     cmd_2 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
     system_sub(cmd_0 + cmd_1 + cmd_2)
@@ -341,7 +341,7 @@ def prepare_zotus():
 
 
 def build_ZOTU_table():
-    cmd_0 = USEARCH_11_BIN + ' -otutab filtered1.fasta -zotus ZOTUs.fasta'
+    cmd_0 = USEARCH_11_BIN + ' -otutab filtered1.fastq -zotus ZOTUs.fasta'
     cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id) + " "
     system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
 
@@ -488,7 +488,7 @@ def cleanup(input_id, full_clean=False, dir_path=None):
         deleted_files = "$(ls | grep -v *.pk)"
         deleted_dirs = "-r " + deleted_files
     else:
-        deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fasta filtered2.fasta'
+        deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fastq filtered2.fasta'
         deleted_files += ' aligned_' + str(input_id) + '.csv aligned_' + str(input_id) + '.fasta merged.fasta'
         deleted_files += ' sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
         # derep.fasta get deleted and we keep the gzipped one according to Ilias, preserve it for diversity analysis
@@ -731,26 +731,27 @@ def main_processing(
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         create_zip(input_id)
         log.info('Zipped!')
-        cleanup(input_id)
+        # cleanup(input_id)
         log.info("Cleaned up: {}".format(input_id))
-        system("rm {}_logs.txt".format(input_id))
-        return start_mode, end_mode, real_reads_c, spike_reads_c
+
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
         print(err_msg)
         update_task_pko("Error", str(err_msg).strip())
-        cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
+        # cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
         pko.close()
         raise e
-    else:
-        chdir(input_dir)
-        udb_file = path.join(input_dir, '{}.udb'.format(str(input_id)))
-        status_code = "Done"
-        status_msg = ""
-        if not path.isfile(udb_file):
-            status_code = "Error"
-            status_msg = "Process Failed! no UDB!"
-        update_task_pko(status_code, status_msg)
-        pko.close()
-        if not path.isfile(udb_file):
-            raise FileNotFoundError("No UDB created for {}".format(input_dir))
+
+    chdir(input_dir)
+    udb_file = path.join(input_dir, '{}.udb'.format(str(input_id)))
+    status_code = "Done"
+    status_msg = ""
+    if not path.isfile(udb_file):
+        status_code = "Error"
+        status_msg = "Process Failed! no UDB!"
+    update_task_pko(status_code, status_msg)
+    pko.close()
+    if not path.isfile(udb_file):
+        raise FileNotFoundError("No UDB created for {}".format(input_dir))
+
+    return input_dir
