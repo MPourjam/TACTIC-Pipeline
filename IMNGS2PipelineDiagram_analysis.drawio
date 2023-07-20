@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-11T08:41:17.180Z" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0" etag="MuIL0WUy8fUyH7B5M5RT" version="21.6.1" type="device">
+<mxfile host="app.diagrams.net" modified="2023-07-20T13:03:29.230Z" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0" etag="ya35G0xbTigUpijifTFP" version="21.6.1" type="device">
   <diagram id="qAmTL6U-1ehM-cMohceR" name="Page-1">
-    <mxGraphModel dx="3471" dy="1860" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+    <mxGraphModel dx="538" dy="792" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -83,19 +83,19 @@
         <mxCell id="xeL92FsgpAam5WclFUTe-24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;strokeColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="xeL92FsgpAam5WclFUTe-22" target="xeL92FsgpAam5WclFUTe-23" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="xeL92FsgpAam5WclFUTe-22" value="&lt;div&gt;trim both sides:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_truncate merged.fasta&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripleft 5&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripright 5&lt;/div&gt;&lt;div&gt;-fastqout filtered1.fasta)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="xeL92FsgpAam5WclFUTe-22" value="&lt;div&gt;trim both sides:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_truncate merged.fasta&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripleft 5&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripright 5&lt;/div&gt;&lt;div&gt;-fastqout filtered1.fastq)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="343" y="1299.9996551724137" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="xeL92FsgpAam5WclFUTe-23" value="&lt;div&gt;filter merged reads:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_filter filtered1.fasta&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fastq_maxee_rate 0.002&lt;/div&gt;&lt;div&gt;-fastaout filtered2.fasta)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="xeL92FsgpAam5WclFUTe-23" value="&lt;div&gt;filter merged reads:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_filter filtered1.fastq&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fastq_maxee_rate 0.002&lt;/div&gt;&lt;div&gt;-fastaout filtered2.fasta)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="343" y="1579.9996551724137" width="222" height="180" as="geometry" />
         </mxCell>
         <mxCell id="xeL92FsgpAam5WclFUTe-29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;strokeColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="xeL92FsgpAam5WclFUTe-27" target="xeL92FsgpAam5WclFUTe-28" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="xeL92FsgpAam5WclFUTe-27" value="&lt;div&gt;trim one side:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastx_truncate [FORWARD_FILE]&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripleft 5&lt;/div&gt;&lt;div&gt;-fastqout filtered1.fasta)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="xeL92FsgpAam5WclFUTe-27" value="&lt;div&gt;trim one side:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastx_truncate [FORWARD_FILE]&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripleft 5&lt;/div&gt;&lt;div&gt;-fastqout filtered1.fastq)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="29.99862068965524" y="1300" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="xeL92FsgpAam5WclFUTe-28" value="&lt;div&gt;filter reads:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_filter filtered1.fasta&lt;/div&gt;&lt;div&gt;-fastq_truncqual 10&lt;/div&gt;&lt;div&gt;-fastq_maxee_rate 0.002&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fastq_trunclen [MINLEN-0.1MINLEN-5]&lt;/div&gt;&lt;div&gt;-fastaout filtered2.fasta)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="xeL92FsgpAam5WclFUTe-28" value="&lt;div&gt;filter reads:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_filter filtered1.fastq&lt;/div&gt;&lt;div&gt;-fastq_truncqual 10&lt;/div&gt;&lt;div&gt;-fastq_maxee_rate 0.002&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fastq_trunclen [MINLEN-0.1MINLEN-5]&lt;/div&gt;&lt;div&gt;-fastaout filtered2.fasta)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="29.99862068965524" y="1580" width="222" height="180" as="geometry" />
         </mxCell>
         <mxCell id="xeL92FsgpAam5WclFUTe-69" value="" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;strokeColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="xeL92FsgpAam5WclFUTe-35" target="xeL92FsgpAam5WclFUTe-68" edge="1">
@@ -241,55 +241,55 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-0" target="9RB1fwwFY0tGHaCZMdM5-3">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-0" target="9RB1fwwFY0tGHaCZMdM5-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-0" value="Taxed_ZOTUs.fasta" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;aspect=fixed;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-0" value="Taxed_ZOTUs.fasta" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;aspect=fixed;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="820" y="40" width="102" height="81.82" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-3" target="9RB1fwwFY0tGHaCZMdM5-7">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-3" target="9RB1fwwFY0tGHaCZMdM5-7" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-3" value="&lt;div&gt;Append taxed_ZOTUs.fasta of selected sampels:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastx_relabel &amp;lt;reads&amp;gt;&lt;/div&gt;&lt;div&gt;-prefix &amp;lt;dataset_name&amp;gt;.&lt;/div&gt;&lt;div&gt;-fastaout &amp;lt;new&amp;gt;&lt;/div&gt;&lt;div&gt;-keep_annots&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-3" value="&lt;div&gt;Append taxed_ZOTUs.fasta of selected sampels:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastx_relabel &amp;lt;reads&amp;gt;&lt;/div&gt;&lt;div&gt;-prefix &amp;lt;dataset_name&amp;gt;.&lt;/div&gt;&lt;div&gt;-fastaout &amp;lt;new&amp;gt;&lt;/div&gt;&lt;div&gt;-keep_annots&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="760" y="190" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-7" target="9RB1fwwFY0tGHaCZMdM5-9">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-7" target="9RB1fwwFY0tGHaCZMdM5-9" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-7" value="&lt;div&gt;trim sides:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_truncate &amp;lt;analysis.fasta&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripleft &amp;lt;user_input&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripright &amp;lt;user_input&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fastaout filtered1.fasta)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-7" value="&lt;div&gt;trim sides:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastq_truncate &amp;lt;analysis.fasta&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripleft &amp;lt;user_input&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;-stripright &amp;lt;user_input&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fastaout filtered1.fastq)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="760" y="449.99965517241367" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-9" target="9RB1fwwFY0tGHaCZMdM5-13">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-9" target="9RB1fwwFY0tGHaCZMdM5-13" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-9" value="&lt;div&gt;dereplication:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastx_uniques &amp;lt;analysis.fasta&amp;gt;&lt;/div&gt;&lt;div&gt;-relabel Zotu&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fsataout &amp;lt;derep.fasta&amp;gt;&lt;/div&gt;&lt;div&gt;-tabbedout &amp;lt;relabel.tab&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-9" value="&lt;div&gt;dereplication:&lt;/div&gt;&lt;div&gt;(usearch&lt;/div&gt;&lt;div&gt;-fastx_uniques &amp;lt;analysis.fasta&amp;gt;&lt;/div&gt;&lt;div&gt;-relabel Zotu&lt;br&gt;&lt;/div&gt;&lt;div&gt;-fsataout &amp;lt;derep.fasta&amp;gt;&lt;/div&gt;&lt;div&gt;-tabbedout &amp;lt;relabel.tab&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="759.9986206896552" y="750" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-13" target="9RB1fwwFY0tGHaCZMdM5-15">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-13" target="9RB1fwwFY0tGHaCZMdM5-15" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-13" value="&lt;div&gt;TIC split based on taxonomy:&lt;/div&gt;&lt;div&gt;(split_based_on_taxonomy&lt;/div&gt;&lt;div&gt;&amp;lt;TIC_Result_Dir&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;derep_with_tax.fasta&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-13" value="&lt;div&gt;TIC split based on taxonomy:&lt;/div&gt;&lt;div&gt;(split_based_on_taxonomy&lt;/div&gt;&lt;div&gt;&amp;lt;TIC_Result_Dir&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;derep_with_tax.fasta&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="759.9986206896552" y="1040" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-15" target="9RB1fwwFY0tGHaCZMdM5-17">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-15" target="9RB1fwwFY0tGHaCZMdM5-17" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-15" value="&lt;div&gt;Complex TIC:&lt;/div&gt;&lt;div&gt;(main_complex_TIC&lt;/div&gt;&lt;div&gt;tool=&amp;lt;Usearch_11_BIN&amp;gt;&lt;/div&gt;&lt;div&gt;data_dir=&amp;lt;TIC_Result_DIR&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-15" value="&lt;div&gt;Complex TIC:&lt;/div&gt;&lt;div&gt;(main_complex_TIC&lt;/div&gt;&lt;div&gt;tool=&amp;lt;Usearch_11_BIN&amp;gt;&lt;/div&gt;&lt;div&gt;data_dir=&amp;lt;TIC_Result_DIR&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="759.9986206896552" y="1300" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-17" target="9RB1fwwFY0tGHaCZMdM5-19">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-17" target="9RB1fwwFY0tGHaCZMdM5-19" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-17" value="&lt;div&gt;TIC Create Fasta and Table:&lt;/div&gt;&lt;div&gt;(create_fasta_and_table.py&lt;/div&gt;&lt;div&gt;&amp;lt;TIC_Output_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;ZOTUs_fasta_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;ZOTUs_table_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;TIC_Result_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;dereplicated_fasta_path&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;KRONA_TOOL&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;SOTUs_fasta_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;SINA_ARB&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;BIN_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;ANALYSIS_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;BIN_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;SOTUs_table_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;&quot;ZOTU_map.tab&quot;&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;abund_limit&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;sample_wise_correction&amp;gt;&lt;/div&gt;&lt;div&gt;data_dir=&amp;lt;TIC_Result_DIR&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-17" value="&lt;div&gt;TIC Create Fasta and Table:&lt;/div&gt;&lt;div&gt;(create_fasta_and_table.py&lt;/div&gt;&lt;div&gt;&amp;lt;TIC_Output_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;ZOTUs_fasta_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;ZOTUs_table_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;TIC_Result_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;dereplicated_fasta_path&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;KRONA_TOOL&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;SOTUs_fasta_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;SINA_ARB&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;BIN_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;ANALYSIS_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;BIN_DIR&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;SOTUs_table_name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;&quot;ZOTU_map.tab&quot;&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;abund_limit&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;lt;sample_wise_correction&amp;gt;&lt;/div&gt;&lt;div&gt;data_dir=&amp;lt;TIC_Result_DIR&amp;gt;)&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="760" y="1570" width="222" height="360" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-19" target="9RB1fwwFY0tGHaCZMdM5-21">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="9RB1fwwFY0tGHaCZMdM5-19" target="9RB1fwwFY0tGHaCZMdM5-21" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-19" value="&lt;div&gt;cleanup&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-19" value="&lt;div&gt;cleanup&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="759.9986206896552" y="2020" width="222" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="9RB1fwwFY0tGHaCZMdM5-21" value="&lt;div&gt;create_zip()&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="9RB1fwwFY0tGHaCZMdM5-21" value="&lt;div&gt;create_zip()&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="759.9986206896552" y="2280" width="222" height="180" as="geometry" />
         </mxCell>
       </root>
