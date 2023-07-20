@@ -341,7 +341,7 @@ def prepare_zotus():
 
 
 def build_ZOTU_table():
-    cmd_0 = USEARCH_11_BIN + ' -otutab filtered2.fasta -zotus ZOTUs.fasta'
+    cmd_0 = USEARCH_11_BIN + ' -otutab filtered1.fasta -zotus ZOTUs.fasta'
     cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id) + " "
     system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
 
