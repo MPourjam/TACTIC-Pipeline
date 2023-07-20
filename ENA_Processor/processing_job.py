@@ -41,17 +41,18 @@ def system_sub(cmd):
     cmds_to_write_log = ["usearch", "sina", "sortmerna"]
     capture_output_bool = any([True for el in cmds_to_write_log[:1] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
     where_to_cut = len(cmd_list)
-    if capture_output_bool:
-        for ind, arg_ in enumerate(cmd_list):
-            if ">" in arg_:
-                where_to_cut = ind
-                break
+    # removing redirector to files
+    for ind, arg_ in enumerate(cmd_list):
+        if ">" in arg_:
+            where_to_cut = ind
+            break
     # If capture_output_bool is true then do not redirect to /dev/null
     cmd_list = cmd_list[:where_to_cut]
     run_output = subprocess.run(
         cmd_list,
-        capture_output=capture_output_bool,
-        text=capture_output_bool,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding='utf-8',
         shell=False,
     )
     # logging
@@ -342,7 +343,8 @@ def prepare_zotus():
 
 def build_ZOTU_table():
     cmd_0 = USEARCH_11_BIN + ' -otutab filtered1.fastq -zotus ZOTUs.fasta'
-    cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id) + " "
+    cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id)
+    cmd_1 += " -mapout map.txt -notmatched unmapped.fa -dbmatched otus_with_sizes.fa -sizeout"
     system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
 
 
@@ -709,7 +711,7 @@ def main_processing(
         filter16S()
         log.info('Filtering out non 16S ZOTUs')
         prepare_zotus()
-        log.info('Prepared Zotus Done')
+        log.info('Size=1 added to Zotus')
         build_ZOTU_table()
         log.info('Build ZOTU table')
         filter_zotu_abundance()  # ignore this step because the required abundance is 0
