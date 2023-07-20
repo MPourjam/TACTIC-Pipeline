@@ -34,6 +34,7 @@ def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
      It returns the path of direcotry in which the
      preprocessd files of sample are.
     """
+    sample_dir = ""
     try:
         if not hasattr(seq_files_t, "__iter__") or len(seq_files_t) > 2:
             msg = "seq_files_t must be an iterable of max lenght 2"
@@ -53,7 +54,7 @@ def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
             new_paths[ind] = new_path
             # Copying files
             shutil.copy2(str(sfi), str(new_path))
-        preprocessing(
+        sample_dir = preprocessing(
             input_dir=new_dir,
             paired="Yes" if len(seq_files_t) == 2 else "No",
             forward_file=new_paths[0],
@@ -67,7 +68,8 @@ def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
         PREP_LOG.error(msg)
         shutil.rmtree(str(new_dir))
         PREP_LOG.warning("Deleting {}".format(new_dir))
-        return ""
+
+    return sample_dir
 
 
 def run_analysis():
@@ -93,14 +95,15 @@ def run_imngs2(
         PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
         seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
         PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
-        # TODO
+        # running preprocessing
         with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
             res_list = [pool.apply_async(run_preprocessing, args=((file_pair), preproc_dir, str(args_yml_file),))
-                        for file_pair in seq_file_pairs[:2]]  # TODO REMOVE slicing
+                        for file_pair in seq_file_pairs]
             for res in res_list:
                 res.wait()
         # exit()
         # TODO gathering and running analysis
+
 
     except Exception as exc:
         PREP_LOG.error(exc)
