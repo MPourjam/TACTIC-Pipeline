@@ -2,6 +2,7 @@ from os import (chdir, mkdir, listdir, system,
                 makedirs, path, getcwd
                 )
 from collections import Counter
+from collections import defaultdict as dd
 from statistics import stdev, mean
 from .processing_helper import TaskPickle
 from re import search
@@ -327,6 +328,64 @@ def filter16S():
     system_sub(cmd_0 + cmd_1 + cmd_2)
     system_sub('mv out/aligned.fasta good_ZOTUs.fa')
     # system('rm -r idx out kvdb')
+
+
+def parse_denoised_to_zotus(
+        denoised_tabbedout: str,
+        non_human_zotus: str):
+    """
+    It takes X arguments.
+
+    - denoised_tabbedout: The path to tab file output of -unoise command. It has 3 to 4 columns
+        e.g: <Sequence Header>;size=2;	denoise	amp4701
+             <Sequence Header>;size=2;	denoise	bad	dqt=2;top=<Another Sequence Header>
+             <Sequence Header>;size=3;	chfilter	zotu
+    - non_human_zotus: The output of filter16S() step. Zotus not in this file would be filtered.
+        i.e: good_ZOTUs.fa
+    """
+    denoised_tabbedout = path.abspath(denoised_tabbedout)
+    non_human_zotus = path.abspath(non_human_zotus)
+    if not all(path.isfile(denoised_tabbedout), path.isfile(non_human_zotus)):
+        raise ValueError("Invalid path for denoised_tabbedout/non_human_zotus")
+    centroid_line_rgx = re.compile(r'(?P<centroid_name>.*);size=(?P<centroid_size>[0-9]+);\tdenoise\tamp(?P<zotu_number>[0-9]+)$')
+    # TODO
+    noise_line_rgx = re.compile(r'(?P<noise_name>);size=(?P<noise_size>[0-9]+);\tdenoise\t((bad)|(shifted))\tdqt=[0-9]+;top=(?P<centroid_name>.*)$')
+    cents_size_count_dict = Counter()
+    cents_noise_dict = dd(list)
+    cents_zotu_name_dict = dd("str")
+    non_human_zotus = []
+    with open(non_human_zotus) as non_human_zotus_fio:
+        line = non_human_zotus_fio.readline().strip()
+        while line:
+            if line.startswith(">"):
+                zotu_name = line.replace(">", "")
+                non_human_zotus.append(zotu_name)
+            line = non_human_zotus_fio.readline().strip()
+
+    with open(denoised_tabbedout, "r") as noise_map_fio:
+        map_line = noise_map_fio.readline().strip()
+        while map_line:
+            centroid_line_mo = centroid_line_rgx.search(map_line)
+            noise_line_mo = noise_line_rgx.search(map_line)
+            if centroid_line_mo:
+                cent_name = centroid_line_mo.group("centroid_name")
+                cent_size = int(centroid_line_mo.group("centroid_size"))
+                zotu_name = "Zotu" + str(centroid_line_mo.group("zotu_number"))
+                # updating dicts
+                cents_size_count_dict[cent_name] += cent_size
+                cents_zotu_name_dict[cent_name] = zotu_name
+            elif noise_line_mo:
+                cent_name = noise_line_mo.group("centroid_name")
+                noise_name = noise_line_mo.group("noise_name")
+                noise_size = int(noise_line_mo.group("noise_size"))
+                # updating dicts
+                cents_noise_dict[cent_name].append(noise_name)
+                cents_size_count_dict[cent_name] += noise_size
+            # reading line
+            map_line = noise_map_fio.readline().strip()
+    # TODO
+    # Write table writer
+    return True
 
 
 def prepare_zotus():
