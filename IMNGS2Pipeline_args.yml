@@ -33,7 +33,7 @@ Filter16SArgs:
   num_alignments: 1
 # prepare_zotus:
 BuildZOTUTableArgs:
-  id: 0.97
+  id: 0.99
 FilterZOTUAbundanceArgs:
   abundance_cutoff: 0.0
 # select_zotu_seqs:
