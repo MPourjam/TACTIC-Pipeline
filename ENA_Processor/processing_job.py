@@ -2,7 +2,6 @@ from os import (chdir, mkdir, listdir, system,
                 makedirs, path, getcwd
                 )
 from collections import Counter
-from collections import defaultdict as dd
 from statistics import stdev, mean
 from .processing_helper import TaskPickle
 from re import search
@@ -234,7 +233,7 @@ def mymkdir(input_dir):
 def merge_pairs(forward_file, reverse_file):
     cmd_0 = USEARCH_11_BIN + " -fastq_mergepairs " + forward_file + ' -reverse ' + reverse_file
     cmd_1 = " -fastq_maxdiffs " + str(ARGS_CLS.merge_pairs.fasq_maxdiffs)
-    cmd_1 += " -fastq_pctid " + str(ARGS_CLS.merge_pairs.fastq_pctid) + " -fastqout merged.fasta"
+    cmd_1 += " -fastq_pctid " + str(ARGS_CLS.merge_pairs.fastq_pctid) + " -fastqout merged.fastq"
     cmd_2 = " -fastq_minmergelen " + str(ARGS_CLS.merge_pairs.fastq_minmergelen)
     cmd_2 += " -fastq_maxmergelen " + str(ARGS_CLS.merge_pairs.fastq_maxmergelen) + " >/dev/null 2>/dev/null"
     # print(cmd_0 + cmd_1 + cmd_2)
@@ -242,7 +241,7 @@ def merge_pairs(forward_file, reverse_file):
 
 
 def trim_sides():
-    cmd_0 = USEARCH_11_BIN + " -fastx_truncate merged.fasta -stripright " + str(ARGS_CLS.trim_both_sides.stripright)
+    cmd_0 = USEARCH_11_BIN + " -fastx_truncate merged.fastq -stripright " + str(ARGS_CLS.trim_both_sides.stripright)
     cmd_1 = " -stripleft " + str(ARGS_CLS.trim_both_sides.stripleft) + " -fastqout filtered1.fastq >/dev/null 2>/dev/null"
     system_sub(cmd_0 + cmd_1)
 
@@ -330,64 +329,6 @@ def filter16S():
     # system('rm -r idx out kvdb')
 
 
-def parse_denoised_to_zotus(
-        denoised_tabbedout: str,
-        non_human_zotus: str):
-    """
-    It takes X arguments.
-
-    - denoised_tabbedout: The path to tab file output of -unoise command. It has 3 to 4 columns
-        e.g: <Sequence Header>;size=2;	denoise	amp4701
-             <Sequence Header>;size=2;	denoise	bad	dqt=2;top=<Another Sequence Header>
-             <Sequence Header>;size=3;	chfilter	zotu
-    - non_human_zotus: The output of filter16S() step. Zotus not in this file would be filtered.
-        i.e: good_ZOTUs.fa
-    """
-    denoised_tabbedout = path.abspath(denoised_tabbedout)
-    non_human_zotus = path.abspath(non_human_zotus)
-    if not all(path.isfile(denoised_tabbedout), path.isfile(non_human_zotus)):
-        raise ValueError("Invalid path for denoised_tabbedout/non_human_zotus")
-    centroid_line_rgx = re.compile(r'(?P<centroid_name>.*);size=(?P<centroid_size>[0-9]+);\tdenoise\tamp(?P<zotu_number>[0-9]+)$')
-    # TODO
-    noise_line_rgx = re.compile(r'(?P<noise_name>);size=(?P<noise_size>[0-9]+);\tdenoise\t((bad)|(shifted))\tdqt=[0-9]+;top=(?P<centroid_name>.*)$')
-    cents_size_count_dict = Counter()
-    cents_noise_dict = dd(list)
-    cents_zotu_name_dict = dd("str")
-    non_human_zotus = []
-    with open(non_human_zotus) as non_human_zotus_fio:
-        line = non_human_zotus_fio.readline().strip()
-        while line:
-            if line.startswith(">"):
-                zotu_name = line.replace(">", "")
-                non_human_zotus.append(zotu_name)
-            line = non_human_zotus_fio.readline().strip()
-
-    with open(denoised_tabbedout, "r") as noise_map_fio:
-        map_line = noise_map_fio.readline().strip()
-        while map_line:
-            centroid_line_mo = centroid_line_rgx.search(map_line)
-            noise_line_mo = noise_line_rgx.search(map_line)
-            if centroid_line_mo:
-                cent_name = centroid_line_mo.group("centroid_name")
-                cent_size = int(centroid_line_mo.group("centroid_size"))
-                zotu_name = "Zotu" + str(centroid_line_mo.group("zotu_number"))
-                # updating dicts
-                cents_size_count_dict[cent_name] += cent_size
-                cents_zotu_name_dict[cent_name] = zotu_name
-            elif noise_line_mo:
-                cent_name = noise_line_mo.group("centroid_name")
-                noise_name = noise_line_mo.group("noise_name")
-                noise_size = int(noise_line_mo.group("noise_size"))
-                # updating dicts
-                cents_noise_dict[cent_name].append(noise_name)
-                cents_size_count_dict[cent_name] += noise_size
-            # reading line
-            map_line = noise_map_fio.readline().strip()
-    # TODO
-    # Write table writer
-    return True
-
-
 def prepare_zotus():
     contents = read_file('good_ZOTUs.fa')
     out_file = open('ZOTUs.fasta', 'w+')
@@ -401,9 +342,9 @@ def prepare_zotus():
 
 
 def build_ZOTU_table():
-    cmd_0 = USEARCH_11_BIN + ' -otutab filtered1.fastq -zotus ZOTUs.fasta'
-    cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id)
-    cmd_1 += " -mapout map.txt -notmatched unmapped.fa -dbmatched otus_with_sizes.fa -sizeout"
+    cmd_0 = USEARCH_11_BIN + ' -otutab derep.fasta -zotus good_ZOTUs.fa'
+    cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id) + " "
+    # cmd_1 += " -mapout map.txt -notmatched unmapped.fa -dbmatched otus_with_sizes.fa -sizeout "  # for debugging
     system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
 
 
@@ -420,7 +361,7 @@ def filter_zotu_abundance():
     unf_tot_size = get_sample_size('zotu_table.txt')
     contents = read_file('zotu_table.txt')[1:]
     out_file = open('zotu_table_filtered.txt', 'w+')
-    out_file_2 = open('filtered_zotu_table_list.txt', 'w+')
+    out_file_2 = open('abundant_zotus_table.txt', 'w+')
     for line in contents:
         curr_size = float(line.split('\t')[1])
         if round(float(curr_size / unf_tot_size), 4) >= round(0.0, 4):
@@ -430,8 +371,8 @@ def filter_zotu_abundance():
     out_file_2.close()
 
 
-def select_zotu_seqs():  # TODO Problem is here
-    cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs good_ZOTUs.fa -labels filtered_zotu_table_list.txt'
+def select_zotu_seqs():
+    cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs good_ZOTUs.fa -labels abundant_zotus_table.txt'
     cmd_1 = ' -fastaout ZOTUs-Seqs.fasta '
     system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
 
@@ -550,10 +491,10 @@ def cleanup(input_id, full_clean=False, dir_path=None):
         deleted_dirs = "-r " + deleted_files
     else:
         deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fastq filtered2.fasta'
-        deleted_files += ' aligned_' + str(input_id) + '.csv aligned_' + str(input_id) + '.fasta merged.fasta'
+        deleted_files += ' aligned_' + str(input_id) + '.csv aligned_' + str(input_id) + '.fasta merged.fastq'
         deleted_files += ' sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
         # derep.fasta get deleted and we keep the gzipped one according to Ilias, preserve it for diversity analysis
-        deleted_files += ' classifiedF.txt filtered_zotu_table_list.txt denoising.tab derep.fasta'
+        deleted_files += ' classifiedF.txt abundant_zotus_table.txt denoising.tab derep.fasta'
         deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
         deleted_files += ' *.fastq*'
         deleted_dirs = ' -r kvdb out idx'
@@ -768,9 +709,8 @@ def main_processing(
         clusterZOTUs()
         log.info('Cluster ZOTUs DONE')
         filter16S()
-        log.info('Filtering out non 16S ZOTUs')
-        prepare_zotus()
-        log.info('Size=1 added to Zotus')
+        log.info('Filtered out non 16S ZOTUs')
+        # prepare_zotus()  # Adds size=1 to end of zotus header
         build_ZOTU_table()
         log.info('Build ZOTU table')
         filter_zotu_abundance()  # ignore this step because the required abundance is 0
@@ -792,14 +732,13 @@ def main_processing(
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         create_zip(input_id)
         log.info('Zipped!')
-        # cleanup(input_id)
+        cleanup(input_id)
         log.info("Cleaned up: {}".format(input_id))
-
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
         print(err_msg)
         update_task_pko("Error", str(err_msg).strip())
-        # cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
+        cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
         pko.close()
         raise e
 
@@ -812,7 +751,7 @@ def main_processing(
         status_msg = "Process Failed! no UDB!"
     update_task_pko(status_code, status_msg)
     pko.close()
-    if not path.isfile(udb_file):
-        raise FileNotFoundError("No UDB created for {}".format(input_dir))
+    # if not path.isfile(udb_file):
+        # raise FileNotFoundError("No UDB created for {}".format(input_dir))
 
     return input_dir
