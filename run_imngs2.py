@@ -1,10 +1,14 @@
 import os
+import re
 import argparse
 import shutil
 from ENA_Processor.processing_job import main_processing as preprocessing
+from ENA_Processor.processing_job import calc_spikes
+from collections import namedtuple
 from ENA_Processor.analyze_sample_job import main as analyze
 import ENA_Processor.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
+from typing import List, Dict
 from sys import version_info
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # pip2 install pathlib2
@@ -12,7 +16,7 @@ else:
     from pathlib import Path, PurePath
 
 
-global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG
+global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS, MapLineTup
 INPUT_DIR = "/srv/base/inputs/"
 DBS_DIR = "/srv/base/databases/"
 max_pool = int(cpu_count() * 0.3)
@@ -20,13 +24,151 @@ POOL_SIZE = max_pool if max_pool > 0 else 1
 max_batch = int(POOL_SIZE * 0.8)
 # Preparing the logger
 PREP_LOG = proc_helper.gimmelogger("run_imngs2", only_file=False)
+MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "amount_spike")
+MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2]])
 
 
-def split_files_to_directories():
-    pass
+def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
+    """
+    files_tups: should be a list of files path tuples. i.e: [(<forward_path>, <reverse_path>), ...]
+    """
+    mapping_file_path = Path(PurePath(mapping_file_path)).absolute()
+    valid_ids = []
+    ignored_ids = []  # e.g. entries with NA values
+    mapping_lines: Dict[str, List[str]] = {}  # from mapping file, full line for each relevant sample
+    index_of_sample_id_col = None
+    sample_col_name = MAPPING_FILE_COLS[0]
+    index_of_weight_col = None
+    weight_col_name = MAPPING_FILE_COLS[1]
+    index_of_amounts_col = None
+    amounts_col_name = MAPPING_FILE_COLS[2]
+    with open(mapping_file_path, 'r') as mapping_file_h:
+        header: str = next(mapping_file_h)
+
+        if not header.startswith('#'):
+            PREP_LOG.error('No header in mapping file')
+            raise Exception('No header in mapping file')
+
+        columns = header.split('\t')
+        for i, col in enumerate(columns):
+            colname = col.strip().lstrip('#')
+
+            if colname == sample_col_name:
+                index_of_sample_id_col = i
+            elif colname == weight_col_name:
+                index_of_weight_col = i
+            elif colname == amounts_col_name:
+                index_of_amounts_col = i
+
+        if index_of_sample_id_col is None:
+            msg = f'Column {sample_col_name!r} missing in header of mapping_file: {mapping_file_path}'
+            PREP_LOG.error(msg)
+            raise Exception(msg)
+
+        if index_of_weight_col is None:
+            msg = f'Column {weight_col_name!r} missing in header of mapping_file: {mapping_file_path}'
+            PREP_LOG.error(msg)
+            raise Exception(msg)
+
+        if index_of_amounts_col is None:
+            msg = f'Column {amounts_col_name!r} missing in header of mapping_file: {mapping_file_path}'
+            PREP_LOG.error(msg)
+            raise Exception(msg)
+
+        for line in mapping_file_h:
+            if line.startswith('#'):
+                continue
+
+            fields = line.split('\t')
+            sample_id = fields[index_of_sample_id_col].strip()
+            total_weight_in_g = fields[index_of_weight_col].strip()
+            amount = fields[index_of_amounts_col].strip()
+
+            # warn if weight is not a valid number
+            try:
+                float(total_weight_in_g)
+            except ValueError:
+                PREP_LOG.warning(
+                    f'Weight {total_weight_in_g!r} is not a valid floating point number for {sample_id!r}. Weigth will be processed as NAN.')
+                fields[index_of_weight_col] = "NAN"
+
+            # if amount cannot be parsed to float change to 0
+            try:
+                float(amount)
+            except ValueError:
+                fields[index_of_amounts_col] = "0"
+
+            valid_ids.append(sample_id)
+            map_line = MapLineTup(fields[index_of_sample_id_col], fields[index_of_weight_col], fields[index_of_amounts_col])
+            # Mapping file paris to sample_id
+            file_pair_tup = ("", "")
+            for file_tup in files_tups:
+                try:
+                    forw_name = file_tup[0]
+                except Exception:
+                    forw_name = ""
+                if sample_id in forw_name:
+                    file_pair_tup = file_tup
+            mapping_lines[sample_id] = (map_line, file_pair_tup)
+
+    return mapping_lines
 
 
-def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
+def remove_spikes(
+        files_paths: list,
+        spike_stat_mapping_path: str,
+        sample_id: str,
+        sample_weight: float,  # in gram
+        spike_amount: int):
+    """
+    It remove spikes from a sample and adds the number of spikes to a mapping file given.
+     the column name should be "SpikeReads". The format of spike_stat_mapping_path must be
+     like below:
+     #SampleID\tSpikeReads\tspikes_total_weight_in_g\tamount_spike\n'
+
+    Arguments:
+        - files_path: list = list of files on which spike removal should be applied
+        - sample_id: str = sample identifier to be reported in spike_stat_mapping_path
+        - sample_weight: float = sample weight sent for sequencing in gram
+        - spike_amount: int = amount of spike in nanogram
+        - spike_stat_mapping_path: str = the path to write or append spike stats
+
+    """
+    row_fmt = "{}\t{}\t{}\t{}\n"
+    header_ = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "amount_spike")
+    spike_stat_mapping_path = Path(PurePath(spike_stat_mapping_path)).absolute()
+    files_paths_abs = [Path(PurePath(fi_pa)) for fi_pa in files_paths if Path(PurePath(fi_pa)).is_file()]
+    if len(files_paths) != len(files_paths_abs):
+        msg = "Some given files for spike removal do not exist!"
+        PREP_LOG.error(msg)
+        raise ValueError(msg)
+    if not spike_stat_mapping_path.is_file():
+        with open(spike_stat_mapping_path, 'w') as stats_h:
+            stats_h.write(header_)
+    else:
+        with open(spike_stat_mapping_path, 'a+') as stats_h:
+            line = stats_h.readline()
+            if not re.match(header_, line):
+                msg = f"Existing spike_stat_file: {spike_stat_mapping_path} does not have correct format of : {header_}"
+                PREP_LOG.error(msg)
+                raise ValueError(msg)
+            # appending
+            real_reads_c, spike_reads_c = calc_spikes(files_paths, spike_amount)
+            out_tup = (sample_id, spike_reads_c, sample_weight, spike_amount)
+            stats_h.write(row_fmt.format(*out_tup))
+
+    PREP_LOG.info(f"Spike removal done for {sample_id}.\nSpike Reads: {spike_reads_c}\tnon-spike reads: {real_reads_c}")
+
+    return out_tup
+
+
+def run_preprocessing(
+        seq_files_t: tuple,
+        preproc_dir: str,
+        args_yml_path: str,
+        sample_id: str = "",
+        sample_weight: float = float("NAN"),  # spike normalizer handles this
+        spike_amount: int = 0):
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -47,13 +189,29 @@ def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
         # Getting initial stem
         while new_dir.suffixes:
             new_dir = Path(new_dir).absolute().parent.joinpath(new_dir.stem)
-        new_dir = Path(PurePath(preproc_dir)).absolute().joinpath(proc_helper.get_base_name(new_dir))
+
+        sample_base_name = proc_helper.get_base_name(new_dir)
+        sample_id = sample_id if sample_id else sample_base_name
+        new_dir = Path(PurePath(preproc_dir)).absolute().joinpath(sample_id)
         new_dir.mkdir(parents=True, exist_ok=True)
+        # defining spike_stat_file
+        spike_stat_mapping_file_path = Path(PurePath(preproc_dir)).absolute().joinpath("spike_stat_mapping_file.tsv")
         for ind, sfi in enumerate(seq_files_t):
             new_path = new_dir.joinpath(sfi.name)
             new_paths[ind] = new_path
             # Copying files
             shutil.copy2(str(sfi), str(new_path))
+        # TODO we do spike removal if necessary and add a line to spike_stats file for spike normalization
+        new_paths = [el for el in new_paths if bool(el)]
+        if spike_amount > 0:
+            real_reads_c, spike_reads_c = remove_spikes(
+                new_paths,
+                spike_stat_mapping_file_path,
+                sample_id,
+                sample_weight,
+                spike_amount
+            )
+        # Running proeprocessing
         sample_dir = preprocessing(
             input_dir=new_dir,
             paired="Yes" if len(seq_files_t) == 2 else "No",
@@ -81,6 +239,7 @@ def run_imngs2(
         fastq_file_dir: str,
         args_yml_file: str,
         dbs_dir: str,
+        mapping_file: str = "",
         only_preproc: bool = False):
     try:
         fastq_file_dir = Path(PurePath(fastq_file_dir))
@@ -96,6 +255,16 @@ def run_imngs2(
         PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
         seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
         PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
+        _row_vals_tup = MapLineTup("", float("NAN"), 0)
+        if str(mapping_file):
+            mapping_file_path = Path(PurePath(str(mapping_file))).absolute()
+            assert mapping_file_path.is_file(), f"{mapping_file_path} must be a path to an exisitng mapping file"
+            try:
+                mapping_line_tup, file_pair_tup = parse_mapping_file(mapping_file_path)
+            except Exception:
+                PREP_LOG.warning(f"Parsing of mapping file failed. Continuing as if there is no spike in the samples")
+        # TODO We need a dictionary mapping sample names in mapping file to seqeunces file names and arguments needed for run_preprocessing
+        # TODO What if some gathered files are in mapping file and some are not!!!!
         # running preprocessing
         with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
             res_list = [pool.apply_async(run_preprocessing, args=((file_pair), preproc_dir, str(args_yml_file),))
@@ -104,7 +273,6 @@ def run_imngs2(
                 res.wait()
         # exit()
         # TODO gathering and running analysis
-
 
     except Exception as exc:
         PREP_LOG.error(exc)
