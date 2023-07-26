@@ -61,6 +61,7 @@ def run_preprocessing(seq_files_t: tuple, preproc_dir: str, args_yml_path: str):
             reverse_file=new_paths[1],
             input_id=new_dir.name,
             args_file_path=args_yml_path,
+            spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
         )
 
     except Exception as exc:
