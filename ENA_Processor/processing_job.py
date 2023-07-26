@@ -622,7 +622,8 @@ def main_processing(
         forward_file,
         reverse_file,
         input_id,
-        args_file_path: str = ""):
+        args_file_path: str = "",
+        spike_amount: int = 0):
     global log
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
     log = gimmelogger(
@@ -649,7 +650,7 @@ def main_processing(
             pko.task_dict["args"]["forward_file"] = forward_file
             pko.task_dict["args"]["reverse_file"] = reverse_file
             pko.task_dict["args"]["input_id"] = input_id
-            pko.task_dict["args"]["spike_amount"] = ARGS_CLS.spike_removal.spike_amount
+            pko.task_dict["args"]["spike_amount"] = spike_amount
             pko.task_dict["status"]["run"] = pko.scode_d["Started"]
             abs_path_forw = path.exists(path.abspath(path.join(input_dir, forward_file)))
             if reverse_file:
@@ -681,7 +682,7 @@ def main_processing(
             files_names.append("")
         forward_file, reverse_file = files_names
         log.info("Spike removal started.")
-        real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=ARGS_CLS.spike_removal.spike_amount)
+        real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=spike_amount)
         log.info("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is crucial to be here

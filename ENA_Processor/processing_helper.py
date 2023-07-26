@@ -801,7 +801,6 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             argparse_logger.warning(e)
 
         # Updating attributes of class instance
-        self.spike_removal = SpikeRemovalArgs(config_dict)
         self.merge_pairs = MergePairsArgs(config_dict)
         self.trim_both_sides = TrimBothSidesArgs(config_dict)
         self.trim_one_side = TrimOneSideArgs(config_dict)
