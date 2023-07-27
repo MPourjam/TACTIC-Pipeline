@@ -1,11 +1,10 @@
-import os
 import re
 import argparse
 import shutil
 from ENA_Processor.processing_job import main_processing as preprocessing
-from ENA_Processor.processing_job import calc_spikes
+from ENA_Processor.processing_job import calc_spikes, gzip_to_fastq
+from ENA_Processor.analyze_sample_job import main as main_analysis
 from collections import namedtuple
-from ENA_Processor.analyze_sample_job import main as analyze
 import ENA_Processor.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
 from typing import List, Dict
@@ -26,6 +25,10 @@ max_batch = int(POOL_SIZE * 0.8)
 PREP_LOG = proc_helper.gimmelogger("run_imngs2", only_file=False)
 MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "amount_spike")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2]])
+global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER
+SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.tsv"
+row_fmt = "{}\t{}\t{}\t{}"
+SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "amount_spike")
 
 
 def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
@@ -116,7 +119,6 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
 
 def remove_spikes(
         files_paths: list,
-        spike_stat_mapping_path: str,
         sample_id: str,
         sample_weight: float,  # in gram
         spike_amount: int):
@@ -131,36 +133,40 @@ def remove_spikes(
         - sample_id: str = sample identifier to be reported in spike_stat_mapping_path
         - sample_weight: float = sample weight sent for sequencing in gram
         - spike_amount: int = amount of spike in nanogram
-        - spike_stat_mapping_path: str = the path to write or append spike stats
 
     """
     row_fmt = "{}\t{}\t{}\t{}"
-    header_ = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "amount_spike")
-    header_rgx = re.compile(header_)
-    spike_stat_mapping_path = Path(PurePath(spike_stat_mapping_path)).absolute()
+    header_rgx = re.compile(SPIKE_STAT_HEADER)
     files_paths_abs = [Path(PurePath(fi_pa)) for fi_pa in files_paths if Path(PurePath(fi_pa)).is_file()]
-    if len(files_paths) != len(files_paths_abs):
+    spike_stat_mapping_path = files_paths_abs[0].parent.joinpath(SPIKE_STAT_FILE_NAME)
+    # NOTE calc_spikes() only works with fastq files. After this step the path to files would change
+    # It's important to continue downstream analysis with new files.
+    fastq_files_abs_path = gzip_to_fastq(*files_paths_abs)
+    # Preparing default output
+    out_tup = (0, spike_stat_mapping_path, tuple(fastq_files_abs_path))
+    if len(files_paths) != len(fastq_files_abs_path):
         msg = "Some given files for spike removal do not exist!"
         PREP_LOG.error(msg)
         raise ValueError(msg)
-    if not spike_stat_mapping_path.is_file():
-        with open(spike_stat_mapping_path, 'w') as stats_h:
-            stats_h.write(header_ + "\n")
-    else:
-        with open(spike_stat_mapping_path, 'r') as stats_h:
-            header_existing = stats_h.readline()
-        with open(spike_stat_mapping_path, 'a') as stats_h:
-            header_line_mo = header_rgx.match(header_existing)
-            if not header_line_mo:
-                msg = f"Existing spike_stat_file: {spike_stat_mapping_path} does not have correct format of : {header_}"
-                PREP_LOG.error(msg)
-                raise ValueError(msg)
-            # appending
-            real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
-            out_tup = (sample_id, spike_reads_c, sample_weight, spike_amount)
-            stats_h.write(row_fmt.format(*out_tup) + "\n")
+    # Writing header
+    header_existing = SPIKE_STAT_HEADER + "\n"
+    with open(spike_stat_mapping_path, 'w') as stats_h:
+        stats_h.write(header_existing)
+    # Adding rows to spike stat file.
+    header_line_mo = header_rgx.match(header_existing)
+    if not header_line_mo:
+        msg = f"Existing spike_stat_file: {spike_stat_mapping_path} does not have correct format of : {SPIKE_STAT_HEADER}"
+        PREP_LOG.error(msg)
+        raise ValueError(msg)
 
-    PREP_LOG.info(f"Spike removal done for {sample_id}.\nSpike Reads: {spike_reads_c}\tnon-spike reads: {real_reads_c}")
+    # postponing file openning to avoid race condition if ran parallel
+    real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
+    out_tup = (spike_reads_c, spike_stat_mapping_path, tuple(fastq_files_abs_path))
+    with open(spike_stat_mapping_path, 'a') as stats_h:
+        # appending
+        stats_h.write(row_fmt.format(sample_id, spike_reads_c, sample_weight, spike_amount) + "\n")
+
+    PREP_LOG.info(f"Spike removal done for {sample_id}.Spike Reads: {spike_reads_c}\tnon-spike reads: {real_reads_c}")
 
     return out_tup
 
@@ -169,7 +175,7 @@ def run_preprocessing(
         seq_files_t: tuple,
         preproc_dir: str,
         args_yml_path: str,
-        sample_id: str = "",
+        sample_id: str = "",  # If it's not provided then the base name of forward file
         sample_weight: float = float("NAN"),  # spike normalizer handles this
         spike_amount: int = 0):
     """
@@ -197,8 +203,6 @@ def run_preprocessing(
         sample_id = sample_id if sample_id else sample_base_name
         new_dir = Path(PurePath(preproc_dir)).absolute().joinpath(sample_id)
         new_dir.mkdir(parents=True, exist_ok=True)
-        # defining spike_stat_file
-        spike_stat_mapping_file_path = Path(PurePath(preproc_dir)).absolute().joinpath("spike_stat_mapping_file.tsv")
         for ind, sfi in enumerate(seq_files_t):
             new_path = new_dir.joinpath(sfi.name)
             new_paths[ind] = new_path
@@ -206,24 +210,23 @@ def run_preprocessing(
             shutil.copy2(str(sfi), str(new_path))
         # TODO we do spike removal if necessary and add a line to spike_stats file for spike normalization
         new_paths = [el for el in new_paths if bool(el)]
-        sample_id, spike_reads_c, sample_weight, spike_amount = remove_spikes(
+        # removing spikes and decompressing files below
+        spike_reads_c, spike_stat_mapping_path, fastq_files_tuple = remove_spikes(
             new_paths,
-            spike_stat_mapping_file_path,
             sample_id,
             sample_weight,
             spike_amount
         )
-        # Running proeprocessing
+        # Running preprocessing
         sample_dir = preprocessing(
             input_dir=new_dir,
-            paired="Yes" if len(seq_files_t) == 2 else "No",
-            forward_file=new_paths[0],
-            reverse_file=new_paths[1],
-            input_id=new_dir.name,
+            paired="Yes" if len(fastq_files_tuple) == 2 else "No",
+            forward_file=fastq_files_tuple[0],
+            reverse_file=fastq_files_tuple[1],
+            input_id=sample_id,
             args_file_path=args_yml_path,
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
         )
-
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
@@ -233,8 +236,74 @@ def run_preprocessing(
     return sample_dir
 
 
-def run_analysis():
-    pass
+def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
+    samples_dirs_path = []
+    for sam_dir in samples_dirs:
+        try:
+            sam_dir_path = Path(PurePath(sam_dir)).absolute()
+            if not sam_dir_path.is_dir():
+                raise ValueError(f"{sam_dir_path} does not exist!")
+        except Exception as exc:
+            PREP_LOG.warning(f"Invalid sample directory for {sam_dir}. {exc}")
+            continue
+        samples_dirs_path.append(sam_dir_path)
+
+    combined_spike_stat = Path(PurePath(combined_spike_stat))
+    if combined_spike_stat.is_dir():
+        combined_spike_stat = samples_dirs_path[0].parent.joinpath(SPIKE_STAT_FILE_NAME)
+
+    sample_stat_files_paths = [sdir.joinpath(SPIKE_STAT_FILE_NAME) for sdir in samples_dirs_path]
+    header_rgx = re.compile(SPIKE_STAT_HEADER)
+    with open(combined_spike_stat, "w") as combined_stat_file_fio:
+        combined_stat_file_fio.write(SPIKE_STAT_HEADER + "\n")
+        for ssfp in sample_stat_files_paths:
+            with open(ssfp) as sam_stat_file_fio:
+                header = sam_stat_file_fio.readline().strip()
+                row_values = sam_stat_file_fio.readline().strip()
+            header_line_mo = header_rgx.match(header)
+            if not header_line_mo:
+                msg = f"Existing spike_stat_file: {ssfp} does not have correct format of : {SPIKE_STAT_HEADER}"
+                PREP_LOG.error(msg)
+                continue
+            combined_stat_file_fio.write(row_values + "\n")
+
+    samples_dirs_path = [str(el) for el in samples_dirs_path]
+    return samples_dirs_path, combined_spike_stat
+
+
+def gather_files(*preproc_dirs_path, file_name="taxed_ZOTUs.fasta"):
+    # print(preproc_dirs_path)
+    sam_dirs = []
+    preproc_dirs_path_deepests = []
+    for prep_dir in preproc_dirs_path:
+        prep_dir = Path(PurePath(prep_dir)).absolute()
+        if not prep_dir.is_dir():
+            continue
+        preproc_dirs_path_deepests.append(str(prep_dir))
+    for prep_dir in preproc_dirs_path_deepests:
+        prep_dir = Path(PurePath(prep_dir))
+        for diri in range(len(preproc_dirs_path_deepests)):
+            added_prep_dir = Path(PurePath(preproc_dirs_path_deepests[diri]))
+            deeper_path = added_prep_dir if len(added_prep_dir.parts) > len(prep_dir.parts) else prep_dir
+            shallower_path = prep_dir if deeper_path == added_prep_dir else added_prep_dir
+            if str(shallower_path) in str(deeper_path):
+                preproc_dirs_path_deepests[diri] = str(deeper_path)
+
+    preproc_dirs_path = list(set(preproc_dirs_path_deepests))
+    size_rgx = re.compile(r"size=([0-9]+);")
+    tax_rgx = re.compile(r"tax=([^;]+){0,7};")
+    for ds in preproc_dirs_path:
+        for fs in Path(PurePath(ds)).rglob(file_name):
+            with open(fs) as fs_fio:
+                line = fs_fio.readline().strip()
+                size_mo = size_rgx.search(line)
+                tax_mo = tax_rgx.search(line)
+                if not all([line, line.startswith(">"), size_mo, tax_mo]):
+                    PREP_LOG.warning(f"{str(fs)} file is not formatted correctly. Proper fasta header format: '>SEQID;size=XXX;tax=KKK,PPP;CCC;OOO")
+                    continue
+            sam_dirs.append(str(fs))
+
+    return sam_dirs
 
 
 def run_imngs2(
@@ -242,57 +311,75 @@ def run_imngs2(
         args_yml_file: str,
         dbs_dir: str,
         mapping_file: str = "",
-        only_preproc: bool = False):
-    try:
-        fastq_file_dir = Path(PurePath(fastq_file_dir))
-        args_yml_file = Path(PurePath(args_yml_file))
-        dbs_dir = Path(PurePath(dbs_dir))
-        preproc_dir = Path(PurePath(INPUT_DIR)).joinpath("Preprocessing")
-        # print(preproc_dir)
-        preproc_dir.mkdir(parents=True, exist_ok=True)
-        assert fastq_file_dir.is_dir(), "fastq_file_dir must be a path to directory"
-        assert args_yml_file.is_file(), "args_yml_file must be a path to a file"
-        assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
-        # Gathering sequence files
-        PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
-        seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
-        PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
-        # Preparing the argument for each sample preprocessing
-        mapping_line_tup_dict = {}
-        if bool(str(mapping_file)):
-            print(str(mapping_file))
-            mapping_file_path = Path(PurePath(str(mapping_file))).absolute()
-            assert mapping_file_path.is_file(), f"{mapping_file_path} must be a path to an exisitng mapping file"
-            try:
-                mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
-            except Exception:
-                PREP_LOG.warning(f"Parsing of mapping file failed. Continuing as if there is no spike in the samples")
-        else:
+        skip_preprocess: bool = False,
+        skip_analysis: bool = False):
+    fastq_file_dir = Path(PurePath(fastq_file_dir))
+    args_yml_file = Path(PurePath(args_yml_file))
+    dbs_dir = Path(PurePath(dbs_dir))
+    assert fastq_file_dir.is_dir(), "fastq_file_dir must be a path to directory"
+    assert args_yml_file.is_file(), "args_yml_file must be a path to a file"
+    assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
+    preproc_dir = Path(PurePath(INPUT_DIR)).joinpath("Preprocessing")
+    preproc_dir.mkdir(parents=True, exist_ok=True)
+
+    reduced_samples_dirs = []
+    mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else Path.cwd()
+    # Analysis defualt vars
+    zotu_file_path, sotu_file_path = ("", "")
+    # assert mapping_file_path.is_file(), f"{mapping_file_path} must be a path to an exisitng mapping file"
+    if not skip_preprocess:
+        try:
+            # Gathering sequence files
+            PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
+            seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
+            PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
+            # Preparing default argument for each sample preprocessing
+            mapping_line_tup_dict = {}
             for file_pair in seq_file_pairs:
                 sample_id = proc_helper.get_base_name(file_pair[0])
                 _row_vals_tup = MapLineTup(sample_id, float("NAN"), 0)
                 mapping_line_tup_dict[sample_id] = (_row_vals_tup, file_pair)
+            # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
+            if mapping_file_path.is_file():
+                try:
+                    mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
+                except Exception as exc:
+                    PREP_LOG.warning(f"Parsing of mapping file failed. Continuing as if there is no spike in the samples. {exc}")
+            # running preprocessing
+            with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
+                res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), preproc_dir, str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].amount_spike,))
+                            for sample_id, arg_tup in list(mapping_line_tup_dict.items())[3:4]]
+                for res in res_list:
+                    res.wait()
+            samples_dirs = [el.get() for el in res_list]
+            combined_spike_stats_path = preproc_dir.joinpath(SPIKE_STAT_FILE_NAME)
+            reduced_samples_dirs, _ = combine_spike_stats_file(*samples_dirs, combined_spike_stat=combined_spike_stats_path)
+            missed_sampels = [sam_dir for sam_dir in samples_dirs if str(sam_dir) not in reduced_samples_dirs]
+            if missed_sampels:
+                PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
+                PREP_LOG.warning(f"Missed Samples are: {missed_sampels}")
+        except Exception as exc:
+            PREP_LOG.error(f"Preprocessing Failed: {exc}")
+            # shutil.rmtree(str(preproc_dir))
+            # PREP_LOG.warning("Deleting {}".format(preproc_dir))
 
-        # TODO We need a dictionary mapping sample names in mapping file to seqeunces file names and arguments needed for run_preprocessing
-        # TODO What if some gathered files are in mapping file and some are not!!!!
-        # running preprocessing
-        with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
-            res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), preproc_dir, str(args_yml_file), arg_tup[0][0], arg_tup[0][1], arg_tup[0][2],))
-                        for sample_id, arg_tup in mapping_line_tup_dict.items()]
-            for res in res_list:
-                res.wait()
-        # exit()
-        # TODO gathering and running analysis
-        if str(mapping_file):
-            """
-            # TODO Then we do spike normalization
-            """
-            pass
+    else:
+        reduced_samples_dirs = [preproc_dir]
 
-    except Exception as exc:
-        PREP_LOG.error(exc)
-        shutil.rmtree(str(preproc_dir))
-        PREP_LOG.warning("Deleting {}".format(preproc_dir))
+    # Runing analysis
+    if not skip_analysis:
+        try:
+            analysis_dir = Path(PurePath(INPUT_DIR)).joinpath("Analysis")
+            analysis_dir.mkdir(parents=True, exist_ok=True)
+            samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name="taxed_ZOTUs.fasta")
+            zotu_file_path, sotu_file_path = main_analysis(samp_zotu_seq_files, analysis_dir, args_yml_file)
+        except Exception as exc:
+            PREP_LOG.error(f"Analysis Failed: {exc}")
+
+        ##################
+    # Normalizing
+    if not skip_analysis and mapping_file_path.is_file() and zotu_file_path and sotu_file_path:
+        pass
 
 
 if __name__ == "__main__":
@@ -314,9 +401,12 @@ if __name__ == "__main__":
                         type=str,
                         help="Path to directory containing silva, sortmerna files",
                         default=DBS_DIR)
-    parser.add_argument("-op", "--only-preprocess",
+    parser.add_argument("-sp", "--skip-preprocess",
                         action="store_true",
-                        help="Should run analysis step")
+                        help="Should skip preprocessing step")
+    parser.add_argument("-sa", "--skip-analysis",
+                        action="store_true",
+                        help="Should skip analysis step")
     args = parser.parse_args()
     if args.db_directory != DBS_DIR:
         DBS_DIR = args.db_directory
@@ -325,5 +415,6 @@ if __name__ == "__main__":
         args.yml_file,
         args.db_directory,
         args.mapping_file,
-        args.only_preprocess
+        args.skip_preprocess,
+        args.skip_analysis,
     )
