@@ -160,7 +160,8 @@ def gzip_to_fastq(*files):
                 with open(f, "r+") as fi:
                     line = fi.readline()
                 if len(line) == len(line.encode()):  # If it's ascii
-                    system("mv {} {}".format(f, asciifile))
+                    if str(f) != str(asciifile):  # Avoiding moving a file to itself
+                        system("mv {} {}".format(f, asciifile))
                     fastq_paths.append(asciifile)
             except Exception as e:
                 print("{}\t{}".format(f, e))
@@ -677,12 +678,11 @@ def main_processing(
         f_path = path.join(input_dir, forward_file) if forward_file else ""
         r_path = path.join(input_dir, reverse_file) if reverse_file else ""
         files_paths = [f_path, r_path]
-        files_names = [path.basename(gzip_to_fastq(fi)[0]) for fi in files_paths if path.isfile(fi)]
-        if len(files_names) == 1:
-            files_names.append("")
-        forward_file, reverse_file = files_names
+        if len(files_paths) == 1:
+            files_paths.append("")
+        forward_file, reverse_file = files_paths
         log.info("Spike removal started.")
-        real_reads_c, spike_reads_c = calc_spikes(*files_names, spike_amount=spike_amount)
+        real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         log.info("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is crucial to be here
@@ -700,8 +700,7 @@ def main_processing(
             filter_merged_one_side(forward_file)
             log.info('Filter one DONE')
         dereped_read_n = dereplicate_seqs()
-        read_report = write_reads_report(input_id, Actual_reads=real_reads_c,
-                                         Spike_reads=spike_reads_c,
+        read_report = write_reads_report(input_id,
                                          Dereplicated_reads=dereped_read_n)
         log.debug(read_report)
         log.info('Dereplication DONE')
@@ -737,7 +736,7 @@ def main_processing(
         log.info("Cleaned up: {}".format(input_id))
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
-        print(err_msg)
+        log.error(err_msg)
         update_task_pko("Error", str(err_msg).strip())
         cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
         pko.close()
