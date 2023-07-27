@@ -2,11 +2,15 @@ import os
 import re
 import shutil
 from os import chdir, system
-from zipfile import ZipFile
 from pprint import pprint as print
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
-# from crcapp.models_job import job_anaquery
+from .processing_helper import get_base_name, IMNGS2ArgsParser
+from sys import version_info
+if version_info[0] < 3:
+    from pathlib2 import Path, PurePath  # pip2 install pathlib2
+else:
+    from pathlib import Path, PurePath
 
 
 ORIGINAL_DIR = '/srv/crc/projects/'
@@ -14,10 +18,10 @@ BIN_DIR = "/base/binaries/"
 # Here we don't add -strand both to usearch as we have already added in preprocessing pipeline
 USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
 USEARCH_8_bin = BIN_DIR + "usearch8.1"
-DB_LOC = "/srv/crc/databases/"
+DB_LOC = "/srv/base/databases/"
 SINA_ARB = DB_LOC + "SILVA_138.1_SSURef_NR99_12_06_20_opt.arb"
 GOLD_REFDB_USEARCH = DB_LOC + "SILVA-bac-16s-90.udb"
-USERS_DIR = '/srv/crc/users/'
+# USERS_DIR = '/srv/crc/users/'
 ref16RNAdb_1 = DB_LOC + "silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = DB_LOC + "silva-arc-16s-id95.fasta"
 SORT_ME_RNA_BIN = BIN_DIR + "sortmerna"
@@ -59,13 +63,14 @@ def onelinefasta(fastafilepath):
                                          "f": filename.replace(' ', '\ ')}))  # handling space in name of file
 
 
-def append_reads(dataset, analysis_dir):
-    reads = ORIGINAL_DIR + str(dataset.sample_f.organism_f.project_f.id) + '/'
-    reads += str(dataset.sample_f.organism_f.id) + '/'
-    reads += str(dataset.sample_f.id) + '/16S/' + str(dataset.id) + '/taxed_ZOTUs.fasta'
-    dataset_name = f"'D{dataset.id}_{str(dataset.alias)}'" if dataset.alias else f"'D{dataset.id}'"
-    print(reads)
-    cmd = USEARCH_11_BIN + ' -fastx_relabel ' + reads + ' -prefix ' + dataset_name
+def append_reads(taxed_ZOTUs_file_path, analysis_dir):
+    # reads = ORIGINAL_DIR + str(dataset.sample_f.organism_f.project_f.id) + '/'
+    # reads += str(dataset.sample_f.organism_f.id) + '/'
+    # reads += str(dataset.sample_f.id) + '/16S/' + str(dataset.id) + '/taxed_ZOTUs.fasta'
+    taxed_ZOTUs_file_path = os.path.abspath(taxed_ZOTUs_file_path)
+    sample_id = get_base_name(os.path.split(taxed_ZOTUs_file_path)[0])
+    dataset_name = f"{sample_id}"
+    cmd = USEARCH_11_BIN + ' -fastx_relabel ' + taxed_ZOTUs_file_path + ' -prefix ' + dataset_name
     cmd += '. -fastaout new -keep_annots'
     system(cmd)
     system('cat new >> ' + analysis_dir + 'analysis.fasta')
@@ -76,6 +81,7 @@ def trim_sides(five_end_trim, three_end_trim):
     cmd_0 = USEARCH_11_BIN + " -fastx_truncate analysis.fasta -stripright " + str(five_end_trim)
     cmd_1 = " -stripleft " + str(three_end_trim) + " -fastaout filtered1.fasta "
     system(cmd_0 + cmd_1 + USEARCH_TAIL)
+    system("mv analysis.fasta analysis_bkp.fasta")
     cmd_2 = 'mv filtered1.fasta analysis.fasta'
     system(cmd_2)
     onelinefasta('analysis.fasta')
@@ -495,21 +501,6 @@ def rename_final_files():
     system("mv sotus_table.tab OTUs-table.final.tab")
 
 
-def create_zip_old(user_name, query_id):
-    analysis_dir = USERS_DIR + user_name + '/AnalQuery/'
-    chdir(analysis_dir)
-    zip_file = os.path.join(analysis_dir, "{}.zip".format(str(query_id)))
-    an_dir = os.path.join(analysis_dir, "{}/".format(str(query_id)))
-    with ZipFile(zip_file, 'w') as zipObj:
-        # Iterate over all the files in directory
-        for folderName, subfolders, filenames in os.walk(an_dir):
-            for filename in filenames:
-                # create complete filepath of file in directory
-                filePath = os.path.join(folderName, filename)
-                # Add file to zip
-                zipObj.write(filePath, os.path.basename(filePath))
-
-
 def create_krona():
     OTUfinal_line = read_file('ZOTUs-table.final.tab')[1:]
     krona_text = open('krona.txt', 'w+')
@@ -713,21 +704,37 @@ def fasta_name_with_space(filepath):
     system("mv {} {}".format(fout_path, filepath))
 
 
-def main(user_name, analysis_q_id):
-    analysis_obj = job_anaquery.objects.get(id=int(analysis_q_id))
-    sample_wise_correction = analysis_obj.sample_wise_correction
-    ANALYSIS_DIR = USERS_DIR + user_name + '/AnalQuery/' + analysis_q_id + '/'
-    chdir(ANALYSIS_DIR)
-    print(ANALYSIS_DIR)
-    # selected_samples_ = read_file(USERS_DIR + user_name + '/AnalQuery/selected_samples.txt')
-    # If the list has only one element and it's string then objects.filter(pk__in) takes the string as an array !!!
-    # selected_samples_ids = [int(pk) for pk in selected_samples_]
-    selected_datasets = analysis_obj.samples.all()
-    for sample in selected_datasets:
+def main(
+        sample_seq_files_path: list,
+        analysis_dir: str,
+        args_file_path: str = ""):
+    """
+    sample_seq_files_path: a list of file path to
+     each samples' sequence file which is going to be combined with other samples passed to analysis.
+    analysis_dir: The destination directory to save results
+    """
+    global ANALYSIS_DIR, ARGS_CLS
+    ANALYSIS_DIR = Path(PurePath(analysis_dir))
+    assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
+    ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"
+    ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
+    sample_seq_files_path = [Path(PurePath(el)).absolute() for el in sample_seq_files_path]
+    if any([True for el in sample_seq_files_path if not Path(PurePath(el)).is_file()]):
+        raise ValueError("sample_seq_files_path must contain path to each samples sequence file!")
+    # analysis_obj = job_anaquery.objects.get(id=int(analysis_q_id))
+    # sample_wise_correction = analysis_obj.sample_wise_correction
+    # ANALYSIS_DIR = USERS_DIR + user_name + '/AnalQuery/' + analysis_q_id + '/'
+    # chdir(ANALYSIS_DIR)
+    # print(ANALYSIS_DIR)
+    # # selected_samples_ = read_file(USERS_DIR + user_name + '/AnalQuery/selected_samples.txt')
+    # # If the list has only one element and it's string then objects.filter(pk__in) takes the string as an array !!!
+    # # selected_samples_ids = [int(pk) for pk in selected_samples_]
+    # selected_datasets = analysis_obj.samples.all()
+    for sample in sample_seq_files_path:
         append_reads(sample, ANALYSIS_DIR)
     print('READS CONCATENATED')
     chdir(ANALYSIS_DIR)
-    trim_sides(analysis_obj.five_end_trim, analysis_obj.three_end_trim)
+    trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
     dereplication()
     print('Dereplication DONE')
     #################
@@ -749,7 +756,7 @@ def main(user_name, analysis_q_id):
     if os.path.isdir(TIC_Output_DIR):
         shutil.rmtree(TIC_Output_DIR)
     # Abundance filtering
-    abund_limit = analysis_obj.abundance / 100.0
+    abund_limit = ARGS_CLS.create_table.abund_limit
     # output files names
     ZOTUs_fasta_name = "ZOTUs-Seqs.fasta"
     SOTUs_fasta_name = "SOTUs-Seqs.fasta"
@@ -758,7 +765,7 @@ def main(user_name, analysis_q_id):
     chdir(ANALYSIS_DIR)
     main_create_args = [
         "python3.7",
-        "/crc/crc/crcapp/jobs/TIC/create_fasta_and_table.py",  # 0
+        "/base/ENA_Processor/TIC/create_fasta_and_table.py",  # 0
         TIC_Output_DIR,  # OUTPUT_FOLDER
         ZOTUs_fasta_name,  # OUTPUT_ASV_FASTA_WITH_TAXONOMY
         ZOTUs_table_name,  # OUTPUT_ASV_TABLE
@@ -773,7 +780,7 @@ def main(user_name, analysis_q_id):
         SOTUs_table_name,  # SOTUS_TABLE_NAME
         "ZOTU_map.tab",  # INITIAL_ZOTUS_TABLE
         str(abund_limit),  #
-        str(sample_wise_correction)  #
+        str(ARGS_CLS.create_table.sample_wise_correction)  #
     ]
     try:
         system(" ".join(main_create_args))
@@ -785,7 +792,8 @@ def main(user_name, analysis_q_id):
     ##################
     system("mv ./TICOut/* .")
     shutil.rmtree("./TICOut")
-    cleanup()
+    # cleanup()
     print('Cleanup DONE')
-    create_zip(analysis_q_id)
+    # create_zip(analysis_q_id)
     print('ANALYSIS DONE')
+    return ANALYSIS_DIR + ZOTUs_table_name, ANALYSIS_DIR + SOTUs_table_name
