@@ -580,7 +580,8 @@ class ArgsParserUtil(ArgsParserDunderUtil):
         for key, val in self.default_args.items():
             setattr(self, key, val)
             # addTaxUpdating the argument value if it exists in args_d
-            arg_val_to_put = None
+            not_valid_value = "It's not yet a valid number"
+            arg_val_to_put = not_valid_value
             # All args_d is supposed to be flattend with "__" as parent_key seperator
             for ky, vl in args_d.items():
                 arg_parser_class_name = ky.split(ArgsParserUtil.dict_flatt_sep)[0:1]
@@ -593,7 +594,8 @@ class ArgsParserUtil(ArgsParserDunderUtil):
                 """
                 if key in ky and str(self.__class__.__name__) in arg_parser_class_name:
                     arg_val_to_put = vl
-            if arg_val_to_put and isinstance(arg_val_to_put, type(val)):
+
+            if str(arg_val_to_put) != not_valid_value and isinstance(arg_val_to_put, type(val)):
                 setattr(self, key, arg_val_to_put)
 
     def update_attrs(self, args_dict: dict = {}):
