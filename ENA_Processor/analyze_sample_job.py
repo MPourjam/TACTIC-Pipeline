@@ -67,6 +67,7 @@ def append_reads(taxed_ZOTUs_file_path, analysis_dir):
     # reads = ORIGINAL_DIR + str(dataset.sample_f.organism_f.project_f.id) + '/'
     # reads += str(dataset.sample_f.organism_f.id) + '/'
     # reads += str(dataset.sample_f.id) + '/16S/' + str(dataset.id) + '/taxed_ZOTUs.fasta'
+    chdir(analysis_dir)
     taxed_ZOTUs_file_path = os.path.abspath(taxed_ZOTUs_file_path)
     sample_id = get_base_name(os.path.split(taxed_ZOTUs_file_path)[0])
     dataset_name = f"{sample_id}"
@@ -81,7 +82,6 @@ def trim_sides(five_end_trim, three_end_trim):
     cmd_0 = USEARCH_11_BIN + " -fastx_truncate analysis.fasta -stripright " + str(five_end_trim)
     cmd_1 = " -stripleft " + str(three_end_trim) + " -fastaout filtered1.fasta "
     system(cmd_0 + cmd_1 + USEARCH_TAIL)
-    system("mv analysis.fasta analysis_bkp.fasta")
     cmd_2 = 'mv filtered1.fasta analysis.fasta'
     system(cmd_2)
     onelinefasta('analysis.fasta')
@@ -730,6 +730,7 @@ def main(
     # # If the list has only one element and it's string then objects.filter(pk__in) takes the string as an array !!!
     # # selected_samples_ids = [int(pk) for pk in selected_samples_]
     # selected_datasets = analysis_obj.samples.all()
+    chdir(ANALYSIS_DIR)
     for sample in sample_seq_files_path:
         append_reads(sample, ANALYSIS_DIR)
     print('READS CONCATENATED')
