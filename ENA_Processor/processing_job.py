@@ -61,8 +61,6 @@ def system_sub(cmd):
         if run_output.stderr:
             msg += str(run_output.stderr)
             log.warning(msg)
-        # if run_output.stdout:
-        # log.info(run_output.stdout)
 
 
 def calc_spikes(*fastq_files, spike_amount):
