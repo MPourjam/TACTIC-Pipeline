@@ -11,10 +11,10 @@ MergePairsArgs:
   fastq_minmergelen: 200
   fastq_maxmergelen: 600
 TrimBothSidesArgs:
-  stripleft: 5
-  stripright: 5
+  stripleft: 15  # 15 is optimum. Change if reasnably
+  stripright: 15  # 15 is optimum. Change if reasnably
 TrimOneSideArgs:
-  stripleft: 5
+  stripleft: 15
 FilterBothSidesArgs:
   fastq_maxee_rate: 0.002
 FilterOneSideArgs:
@@ -25,13 +25,13 @@ DereplicationArgs:
   sizeout: true
 # sort_sequences:
 ClusterZOTUsArgs:
-  minsize: 2
+  minsize: 2  # This value gives highest possible ZOTUS for more resolution.
 Filter16SArgs:
   e: 0.1
   num_alignments: 1
 # prepare_zotus:
 BuildZOTUTableArgs:
-  id: 0.99
+  id: 0.99  # This value results more refined ZOTU count than 0.97 (default)
 FilterZOTUAbundanceArgs:
   abundance_cutoff: 0.0
 # select_zotu_seqs:
@@ -41,12 +41,12 @@ AddTaxArgs:
 ### Analysis ###
 ################
 TrimSidesArgs:
-  stripleft: 10
-  stripright: 10
+  stripleft: 5
+  stripright: 5
 ComplexTICArgs:
   family_sim: 0.90
   genus_sim: 0.95
   species_sim: 0.97
 CreateTableTICArgs:
-  abund_limit: 0.0025
-  sample_wise_correction: true
+  abund_limit: 0.0
+  sample_wise_correction: false
