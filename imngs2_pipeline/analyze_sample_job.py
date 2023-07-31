@@ -807,14 +807,17 @@ def main(
         sample_seq_files_path: list,
         analysis_dir: str,
         args_file_path: str = "",
-        spike_stat_file: str = ""):
+        spike_stat_file: str = "",
+        dbs_loc: str = DB_LOC):
     """
     sample_seq_files_path: a list of file path to
      each samples' sequence file which is going to be combined with other samples passed to analysis.
     analysis_dir: The destination directory to save results
     """
     spike_stat_file = Path(PurePath(spike_stat_file)) if spike_stat_file else ""
-    global ANALYSIS_DIR, ARGS_CLS, ANA_LOG
+    global ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC
+    DB_LOC = Path(PurePath(dbs_loc))
+    assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
     ANA_LOG = gimmelogger(
         logger_name="run_imngs2.analysis",

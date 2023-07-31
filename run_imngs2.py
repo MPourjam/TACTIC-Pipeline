@@ -392,7 +392,7 @@ def run_imngs2(
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
             samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name="taxed_ZOTUs.fasta")
-            zotu_file_path, sotu_file_path = main_analysis(samp_zotu_seq_files, analysis_dir, args_yml_file, combined_spike_stats_path)
+            zotu_file_path, sotu_file_path = main_analysis(samp_zotu_seq_files, analysis_dir, args_yml_file, combined_spike_stats_path, dbs_loc=dbs_dir)
         except Exception as exc:
             PREP_LOG.error(f"Analysis Failed: {exc}")
 
@@ -408,14 +408,14 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--fastq-directory",
                         type=str,
                         help=help_text,
-                        default=".")
+                        default=INPUT_DIR)  # WORKDIR of container is /srv/base/inputs
     parser.add_argument("-y", "--yml-file",
                         type=str,
                         help="Path to arguments yaml file",
-                        default="./IMNGS2Pipeline_args.yml")
+                        default=Path(PurePath(INPUT_DIR)).joinpath("IMNGS2Pipeline_args.yml"))
     parser.add_argument("-map", "--mapping-file",
                         type=str,
-                        default="./mapping_file.tab",
+                        default=Path(PurePath(INPUT_DIR)).joinpath("mapping_file.tsv"),
                         help="The path to a mapping file defining sample weight and spike amount for each sample")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
