@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.IMNGS2Pipeline
     hostname: IMNGS2Pipeline
-    command: ./run_IMNGS2Pipeline.sh
+    command: "tail -F /base/requirements.txt"
     volumes:
       - /media/adminuser/CFM/inputs:/srv/base/inputs
       - /media/adminuser/CFM/outputs:/srv/base/outputs
