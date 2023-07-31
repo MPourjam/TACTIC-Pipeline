@@ -17,7 +17,7 @@ else:
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS, MapLineTup
 INPUT_DIR = "/srv/base/inputs/"
-DBS_DIR = "/srv/base/databases/"
+DBS_DIR = "/base/databases/"
 max_pool = int(cpu_count() * 0.3)
 POOL_SIZE = max_pool if max_pool > 0 else 1
 max_batch = int(POOL_SIZE * 0.8)

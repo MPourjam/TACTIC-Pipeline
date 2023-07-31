@@ -20,7 +20,7 @@ BIN_DIR = "/base/binaries/"
 # Here we don't add -strand both to usearch as we have already added in preprocessing pipeline
 USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
 USEARCH_8_bin = BIN_DIR + "usearch8.1"
-DB_LOC = "/srv/base/databases/"
+DB_LOC = "/base/databases/"
 SINA_ARB = DB_LOC + "SILVA_138.1_SSURef_NR99_12_06_20_opt.arb"
 GOLD_REFDB_USEARCH = DB_LOC + "SILVA-bac-16s-90.udb"
 # USERS_DIR = '/srv/crc/users/'
