@@ -1,11 +1,11 @@
 import re
 import argparse
 import shutil
-from ENA_Processor.processing_job import main_processing as preprocessing
-from ENA_Processor.processing_job import calc_spikes, gzip_to_fastq
-from ENA_Processor.analyze_sample_job import main as main_analysis
+from imngs2_pipeline.processing_job import main_processing as preprocessing
+from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
+from imngs2_pipeline.analyze_sample_job import main as main_analysis
 from collections import namedtuple
-import ENA_Processor.processing_helper as proc_helper
+import imngs2_pipeline.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
 from typing import List, Dict
 from sys import version_info
@@ -342,7 +342,7 @@ def run_imngs2(
     assert fastq_file_dir.is_dir(), "fastq_file_dir must be a path to directory"
     assert args_yml_file.is_file(), "args_yml_file must be a path to a file"
     assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
-    preproc_dir = Path(PurePath(INPUT_DIR)).joinpath("Preprocessing")
+    preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = preproc_dir.joinpath(SPIKE_STAT_FILE_NAME)
     combined_spike_stats_path = default_spike_stat_compiled if not spike_stat_file else Path(PurePath(spike_stat_file))
@@ -381,10 +381,10 @@ def run_imngs2(
     # Runing analysis
     if not skip_analysis:
         try:
-            analysis_dir = Path(PurePath(INPUT_DIR)).joinpath("Analysis")
+            analysis_dir = fastq_file_dir.joinpath("Analysis")
             analysis_dir.mkdir(parents=True, exist_ok=True)
             # we do the step down because if skip_preprocess is True then tha path to preprocess would be given not all smaple_dirs
-            if str(combined_spike_stats_path) != str(preproc_dir.joinpath(SPIKE_STAT_FILE_NAME)):
+            if str(combined_spike_stats_path) != str(default_spike_stat_compiled):
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
             reduced_samples_dirs, _ = combine_spike_stats_file(*samples_dirs, combined_spike_stat=combined_spike_stats_path)
             missed_samples = [sam_dir for sam_dir in samples_dirs if str(sam_dir) not in reduced_samples_dirs]
