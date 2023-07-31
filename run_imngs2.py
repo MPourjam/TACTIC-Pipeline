@@ -415,7 +415,7 @@ if __name__ == "__main__":
                         default="./IMNGS2Pipeline_args.yml")
     parser.add_argument("-map", "--mapping-file",
                         type=str,
-                        default="",
+                        default="./mapping_file.tab",
                         help="The path to a mapping file defining sample weight and spike amount for each sample")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
