@@ -412,10 +412,10 @@ if __name__ == "__main__":
     parser.add_argument("-y", "--yml-file",
                         type=str,
                         help="Path to arguments yaml file",
-                        default=Path(PurePath(INPUT_DIR)).joinpath("IMNGS2Pipeline_args.yml"))
+                        default=INPUT_DIR + "IMNGS2Pipeline_args.yml")
     parser.add_argument("-map", "--mapping-file",
                         type=str,
-                        default=Path(PurePath(INPUT_DIR)).joinpath("mapping_file.tsv"),
+                        default=INPUT_DIR + "mapping_file.tsv",
                         help="The path to a mapping file defining sample weight and spike amount for each sample")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
