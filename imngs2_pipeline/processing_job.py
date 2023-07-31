@@ -31,7 +31,7 @@ USEARCH_TAIL = '> /dev/null 2>&1'
 bowtie2 = BIN_DIR + "bowtie2/bowtie2"
 krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
 SPIKESIDX = "/base/spikesidx/spike"
-R_processing_stat = "/base/ENA_Processor/processing_stats.R"
+R_processing_stat = "/base/imngs2_pipeline/processing_stats.R"
 S_FLAT_LOCATION = '/base/s_flat.txt'
 
 

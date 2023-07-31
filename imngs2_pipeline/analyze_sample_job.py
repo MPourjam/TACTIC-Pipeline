@@ -864,7 +864,7 @@ def main(
     chdir(ANALYSIS_DIR)
     main_create_args = [
         "python3.7",
-        "/base/ENA_Processor/TIC/create_fasta_and_table.py",  # 0
+        "/base/imngs2_pipeline/TIC/create_fasta_and_table.py",  # 0
         TIC_Output_DIR,  # OUTPUT_FOLDER
         ZOTUs_fasta_name,  # OUTPUT_ASV_FASTA_WITH_TAXONOMY
         ZOTUs_table_name,  # OUTPUT_ASV_TABLE
