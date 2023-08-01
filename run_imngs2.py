@@ -340,8 +340,10 @@ def run_imngs2(
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir))
     assert fastq_file_dir.is_dir(), "fastq_file_dir must be a path to directory"
-    assert args_yml_file.is_file(), "args_yml_file must be a path to a file"
     assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
+    if not args_yml_file.is_file():
+        PREP_LOG.warning(f"Config File: {str(args_yml_file)} does not exist. USING DEFAULT PARAMETERS!")
+        args_yml_file = Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()
     preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = preproc_dir.joinpath(SPIKE_STAT_FILE_NAME)
