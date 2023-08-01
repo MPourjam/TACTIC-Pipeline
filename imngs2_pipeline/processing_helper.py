@@ -798,6 +798,7 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
         yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml) if config_yaml else {}
         yml_args_dict = flatten_dict(yml_args_dict, sep=ArgsParserUtil.dict_flatt_sep)
         try:
+            # NOTE values of the yaml file would overwrite values of config_dict
             config_dict.update(yml_args_dict)
         except Exception as e:
             argparse_logger.warning(e)

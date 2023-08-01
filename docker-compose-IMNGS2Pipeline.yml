@@ -10,8 +10,6 @@ services:
     command: "tail -F /base/requirements.txt"
     volumes:
       - /media/adminuser/CFM/inputs:/srv/base/inputs
-      - /media/adminuser/CFM/outputs:/srv/base/outputs
       - /media/adminuser/MSD-Storage/databases:/srv/base/databases
-      - /media/adminuser/imngs2/crc/docs/:/srv/base/docs
     env_file:
       - ./.env.prod
