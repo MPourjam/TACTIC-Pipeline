@@ -9,7 +9,7 @@ services:
     hostname: IMNGS2Pipeline
     command: "tail -F /base/requirements.txt"
     volumes:
-      - /media/adminuser/CFM/inputs:/srv/base/inputs
-      - /media/adminuser/MSD-Storage/databases:/srv/base/databases
+      - /media/adminuser/CFM/inputs:/base/inputs
+      - /media/adminuser/MSD-Storage/databases:/base/databases
     env_file:
       - ./.env.prod

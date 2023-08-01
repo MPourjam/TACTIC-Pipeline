@@ -16,7 +16,7 @@ else:
 
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS, MapLineTup
-INPUT_DIR = "/srv/base/inputs/"
+INPUT_DIR = "/base/inputs/"
 DBS_DIR = "/base/databases/"
 max_pool = int(cpu_count() * 0.3)
 POOL_SIZE = max_pool if max_pool > 0 else 1
@@ -410,7 +410,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--fastq-directory",
                         type=str,
                         help=help_text,
-                        default=INPUT_DIR)  # WORKDIR of container is /srv/base/inputs
+                        default=INPUT_DIR)  # WORKDIR of container is /base/inputs
     parser.add_argument("-y", "--yml-file",
                         type=str,
                         help="Path to arguments yaml file",

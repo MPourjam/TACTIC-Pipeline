@@ -41,5 +41,5 @@ RUN apt install -y r-base
 # RUN Rscript base/R_packages_install.R
 
 
-WORKDIR /srv/base/inputs
+WORKDIR /base
 # ENTRYPOINT ["./entrypoint.sh"]
