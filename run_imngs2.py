@@ -446,7 +446,7 @@ if __name__ == "__main__":
     if args.place_args_file:
         shutil.copy2(
             str(Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()),
-            str(Path(PurePath(args.fastq_directory)).absolute().joinpath("IMNGS2Pipeline_args.yml"))
+            str(INPUT_DIR.joinpath("IMNGS2Pipeline_args.yml"))
         )
         parser.print_help()
     else:
