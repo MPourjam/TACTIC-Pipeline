@@ -352,7 +352,8 @@ def run_imngs2(
     preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = preproc_dir.joinpath(SPIKE_STAT_FILE_NAME)
-    combined_spike_stats_path = default_spike_stat_compiled if not spike_stat_file else Path(PurePath(spike_stat_file))
+    given_spike_stat_file = Path(PurePath(spike_stat_file)).absolute()
+    combined_spike_stats_path = default_spike_stat_compiled if not given_spike_stat_file.is_file() else given_spike_stat_file
     reduced_samples_dirs = []
     mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else Path.cwd()
     # Analysis defualt vars
@@ -411,7 +412,11 @@ def run_imngs2(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    help_text = "The directory to find recursively all fastq files inside"
+    help_text = "The directory to find recursively all fastq files inside. Default is <input-directory>"
+    parser.add_argument("-i", "--input-directory",
+                        type=str,
+                        help="Every needed file and directory should be findable relative to this directory",
+                        default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
     parser.add_argument("-d", "--fastq-directory",
                         type=str,
                         help=help_text,
@@ -442,6 +447,8 @@ if __name__ == "__main__":
                         action="store_true",
                         help="Writes the default argument yaml file to <fastq-directory> and EXITS.")
     args = parser.parse_args()
+    # Updating INPUT_DIR
+    INPUT_DIR = Path(PurePath(args.input_directory)).absolute()
     # Exposing default argument files.
     if args.place_args_file:
         shutil.copy2(
@@ -458,7 +465,7 @@ if __name__ == "__main__":
             args_yml_file=INPUT_DIR.joinpath(args.yml_file),
             dbs_dir=INPUT_DIR.joinpath(args.db_directory),
             mapping_file=INPUT_DIR.joinpath(args.mapping_file),
-            spike_stat_file=args.spike_stat,
+            spike_stat_file=INPUT_DIR.joinpath(args.spike_stat),
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
         )
