@@ -16,7 +16,7 @@ else:
 
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS, MapLineTup
-INPUT_DIR = "/base/inputs/"
+INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
 DBS_DIR = "/base/databases/"
 max_pool = int(cpu_count() * 0.3)
 POOL_SIZE = max_pool if max_pool > 0 else 1
@@ -24,7 +24,7 @@ max_batch = int(POOL_SIZE * 0.8)
 # Preparing the logger
 PREP_LOG = proc_helper.gimmelogger(
     "run_imngs2",
-    log_file=Path(PurePath(INPUT_DIR)).absolute().joinpath("Pipeline_log.txt"),
+    log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
     only_file=False)
 MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "amount_spike")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2]])
@@ -415,14 +415,14 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--fastq-directory",
                         type=str,
                         help=help_text,
-                        default=INPUT_DIR)  # WORKDIR of container is /base/inputs
+                        default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
     parser.add_argument("-y", "--yml-file",
                         type=str,
                         help="Path to arguments yaml file",
-                        default=INPUT_DIR + "IMNGS2Pipeline_args.yml")
+                        default=str(INPUT_DIR/"IMNGS2Pipeline_args.yml"))
     parser.add_argument("-map", "--mapping-file",
                         type=str,
-                        default=INPUT_DIR + "mapping_file.tsv",
+                        default=str(INPUT_DIR/"mapping_file.tsv"),
                         help="The path to a mapping file defining sample weight and spike amount for each sample")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
@@ -452,12 +452,13 @@ if __name__ == "__main__":
     else:
         if args.db_directory != DBS_DIR:
             DBS_DIR = args.db_directory
+        # NOTE Every needed file and directory should be in /base/inputs/
         run_imngs2(
-            args.fastq_directory,
-            args.yml_file,
-            args.db_directory,
-            args.mapping_file,
-            args.spike_stat,
-            args.skip_preprocess,
-            args.skip_analysis,
+            fastq_file_dir=INPUT_DIR.joinpath(args.fastq_directory),
+            args_yml_file=INPUT_DIR.joinpath(args.yml_file),
+            dbs_dir=INPUT_DIR.joinpath(args.db_directory),
+            mapping_file=INPUT_DIR.joinpath(args.mapping_file),
+            spike_stat_file=args.spike_stat,
+            skip_preprocess=args.skip_preprocess,
+            skip_analysis=args.skip_analysis,
         )
