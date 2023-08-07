@@ -344,6 +344,11 @@ def run_imngs2(
     if not args_yml_file.is_file():
         PREP_LOG.warning(f"Config File: {str(args_yml_file)} does not exist. USING DEFAULT PARAMETERS!")
         args_yml_file = Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()
+    # Copying the args file to input_dir to always have the args file.
+    try:
+        shutil.copy2(str(args_yml_file), str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml")))
+    except Exception:
+        pass
     preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = preproc_dir.joinpath(SPIKE_STAT_FILE_NAME)
@@ -433,15 +438,26 @@ if __name__ == "__main__":
     parser.add_argument("-sa", "--skip-analysis",
                         action="store_true",
                         help="Should skip analysis step")
+    parser.add_argument("-af", "--place-args-file",
+                        action="store_true",
+                        help="Writes the default argument yaml file to <fastq-directory> and EXITS.")
     args = parser.parse_args()
-    if args.db_directory != DBS_DIR:
-        DBS_DIR = args.db_directory
-    run_imngs2(
-        args.fastq_directory,
-        args.yml_file,
-        args.db_directory,
-        args.mapping_file,
-        args.spike_stat,
-        args.skip_preprocess,
-        args.skip_analysis,
-    )
+    # Exposing default argument files.
+    if args.place_args_file:
+        shutil.copy2(
+            str(Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()),
+            str(Path(PurePath(args.fastq_directory)).absolute().joinpath("IMNGS2Pipeline_args.yml"))
+        )
+        parser.print_help()
+    else:
+        if args.db_directory != DBS_DIR:
+            DBS_DIR = args.db_directory
+        run_imngs2(
+            args.fastq_directory,
+            args.yml_file,
+            args.db_directory,
+            args.mapping_file,
+            args.spike_stat,
+            args.skip_preprocess,
+            args.skip_analysis,
+        )
