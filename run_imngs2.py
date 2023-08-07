@@ -26,7 +26,7 @@ PREP_LOG = proc_helper.gimmelogger(
     "run_imngs2",
     log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
     only_file=False)
-MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "amount_spike")
+MAPPING_FILE_COLS = ("#SampleID", "total_weight_in_g", "amount_spike")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2]])
 global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER
 SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.tsv"
