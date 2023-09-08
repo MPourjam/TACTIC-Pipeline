@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile.IMNGS2Pipeline
     hostname: IMNGS2Pipeline
     command: "tail -F /base/requirements.txt"
-    volumes:
-      - /media/adminuser/CFM/inputs:/base/inputs
-      - /media/adminuser/MSD-Storage/databases:/base/databases
+    # volumes:
+    #   - /media/adminuser/CFM/inputs:/base/inputs
+    #   - /media/adminuser/MSD-Storage/databases:/base/databases
     env_file:
       - ./.env.prod
