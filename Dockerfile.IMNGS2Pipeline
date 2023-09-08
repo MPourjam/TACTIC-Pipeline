@@ -40,6 +40,9 @@ RUN apt update -y
 RUN apt install -y r-base
 # RUN Rscript base/R_packages_install.R
 
+# Adding run_imngs2 command to PATH
+RUN /bin/chmod 777 /base/run_imngs2.py
+RUN /bin/ln -s /base/run_imngs2.py /usr/local/bin/run_imngs2 
 
 WORKDIR /base
 # ENTRYPOINT ["./entrypoint.sh"]
