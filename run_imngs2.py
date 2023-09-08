@@ -375,6 +375,8 @@ def run_imngs2(
                 for res in res_list:
                     res.wait()
             samples_dirs = [el.get() for el in res_list]
+            # NOTE result form run_preprocessing could be "" which meand the preprocessing has failed
+            samples_dirs = [el for el in samples_dirs if el]
 
         except Exception as exc:
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
