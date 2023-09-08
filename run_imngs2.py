@@ -1,4 +1,4 @@
-#! /bin/python
+#! /usr/local/bin/python
 import re
 import argparse
 import shutil
