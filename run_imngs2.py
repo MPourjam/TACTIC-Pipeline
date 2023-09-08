@@ -412,7 +412,7 @@ def run_imngs2(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    help_text = "The directory to find recursively all fastq files inside. Default is <input-directory>"
+    help_text = "The directory to find recursively all fastq files inside. Default is <--input-directory>"
     parser.add_argument("-i", "--input-directory",
                         type=str,
                         help="Every needed file and directory should be findable relative to this directory",
@@ -423,19 +423,20 @@ if __name__ == "__main__":
                         default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
     parser.add_argument("-y", "--yml-file",
                         type=str,
-                        help="Path to arguments yaml file",
+                        help="Path to arguments yaml file. Relative to <--input-directory>",
                         default=str(INPUT_DIR/"IMNGS2Pipeline_args.yml"))
     parser.add_argument("-map", "--mapping-file",
                         type=str,
                         default=str(INPUT_DIR/"mapping_file.tsv"),
-                        help="The path to a mapping file defining sample weight and spike amount for each sample")
+                        help="The path to a mapping file defining sample weight and spike amount for each sample. Relative to <--input-directory>")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
                         default="",
-                        help=f"The path to a mapping file defining spike count, sample weight and spike amount for each sample.\n{SPIKE_STAT_HEADER}")
+                        help=f"The path to a mapping file defining spike count, sample weight and spike amount for each sample.\n{SPIKE_STAT_HEADER}.\n"
+                        "Relative to <--input-directory>")
     parser.add_argument("-db", "--db-directory",
                         type=str,
-                        help="Path to directory containing silva, sortmerna files",
+                        help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
                         default=DBS_DIR)
     parser.add_argument("-sp", "--skip-preprocess",
                         action="store_true",
@@ -445,7 +446,7 @@ if __name__ == "__main__":
                         help="Should skip analysis step")
     parser.add_argument("-af", "--place-args-file",
                         action="store_true",
-                        help="Writes the default argument yaml file to <fastq-directory> and EXITS.")
+                        help="Writes the default argument yaml file to <--input-directory>, print help text and exits.")
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = Path(PurePath(args.input_directory)).absolute()
