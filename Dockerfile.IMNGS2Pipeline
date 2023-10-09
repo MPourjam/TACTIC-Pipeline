@@ -3,15 +3,15 @@ FROM python:3.7-buster
 # Install dependencies
 RUN apt update -y && apt upgrade -y
 RUN apt update --fix-missing
-RUN apt install -y libharfbuzz-dev libfribidi-dev
+RUN apt install -y libharfbuzz-dev libfribidi-dev cmake
 RUN apt update --fix-missing
-RUN apt install -y r-cran-rcppeigen
 RUN apt update --fix-missing
 RUN apt install -y vim rsync
 RUN apt update -y && apt upgrade -y
 RUN apt update --fix-missing
 RUN apt install -y fastqc
-RUN apt install -y graphlan
+RUN apt install -y graphlan gfortran
+RUN apt update --fix-missing
 RUN apt clean
 RUN pip install tqdm pandas
 RUN apt update -y && apt upgrade -y
@@ -36,9 +36,19 @@ RUN pip install --upgrade -r base/requirements.txt
 ######################
 ## R and R PACKAGES ##
 ######################
-RUN apt update -y
-RUN apt install -y r-base
-# RUN Rscript base/R_packages_install.R
+RUN mkdir -p /crc/src/
+RUN wget --continue --output-document /crc/src/R-4.3.1.tar.gz https://cloud.r-project.org/src/base/R-4/R-4.3.1.tar.gz
+RUN tar -xzf /crc/src/R-4.3.1.tar.gz --directory=/crc/src/
+RUN cd /crc/src/R-4.3.1/ && ./configure --prefix=/opt/R/4.3.1 --enable-R-shlib --enable-memory-profiling --with-blas --with-lapack --with-pcre1
+RUN cd /crc/src/R-4.3.1/ && make && make install
+RUN apt install -y r-cran-rcppeigen
+RUN rm -f /usr/bin/R
+RUN ln -sf /opt/R/4.3.1/bin/R /usr/bin/R
+RUN rm -f /usr/bin/Rscript
+RUN ln -sf /opt/R/4.3.1/bin/Rscript /usr/bin/Rscript
+RUN Rscript base/R_packages_install.R
+COPY . /crc
+WORKDIR /crc/
 
 # Adding run_imngs2 command to PATH
 RUN /bin/chmod 777 /base/run_imngs2.py
