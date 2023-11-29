@@ -1,2 +1,0 @@
-PyYAML==6.0
-billiard==4.1.0 
