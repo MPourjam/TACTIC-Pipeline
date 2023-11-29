@@ -5,7 +5,6 @@ RUN apt update -y && apt upgrade -y
 RUN apt update --fix-missing
 RUN apt install -y libharfbuzz-dev libfribidi-dev cmake
 RUN apt update --fix-missing
-RUN apt update --fix-missing
 RUN apt install -y vim rsync
 RUN apt update -y && apt upgrade -y
 RUN apt update --fix-missing
@@ -14,6 +13,8 @@ RUN apt install -y graphlan gfortran
 RUN apt update --fix-missing
 RUN apt clean
 RUN pip install tqdm pandas
+RUN apt install -y r-cran-rcppeigen
+RUN apt update --fix-missing
 RUN apt update -y && apt upgrade -y
 
 
@@ -25,18 +26,17 @@ RUN mkdir -p /base/binaries
 RUN mkdir -p /base/spikesidx
 RUN mkdir -p /base/databases
 RUN mkdir -p /base/imngs2_pipeline
-COPY ./binaries /base/
-COPY ./spikesidx /base/
-COPY ./databases /base/
-COPY ./imngs2_pipeline /base/
+COPY binaries/* /base/binaries/
+COPY spikesidx/* /base/spikesidx/
+COPY databases/* /base/databases/
+COPY imngs2_pipeline /base/imngs2_pipeline/
+COPY run_imngs2.py /base/run_imngs2.py
+COPY IMNGS2Pipeline_args.yml /base/IMNGS2Pipeline_args.yml
 
 
-
-#############
-## Sources ##
-#############
-RUN mkdir base
-COPY ./SILVA_download.sh /base/
+#########################
+# Downloading Databases #
+#########################
 RUN /bin/bash /base/databases/SILVA_download.sh
 
 
@@ -44,7 +44,7 @@ RUN /bin/bash /base/databases/SILVA_download.sh
 ## PIP DEPENDENCIES ##
 ######################
 RUN pip install --upgrade pip
-RUN pip install --upgrade PyYAML=6.0 billiard=4.1.0
+RUN pip install --upgrade PyYAML==6.0 billiard==4.1.0
 
 
 ######################
@@ -55,19 +55,19 @@ RUN wget --continue --output-document /crc/src/R-4.3.1.tar.gz https://cloud.r-pr
 RUN tar -xzf /crc/src/R-4.3.1.tar.gz --directory=/crc/src/
 RUN cd /crc/src/R-4.3.1/ && ./configure --prefix=/opt/R/4.3.1 --enable-R-shlib --enable-memory-profiling --with-blas --with-lapack --with-pcre1
 RUN cd /crc/src/R-4.3.1/ && make && make install
-RUN apt install -y r-cran-rcppeigen
 RUN rm -f /usr/bin/R
 RUN rm -f /usr/bin/Rscript
 RUN ln -sf /opt/R/4.3.1/bin/R /usr/bin/R
 RUN ln -sf /opt/R/4.3.1/bin/Rscript /usr/bin/Rscript
-RUN Rscript -e 'install.packages("devtools", repos="https://cran.r-project.org")'
-RUN Rscript -e 'install_version("vegan", version="2.6-2", repos="https://cran.r-project.org")'
-RUN Rscript -e 'install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org")'
-RUN Rscript -e 'install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org")'
-RUN Rscript -e 'install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org")'
-
+RUN Rscript -e 'install.packages("devtools", repos="https://cran.r-project.org");\
+library("devtools"); install_version("vegan", version="2.6-2", repos="https://cran.r-project.org");\
+install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org");\
+install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org");\
+install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org");\
+'
+RUN rm -rf /crc/src/
 
 # Adding run_imngs2 command to PATH
 RUN /bin/chmod 777 -R /base 
-RUN /bin/ln -s /base/run_imngs2.py /usr/local/bin/run_imngs2 
+RUN /bin/ln -s /base/run_imngs2.py /usr/local/bin/run_imngs2
 WORKDIR /base
