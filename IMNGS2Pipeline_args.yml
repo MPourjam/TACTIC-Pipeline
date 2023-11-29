@@ -11,8 +11,8 @@ MergePairsArgs:
   fastq_minmergelen: 200
   fastq_maxmergelen: 600
 TrimBothSidesArgs:
-  stripleft: 15  # 15 is optimum. Change if reasnably
-  stripright: 15  # 15 is optimum. Change if reasnably
+  stripleft: 15  # 15 is optimum.  Change only if you know exact lenght of you primers
+  stripright: 15  # 15 is optimum. Change only if you know exact lenght of you primers
 TrimOneSideArgs:
   stripleft: 15
 FilterBothSidesArgs:
