@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.IMNGS2Pipeline
-    image: imngs2_pipline
+    image: imngs2_pipeline
     hostname: IMNGS2Pipeline
     command: "tail -F /base/requirements.txt"
     # volumes:
