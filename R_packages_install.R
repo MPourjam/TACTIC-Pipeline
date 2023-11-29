@@ -1,6 +1,0 @@
-install.packages("devtools", repos="https://cran.r-project.org")
-library("devtools")
-install_version("vegan", version="2.6-2", repos="https://cran.r-project.org")
-install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org")
-install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org")
-install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org")
