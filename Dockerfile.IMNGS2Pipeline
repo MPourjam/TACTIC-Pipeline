@@ -1,21 +1,4 @@
-FROM python:3.7-buster
-
-# Install dependencies
-RUN apt update -y && apt upgrade -y
-RUN apt update --fix-missing
-RUN apt install -y libharfbuzz-dev libfribidi-dev cmake
-RUN apt update --fix-missing
-RUN apt install -y vim rsync
-RUN apt update -y && apt upgrade -y
-RUN apt update --fix-missing
-RUN apt install -y fastqc
-RUN apt install -y graphlan gfortran
-RUN apt update --fix-missing
-RUN apt clean
-RUN pip install tqdm pandas
-RUN apt install -y r-cran-rcppeigen
-RUN apt update --fix-missing
-RUN apt update -y && apt upgrade -y
+FROM mpourjam/python3.7_buster_r4.3.1
 
 
 ###########################
@@ -26,9 +9,9 @@ RUN mkdir -p /base/binaries
 RUN mkdir -p /base/spikesidx
 RUN mkdir -p /base/databases
 RUN mkdir -p /base/imngs2_pipeline
-COPY binaries/* /base/binaries/
-COPY spikesidx/* /base/spikesidx/
-COPY databases/* /base/databases/
+COPY binaries/ /base/binaries/
+COPY spikesidx/ /base/spikesidx/
+COPY databases/ /base/databases/
 COPY imngs2_pipeline /base/imngs2_pipeline/
 COPY run_imngs2.py /base/run_imngs2.py
 COPY IMNGS2Pipeline_args.yml /base/IMNGS2Pipeline_args.yml
@@ -50,21 +33,13 @@ RUN pip install --upgrade PyYAML==6.0 billiard==4.1.0
 ######################
 ## R and R PACKAGES ##
 ######################
-RUN mkdir -p /crc/src/
-RUN wget --continue --output-document /crc/src/R-4.3.1.tar.gz https://cloud.r-project.org/src/base/R-4/R-4.3.1.tar.gz
-RUN tar -xzf /crc/src/R-4.3.1.tar.gz --directory=/crc/src/
-RUN cd /crc/src/R-4.3.1/ && ./configure --prefix=/opt/R/4.3.1 --enable-R-shlib --enable-memory-profiling --with-blas --with-lapack --with-pcre1
-RUN cd /crc/src/R-4.3.1/ && make && make install
-RUN rm -f /usr/bin/R
-RUN rm -f /usr/bin/Rscript
-RUN ln -sf /opt/R/4.3.1/bin/R /usr/bin/R
-RUN ln -sf /opt/R/4.3.1/bin/Rscript /usr/bin/Rscript
-RUN Rscript -e 'install.packages("devtools", repos="https://cran.r-project.org");\
+RUN Rscript -e '\
 library("devtools"); install_version("vegan", version="2.6-2", repos="https://cran.r-project.org");\
 install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org");\
 install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org");\
 install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org");\
 '
+
 RUN rm -rf /crc/src/
 
 # Adding run_imngs2 command to PATH
