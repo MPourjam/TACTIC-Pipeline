@@ -413,6 +413,23 @@ def run_imngs2(
         pass
 
 
+def get_fastq_dir(namespace):
+    # Access the value of --input-directory from the namespace
+    fastq_directory = Path(PurePath(getattr(namespace, 'fastq_directory', INPUT_DIR))).absolute()
+    # Combine fastq_directory with a fixed value for fastq_directory
+    return fastq_directory
+
+
+def get_default_mapping_file_path(namespace):
+    fastq_dir = str(get_fastq_dir(namespace))
+    return f"{fastq_dir}/mapping_file.tsv"
+
+
+def get_default_args_file_path(namespace):
+    fastq_dir = str(get_fastq_dir(namespace))
+    return f"{fastq_dir}/IMNGS2Pipeline_args.yml"
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     help_text = "The directory to find recursively all fastq files inside. Default is <--input-directory>"
@@ -427,10 +444,10 @@ if __name__ == "__main__":
     parser.add_argument("-y", "--yml-file",
                         type=str,
                         help="Path to arguments yaml file. Relative to <--input-directory>",
-                        default=str(INPUT_DIR/"IMNGS2Pipeline_args.yml"))
+                        default=get_default_args_file_path)
     parser.add_argument("-map", "--mapping-file",
                         type=str,
-                        default=str(INPUT_DIR/"mapping_file.tsv"),
+                        default=get_default_mapping_file_path,
                         help="The path to a mapping file defining sample weight and spike amount for each sample. Relative to <--input-directory>")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
@@ -447,19 +464,28 @@ if __name__ == "__main__":
     parser.add_argument("-sa", "--skip-analysis",
                         action="store_true",
                         help="Should skip analysis step")
-    parser.add_argument("-af", "--place-args-file",
+    parser.add_argument("-tf", "--place-template-files",
                         action="store_true",
-                        help="Writes the default argument yaml file to <--input-directory>, print help text and exits.")
+                        help="Writes the default argument yaml template file (IMNGS2Pipeline_args.yml) and mapping template file (mapping_file.tsv)"
+                        " to <--input-directory>, print help text and exits.")
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = Path(PurePath(args.input_directory)).absolute()
+    FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    YAML_FILE = FASTQ_DIR.joinpath(args.yml_file)
+    MAP_FILE = FASTQ_DIR.joinpath(args.mapping_file)
     # Exposing default argument files.
     if args.place_args_file:
         shutil.copy2(
-            str(Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()),
-            str(INPUT_DIR.joinpath("IMNGS2Pipeline_args.yml"))
+            str(YAML_FILE),
+            str(FASTQ_DIR.joinpath("IMNGS2Pipeline_args.yml"))
         )
-        parser.print_help()
+        shutil.copy2(
+            str(MAP_FILE),
+            str(FASTQ_DIR.joinpath("mapping_file.tsv"))
+        )
+        # log
+        PREP_LOG.info(f"Template files written to ./{args.fastq_directory}")
     else:
         if args.db_directory != DBS_DIR:
             DBS_DIR = args.db_directory
