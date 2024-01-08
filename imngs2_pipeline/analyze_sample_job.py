@@ -693,7 +693,7 @@ def cleanup():
 
 
 def create_zip():
-    system_sub('zip -r ../Anlaysis.zip .')
+    system_sub('zip -r ../Analysis.zip .')
 
 
 def addKrona(KRONA_TOOL):
