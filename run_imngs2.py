@@ -349,7 +349,7 @@ def run_imngs2(
     try:
         shutil.copy2(str(args_yml_file), str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml")))
     except Exception:
-        PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml"))))
+        PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml").relative_to(INPUT_DIR))))
         pass
     preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     preproc_dir.mkdir(parents=True, exist_ok=True)
@@ -472,8 +472,8 @@ if __name__ == "__main__":
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
-        PREP_LOG.warning(f"{str(cli_args_file.relative_to(INPUT_DIR))} is not a valid file path. \
-                           Falling back to default argument set written to {str(cli_args_file.relative_to(INPUT_DIR))}")
+        PREP_LOG.warning(f"{str(cli_args_file.relative_to(INPUT_DIR))} is not a valid file path. "
+                           f"Falling back to default argument set written to {str(cli_args_file.relative_to(INPUT_DIR))}")
 
     if args.place_template_files:
         shutil.copy2(
