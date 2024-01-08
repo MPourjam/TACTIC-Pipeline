@@ -16,8 +16,10 @@ else:
     from pathlib import Path, PurePath
 
 
-global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS, MapLineTup
+global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS, MapLineTup, ARGS_YAML_FILE
 INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
+ARGS_YAML_FILE = Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()
+MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.tsv")).absolute()
 DBS_DIR = "/base/databases/"
 max_pool = int(cpu_count() * 0.3)
 POOL_SIZE = max_pool if max_pool > 0 else 1
@@ -56,7 +58,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
         mapping_lines[sample_id] = (_row_vals_tup, file_pair)
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
     if not mapping_file_path.is_file():
-        PREP_LOG.warning("Parsing of mapping file failed. Continuing as if there is no spike in the samples.")
+        PREP_LOG.warning("Parsing of mapping file failed. Continuing as if mapping file is provided.")
         return mapping_lines
 
     PREP_LOG.warning(f"When mapping file is provided ({mapping_file_path}), only samples in mapping file will get processed!!!")
@@ -331,8 +333,8 @@ def gather_files(*preproc_dirs_path, file_name="taxed_ZOTUs.fasta"):
 
 def run_imngs2(
         fastq_file_dir: str,
-        args_yml_file: str,
-        dbs_dir: str,
+        args_yml_file: str = str(ARGS_YAML_FILE),
+        dbs_dir: str = str(DBS_DIR),
         mapping_file: str = "",
         spike_stat_file: str = "",
         skip_preprocess: bool = False,
@@ -342,13 +344,12 @@ def run_imngs2(
     dbs_dir = Path(PurePath(dbs_dir))
     assert fastq_file_dir.is_dir(), "fastq_file_dir must be a path to directory"
     assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
-    if not args_yml_file.is_file():
-        PREP_LOG.warning(f"Config File: {str(args_yml_file)} does not exist. USING DEFAULT PARAMETERS!")
-        args_yml_file = Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()
+    assert args_yml_file.is_file(), "args_yml_file should be a valid path to YAML file reachable through input_dir"
     # Copying the args file to input_dir to always have the args file.
     try:
         shutil.copy2(str(args_yml_file), str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml")))
     except Exception:
+        PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml"))))
         pass
     preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     preproc_dir.mkdir(parents=True, exist_ok=True)
@@ -356,10 +357,10 @@ def run_imngs2(
     given_spike_stat_file = Path(PurePath(spike_stat_file)).absolute()
     combined_spike_stats_path = default_spike_stat_compiled if not given_spike_stat_file.is_file() else given_spike_stat_file
     reduced_samples_dirs = []
-    mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else Path.cwd()
+    mapping_file_path = Path(PurePath(str(mapping_file))).absolute()  # it will return a path to current directory if mapping_file = ""
     # Analysis defualt vars
     zotu_file_path, sotu_file_path = ("", "")
-    # assert mapping_file_path.is_file(), f"{mapping_file_path} must be a path to an exisitng mapping file"
+
     if not skip_preprocess:
         try:
             # Gathering sequence files
@@ -413,24 +414,9 @@ def run_imngs2(
         pass
 
 
-def get_fastq_dir(namespace):
-    # Access the value of --input-directory from the namespace
-    fastq_directory = Path(PurePath(getattr(namespace, 'fastq_directory', INPUT_DIR))).absolute()
-    # Combine fastq_directory with a fixed value for fastq_directory
-    return fastq_directory
-
-
-def get_default_mapping_file_path(namespace):
-    fastq_dir = str(get_fastq_dir(namespace))
-    return f"{fastq_dir}/mapping_file.tsv"
-
-
-def get_default_args_file_path(namespace):
-    fastq_dir = str(get_fastq_dir(namespace))
-    return f"{fastq_dir}/IMNGS2Pipeline_args.yml"
-
-
 if __name__ == "__main__":
+    class C:
+        pass
     parser = argparse.ArgumentParser()
     help_text = "The directory to find recursively all fastq files inside. Default is <--input-directory>"
     parser.add_argument("-i", "--input-directory",
@@ -441,13 +427,20 @@ if __name__ == "__main__":
                         type=str,
                         help=help_text,
                         default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
+    init_args = C()
+    name_space, rest_args = parser.parse_known_args(namespace=init_args)
+    # Updating INPUT_DIR
+    INPUT_DIR = Path(PurePath(init_args.input_directory)).absolute()
+    FASTQ_DIR = INPUT_DIR.joinpath(init_args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    expected_yml_file = INPUT_DIR.joinpath("IMNGS2Pipeline_args.yml").absolute()
+    expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.tsv").absolute()
     parser.add_argument("-y", "--yml-file",
                         type=str,
                         help="Path to arguments yaml file. Relative to <--input-directory>",
-                        default=get_default_args_file_path)
+                        default=expected_yml_file)
     parser.add_argument("-map", "--mapping-file",
                         type=str,
-                        default=get_default_mapping_file_path,
+                        default=expected_mapping_file,
                         help="The path to a mapping file defining sample weight and spike amount for each sample. Relative to <--input-directory>")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
@@ -468,30 +461,34 @@ if __name__ == "__main__":
                         action="store_true",
                         help="Writes the default argument yaml template file (IMNGS2Pipeline_args.yml) and mapping template file (mapping_file.tsv)"
                         " to <--input-directory>, print help text and exits.")
-    args = parser.parse_args()
-    # Updating INPUT_DIR
-    INPUT_DIR = Path(PurePath(args.input_directory)).absolute()
-    FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
-    YAML_FILE = FASTQ_DIR.joinpath(args.yml_file)
-    MAP_FILE = FASTQ_DIR.joinpath(args.mapping_file)
+    args = parser.parse_args(rest_args)
+    cli_args_file = INPUT_DIR.joinpath(args.yml_file)
+    # This will return longest path. mapping file could be anywhere. Difining lower directories as fastq_directory will limit the searched files
+    # and then less rows in mapping_file to be found.
+    cli_map_file = INPUT_DIR.joinpath(args.mapping_file)
     # Exposing default argument files.
-    if args.place_args_file:
+    if not cli_args_file.is_file():
         shutil.copy2(
-            str(YAML_FILE),
-            str(FASTQ_DIR.joinpath("IMNGS2Pipeline_args.yml"))
+            str(ARGS_YAML_FILE),
+            str(cli_args_file)
         )
+        PREP_LOG.warning(f"{str(cli_args_file.relative_to(INPUT_DIR))} is not a valid file path. \
+                           Falling back to default argument set written to {str(cli_args_file.relative_to(INPUT_DIR))}")
+
+    if args.place_template_files:
         shutil.copy2(
             str(MAP_FILE),
-            str(FASTQ_DIR.joinpath("mapping_file.tsv"))
+            str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.tsv"))
         )
         # log
-        PREP_LOG.info(f"Template files written to ./{args.fastq_directory}")
+        PREP_LOG.info(f"Mapping file template files written to {str(FASTQ_DIR.joinpath('mapping_file_TEMPLATE.tsv').relative_to(INPUT_DIR))}")
+        exit(0)
     else:
         if args.db_directory != DBS_DIR:
             DBS_DIR = args.db_directory
         # NOTE Every needed file and directory should be in /base/inputs/
         run_imngs2(
-            fastq_file_dir=INPUT_DIR.joinpath(args.fastq_directory),
+            fastq_file_dir=FASTQ_DIR,
             args_yml_file=INPUT_DIR.joinpath(args.yml_file),
             dbs_dir=INPUT_DIR.joinpath(args.db_directory),
             mapping_file=INPUT_DIR.joinpath(args.mapping_file),
