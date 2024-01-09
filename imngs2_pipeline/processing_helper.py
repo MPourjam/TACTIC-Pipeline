@@ -62,17 +62,22 @@ reve_file_indicators = [
 ]
 
 
-def get_base_name(file_path):
+def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple = ("", "")):
     file_path = Path(PurePath(file_path)).absolute()
+    parent_path, file_name = file_path.parent, file_path.name
+    if include_path is None or not isinstance(include_path, Path):
+        include_path = parent_path
+
     while file_path.suffixes:
         file_path = Path(PurePath(file_path.parent)).absolute().joinpath(file_path.stem)
-    base_name = file_path.name
-    for ind in forw_file_indicators + reve_file_indicators:
-        if ind in file_path.name:
-            base_name = str(file_path.name.split(ind)[0])
-            break
 
-    return base_name
+    for ind in forw_file_indicators + reve_file_indicators:
+        if ind in file_name:
+            file_name = str(file_name.split(ind)[0])
+            break
+    new_name = parent_path.joinpath(file_name).absolute().relative_to(include_path)
+    new_name = Path(PurePath(str(new_name).replace(*replace_sep)))
+    return new_name
 
 
 def is_seq_file(file_path, seq_file_format="any"):
@@ -296,14 +301,14 @@ def flatten_dict(
         d: MutableMapping,
         parent_key: str = '',
         sep: str = ".") -> MutableMapping:
-        items = []
-        for k, v in d.items():
-            new_key = parent_key + sep + k if parent_key else k
-            if isinstance(v, MutableMapping):
-                items.extend(flatten_dict(v, new_key, sep=sep).items())
-            else:
-                items.append((new_key, v))
-        return dict(items)
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, MutableMapping):
+            items.extend(flatten_dict(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
 
 
 class TaskPickle:

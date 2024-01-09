@@ -683,7 +683,7 @@ def main_processing(
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         log.info("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
         run_FastQC(forward_file, reverse_file)
-        chdir(input_dir)  # This is crucial to be here
+        chdir(input_dir)  # This is CRUCIAL to be here
         log.info('fastQC DONE')
         if reverse_file:
             merge_pairs(forward_file, reverse_file)
