@@ -58,7 +58,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
         mapping_lines[sample_id] = (_row_vals_tup, file_pair)
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
     if not mapping_file_path.is_file():
-        PREP_LOG.warning("Parsing of mapping file failed. Continuing as if mapping file is provided.")
+        PREP_LOG.warning("Parsing of mapping file failed. Continuing with fake mapping file.")
         return mapping_lines
 
     PREP_LOG.warning(f"When mapping file is provided ({mapping_file_path}), only samples in mapping file will get processed!!!")
@@ -105,8 +105,11 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
 
             fields = line.split('\t')
             sample_id = fields[index_of_sample_id_col].strip()
+            fields[index_of_sample_id_col] = sample_id
             total_weight_in_g = fields[index_of_weight_col].strip()
+            fields[index_of_weight_col] = total_weight_in_g
             amount = fields[index_of_amounts_col].strip()
+            fields[index_of_amounts_col] = amount
 
             # warn if weight is not a valid number
             try:
@@ -123,7 +126,11 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 fields[index_of_amounts_col] = "0"
 
             valid_ids.append(sample_id)
-            map_line = MapLineTup(fields[index_of_sample_id_col], fields[index_of_weight_col], fields[index_of_amounts_col])
+            map_line = MapLineTup(
+                sample_id,
+                fields[index_of_weight_col],
+                fields[index_of_amounts_col]
+            )
             # Mapping file paris to sample_id
             file_pair_tup = ("", "")
             for file_tup in files_tups:
@@ -131,7 +138,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                     forw_name = file_tup[0]
                 except Exception:
                     forw_name = ""
-                if sample_id in forw_name:
+                if sample_id in forw_name:  # sample_id could also be partial path of file_names
                     file_pair_tup = file_tup
                     # NOTE We only add valid file names which are given in mapping file
             mapping_lines[sample_id] = (map_line, file_pair_tup)
@@ -188,7 +195,7 @@ def remove_spikes(
         # appending
         stats_h.write(row_fmt.format(sample_id, spike_reads_c, sample_weight, spike_amount) + "\n")
 
-    PREP_LOG.info(f"Spike removal done for {sample_id}.Spike Reads: {spike_reads_c}\tnon-spike reads: {real_reads_c}")
+    PREP_LOG.info(f"Spike removal done for {sample_id}. Spike Reads: {spike_reads_c}\tnon-spike reads: {real_reads_c}")
 
     return out_tup
 
@@ -473,7 +480,7 @@ if __name__ == "__main__":
             str(cli_args_file)
         )
         PREP_LOG.warning(f"{str(cli_args_file.relative_to(INPUT_DIR))} is not a valid file path. "
-                           f"Falling back to default argument set written to {str(cli_args_file.relative_to(INPUT_DIR))}")
+                         f"Falling back to default argument set written to {str(cli_args_file.relative_to(INPUT_DIR))}")
 
     if args.place_template_files:
         shutil.copy2(
