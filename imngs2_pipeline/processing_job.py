@@ -135,35 +135,35 @@ def gzip_to_fastq(*files):
     if len(files) != len(file_path):
         raise TypeError("Some given arguments are not files.")
     fastq_paths = []
-    for f in file_path:
+    for f_abs in file_path:
         tstmp = str(time.time()).replace(".", "_")
-        app, typ = mtypes.guess_type(f)
-        file_dir, file_name = path.split(f)
+        f_real = path.realpath(f_abs)
+        app, typ = mtypes.guess_type(f_real)
+        file_dir, file_name = path.split(f_abs)
         file_name = file_name.replace(".", "_").replace("_gz", "").replace("_bz2", "")
         asciifile_name = file_name.replace(" ", "").replace("_fastq", "") + ".fastq"
         asciifile = path.join(file_dir, asciifile_name)
         tmp_file = path.join(file_dir, "_{}_".format(tstmp))
         if 'zip' in str(typ):
-            system("gunzip --stdout {} > {}".format(f, tmp_file))
-            system("rm -r {}".format(f))
+            system("gunzip --stdout {} > {}".format(f_real, tmp_file))
+            system("rm -r {}".format(f_abs))
             system("mv {} {}".format(tmp_file, asciifile))
             fastq_paths.append(asciifile)
         elif 'zip' in str(app):  # For zipped files
-            system("unzip {} -d {}".format(f, tmp_file))
-            system("rm -r {}".format(f))
+            system("unzip {} -d {}".format(f_real, tmp_file))
+            system("rm -r {}".format(f_abs))
             system("mv {} {}".format(tmp_file, asciifile))
             fastq_paths.append(asciifile)
         else:
             try:
-                with open(f, "r+") as fi:
+                with open(f_real, "r+") as fi:
                     line = fi.readline()
                 if len(line) == len(line.encode()):  # If it's ascii
-                    if str(f) != str(asciifile):  # Avoiding moving a file to itself
-                        system("mv {} {}".format(f, asciifile))
+                    if str(f_abs) != str(asciifile):  # Avoiding moving a file to itself
+                        system("mv {} {}".format(f_abs, asciifile))
                     fastq_paths.append(asciifile)
             except Exception as e:
-                print("{}\t{}".format(f, e))
-                raise
+                raise TypeError("{}\t{}".format(f_abs, e))
     if len(file_path) != len(fastq_paths):
         raise TypeError("Some files could not get converted or were not in utf-8 format!")
     # returns absolute paths
@@ -261,7 +261,7 @@ def run_FastQC(forward_file, reverse_file):
     try:
         system(cmd_0 + cmd_1)
     except BaseException:
-        raise("FastQC did NOT run")
+        raise RuntimeError("FastQC did NOT run")
     chdir(out_dir)
     if not reverse_file == '':
         clean_FastQC(input_file=forward_file, reverse_file=reverse_file)
@@ -750,6 +750,6 @@ def main_processing(
     update_task_pko(status_code, status_msg)
     pko.close()
     # if not path.isfile(udb_file):
-        # raise FileNotFoundError("No UDB created for {}".format(input_dir))
+    #    raise FileNotFoundError("No UDB created for {}".format(input_dir))
 
     return input_dir
