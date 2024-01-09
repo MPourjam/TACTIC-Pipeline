@@ -2,6 +2,7 @@
 import re
 import argparse
 import shutil
+from os import symlink
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
 from imngs2_pipeline.analyze_sample_job import main as main_analysis
@@ -235,8 +236,8 @@ def run_preprocessing(
         for ind, sfi in enumerate(seq_files_t):
             new_path = new_dir.joinpath(sfi.name)
             new_paths[ind] = new_path
-            # Copying files
-            shutil.copy2(str(sfi), str(new_path))
+            # Copying files #TODO change it to creating symlink
+            symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
         # TODO we do spike removal if necessary and add a line to spike_stats file for spike normalization
         new_paths = [el for el in new_paths if bool(el)]
         # removing spikes and decompressing files below
