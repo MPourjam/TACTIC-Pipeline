@@ -374,7 +374,7 @@ def run_imngs2(
                 res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), preproc_dir, str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].amount_spike,))
                             for sample_id, arg_tup in mapping_line_tup_dict.items()]
                 for res in res_list:
-                    res.wait()
+                    res.wait(720)  # After 12 minutes it terminates the thread
             samples_dirs = [el.get() for el in res_list]
             # NOTE result form run_preprocessing could be "" which meand the preprocessing has failed
             samples_dirs = [el for el in samples_dirs if el]
