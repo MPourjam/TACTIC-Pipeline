@@ -76,7 +76,7 @@ def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple
             file_name = str(file_name.split(ind)[0])
             break
     new_name = parent_path.joinpath(file_name).absolute().relative_to(include_path)
-    new_name = Path(PurePath(str(new_name).replace(*replace_sep)))
+    new_name = str(Path(PurePath(str(new_name).replace(*replace_sep))))
     return new_name
 
 
