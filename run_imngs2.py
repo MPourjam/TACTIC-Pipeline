@@ -6,19 +6,21 @@ from os import symlink
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
 from imngs2_pipeline.analyze_sample_job import main as main_analysis
-from collections import namedtuple
+from collections import namedtuple, Counter
 import imngs2_pipeline.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
-from typing import List, Dict
+from typing import List
 from sys import version_info
 if version_info[0] < 3:
-    from pathlib2 import Path, PurePath  # pip2 install pathlib2
+    from pathlib2 import Path, PurePath, PureWindowsPath, PurePosixPath  # pip2 install pathlib2
 else:
-    from pathlib import Path, PurePath
+    from pathlib import Path, PurePath, PureWindowsPath, PurePosixPath
 
 
-global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS, MapLineTup, ARGS_YAML_FILE
+global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS
+global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE
 INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
+FASTQ_DIR = INPUT_DIR
 ARGS_YAML_FILE = Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()
 MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.tsv")).absolute()
 DBS_DIR = "/base/databases/"
@@ -30,12 +32,115 @@ PREP_LOG = proc_helper.gimmelogger(
     "run_imngs2",
     log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
     only_file=False)
-MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "amount_spike")
-MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2]])
-global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER
+MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "amount_spike", "parent_path")
+MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2], MAPPING_FILE_COLS[3]])
+global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER, PATH_SEP
+PATH_SEP = "_-_"
 SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.tsv"
 row_fmt = "{}\t{}\t{}\t{}"
 SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "amount_spike")
+
+
+def uniqify_map_lines(dup_ids_maplinetup_list: List[(MapLineTup, tuple)]) -> List[(MapLineTup, tuple)]:
+    sample_ids_count = Counter([x[0][0] for x in dup_ids_maplinetup_list])
+    most_common = Counter(dict(sample_ids_count.most_common(1)))
+    while most_common.total() > 1:
+        most_common_sample_id, most_common_count = most_common.items()
+        for ind in range(len(dup_ids_maplinetup_list)):
+            map_line_obj = dup_ids_maplinetup_list[ind][0]
+            file_pair = dup_ids_maplinetup_list[ind][1]
+            if most_common[map_line_obj.SampleID]:
+                new_map_line = MapLineTup(
+                    str(map_line_obj[3]) + PATH_SEP + str(most_common_sample_id) + "__" + str(most_common_count),
+                    map_line_obj[1],
+                    map_line_obj[2],
+                    map_line_obj[3],
+                )
+                dup_ids_maplinetup_list[ind] = (new_map_line, file_pair)
+                dup_ids_maplinetup_list = uniqify_map_lines(dup_ids_maplinetup_list)
+
+    return dup_ids_maplinetup_list
+
+
+def convert_mapping_entries_to_dict(map_line_entries_list: List[(MapLineTup, tuple)]) -> dict:
+    # Sorting by sample_id
+    # map_line_entries_list = sorted(map_line_entries_list, key= lambda x: x[0][0])
+    init_count = len(map_line_entries_list)
+    sample_ids_count = Counter([x[0][0] for x in map_line_entries_list])
+    most_common = Counter(dict(sample_ids_count.most_common(1)))
+    while most_common.total() > 1:
+        # deleting duplicates from map_line_entries
+        sub_list_to_uniqify = []
+        for ind in range(len(map_line_entries_list)):
+            mapline_tup = map_line_entries_list[ind]
+            if most_common[mapline_tup[0].SampleID]:
+                sub_list_to_uniqify.append(mapline_tup)
+                del map_line_entries_list[ind]
+        map_line_entries_list.append(uniqify_map_lines(sub_list_to_uniqify))
+
+    mapping_line_dict = {element[0].SampleID: element for element in map_line_entries_list}
+    assert (len(mapping_line_dict) == init_count), "Different length for map_line_entries list and output dictionary"
+    return mapping_line_dict
+
+
+def correct_path_for_windows(input_path: str) -> Path:
+    logic_test_list = [
+        isinstance(input_path, str)
+    ]
+    if not any(logic_test_list):
+        raise TypeError("Not a valid path")
+    input_path = str(input_path)
+    if "\\\\" in input_path or "\\" in input_path:
+        return PureWindowsPath(input_path)
+    elif "/" in input_path:
+        return PurePosixPath(input_path)
+
+    return PurePath(FASTQ_DIR)
+
+
+def is_correct_parent(
+        fastq_file: Path,
+        given_parent_path: str = str(FASTQ_DIR),
+        base_path: Path = FASTQ_DIR) -> bool:
+    """
+    Choosing a point in hierarchy of file system, any child path is unique including a
+    unique character or name differntiating from other child path. The unique part is not
+    in parent path as the selected point have only one parent.
+    """
+    fastq_file = Path(PurePath(fastq_file))
+    pre_checks_bools = [
+        not isinstance(given_parent_path, str),
+        not isinstance(given_parent_path, Path),
+        not isinstance(fastq_file, Path),
+    ]
+    if any(pre_checks_bools) and not fastq_file.is_file():
+        return False
+    given_parent_path = str(FASTQ_DIR) if given_parent_path == "" else given_parent_path
+    given_parent_path = correct_path_for_windows(str(given_parent_path))
+    fastq_file_parent = fastq_file.parent.relative_to(base_path)
+    # We assume that the user gives the full path to parent directory in worst case.
+    given_parent_parts = given_parent_path.parts
+    ind = len(given_parent_parts)
+    # If given fastq_file_parent is relative and exhausted
+    # if fastq_file_parent is given with leading '/'
+    # if fastq_file is set in c://
+    # if parts of given_parent_parts is exhausted
+    while str(fastq_file_parent) != "." \
+            and str(fastq_file_parent) != "/" \
+            and not str(fastq_file_parent).endswith(":/") \
+            and ind >= 0:
+        this_level = fastq_file_parent.name
+        if this_level != given_parent_parts[ind * -1]:
+            return False
+        fastq_file_parent = fastq_file_parent.parent
+        ind -= 1
+
+    if str(fastq_file_parent) != ".":
+        # The given path is only partially covering the fastq path
+        # This is ambiguous
+        return False
+
+    return True
 
 
 def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
@@ -45,26 +150,29 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     mapping_file_path = Path(PurePath(mapping_file_path)).absolute()
     valid_ids = []
     ignored_ids = []  # e.g. entries with NA values
-    mapping_lines: Dict[str, List[str]] = {}  # from mapping file, full line for each relevant sample
+    mapping_lines: List[(MapLineTup, tuple)] = []  # from mapping file, full line for each relevant sample
     index_of_sample_id_col = None
     sample_col_name = MAPPING_FILE_COLS[0]
     index_of_weight_col = None
     weight_col_name = MAPPING_FILE_COLS[1]
     index_of_amounts_col = None
     amounts_col_name = MAPPING_FILE_COLS[2]
+    index_of_parent_path_col = None
+    parent_path_col_name = MAPPING_FILE_COLS[2]
     # Preparing default argument for each sample preprocessing
     for file_pair in files_tups:
         sample_id = proc_helper.get_base_name(file_pair[0])
-        _row_vals_tup = MapLineTup(sample_id, float("NAN"), 0)
-        mapping_lines[sample_id] = (_row_vals_tup, file_pair)
+        _row_vals_tup = MapLineTup(sample_id, float("NAN"), 0, "")
+        mapping_lines.append(_row_vals_tup, file_pair)
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
+    mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
     if not mapping_file_path.is_file():
         PREP_LOG.warning("Parsing of mapping file failed. Continuing with fake mapping file.")
         return mapping_lines
 
     PREP_LOG.warning(f"When mapping file is provided ({mapping_file_path}), only samples in mapping file will get processed!!!")
     # If mapping_file_is there then renew the mapping_lines
-    mapping_lines: Dict[str, List[str]] = {}  # from mapping file, full line for each relevant sample
+    mapping_lines: List[(MapLineTup, file_pair)] = []  # from mapping file, full line for each relevant sample
 
     with open(mapping_file_path, 'r') as mapping_file_h:
         header: str = next(mapping_file_h)
@@ -83,6 +191,8 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 index_of_weight_col = i
             elif colname == amounts_col_name:
                 index_of_amounts_col = i
+            elif colname == parent_path_col_name:
+                index_of_parent_path_col = i
 
         if index_of_sample_id_col is None:
             msg = f'Column {sample_col_name!r} missing in header of mapping_file: {mapping_file_path}'
@@ -111,6 +221,8 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             fields[index_of_weight_col] = total_weight_in_g
             amount = fields[index_of_amounts_col].strip()
             fields[index_of_amounts_col] = amount
+            parent_path = fields[index_of_parent_path_col].strip().rstrip("\\").rstrip("/")
+            fields[index_of_parent_path_col] = parent_path
 
             # warn if weight is not a valid number
             try:
@@ -130,19 +242,24 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             map_line = MapLineTup(
                 sample_id,
                 fields[index_of_weight_col],
-                fields[index_of_amounts_col]
+                fields[index_of_amounts_col],
+                fields[index_of_parent_path_col]
             )
             # Mapping file paris to sample_id
-            file_pair_tup = ("", "")
-            for file_tup in files_tups:
+            file_pairs_tup = ("", "")
+            for ind in range(len(files_tups)):
+                file_tup = files_tups[ind]
                 try:
-                    forw_name = file_tup[0]
+                    forw_file_name = str(file_tup[0]).split("/")[-1]
                 except Exception:
-                    forw_name = ""
-                if sample_id in forw_name:  # sample_id could also be partial path of file_names
-                    file_pair_tup = file_tup
-                    # NOTE We only add valid file names which are given in mapping file
-            mapping_lines[sample_id] = (map_line, file_pair_tup)
+                    forw_file_name = ""
+                correct_parent = is_correct_parent(file_tup[0], parent_path)
+                if sample_id in forw_file_name and correct_parent:  # sample_id could also be partial path of file_names
+                    file_pairs_tup = file_tup
+                    del files_tups[ind]
+
+            mapping_lines.append(map_line, file_pairs_tup)
+    mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
 
     return mapping_lines
 

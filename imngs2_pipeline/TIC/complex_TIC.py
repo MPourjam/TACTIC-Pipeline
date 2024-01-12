@@ -3,7 +3,7 @@ from os import chdir, system, mkdir, remove
 from os.path import isfile, getsize, isdir
 from shutil import copyfile
 from tqdm import tqdm
-import billiard as multiprocessing
+import multiprocessing
 from glob import glob
 from random import shuffle
 
