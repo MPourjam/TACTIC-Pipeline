@@ -43,6 +43,11 @@ install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org");\
 
 RUN rm -rf /crc/src/
 
+# Cleaning apt-cache
+RUN apt clean autoclean
+RUN apt autoremove --yes
+RUN rm -rf /var/lib/{apt,dpkg,cache,log}/
+
 # Adding run_imngs2 command to PATH
 RUN /bin/chmod 777 -R /base 
 RUN /bin/ln -s /base/run_imngs2.py /usr/local/bin/run_imngs2
