@@ -6,6 +6,7 @@ import time
 import gzip
 import zipfile
 import inspect
+import threading
 from os import getcwd
 from mimetypes import guess_type
 from datetime import datetime as dt
@@ -60,6 +61,16 @@ reve_file_indicators = [
     "_R2",
     "@R"
 ]
+
+
+def generate_timestamp():
+    current_time = dt.now()
+    timestamp = current_time.strftime("%Y-%m-%d_%H-%M-%S")
+
+    # Get the current thread name
+    thread_name = threading.current_thread().name
+    timestamp += f"_{thread_name}"
+    return timestamp
 
 
 def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple = ("", "")):
