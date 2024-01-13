@@ -320,7 +320,6 @@ def remove_spikes(
 
 def run_preprocessing(
         seq_files_t: tuple,
-        preproc_dir: str,
         args_yml_path: str,
         sample_id: str = "",  # If it's not provided then the base name of forward file
         sample_weight: float = float("NAN"),  # spike normalizer handles this
@@ -344,12 +343,19 @@ def run_preprocessing(
         new_dir = seq_files_t[0]
         # Getting initial stem
         while new_dir.suffixes:
-            new_dir = Path(new_dir).absolute().parent.joinpath(new_dir.stem)
+            new_dir = Path(new_dir).parent.joinpath(new_dir.stem)
 
         sample_base_name = proc_helper.get_base_name(new_dir)
         sample_id = sample_id if sample_id else sample_base_name
-        new_dir = Path(PurePath(preproc_dir)).absolute().joinpath(sample_id)
+        new_dir = new_dir.joinpath(str(sample_id) + "_processed").joinpath(proc_helper.generate_timestamp())
+
+        # TODO decide if we need to process the sample or not
+        # 1- argumnt check
+        # 2- checking if some processed version already exist
+        # 3- Choosing the one compliant to current argument set and return success. Otherwise new processing.
+
         new_dir.mkdir(parents=True, exist_ok=True)
+        # Updating fastq files path
         for ind, sfi in enumerate(seq_files_t):
             new_path = new_dir.joinpath(sfi.name)
             new_paths[ind] = new_path
@@ -378,7 +384,7 @@ def run_preprocessing(
         msg = f"{exc}"
         PREP_LOG.error(msg)
         shutil.rmtree(str(new_dir))
-        PREP_LOG.warning("Deleting {}".format(new_dir))
+        PREP_LOG.warning("Failed while processing {}, Deleting {}".format(new_dir.name, new_dir))
 
     return sample_dir
 
@@ -476,9 +482,9 @@ def run_imngs2(
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml").relative_to(INPUT_DIR))))
         pass
-    preproc_dir = fastq_file_dir.joinpath("Preprocessing")
-    preproc_dir.mkdir(parents=True, exist_ok=True)
-    default_spike_stat_compiled = preproc_dir.joinpath(SPIKE_STAT_FILE_NAME)
+    # preproc_dir = fastq_file_dir.joinpath("Preprocessing")
+    # preproc_dir.mkdir(parents=True, exist_ok=True)
+    default_spike_stat_compiled = fastq_file_dir.joinpath(SPIKE_STAT_FILE_NAME)
     given_spike_stat_file = Path(PurePath(spike_stat_file)).absolute()
     combined_spike_stats_path = default_spike_stat_compiled if not given_spike_stat_file.is_file() else given_spike_stat_file
     reduced_samples_dirs = []
@@ -496,7 +502,7 @@ def run_imngs2(
             mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
             # running preprocessing
             with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
-                res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), preproc_dir, str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].amount_spike,))
+                res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].amount_spike,))
                             for sample_id, arg_tup in mapping_line_tup_dict.items()]
                 for res in res_list:
                     res.wait(720)  # After 12 minutes it terminates the thread
@@ -506,14 +512,18 @@ def run_imngs2(
 
         except Exception as exc:
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
-            # shutil.rmtree(str(preproc_dir))  # TODO decide if we need to delete Preprocessing direcotory in case of failure.
-            PREP_LOG.warning("Deleting {}".format(preproc_dir))
             skip_analysis = True
             samples_dirs = []
     else:
-        PREP_LOG.warning(f"Skipping Preprocessing. Processing sammples in directory {preproc_dir}")
-        samp_zotu_seq_files = gather_files(*[preproc_dir], file_name="taxed_ZOTUs.fasta")
+        PREP_LOG.warning(f"Skipping Preprocessing. Processing sammples in directory {fastq_file_dir}")
+        samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="taxed_ZOTUs.fasta")
         samples_dirs = [Path(PurePath(el)).parent for el in samp_zotu_seq_files]
+
+    # TODO the function to decide if the preprocessed samples should go for analysis or not come here.
+    # we filter selected samples_dirs if they should be passed for analysis or not
+    # 1- Argument set of selected sample should be the same as given one in the argument
+    # 2- It should have "taxed_zotu.fasta"
+    # Show warning if the sample is filtered out with a reason
 
     # Runing analysis
     if not skip_analysis:
