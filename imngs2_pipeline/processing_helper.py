@@ -581,6 +581,9 @@ class ArgsParserDunderUtil:
             dict_print.update({ky: str(vl)})
         return str(dict_print)
 
+    def __hash__(self):
+        return hash(hex(id(self) + self.__sizeof__()))
+
 
 class ArgsParserUtil(ArgsParserDunderUtil):
     dict_flatt_sep = "__"
@@ -635,7 +638,9 @@ class ArgsParserUtil(ArgsParserDunderUtil):
         Parses a yaml to dictionary
         """
         yml_args_d = {}
-        yaml_path = Path(yaml_path)
+        yaml_path = Path(PurePath(str(yaml_path))).absolute() if yaml_path else Path(PurePath("."))
+        if not yaml_path.is_file():
+            return yml_args_d
         with open(yaml_path, "r") as yaml_stream:
             try:
                 yml_args_d = yaml.safe_load(yaml_stream)
@@ -643,6 +648,17 @@ class ArgsParserUtil(ArgsParserDunderUtil):
                 argparse_logger.warning(e)
 
         return yml_args_d
+
+    def __eq__(self, other):
+        if not isinstance(self, other.__class__):
+            return False
+        if not (hasattr(self, "default_args") and hasattr(other, "default_args")):
+            return False
+        eq_tests = []
+        for ke in self.default_args.keys():
+            el = self.get(ke, self.__hash__()) == other.get(ke, self.__hash__())
+            eq_tests.append(el)
+        return all(eq_tests)
 
 
 class SpikeRemovalArgs(ArgsParserUtil):
@@ -833,6 +849,25 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
         self.filter_zotu_abundance = FilterZOTUAbundanceArgs(config_dict)
         self.add_tax = AddTaxArgs(config_dict)
 
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        eq_tests = [
+            self.merge_pairs == other.merge_pairs,
+            self.trim_both_sides == other.trim_both_sides,
+            self.trim_one_side == other.trim_one_side,
+            self.filter_merged == other.filter_merged,
+            self.filter_single_reads == other.filter_single_reads,
+            self.dereplication == other.dereplication,
+            self.sort_seq == other.sort_seq,
+            self.cluster_zotus == other.cluster_zotus,
+            self.filter_16S == other.filter_16S,
+            self.build_zotus_table == other.build_zotus_table,
+            self.filter_zotu_abundance == other.filter_zotu_abundance,
+            self.add_tax == other.add_tax,
+        ]
+        return all(eq_tests)
+
 
 class AnalysisArgsParser(ArgsParserDunderUtil):
 
@@ -860,6 +895,16 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
         self.complex_tic = ComplexTICArgs(config_dict)
         self.create_table = CreateTableTICArgs(config_dict)
 
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        eq_tests = [
+            self.trimsides == other.trimsides,
+            self.complex_tic == other.complex_tic,
+            self.create_table == other.create_table,
+        ]
+        return all(eq_tests)
+
 
 class IMNGS2ArgsParser(ArgsParserDunderUtil):
 
@@ -874,3 +919,10 @@ class IMNGS2ArgsParser(ArgsParserDunderUtil):
         """
         self.preproc_args = PreprocessingArgsParser(config_yaml, config_dict)
         self.analysis_args = AnalysisArgsParser(config_yaml, config_dict)
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        prep_eq = self.preproc_args == other.preproc_args
+        analysis_eq = self.preproc_args == other.preproc_args
+        return prep_eq and analysis_eq

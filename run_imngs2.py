@@ -18,10 +18,13 @@ else:
 
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS
-global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE
+global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX
 INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
 FASTQ_DIR = INPUT_DIR
-ARGS_YAML_FILE = Path(PurePath("/base/IMNGS2Pipeline_args.yml")).absolute()
+PROC_DIR_SUFFIX = "__processed"
+global DEFAULT_ARG_FILE_NAME
+DEFAULT_ARG_FILE_NAME = "IMNGS2Pipeline_args.yml"
+ARGS_YAML_FILE = Path(PurePath("/base/" + DEFAULT_ARG_FILE_NAME)).absolute()
 MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.tsv")).absolute()
 DBS_DIR = "/base/databases/"
 max_pool = int(cpu_count() * 0.3)
@@ -41,6 +44,103 @@ row_fmt = "{}\t{}\t{}\t{}"
 SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "amount_spike")
 
 
+def is_argset_different(existing_arg_file: Path, processed_arg_file: Path = None) -> bool:
+    """
+    It decides if two set of arguments are the same or not for deciding whether a sample
+    should be passed for processing or not.
+    """
+    is_different = True
+    tests = [
+        isinstance(existing_arg_file, str) or isinstance(existing_arg_file, Path),
+        isinstance(processed_arg_file, Path) or isinstance(processed_arg_file, str) or processed_arg_file is None,
+    ]
+    if not all(tests):
+        raise ValueError("Arguments should be str or Path object")
+
+    existing_arg_file = Path(PurePath(existing_arg_file)).absolute()
+    proce_arg_file = Path(PurePath(processed_arg_file)).absolute() if processed_arg_file else None
+    if not proce_arg_file:
+        given_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=existing_arg_file)
+        proce_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=proce_arg_file)
+
+        is_different = given_argset_obj.preproc_args == proce_argset_obj.analysis_args
+
+    return is_different
+
+
+def get_processed_argset(processed_dir_path: Path) -> List[Path]:
+    out_list = []
+    if bool(isinstance(processed_dir_path, str) or isinstance(processed_dir_path, Path)):
+        processed_dir_path = Path(PurePath(processed_dir_path)).absolute()
+        if not processed_dir_path.is_dir() or not str(processed_dir_path).endswith(PROC_DIR_SUFFIX):
+            raise TypeError(f"{processed_dir_path} must be a path to a directory ending with '{PROC_DIR_SUFFIX}'")
+        # finding argument files
+        out_list = processed_dir_path.rglob(DEFAULT_ARG_FILE_NAME)
+
+    return out_list
+
+
+def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
+    my_dir = processed_dir_date_version_path
+    is_valid_path = [
+        isinstance(my_dir, str),
+        isinstance(my_dir, str)
+    ]
+    if not my_dir.is_dir() or not all(is_valid_path):
+        return False
+    my_dir = Path(PurePath(my_dir)).absolute()
+    should_be_there = [
+        DEFAULT_ARG_FILE_NAME,
+        "taxed_ZOTUs.fasta",
+        SPIKE_STAT_FILE_NAME
+    ]
+    logic_test = [False for fi in should_be_there]
+
+    for ind in range(len(should_be_there)):
+        dir_content = processed_dir_date_version_path.iterdir()
+        for cont in dir_content:
+            logic_test[ind] = True if cont.is_file() and cont.name == should_be_there[ind] else False
+
+    return all(logic_test)
+
+
+def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -> (Path, bool):
+    this_out = ["", True]
+    given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) and isinstance(given_argset_file, Path) else ""
+    sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) and isinstance(sample_base_path, Path) else ""
+
+    if not sample_base_path:
+        return tuple(this_out)
+
+    processed_dir_path = Path(PurePath(str(sample_base_path))).absolute()
+    if not str(sample_base_path).endswith(PROC_DIR_SUFFIX):
+        processed_dir_path = Path(PurePath(str(sample_base_path) + PROC_DIR_SUFFIX))
+
+    this_out[0] = str(processed_dir_path.joinpath(proc_helper.generate_timestamp()))
+    arg_files = processed_dir_path.rglob(DEFAULT_ARG_FILE_NAME)
+
+    for argfile in arg_files:
+        if not argfile.is_file():
+            continue
+        if is_argset_different(argfile, given_argset_file) and is_processed_dir_healthy(argfile.parent):
+            this_out[0] = str(argfile.parent.absolute())
+            this_out[1] = False
+
+    return tuple(this_out)
+
+
+def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
+    dir_path = Path(PurePath(dir_path)).absolute() if isinstance(dir_path, str) and isinstance(dir_path, Path) else ""
+    given_arg_file = Path(PurePath(given_arg_file)).absolute() if isinstance(given_arg_file, str) and isinstance(given_arg_file, Path) else ""
+    if not dir_path or not given_arg_file:
+        return False
+    is_complete = is_processed_dir_healthy(dir_path)
+    old_arg_file = dir_path.joinpath(DEFAULT_ARG_FILE_NAME)
+    same_argset = not is_argset_different(given_arg_file, old_arg_file)
+
+    return bool(is_complete and same_argset)
+
+
 def uniqify_map_lines(dup_ids_maplinetup_list: List[(MapLineTup, tuple)]) -> List[(MapLineTup, tuple)]:
     sample_ids_count = Counter([x[0][0] for x in dup_ids_maplinetup_list])
     most_common = Counter(dict(sample_ids_count.most_common(1)))
@@ -57,7 +157,10 @@ def uniqify_map_lines(dup_ids_maplinetup_list: List[(MapLineTup, tuple)]) -> Lis
                     map_line_obj[3],
                 )
                 dup_ids_maplinetup_list[ind] = (new_map_line, file_pair)
+                # End Phase of loop
                 dup_ids_maplinetup_list = uniqify_map_lines(dup_ids_maplinetup_list)
+                sample_ids_count = Counter([x[0][0] for x in dup_ids_maplinetup_list])
+                most_common = Counter(dict(sample_ids_count.most_common(1)))
 
     return dup_ids_maplinetup_list
 
@@ -69,14 +172,19 @@ def convert_mapping_entries_to_dict(map_line_entries_list: List[(MapLineTup, tup
     sample_ids_count = Counter([x[0][0] for x in map_line_entries_list])
     most_common = Counter(dict(sample_ids_count.most_common(1)))
     while most_common.total() > 1:
+        map_line_entries_list_filtered = []
         # deleting duplicates from map_line_entries
         sub_list_to_uniqify = []
         for ind in range(len(map_line_entries_list)):
             mapline_tup = map_line_entries_list[ind]
             if most_common[mapline_tup[0].SampleID]:
                 sub_list_to_uniqify.append(mapline_tup)
-                del map_line_entries_list[ind]
-        map_line_entries_list.append(uniqify_map_lines(sub_list_to_uniqify))
+            else:
+                map_line_entries_list_filtered.append(map_line_entries_list[ind])
+        map_line_entries_list_filtered.append(uniqify_map_lines(sub_list_to_uniqify))
+        map_line_entries_list = map_line_entries_list_filtered
+        sample_ids_count = Counter([x[0][0] for x in map_line_entries_list])
+        most_common = Counter(dict(sample_ids_count.most_common(1)))
 
     mapping_line_dict = {element[0].SampleID: element for element in map_line_entries_list}
     assert (len(mapping_line_dict) == init_count), "Different length for map_line_entries list and output dictionary"
@@ -347,9 +455,14 @@ def run_preprocessing(
 
         sample_base_name = proc_helper.get_base_name(new_dir)
         sample_id = sample_id if sample_id else sample_base_name
-        new_dir = new_dir.joinpath(str(sample_id) + "_processed").joinpath(proc_helper.generate_timestamp())
+        base_path_dir = new_dir.joinpath(str(sample_id))  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
+        new_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
+        if not shall_continue:
+            if not new_dir:
+                raise ValueError("Invalid preprocessing base_path!")
+            return new_dir
 
-        # TODO decide if we need to process the sample or not
+        # TODO:NOTE decide if we need to process the sample or not
         # 1- argumnt check
         # 2- checking if some processed version already exist
         # 3- Choosing the one compliant to current argument set and return success. Otherwise new processing.
@@ -370,6 +483,9 @@ def run_preprocessing(
             sample_weight,
             spike_amount
         )
+        # Copying the argument file to sample directory
+        sample_arg_file = new_dir.joinpath(DEFAULT_ARG_FILE_NAME)
+        shutil.copy2(args_yml_path, sample_arg_file)
         # Running preprocessing
         sample_dir = preprocessing(
             input_dir=new_dir,
@@ -377,7 +493,7 @@ def run_preprocessing(
             forward_file=fastq_files_tuple[0],
             reverse_file=fastq_files_tuple[1],
             input_id=sample_id,
-            args_file_path=args_yml_path,
+            args_file_path=sample_arg_file,
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
         )
     except Exception as exc:
@@ -478,9 +594,9 @@ def run_imngs2(
     assert args_yml_file.is_file(), "args_yml_file should be a valid path to YAML file reachable through input_dir"
     # Copying the args file to input_dir to always have the args file.
     try:
-        shutil.copy2(str(args_yml_file), str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml")))
+        shutil.copy2(str(args_yml_file), str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME)))
     except Exception:
-        PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath("IMNGS2Pipeline_args.yml").relative_to(INPUT_DIR))))
+        PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
         pass
     # preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     # preproc_dir.mkdir(parents=True, exist_ok=True)
@@ -519,11 +635,17 @@ def run_imngs2(
         samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="taxed_ZOTUs.fasta")
         samples_dirs = [Path(PurePath(el)).parent for el in samp_zotu_seq_files]
 
-    # TODO the function to decide if the preprocessed samples should go for analysis or not come here.
+    # TODO:NOTE the function to decide if the preprocessed samples should go for analysis or not come here.
     # we filter selected samples_dirs if they should be passed for analysis or not
     # 1- Argument set of selected sample should be the same as given one in the argument
     # 2- It should have "taxed_zotu.fasta"
     # Show warning if the sample is filtered out with a reason
+    filtered_samples_dir = []
+    for ind in range(len(samples_dirs)):
+        curr_dir = samples_dirs[ind]
+        if valid_for_analysis(curr_dir, args_yml_file):
+            filtered_samples_dir.append(curr_dir)
+    samples_dirs = filtered_samples_dir
 
     # Runing analysis
     if not skip_analysis:
@@ -567,7 +689,7 @@ if __name__ == "__main__":
     # Updating INPUT_DIR
     INPUT_DIR = Path(PurePath(init_args.input_directory)).absolute()
     FASTQ_DIR = INPUT_DIR.joinpath(init_args.fastq_directory).absolute()  # If they are the same it returns unchanged
-    expected_yml_file = INPUT_DIR.joinpath("IMNGS2Pipeline_args.yml").absolute()
+    expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
     expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.tsv").absolute()
     parser.add_argument("-y", "--yml-file",
                         type=str,
@@ -594,7 +716,7 @@ if __name__ == "__main__":
                         help="Should skip analysis step")
     parser.add_argument("-tf", "--place-template-files",
                         action="store_true",
-                        help="Writes the default argument yaml template file (IMNGS2Pipeline_args.yml) and mapping template file (mapping_file.tsv)"
+                        help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.tsv)"
                         " to <--input-directory>, print help text and exits.")
     args = parser.parse_args(rest_args)
     cli_args_file = INPUT_DIR.joinpath(args.yml_file)
