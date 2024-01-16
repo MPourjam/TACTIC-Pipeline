@@ -266,7 +266,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     index_of_amounts_col = None
     amounts_col_name = MAPPING_FILE_COLS[2]
     index_of_parent_path_col = None
-    parent_path_col_name = MAPPING_FILE_COLS[2]
+    parent_path_col_name = MAPPING_FILE_COLS[3]
     # Preparing default argument for each sample preprocessing
     for file_pair in files_tups:
         sample_id = proc_helper.get_base_name(file_pair[0])
@@ -329,7 +329,9 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             fields[index_of_weight_col] = total_weight_in_g
             amount = fields[index_of_amounts_col].strip()
             fields[index_of_amounts_col] = amount
-            parent_path = fields[index_of_parent_path_col].strip().rstrip("\\").rstrip("/")
+            parent_path = fields[index_of_parent_path_col] if index_of_parent_path_col else ""
+            parent_path = parent_path.strip().rstrip("\\").rstrip("/")
+            index_of_parent_path_col = index_of_parent_path_col  if index_of_parent_path_col else len(fields)
             fields[index_of_parent_path_col] = parent_path
 
             # warn if weight is not a valid number
@@ -356,6 +358,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             # Mapping file paris to sample_id
             file_pairs_tup = ("", "")
             for ind in range(len(files_tups)):
+
                 file_tup = files_tups[ind]
                 try:
                     forw_file_name = str(file_tup[0]).split("/")[-1]
@@ -457,6 +460,7 @@ def run_preprocessing(
         sample_id = sample_id if sample_id else sample_base_name
         base_path_dir = new_dir.joinpath(str(sample_id))  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
         new_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
+
         if not shall_continue:
             if not new_dir:
                 raise ValueError("Invalid preprocessing base_path!")
