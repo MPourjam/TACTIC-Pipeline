@@ -181,7 +181,7 @@ def convert_mapping_entries_to_dict(map_line_entries_list: list) -> dict:  # Lis
                 sub_list_to_uniqify.append(mapline_tup)
             else:
                 map_line_entries_list_filtered.append(map_line_entries_list[ind])
-        map_line_entries_list_filtered.append(uniqify_map_lines(sub_list_to_uniqify))
+        map_line_entries_list_filtered.extend(uniqify_map_lines(sub_list_to_uniqify))
         map_line_entries_list = map_line_entries_list_filtered
         sample_ids_count = Counter([x[0][0] for x in map_line_entries_list])
         most_common = Counter(dict(sample_ids_count.most_common(1)))
@@ -271,7 +271,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     for file_pair in files_tups:
         sample_id = proc_helper.get_base_name(file_pair[0])
         _row_vals_tup = MapLineTup(sample_id, float("NAN"), 0, "")
-        mapping_lines.append(_row_vals_tup, file_pair)
+        mapping_lines.append((_row_vals_tup, file_pair))
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
     if not mapping_file_path.is_file():
