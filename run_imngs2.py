@@ -6,7 +6,7 @@ from os import symlink
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
 from imngs2_pipeline.analyze_sample_job import main as main_analysis
-from collections import namedtuple, Counter
+from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
 from typing import List
@@ -142,8 +142,8 @@ def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
 
 
 def uniqify_map_lines(dup_ids_maplinetup_list: list) -> list:  # List[(MapLineTup, tuple)]
-    sample_ids_count = Counter([x[0][0] for x in dup_ids_maplinetup_list])
-    most_common = Counter(dict(sample_ids_count.most_common(1)))
+    sample_ids_count = proc_helper.MyCounter([x[0][0] for x in dup_ids_maplinetup_list])
+    most_common = proc_helper.MyCounter(dict(sample_ids_count.most_common(1)))
     while most_common.total() > 1:
         most_common_sample_id, most_common_count = most_common.items()
         for ind in range(len(dup_ids_maplinetup_list)):
@@ -159,8 +159,8 @@ def uniqify_map_lines(dup_ids_maplinetup_list: list) -> list:  # List[(MapLineTu
                 dup_ids_maplinetup_list[ind] = (new_map_line, file_pair)
                 # End Phase of loop
                 dup_ids_maplinetup_list = uniqify_map_lines(dup_ids_maplinetup_list)
-                sample_ids_count = Counter([x[0][0] for x in dup_ids_maplinetup_list])
-                most_common = Counter(dict(sample_ids_count.most_common(1)))
+                sample_ids_count = proc_helper.MyCounter([x[0][0] for x in dup_ids_maplinetup_list])
+                most_common = proc_helper.MyCounter(dict(sample_ids_count.most_common(1)))
 
     return dup_ids_maplinetup_list
 
@@ -169,8 +169,8 @@ def convert_mapping_entries_to_dict(map_line_entries_list: list) -> dict:  # Lis
     # Sorting by sample_id
     # map_line_entries_list = sorted(map_line_entries_list, key= lambda x: x[0][0])
     init_count = len(map_line_entries_list)
-    sample_ids_count = Counter([x[0][0] for x in map_line_entries_list])
-    most_common = Counter(dict(sample_ids_count.most_common(1)))
+    sample_ids_count = proc_helper.MyCounter([x[0][0] for x in map_line_entries_list])
+    most_common = proc_helper.MyCounter(dict(sample_ids_count.most_common(1)))
     while most_common.total() > 1:
         map_line_entries_list_filtered = []
         # deleting duplicates from map_line_entries
@@ -183,8 +183,8 @@ def convert_mapping_entries_to_dict(map_line_entries_list: list) -> dict:  # Lis
                 map_line_entries_list_filtered.append(map_line_entries_list[ind])
         map_line_entries_list_filtered.extend(uniqify_map_lines(sub_list_to_uniqify))
         map_line_entries_list = map_line_entries_list_filtered
-        sample_ids_count = Counter([x[0][0] for x in map_line_entries_list])
-        most_common = Counter(dict(sample_ids_count.most_common(1)))
+        sample_ids_count = proc_helper.MyCounter([x[0][0] for x in map_line_entries_list])
+        most_common = proc_helper.MyCounter(dict(sample_ids_count.most_common(1)))
 
     mapping_line_dict = {element[0].SampleID: element for element in map_line_entries_list}
     assert (len(mapping_line_dict) == init_count), "Different length for map_line_entries list and output dictionary"
