@@ -366,7 +366,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                     file_pairs_tup = file_tup
                     del files_tups[ind]
 
-            mapping_lines.append(map_line, file_pairs_tup)
+            mapping_lines.append((map_line, file_pairs_tup))
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
 
     return mapping_lines
