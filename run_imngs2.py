@@ -141,7 +141,7 @@ def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
     return bool(is_complete and same_argset)
 
 
-def uniqify_map_lines(dup_ids_maplinetup_list: List[(MapLineTup, tuple)]) -> List[(MapLineTup, tuple)]:
+def uniqify_map_lines(dup_ids_maplinetup_list: list) -> list:  # List[(MapLineTup, tuple)]
     sample_ids_count = Counter([x[0][0] for x in dup_ids_maplinetup_list])
     most_common = Counter(dict(sample_ids_count.most_common(1)))
     while most_common.total() > 1:
@@ -165,7 +165,7 @@ def uniqify_map_lines(dup_ids_maplinetup_list: List[(MapLineTup, tuple)]) -> Lis
     return dup_ids_maplinetup_list
 
 
-def convert_mapping_entries_to_dict(map_line_entries_list: List[(MapLineTup, tuple)]) -> dict:
+def convert_mapping_entries_to_dict(map_line_entries_list: list) -> dict:  # List[(MapLineTup, tuple)]
     # Sorting by sample_id
     # map_line_entries_list = sorted(map_line_entries_list, key= lambda x: x[0][0])
     init_count = len(map_line_entries_list)
@@ -258,7 +258,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     mapping_file_path = Path(PurePath(mapping_file_path)).absolute()
     valid_ids = []
     ignored_ids = []  # e.g. entries with NA values
-    mapping_lines: List[(MapLineTup, tuple)] = []  # from mapping file, full line for each relevant sample
+    mapping_lines = []  # List[(MapLineTup, tuple)] -> from mapping file, full line for each relevant sample
     index_of_sample_id_col = None
     sample_col_name = MAPPING_FILE_COLS[0]
     index_of_weight_col = None
@@ -280,7 +280,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
 
     PREP_LOG.warning(f"When mapping file is provided ({mapping_file_path}), only samples in mapping file will get processed!!!")
     # If mapping_file_is there then renew the mapping_lines
-    mapping_lines: List[(MapLineTup, file_pair)] = []  # from mapping file, full line for each relevant sample
+    mapping_lines = []  # List[(MapLineTup, file_pair)] -> from mapping file, full line for each relevant sample
 
     with open(mapping_file_path, 'r') as mapping_file_h:
         header: str = next(mapping_file_h)
