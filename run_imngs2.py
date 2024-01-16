@@ -722,6 +722,7 @@ if __name__ == "__main__":
     # and then less rows in mapping_file to be found.
     cli_map_file = INPUT_DIR.joinpath(Path(PurePath(args.mapping_file))) if args.mapping_file else ""
     # Exposing default argument files.
+    cli_spike_stat_file = INPUT_DIR.joinpath(args.spike_stat) if args.spike_stat else ""
     if not cli_args_file.is_file():
         shutil.copy2(
             str(ARGS_YAML_FILE),
@@ -747,7 +748,7 @@ if __name__ == "__main__":
             args_yml_file=cli_args_file,
             dbs_dir=INPUT_DIR.joinpath(args.db_directory),
             mapping_file=cli_map_file,
-            spike_stat_file=INPUT_DIR.joinpath(args.spike_stat),
+            spike_stat_file=cli_spike_stat_file,
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
         )
