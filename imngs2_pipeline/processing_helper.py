@@ -11,6 +11,7 @@ from os import getcwd
 from mimetypes import guess_type
 from datetime import datetime as dt
 from collections.abc import MutableMapping
+from collections import Counter
 import mimetypes as mtypes
 from os import path as ospath
 from os import remove
@@ -926,3 +927,9 @@ class IMNGS2ArgsParser(ArgsParserDunderUtil):
         prep_eq = self.preproc_args == other.preproc_args
         analysis_eq = self.preproc_args == other.preproc_args
         return prep_eq and analysis_eq
+
+
+class MyCounter(Counter):
+
+    def total(self):
+        return sum([va for ke, va in self.items()])
