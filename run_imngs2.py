@@ -672,8 +672,6 @@ def run_imngs2(
 
 
 if __name__ == "__main__":
-    class C:
-        pass
     parser = argparse.ArgumentParser()
     help_text = "The directory to find recursively all fastq files inside. Default is <--input-directory>"
     parser.add_argument("-i", "--input-directory",
@@ -684,26 +682,21 @@ if __name__ == "__main__":
                         type=str,
                         help=help_text,
                         default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
-    init_args = C()
-    name_space, rest_args = parser.parse_known_args(namespace=init_args)
-    # Updating INPUT_DIR
-    INPUT_DIR = Path(PurePath(init_args.input_directory)).absolute()
-    FASTQ_DIR = INPUT_DIR.joinpath(init_args.fastq_directory).absolute()  # If they are the same it returns unchanged
-    expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
-    expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.tsv").absolute()
+    # >BEGIN: Arguments need to be parsed from input and fastq directory
     parser.add_argument("-y", "--yml-file",
                         type=str,
                         help="Path to arguments yaml file. Relative to <--input-directory>",
-                        default=expected_yml_file)
+                        default=None)
     parser.add_argument("-map", "--mapping-file",
                         type=str,
-                        default=expected_mapping_file,
+                        default=None,
                         help="The path to a mapping file defining sample weight and spike amount for each sample. Relative to <--input-directory>")
     parser.add_argument("-stat", "--spike-stat",
                         type=str,
-                        default="",
+                        default=None,
                         help=f"The path to a mapping file defining spike count, sample weight and spike amount for each sample.\n{SPIKE_STAT_HEADER}.\n"
                         "Relative to <--input-directory>")
+    # <END
     parser.add_argument("-db", "--db-directory",
                         type=str,
                         help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
@@ -718,11 +711,16 @@ if __name__ == "__main__":
                         action="store_true",
                         help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.tsv)"
                         " to <--input-directory>, print help text and exits.")
-    args = parser.parse_args(rest_args)
-    cli_args_file = INPUT_DIR.joinpath(args.yml_file)
+    args = parser.parse_args()
+    # Updating INPUT_DIR
+    INPUT_DIR = Path(PurePath(args.input_directory)).absolute()
+    FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
+    expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.tsv").absolute()
+    cli_args_file = INPUT_DIR.joinpath(args.yml_file) if args.yml_file else expected_yml_file
     # This will return longest path. mapping file could be anywhere. Difining lower directories as fastq_directory will limit the searched files
     # and then less rows in mapping_file to be found.
-    cli_map_file = INPUT_DIR.joinpath(args.mapping_file)
+    cli_map_file = INPUT_DIR.joinpath(Path(PurePath(args.mapping_file))) if args.mapping_file else ""
     # Exposing default argument files.
     if not cli_args_file.is_file():
         shutil.copy2(
@@ -746,9 +744,9 @@ if __name__ == "__main__":
         # NOTE Every needed file and directory should be in /base/inputs/
         run_imngs2(
             fastq_file_dir=FASTQ_DIR,
-            args_yml_file=INPUT_DIR.joinpath(args.yml_file),
+            args_yml_file=cli_args_file,
             dbs_dir=INPUT_DIR.joinpath(args.db_directory),
-            mapping_file=INPUT_DIR.joinpath(args.mapping_file),
+            mapping_file=cli_map_file,
             spike_stat_file=INPUT_DIR.joinpath(args.spike_stat),
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
