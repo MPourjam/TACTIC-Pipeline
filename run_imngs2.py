@@ -2,7 +2,7 @@
 import re
 import argparse
 import shutil
-from os import symlink
+from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
 from imngs2_pipeline.analyze_sample_job import main as main_analysis
@@ -107,11 +107,10 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
 
 def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -> (Path, bool):
     this_out = ["", True]
-    given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) and isinstance(given_argset_file, Path) else ""
-    sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) and isinstance(sample_base_path, Path) else ""
-
-    if not sample_base_path:
-        return tuple(this_out)
+    given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
+    sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
+    if not given_argset_file or not sample_base_path:
+        raise ValueError(f"Not Valid sample_base_path or not valid argument file. Both should be string or Path object.")
 
     processed_dir_path = Path(PurePath(str(sample_base_path))).absolute()
     if not str(sample_base_path).endswith(PROC_DIR_SUFFIX):
@@ -407,9 +406,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
 
             mapping_lines.append((map_line, file_pairs_tup))
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
-    # >DEBUG
-    PREP_LOG.debug(f"DEBUGGING: {str(mapping_lines)}")
-    # <DEBUG
+
     return mapping_lines
 
 
@@ -489,27 +486,25 @@ def run_preprocessing(
         # Creating the preprocessing directory
         seq_files_t = [Path(PurePath(sfi)).absolute() for sfi in seq_files_t]
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
-        new_dir = Path(PurePath(seq_files_t[0])).absolute()
+        file_full_path = Path(PurePath(seq_files_t[0])).absolute()
         # creating processing directory 
-        sample_base_name = proc_helper.get_base_name(new_dir)
+        sample_base_name = proc_helper.get_base_name(file_full_path)
         sample_id = sample_id if sample_id else sample_base_name
-        base_path_dir = new_dir.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
-        new_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
-
+        base_path_dir = file_full_path.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
+        new_proc_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
+        new_proc_dir = Path(PurePath(new_proc_dir))
         if not shall_continue:
-            if not new_dir:
-                raise ValueError("Invalid preprocessing base_path!")
-            return new_dir
+            return new_proc_dir
 
         # TODO:NOTE decide if we need to process the sample or not
         # 1- argumnt check
         # 2- checking if some processed version already exist
         # 3- Choosing the one compliant to current argument set and return success. Otherwise new processing.
 
-        new_dir.mkdir(parents=True, exist_ok=True)
+        new_proc_dir.mkdir(parents=True, exist_ok=True)
         # Updating fastq files path
         for ind, sfi in enumerate(seq_files_t):
-            new_path = new_dir.joinpath(sfi.name)
+            new_path = new_proc_dir.joinpath(sfi.name)
             new_paths[ind] = new_path
             # Copying files
             symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
@@ -523,11 +518,11 @@ def run_preprocessing(
             spike_amount
         )
         # Copying the argument file to sample directory
-        sample_arg_file = new_dir.joinpath(DEFAULT_ARG_FILE_NAME)
+        sample_arg_file = new_proc_dir.joinpath(DEFAULT_ARG_FILE_NAME)
         shutil.copy2(args_yml_path, sample_arg_file)
         # Running preprocessing
         sample_dir = preprocessing(
-            input_dir=new_dir,
+            input_dir=new_proc_dir,
             paired="Yes" if len(fastq_files_tuple) == 2 else "No",
             forward_file=fastq_files_tuple[0],
             reverse_file=fastq_files_tuple[1],
@@ -538,8 +533,8 @@ def run_preprocessing(
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
-        shutil.rmtree(str(new_dir))
-        PREP_LOG.warning("Failed while processing {}, Deleting {}".format(new_dir.name, new_dir))
+        shutil.rmtree(str(new_proc_dir))
+        PREP_LOG.warning("Failed while processing {}, Deleting {}".format(new_proc_dir.name, new_proc_dir))
 
     return sample_dir
 
@@ -632,6 +627,8 @@ def run_imngs2(
     assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
     assert args_yml_file.is_file(), "args_yml_file should be a valid path to YAML file reachable through input_dir"
     # Copying the args file to input_dir to always have the args file.
+    # Just to be sure of being in the right place, KEEP THE NEXT LINE
+    chdir(fastq_file_dir)
     try:
         shutil.copy2(str(args_yml_file), str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME)))
     except Exception:
