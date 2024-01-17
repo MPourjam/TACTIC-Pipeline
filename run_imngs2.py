@@ -208,38 +208,46 @@ def correct_path_for_windows(input_path: str) -> Path:
 
 def is_correct_parent(
         fastq_file: Path,
-        given_parent_path: str = str(FASTQ_DIR),
-        base_path: Path = FASTQ_DIR) -> bool:
+        given_parent_path: str) -> bool:
     """
     Choosing a point in hierarchy of file system, any child path is unique including a
     unique character or name differntiating from other child path. The unique part is not
     in parent path as the selected point have only one parent.
     """
+    base_path = FASTQ_DIR
     fastq_file = Path(PurePath(fastq_file))
     pre_checks_bools = [
         not isinstance(given_parent_path, str),
         not isinstance(given_parent_path, Path),
         not isinstance(fastq_file, Path),
     ]
-    if any(pre_checks_bools) and not fastq_file.is_file():
+    if not any(pre_checks_bools) and not fastq_file.is_file():
         return False
     given_parent_path = str(FASTQ_DIR) if given_parent_path == "" else given_parent_path
     given_parent_path = correct_path_for_windows(str(given_parent_path))
     fastq_file_parent = fastq_file.parent.relative_to(base_path)
     # We assume that the user gives the full path to parent directory in worst case.
     given_parent_parts = given_parent_path.parts
-    ind = len(given_parent_parts)
+    ind = -1
+    ind_limit = len(given_parent_parts) * -1
     # If given fastq_file_parent is relative and exhausted
     # if fastq_file_parent is given with leading '/'
     # if fastq_file is set in c://
     # if parts of given_parent_parts is exhausted
-    while str(fastq_file_parent) != "." \
-            and str(fastq_file_parent) != "/" \
-            and not str(fastq_file_parent).endswith(":/") \
-            and ind >= 0:
+    while True:
+        while_terminator = [
+            str(fastq_file_parent) != ".",
+            str(fastq_file_parent) != "/",
+            not str(fastq_file_parent).endswith(":/"),
+            ind >= ind_limit,
+        ]
+
+        if not all(while_terminator):
+            break
         this_level = fastq_file_parent.name
-        if this_level != given_parent_parts[ind * -1]:
+        if this_level != given_parent_parts[ind]:
             return False
+        # Updating while loop parameters
         fastq_file_parent = fastq_file_parent.parent
         ind -= 1
 
@@ -331,7 +339,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             fields[index_of_amounts_col] = amount
             parent_path = fields[index_of_parent_path_col] if index_of_parent_path_col else ""
             parent_path = parent_path.strip().rstrip("\\").rstrip("/")
-            index_of_parent_path_col = index_of_parent_path_col  if index_of_parent_path_col else len(fields)
+            index_of_parent_path_col = index_of_parent_path_col if index_of_parent_path_col else len(fields)
             fields[index_of_parent_path_col] = parent_path
 
             # warn if weight is not a valid number
@@ -358,13 +366,15 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             # Mapping file paris to sample_id
             file_pairs_tup = ("", "")
             for ind in range(len(files_tups)):
-
                 file_tup = files_tups[ind]
                 try:
                     forw_file_name = str(file_tup[0]).split("/")[-1]
                 except Exception:
                     forw_file_name = ""
                 correct_parent = is_correct_parent(file_tup[0], parent_path)
+                # >DEBUG
+                PREP_LOG.warning(f"DEBUGGING: \t {str(correct_parent)}\t{file_tup[0]}\t{parent_path}")
+                # <DEBUG
                 if sample_id in forw_file_name and correct_parent:  # sample_id could also be partial path of file_names
                     file_pairs_tup = file_tup
                     del files_tups[ind]
@@ -620,6 +630,7 @@ def run_imngs2(
             PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
+
             # running preprocessing
             with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
                 res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].amount_spike,))
