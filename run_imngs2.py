@@ -35,13 +35,14 @@ PREP_LOG = proc_helper.gimmelogger(
     "run_imngs2",
     log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
     only_file=False)
-MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "amount_spike", "parent_path")
+MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "spike_amount", "parent_path")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2], MAPPING_FILE_COLS[3]])
-global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER, PATH_SEP
+global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER, PATH_SEP, DEFAULT_MAP_LINE
+DEFAULT_MAP_LINE = MapLineTup("", float("NAN"), "0", "")
 PATH_SEP = "_-_"
 SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.tsv"
 row_fmt = "{}\t{}\t{}\t{}"
-SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "amount_spike")
+SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount")
 
 
 def is_argset_different(existing_arg_file: Path, processed_arg_file: Path = None) -> bool:
@@ -278,7 +279,12 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     # Preparing default argument for each sample preprocessing
     for file_pair in files_tups:
         sample_id = proc_helper.get_base_name(file_pair[0])
-        _row_vals_tup = MapLineTup(sample_id, float("NAN"), 0, "")
+        _row_vals_tup = MapLineTup(
+                sample_id,
+                DEFAULT_MAP_LINE.total_weight_in_g,
+                DEFAULT_MAP_LINE.spike_amount,
+                DEFAULT_MAP_LINE.parent_path
+        )
         mapping_lines.append((_row_vals_tup, file_pair))
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
@@ -325,63 +331,85 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             PREP_LOG.error(msg)
             raise Exception(msg)
 
+        # injecting parent_path
+        index_of_parent_path_col = index_of_parent_path_col if index_of_parent_path_col else len(MAPPING_FILE_COLS)
+        # looping over lines
         for line in mapping_file_h:
-            line = line.strip()
+            line = line.strip().rstrip()
             if line.startswith('#'):
                 continue
-
+            # placing default values
+            hypo_fields = ["", "NAN", "0", ""]
+            # Parsing lines
             fields = line.split('\t')
-            sample_id = fields[index_of_sample_id_col].strip()
-            fields[index_of_sample_id_col] = sample_id
-            total_weight_in_g = fields[index_of_weight_col].strip()
-            fields[index_of_weight_col] = total_weight_in_g
-            amount = fields[index_of_amounts_col].strip()
-            fields[index_of_amounts_col] = amount
-            parent_path = fields[index_of_parent_path_col] if index_of_parent_path_col else ""
-            parent_path = parent_path.strip().rstrip("\\").rstrip("/")
-            index_of_parent_path_col = index_of_parent_path_col if index_of_parent_path_col else len(fields)
-            fields[index_of_parent_path_col] = parent_path
-
+            try:
+                sample_id = fields[index_of_sample_id_col].strip()
+                hypo_fields[0] = sample_id
+            except Exception:
+                raise ValueError(f"Could not parse SampleID from mapping file. Error on line: {line}")
+            try:
+                total_weight_in_g = fields[index_of_weight_col].strip()
+                hypo_fields[1] = total_weight_in_g
+            except Exception:
+                PREP_LOG.warning(f"Could not parse weight amount from mapping file. Error on line: {line}\n"
+                                 f" Check the mapping file format. columns should be"
+                                 f" separated by TAB. Continuing wiht default value of NAN")
+            try:
+                amount = fields[index_of_amounts_col].strip()
+                hypo_fields[2] = amount
+            except Exception:
+                PREP_LOG.warning(f"Could not parse spike amount from mapping file. Error on line: {line}\n"
+                                 f" Check the mapping file format. columns should be"
+                                 f" separated by TAB. Continuing wiht default value of 0")
+            try:
+                parent_path = fields[index_of_parent_path_col]
+                parent_path = parent_path.strip().rstrip("\\").rstrip("/")
+                hypo_fields[3] = parent_path 
+            except Exception:
+                PREP_LOG.debug(f"Could not parse parent path from mapping file. Error on line: {line}\n"
+                               f" Check the mapping file format. columns should be"
+                               f" separated by TAB. Continuing wiht default value of 0")
             # warn if weight is not a valid number
             try:
-                float(total_weight_in_g)
+                float(hypo_fields[1])
             except ValueError:
                 PREP_LOG.warning(
                     f'Weight {total_weight_in_g!r} is not a valid floating point number for {sample_id!r}. Weigth will be processed as NAN.')
-                fields[index_of_weight_col] = "NAN"
+                hypo_fields[1] = "NAN"
 
             # if amount cannot be parsed to float change to 0
             try:
-                float(amount)
+                float(hypo_fields[2])
             except ValueError:
-                fields[index_of_amounts_col] = "0"
+                hypo_fields[2] = "0"
 
             valid_ids.append(sample_id)
             map_line = MapLineTup(
-                sample_id,
-                fields[index_of_weight_col],
-                fields[index_of_amounts_col],
-                fields[index_of_parent_path_col]
+                    hypo_fields[0],
+                    hypo_fields[1],
+                    hypo_fields[2],
+                    hypo_fields[3],
             )
             # Mapping file paris to sample_id
             file_pairs_tup = ("", "")
+            # files_tups contain all found fastq files in fastq directory
             for ind in range(len(files_tups)):
                 file_tup = files_tups[ind]
                 try:
                     forw_file_name = str(file_tup[0]).split("/")[-1]
                 except Exception:
                     forw_file_name = ""
-                correct_parent = is_correct_parent(file_tup[0], parent_path)
-                # >DEBUG
-                PREP_LOG.warning(f"DEBUGGING: \t {str(correct_parent)}\t{file_tup[0]}\t{parent_path}")
-                # <DEBUG
+                correct_parent = is_correct_parent(file_tup[0], map_line.parent_path)
                 if sample_id in forw_file_name and correct_parent:  # sample_id could also be partial path of file_names
                     file_pairs_tup = file_tup
                     del files_tups[ind]
+                    break
 
             mapping_lines.append((map_line, file_pairs_tup))
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
-
+    # >DEBUG
+    PREP_LOG.debug(f"DEBUGGING: {str(mapping_lines)}")
+    # <DEBUG
     return mapping_lines
 
 
@@ -394,7 +422,7 @@ def remove_spikes(
     It remove spikes from a sample and adds the number of spikes to a mapping file given.
      the column name should be "SpikeReads". The format of spike_stat_mapping_path must be
      like below:
-     #SampleID\tSpikeReads\tspikes_total_weight_in_g\tamount_spike\n'
+     #SampleID\tSpikeReads\tspikes_total_weight_in_g\tspike_amount\n'
 
     Arguments:
         - files_path: list = list of files on which spike removal should be applied
@@ -461,14 +489,11 @@ def run_preprocessing(
         # Creating the preprocessing directory
         seq_files_t = [Path(PurePath(sfi)).absolute() for sfi in seq_files_t]
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
-        new_dir = seq_files_t[0]
-        # Getting initial stem
-        while new_dir.suffixes:
-            new_dir = Path(new_dir).parent.joinpath(new_dir.stem)
-
+        new_dir = Path(PurePath(seq_files_t[0])).absolute()
+        # creating processing directory 
         sample_base_name = proc_helper.get_base_name(new_dir)
         sample_id = sample_id if sample_id else sample_base_name
-        base_path_dir = new_dir.joinpath(str(sample_id))  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
+        base_path_dir = new_dir.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
         new_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
 
         if not shall_continue:
@@ -630,10 +655,9 @@ def run_imngs2(
             PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
-
             # running preprocessing
             with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
-                res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].amount_spike,))
+                res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].spike_amount,))
                             for sample_id, arg_tup in mapping_line_tup_dict.items()]
                 for res in res_list:
                     res.wait(720)  # After 12 minutes it terminates the thread
@@ -688,7 +712,7 @@ def run_imngs2(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    help_text = "The directory to find recursively all fastq files inside. Default is <--input-directory>"
+    help_text = "The directory to find recursively all fastq files inside. It should be relative to <--input-directory>. Default is <--input-directory>"
     parser.add_argument("-i", "--input-directory",
                         type=str,
                         help="Every needed file and directory should be findable relative to this directory",
@@ -728,14 +752,14 @@ if __name__ == "__main__":
                         " to <--input-directory>, print help text and exits.")
     args = parser.parse_args()
     # Updating INPUT_DIR
-    INPUT_DIR = Path(PurePath(args.input_directory)).absolute()
+    INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
     expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
     expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.tsv").absolute()
     cli_args_file = INPUT_DIR.joinpath(args.yml_file) if args.yml_file else expected_yml_file
     # This will return longest path. mapping file could be anywhere. Difining lower directories as fastq_directory will limit the searched files
     # and then less rows in mapping_file to be found.
-    cli_map_file = INPUT_DIR.joinpath(Path(PurePath(args.mapping_file))) if args.mapping_file else ""
+    cli_map_file = INPUT_DIR.joinpath(args.mapping_file) if args.mapping_file else ""
     # Exposing default argument files.
     cli_spike_stat_file = INPUT_DIR.joinpath(args.spike_stat) if args.spike_stat else ""
     if not cli_args_file.is_file():
