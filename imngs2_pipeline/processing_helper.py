@@ -64,13 +64,16 @@ reve_file_indicators = [
 ]
 
 
-def generate_timestamp():
+def generate_timestamp(thread_safe=False):
     current_time = dt.now()
-    timestamp = current_time.strftime("%Y-%m-%d_%H-%M-%S")
+    timestamp = current_time.strftime("%Y%m%d_%H%M%S")
+    
+    if thread_safe:
+    # Get the current thread obj hex
+        thread_obj = threading.current_thread()
+        thread_obj = str(hash(id(thread_obj)))
+        timestamp += f"_{thread_obj}"
 
-    # Get the current thread name
-    thread_name = threading.current_thread().name
-    timestamp += f"_{thread_name}"
     return timestamp
 
 
