@@ -279,10 +279,10 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     for file_pair in files_tups:
         sample_id = proc_helper.get_base_name(file_pair[0])
         _row_vals_tup = MapLineTup(
-                sample_id,
-                DEFAULT_MAP_LINE.total_weight_in_g,
-                DEFAULT_MAP_LINE.spike_amount,
-                DEFAULT_MAP_LINE.parent_path
+            sample_id,
+            DEFAULT_MAP_LINE.total_weight_in_g,
+            DEFAULT_MAP_LINE.spike_amount,
+            DEFAULT_MAP_LINE.parent_path
         )
         mapping_lines.append((_row_vals_tup, file_pair))
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
@@ -363,7 +363,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             try:
                 parent_path = fields[index_of_parent_path_col]
                 parent_path = parent_path.strip().rstrip("\\").rstrip("/")
-                hypo_fields[3] = parent_path 
+                hypo_fields[3] = parent_path
             except Exception:
                 PREP_LOG.debug(f"Could not parse parent path from mapping file. Error on line: {line}\n"
                                f" Check the mapping file format. columns should be"
@@ -384,10 +384,10 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
 
             valid_ids.append(sample_id)
             map_line = MapLineTup(
-                    hypo_fields[0],
-                    hypo_fields[1],
-                    hypo_fields[2],
-                    hypo_fields[3],
+                hypo_fields[0],
+                hypo_fields[1],
+                hypo_fields[2],
+                hypo_fields[3],
             )
             # Mapping file paris to sample_id
             file_pairs_tup = ("", "")
@@ -487,7 +487,7 @@ def run_preprocessing(
         seq_files_t = [Path(PurePath(sfi)).absolute() for sfi in seq_files_t]
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         file_full_path = Path(PurePath(seq_files_t[0])).absolute()
-        # creating processing directory 
+        # creating processing directory
         sample_base_name = proc_helper.get_base_name(file_full_path)
         sample_id = sample_id if sample_id else sample_base_name
         base_path_dir = file_full_path.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
@@ -519,7 +519,10 @@ def run_preprocessing(
         )
         # Copying the argument file to sample directory
         sample_arg_file = new_proc_dir.joinpath(DEFAULT_ARG_FILE_NAME)
-        shutil.copy2(args_yml_path, sample_arg_file)
+        try:
+            shutil.copy(args_yml_path, sample_arg_file)
+        except shutil.SameFileError:
+            pass
         # Running preprocessing
         sample_dir = preprocessing(
             input_dir=new_proc_dir,
@@ -630,7 +633,7 @@ def run_imngs2(
     # Just to be sure of being in the right place, KEEP THE NEXT LINE
     chdir(fastq_file_dir)
     try:
-        shutil.copy2(str(args_yml_file), str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME)))
+        shutil.copy(str(args_yml_file), str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME)))
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
         pass
@@ -649,7 +652,10 @@ def run_imngs2(
             # Gathering sequence files
             PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
             seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
-            PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
+            # >DEBUG
+            PREP_LOG.debug(f"DEBUGGING: {str(seq_file_pairs)}")
+            # <DEBUG
+            #PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
             # running preprocessing
@@ -760,7 +766,7 @@ if __name__ == "__main__":
     # Exposing default argument files.
     cli_spike_stat_file = INPUT_DIR.joinpath(args.spike_stat) if args.spike_stat else ""
     if not cli_args_file.is_file():
-        shutil.copy2(
+        shutil.copy(
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
@@ -768,7 +774,7 @@ if __name__ == "__main__":
                          f"Falling back to default argument set written to {str(cli_args_file.relative_to(INPUT_DIR))}")
 
     if args.place_template_files:
-        shutil.copy2(
+        shutil.copy(
             str(MAP_FILE),
             str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.tsv"))
         )
