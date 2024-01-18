@@ -30,7 +30,7 @@ SORT_ME_RNA_BIN = BIN_DIR + "sortmerna"
 USEARCH_TAIL = '> /dev/null 2>&1'
 global SPIKE_STAT_HEADER
 row_fmt = "{}\t{}\t{}\t{}"
-SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "amount_spike")
+SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount")
 
 
 # overwriting system_sub() to run it with subprocess.run
@@ -58,7 +58,7 @@ def system_sub(cmd):
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
         if run_output.stderr:
             msg += str(run_output.stderr)
-            ANA_LOG.warning(msg)
+            ANA_LOG.info(msg)
 
 
 def read_file(filename):
@@ -74,7 +74,7 @@ def onelinefasta(fastafilepath):
     os.chdir(dirpath)
     f = open(proper_filepath, 'r')
     newfile_temp_name = "oneline_{}.fasta".format(str(".".join(filename.split(".")[:-1])))
-    assert(not os.path.isfile(newfile_temp_name)), "Destination file {} already exists".format(newfile_temp_name)
+    assert (not os.path.isfile(newfile_temp_name)), "Destination file {} already exists".format(newfile_temp_name)
     with open(newfile_temp_name, "w+") as onelinefa:
         line = f.readline()
         first = True
@@ -93,7 +93,7 @@ def onelinefasta(fastafilepath):
         onelinefa.write("\n")
     f.close()
     system_sub('mv {fbase} {f}'.format(**{"fbase": newfile_temp_name.replace(' ', '\ '),
-                                         "f": filename.replace(' ', '\ ')}))  # handling space in name of file
+                                       "f": filename.replace(' ', '\ ')}))  # handling space in name of file
 
 
 def append_reads(taxed_ZOTUs_file_path, analysis_dir):
@@ -334,7 +334,7 @@ def filter_zotu_abundance(abund_limit):
         curr_sizes = line.split('\t')[1:-1]
         curr_abundances = list()
         for j in range(len(curr_sizes)):
-            abundance = float(curr_sizes[j])/unf_tot_sizes[j]
+            abundance = float(curr_sizes[j]) / unf_tot_sizes[j]
             curr_abundances.append(abundance)
         if any([x >= abund_limit for x in curr_abundances]):
             out_file.write(line + '\n')
@@ -592,12 +592,12 @@ def create_OTUs_from_ZOTUS_table():
                 seq_flag = 0
         else:
             if seq_flag:
-                out_file.write(line+'\n')
+                out_file.write(line + '\n')
     out_file.close()
     out_file_2.close()
     ###
     testfasta_contents = read_file('test.fasta')
-    testfasta_zotus_dict = {l[1:]: testfasta_contents[i+1] for i, l in enumerate(testfasta_contents) if (l[0] == ">")}
+    testfasta_zotus_dict = {l[1:]: testfasta_contents[i + 1] for i, l in enumerate(testfasta_contents) if (l[0] == ">")}
     # otus_contents_zotus = [o[1:] for o in otus_contents if (o[0] == ">")]
     with open('test_otu.fasta', "w+") as test_otu:
         for oc in otus_contents:
@@ -746,7 +746,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
     with open(spikes_stats_path, 'r') as stats_h:
         for line in stats_h:
             if line.startswith("#"):
-                assert(SPIKE_STAT_HEADER in line.strip())
+                assert (SPIKE_STAT_HEADER in line.strip())
             elif line == "\n":
                 continue
             else:
@@ -762,7 +762,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
                     observed_weights.append(original_total_weight_in_g)
                 samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
 
-    sum_ = 0
+    sum_ = 1
     n = 0
     for values in samples.values():
         count, _, amount = values
@@ -791,16 +791,17 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
                     else:
                         weight = statistics.median(observed_weights)  # fallback to median weight
                 factor = 600 / (amount * 100)
-                otu_table[file_id] = (otu_table[file_id] * thismean) / (count * weight * factor)
+                otu_table[file_id] = (otu_table[0] * thismean) / (count * weight * factor)
+            # Writing the table
+            normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
+            otu_table.to_csv(str(normalized_otu_path), sep="\t")
+            ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
+            # correct rights of output folders
+            system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
         except KeyError:
             ANA_LOG.warning(f"{file_id} is in mapping file but not in OTU Table")
-
-    normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
-    otu_table.to_csv(str(normalized_otu_path), sep="\t")
-    ANA_LOG.warning(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
-
-    # correct rights of output folders
-    system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
+        except Exception:
+            ANA_LOG.warning("No Normalization Done.")
 
 
 def main(
@@ -898,8 +899,11 @@ def main(
     ANA_LOG.info('Cleanup DONE')
     # Normalizing Tables
     if spike_stat_file:
-        normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), spike_stat_file)
-        normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), spike_stat_file)
+        try:
+            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), spike_stat_file)
+            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), spike_stat_file)
+        except Exception as exc:
+            ANA_LOG.warning(f"Normalization Faild: {exc}")
 
     create_zip()
     ANA_LOG.info('ANALYSIS DONE')
