@@ -60,7 +60,7 @@ def system_sub(cmd):
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
         if run_output.stderr:
             msg += str(run_output.stderr)
-            log.warning(msg)
+            log.info(msg)
 
 
 def calc_spikes(*fastq_files, spike_amount):
