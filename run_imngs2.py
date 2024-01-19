@@ -45,6 +45,22 @@ row_fmt = "{}\t{}\t{}\t{}"
 SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount")
 
 
+def is_in_processed_dir(fastq_path: Path, sample_id: str = None) -> bool:
+    default = None
+    type_test = [
+        isinstance(fastq_path, str),
+        isinstance(fastq_path, Path),
+    ]
+    if not any(type_test):
+        return default
+    default = False
+    base_name = proc_helper.get_base_name(str(fastq_path)) if sample_id is None else sample_id
+    if f"{str(base_name)}{PROC_DIR_SUFFIX}" in str(fastq_path):
+        default = True
+
+    return default
+
+
 def is_argset_different(existing_arg_file: Path, processed_arg_file: Path = None) -> bool:
     """
     It decides if two set of arguments are the same or not for deciding whether a sample
@@ -60,11 +76,11 @@ def is_argset_different(existing_arg_file: Path, processed_arg_file: Path = None
 
     existing_arg_file = Path(PurePath(existing_arg_file)).absolute()
     proce_arg_file = Path(PurePath(processed_arg_file)).absolute() if processed_arg_file else None
-    if not proce_arg_file:
+    if proce_arg_file:
         given_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=existing_arg_file)
         proce_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=proce_arg_file)
 
-        is_different = given_argset_obj.preproc_args == proce_argset_obj.analysis_args
+        is_different = not given_argset_obj.preproc_args.__eq__(proce_argset_obj.preproc_args)
 
     return is_different
 
@@ -85,9 +101,9 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     my_dir = processed_dir_date_version_path
     is_valid_path = [
         isinstance(my_dir, str),
-        isinstance(my_dir, str)
+        isinstance(my_dir, Path)
     ]
-    if not my_dir.is_dir() or not all(is_valid_path):
+    if not my_dir.is_dir() or not any(is_valid_path):
         return False
     my_dir = Path(PurePath(my_dir)).absolute()
     should_be_there = [
@@ -98,9 +114,10 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     logic_test = [False for fi in should_be_there]
 
     for ind in range(len(should_be_there)):
-        dir_content = processed_dir_date_version_path.iterdir()
+        dir_content = my_dir.iterdir()
         for cont in dir_content:
-            logic_test[ind] = True if cont.is_file() and cont.name == should_be_there[ind] else False
+            if cont.is_file() and str(cont.name) == str(should_be_there[ind]):
+                logic_test[ind] = True
 
     return all(logic_test)
 
@@ -113,6 +130,8 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
         raise ValueError(f"Not Valid sample_base_path or not valid argument file. Both should be string or Path object.")
 
     processed_dir_path = Path(PurePath(str(sample_base_path))).absolute()
+    base_name = processed_dir_path.name.replace(PROC_DIR_SUFFIX, "")
+
     if not str(sample_base_path).endswith(PROC_DIR_SUFFIX):
         processed_dir_path = Path(PurePath(str(sample_base_path) + PROC_DIR_SUFFIX))
 
@@ -122,17 +141,22 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
     for argfile in arg_files:
         if not argfile.is_file():
             continue
-        if is_argset_different(argfile, given_argset_file) and is_processed_dir_healthy(argfile.parent):
+        is_already_processed = is_processed_dir_healthy(argfile.parent) and not is_argset_different(argfile, given_argset_file)
+        if is_already_processed:
             this_out[0] = str(argfile.parent.absolute())
             this_out[1] = False
+
+    if not this_out[1]:
+        PREP_LOG.info(f"Sample '{base_name}' is already processed with given arguemnt set. "
+                      f"Skipping processing and using results in {this_out[0]}")
 
     return tuple(this_out)
 
 
 def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
-    dir_path = Path(PurePath(dir_path)).absolute() if isinstance(dir_path, str) and isinstance(dir_path, Path) else ""
+    dir_path = Path(PurePath(dir_path)).absolute() if isinstance(dir_path, str) or isinstance(dir_path, Path) else ""
     given_arg_file = Path(PurePath(given_arg_file)).absolute() if isinstance(given_arg_file, str) and isinstance(given_arg_file, Path) else ""
-    if not dir_path or not given_arg_file:
+    if not dir_path and not given_arg_file:
         return False
     is_complete = is_processed_dir_healthy(dir_path)
     old_arg_file = dir_path.joinpath(DEFAULT_ARG_FILE_NAME)
@@ -142,7 +166,7 @@ def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
 
 
 def uniqify_map_lines(dup_ids_maplinetup_list: list) -> list:  # List[(MapLineTup, tuple)]
-    sample_ids_count = proc_helper.MyCounter([x[0][0] for x in dup_ids_maplinetup_list])
+    sample_ids_count = proc_helper.MyCounter([x[0].SampleID for x in dup_ids_maplinetup_list])
     most_common = proc_helper.MyCounter(dict(sample_ids_count.most_common(1)))
     while most_common.total() > 1:
         most_common_sample_id, most_common_count = most_common.items()
@@ -171,6 +195,7 @@ def convert_mapping_entries_to_dict(map_line_entries_list: list) -> dict:  # Lis
     init_count = len(map_line_entries_list)
     sample_ids_count = proc_helper.MyCounter([x[0][0] for x in map_line_entries_list])
     most_common = proc_helper.MyCounter(dict(sample_ids_count.most_common(1)))
+
     while most_common.total() > 1:
         map_line_entries_list_filtered = []
         # deleting duplicates from map_line_entries
@@ -265,7 +290,6 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     """
     mapping_file_path = Path(PurePath(mapping_file_path)).absolute()
     valid_ids = []
-    ignored_ids = []  # e.g. entries with NA values
     mapping_lines = []  # List[(MapLineTup, tuple)] -> from mapping file, full line for each relevant sample
     index_of_sample_id_col = None
     sample_col_name = MAPPING_FILE_COLS[0]
@@ -276,6 +300,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     index_of_parent_path_col = None
     parent_path_col_name = MAPPING_FILE_COLS[3]
     # Preparing default argument for each sample preprocessing
+
     for file_pair in files_tups:
         sample_id = proc_helper.get_base_name(file_pair[0])
         _row_vals_tup = MapLineTup(
@@ -478,6 +503,8 @@ def run_preprocessing(
      preprocessd files of sample are.
     """
     sample_dir = ""
+    if not any(seq_files_t):
+        return sample_dir
     try:
         if not hasattr(seq_files_t, "__iter__") or len(seq_files_t) > 2:
             msg = "seq_files_t must be an iterable of max lenght 2"
@@ -485,26 +512,31 @@ def run_preprocessing(
             raise ValueError(msg)
         # Creating the preprocessing directory
         seq_files_t = [Path(PurePath(sfi)).absolute() for sfi in seq_files_t]
+        if not any([True for fastq_fi_path in seq_files_t if fastq_fi_path.is_file()]):
+            # returning if no provided fastq_file path is actually a file
+            return sample_dir
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         file_full_path = Path(PurePath(seq_files_t[0])).absolute()
         # creating processing directory
         sample_base_name = proc_helper.get_base_name(file_full_path)
+        # Replacing sample_id if not given with sample_base_name
         sample_id = sample_id if sample_id else sample_base_name
         base_path_dir = file_full_path.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
-        new_proc_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
-        new_proc_dir = Path(PurePath(new_proc_dir))
+        sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
+
+        sample_dir = Path(PurePath(sample_dir))
         if not shall_continue:
-            return new_proc_dir
+            return sample_dir
 
         # TODO:NOTE decide if we need to process the sample or not
         # 1- argumnt check
         # 2- checking if some processed version already exist
         # 3- Choosing the one compliant to current argument set and return success. Otherwise new processing.
 
-        new_proc_dir.mkdir(parents=True, exist_ok=True)
+        sample_dir.mkdir(parents=True, exist_ok=True)
         # Updating fastq files path
         for ind, sfi in enumerate(seq_files_t):
-            new_path = new_proc_dir.joinpath(sfi.name)
+            new_path = sample_dir.joinpath(sfi.name)
             new_paths[ind] = new_path
             # Copying files
             symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
@@ -518,14 +550,14 @@ def run_preprocessing(
             spike_amount
         )
         # Copying the argument file to sample directory
-        sample_arg_file = new_proc_dir.joinpath(DEFAULT_ARG_FILE_NAME)
+        sample_arg_file = sample_dir.joinpath(DEFAULT_ARG_FILE_NAME)
         try:
             shutil.copy(args_yml_path, sample_arg_file)
         except shutil.SameFileError:
             pass
         # Running preprocessing
         sample_dir = preprocessing(
-            input_dir=new_proc_dir,
+            input_dir=sample_dir,
             paired="Yes" if len(fastq_files_tuple) == 2 else "No",
             forward_file=fastq_files_tuple[0],
             reverse_file=fastq_files_tuple[1],
@@ -536,8 +568,8 @@ def run_preprocessing(
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
-        shutil.rmtree(str(new_proc_dir))
-        PREP_LOG.warning("Failed while processing {}, Deleting {}".format(new_proc_dir.name, new_proc_dir))
+        shutil.rmtree(str(sample_dir))
+        PREP_LOG.warning("Failed while processing {}, Deleting {}".format(sample_dir.name, sample_dir))
 
     return sample_dir
 
@@ -652,22 +684,23 @@ def run_imngs2(
             # Gathering sequence files
             PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
             seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
-            # >DEBUG
-            PREP_LOG.debug(f"DEBUGGING: {str(seq_file_pairs)}")
-            # <DEBUG
-            #PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
-            # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
+            seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
+            PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
+            # Filtering fastq files if they are already in processed directories
+            # Sometimes failed processing leaves fastq files in the processing diectories
+
             mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
+            # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             # running preprocessing
             with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
-                res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), str(args_yml_file), arg_tup[0].SampleID, arg_tup[0].total_weight_in_g, arg_tup[0].spike_amount,))
-                            for sample_id, arg_tup in mapping_line_tup_dict.items()]
+                # Running the preprocessor function only if parese_mapping_file has return one or two files path for the sample
+                res_list = [pool.apply_async(run_preprocessing, args=((arg_tup[1]), str(args_yml_file), arg_tup[0].SampleID, float(arg_tup[0].total_weight_in_g), int(arg_tup[0].spike_amount),))
+                            for sample_id, arg_tup in mapping_line_tup_dict.items() if any(arg_tup[0])]
                 for res in res_list:
                     res.wait(720)  # After 12 minutes it terminates the thread
             samples_dirs = [el.get() for el in res_list]
             # NOTE result form run_preprocessing could be "" which meand the preprocessing has failed
             samples_dirs = [el for el in samples_dirs if el]
-
         except Exception as exc:
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True
@@ -692,7 +725,11 @@ def run_imngs2(
     # Runing analysis
     if not skip_analysis:
         try:
-            analysis_dir = fastq_file_dir.joinpath("Analysis")
+            if not bool(samples_dirs):
+                msg = "No samples were completely processed or had same processing "\
+                      "argument set as given argument set. SKIPPING Analysisi!"
+                raise ValueError(msg)
+            analysis_dir = fastq_file_dir.joinpath(f"Analysis_{proc_helper.generate_timestamp()}")
             analysis_dir.mkdir(parents=True, exist_ok=True)
             # we do the step down because if skip_preprocess is True then tha path to preprocess would be given not all smaple_dirs
             if str(combined_spike_stats_path) != str(default_spike_stat_compiled):
@@ -705,7 +742,7 @@ def run_imngs2(
             samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name="taxed_ZOTUs.fasta")
             zotu_file_path, sotu_file_path = main_analysis(samp_zotu_seq_files, analysis_dir, args_yml_file, combined_spike_stats_path, dbs_loc=dbs_dir)
         except Exception as exc:
-            PREP_LOG.error(f"Analysis Failed: {exc}")
+            PREP_LOG.error(f"Analysis stopped: {exc}")
 
     ##################
     # TODO Only Normalizing
