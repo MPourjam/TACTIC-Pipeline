@@ -67,9 +67,8 @@ reve_file_indicators = [
 def generate_timestamp(thread_safe=False):
     current_time = dt.now()
     timestamp = current_time.strftime("%Y%m%d_%H%M%S")
-    
     if thread_safe:
-    # Get the current thread obj hex
+        # Get the current thread obj hex
         thread_obj = threading.current_thread()
         thread_obj = str(hash(id(thread_obj)))
         timestamp += f"_{thread_obj}"
@@ -585,9 +584,6 @@ class ArgsParserDunderUtil:
             dict_print.update({ky: str(vl)})
         return str(dict_print)
 
-    def __hash__(self):
-        return hash(hex(id(self) + self.__sizeof__()))
-
 
 class ArgsParserUtil(ArgsParserDunderUtil):
     dict_flatt_sep = "__"
@@ -656,12 +652,13 @@ class ArgsParserUtil(ArgsParserDunderUtil):
     def __eq__(self, other):
         if not isinstance(self, other.__class__):
             return False
-        if not (hasattr(self, "default_args") and hasattr(other, "default_args")):
+        if not (hasattr(self, "default_args") or not hasattr(other, "default_args")):
             return False
-        eq_tests = []
-        for ke in self.default_args.keys():
-            el = self.get(ke, self.__hash__()) == other.get(ke, self.__hash__())
-            eq_tests.append(el)
+        eq_tests = [False for fi in self.default_args.keys()]
+        for ind in range(len(self.default_args.keys())):
+            ke = list(self.default_args.keys())[ind]
+            el = self.default_args.get(ke, "A") == other.default_args.get(ke, "B")
+            eq_tests[ind] = el
         return all(eq_tests)
 
 
@@ -928,7 +925,7 @@ class IMNGS2ArgsParser(ArgsParserDunderUtil):
         if not isinstance(other, self.__class__):
             return False
         prep_eq = self.preproc_args == other.preproc_args
-        analysis_eq = self.preproc_args == other.preproc_args
+        analysis_eq = self.analysis_args == other.analysis_args
         return prep_eq and analysis_eq
 
 
