@@ -25,7 +25,7 @@ PROC_DIR_SUFFIX = "__processed"
 global DEFAULT_ARG_FILE_NAME
 DEFAULT_ARG_FILE_NAME = "IMNGS2Pipeline_args.yml"
 ARGS_YAML_FILE = Path(PurePath("/base/" + DEFAULT_ARG_FILE_NAME)).absolute()
-MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.tsv")).absolute()
+MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.csv")).absolute()
 DBS_DIR = "/base/databases/"
 max_pool = int(cpu_count() * 0.3)
 POOL_SIZE = max_pool if max_pool > 0 else 1
@@ -40,7 +40,7 @@ MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1
 global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER, PATH_SEP, DEFAULT_MAP_LINE
 DEFAULT_MAP_LINE = MapLineTup("", float("NAN"), "0", "")
 PATH_SEP = "_-_"
-SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.tsv"
+SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 row_fmt = "{}\t{}\t{}\t{}"
 SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount")
 
@@ -375,24 +375,25 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 total_weight_in_g = fields[index_of_weight_col].strip()
                 hypo_fields[1] = total_weight_in_g
             except Exception:
-                PREP_LOG.warning(f"Could not parse weight amount from mapping file. Error on line: {line}\n"
-                                 f" Check the mapping file format. columns should be"
+                PREP_LOG.warning(f"Could not parse weight amount from mapping file. Line: {line}\n"
+                                 f" Check the mapping file format. Columns should be"
                                  f" separated by TAB. Continuing wiht default value of NAN")
             try:
                 amount = fields[index_of_amounts_col].strip()
                 hypo_fields[2] = amount
             except Exception:
-                PREP_LOG.warning(f"Could not parse spike amount from mapping file. Error on line: {line}\n"
-                                 f" Check the mapping file format. columns should be"
+                PREP_LOG.warning(f"Could not parse spike amount from mapping file. Line: {line}\n"
+                                 f" Check the mapping file format. Columns should be"
                                  f" separated by TAB. Continuing wiht default value of 0")
             try:
                 parent_path = fields[index_of_parent_path_col]
                 parent_path = parent_path.strip().rstrip("\\").rstrip("/")
                 hypo_fields[3] = parent_path
             except Exception:
-                PREP_LOG.debug(f"Could not parse parent path from mapping file. Error on line: {line}\n"
-                               f" Check the mapping file format. columns should be"
-                               f" separated by TAB. Continuing wiht default value of 0")
+                PREP_LOG.warning(f"Could not parse parent path from mapping file. Line: {line}\n"
+                               f" Check the mapping file format. Columns should be"
+                               f" separated by TAB. Continuing wiht default value of 0.\n"
+                               f" If you are using a mapping_file without 'parent_path' column then ignroe this warning.")
             # warn if weight is not a valid number
             try:
                 float(hypo_fields[1])
@@ -603,7 +604,7 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
                 row_values = sam_stat_file_fio.readline().strip()
             header_line_mo = header_rgx.match(header)
             if not header_line_mo:
-                msg = f"Existing spike_stat_file: {ssfp} does not have correct format of : {SPIKE_STAT_HEADER}"
+                msg = f"Existing spike_stat_file: {ssfp} does not have correct format of:\t{SPIKE_STAT_HEADER}"
                 PREP_LOG.error(msg)
                 continue
             combined_stat_file_fio.write(row_values + "\n")
@@ -787,14 +788,14 @@ if __name__ == "__main__":
                         help="Should skip analysis step")
     parser.add_argument("-tf", "--place-template-files",
                         action="store_true",
-                        help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.tsv)"
+                        help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
                         " to <--input-directory>, print help text and exits.")
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
     expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
-    expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.tsv").absolute()
+    expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.csv").absolute()
     cli_args_file = INPUT_DIR.joinpath(args.yml_file) if args.yml_file else expected_yml_file
     # This will return longest path. mapping file could be anywhere. Difining lower directories as fastq_directory will limit the searched files
     # and then less rows in mapping_file to be found.
@@ -812,10 +813,10 @@ if __name__ == "__main__":
     if args.place_template_files:
         shutil.copy(
             str(MAP_FILE),
-            str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.tsv"))
+            str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.csv"))
         )
         # log
-        PREP_LOG.info(f"Mapping file template files written to {str(FASTQ_DIR.joinpath('mapping_file_TEMPLATE.tsv').relative_to(INPUT_DIR))}")
+        PREP_LOG.info(f"Mapping file template files written to {str(FASTQ_DIR.joinpath('mapping_file_TEMPLATE.csv').relative_to(INPUT_DIR))}")
         exit(0)
     else:
         if args.db_directory != DBS_DIR:
