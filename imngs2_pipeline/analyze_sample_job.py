@@ -751,13 +751,13 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
                 continue
             else:
                 fields = line.strip().split("\t")
-                sample_id = fields[0]
+                sample_id = str(fields[0]).strip()
                 spike_reads = int(fields[1])
                 try:
-                    original_total_weight_in_g = float(fields[2])
+                    original_total_weight_in_g = round(float(fields[2]), 5)
                 except ValueError:
                     original_total_weight_in_g = float("nan")
-                amount = float(fields[3])
+                amount = round(float(fields[3]), 5)
                 if not math.isnan(original_total_weight_in_g):
                     observed_weights.append(original_total_weight_in_g)
                 samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
@@ -766,42 +766,42 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
     n = 0
     for values in samples.values():
         count, _, amount = values
-        if amount != 0:
+        if amount != round(float(0), 5):
             sum_ += count
             n += 1
 
-    mean = (sum_ / n)
+    mean = round(float(sum_ / n), 5)
     ANA_LOG.debug(f'mean={mean}')
 
     otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
+    otu_table = otu_table.T
+    if mean == round(float(1 / n), 5):
+        return
     for file_id, values in samples.items():
         count, weight, amount = values
         thismean = mean
         factor = None
+        file_id = str(file_id).strip()
         try:
-            if amount == 0 or count == 0:  # no spike sample
-                # normalize to 10_000
-                row_sum = otu_table[file_id].sum()
-                otu_table[file_id] = otu_table[file_id] * (10000 / row_sum)
-            else:
-                # do spike normalization
-                if math.isnan(weight):
-                    if len(observed_weights) == 0:
-                        weight = 1  # fallback to 1
-                    else:
-                        weight = statistics.median(observed_weights)  # fallback to median weight
-                factor = 600 / (amount * 100)
-                otu_table[file_id] = (otu_table[0] * thismean) / (count * weight * factor)
-            # Writing the table
-            normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
-            otu_table.to_csv(str(normalized_otu_path), sep="\t")
-            ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
-            # correct rights of output folders
-            system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
+            # do spike normalization
+            if math.isnan(weight):
+                if len(observed_weights) == 0:
+                    weight = 1  # fallback to 1
+                else:
+                    weight = statistics.median(observed_weights)  # fallback to median weight
+            factor = 600 / (amount * 100)
+            otu_table.loc[file_id] = (otu_table.loc[file_id] * thismean) / (count * weight * factor)
         except KeyError:
             ANA_LOG.warning(f"{file_id} is in mapping file but not in OTU Table")
-        except Exception:
-            ANA_LOG.warning("No Normalization Done.")
+        except Exception as exc:
+            ANA_LOG.warning(f"No Normalization Done. {exc}")
+
+    # Writing the table
+    normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
+    otu_table.T.to_csv(str(normalized_otu_path), sep="\t")
+    ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
+    # correct rights of output folders
+    system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
 
 
 def main(
