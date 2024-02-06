@@ -107,7 +107,8 @@ def is_seq_file(file_path, seq_file_format="any"):
     if seq_file_format not in format_opts:
         raise ValueError("seq_file_format must be 'fasta', 'fastq' or 'any'")
     seq_head_tag_list = [">"] if seq_file_format == "fasta" else ["@"] if seq_file_format == "fastq" else [">", "@"]
-    file_path = Path(PurePath(file_path))
+    # use realpath to derefrence links to original files
+    file_path = Path(PurePath(file_path)).resolve()
     if not file_path.is_file():
         return False
     app, typ = mtypes.guess_type(str(file_path))
@@ -162,6 +163,7 @@ def pair_seq_files(directory):
     paired_files = []
     if not direcotry_path.is_dir():
         return paired_files
+    # is_seq_file checks the format of file as well.
     skip_reverses = []
     for file_path in direcotry_path.rglob("*"):
         isSeqFile = is_seq_file(file_path)
