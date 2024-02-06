@@ -168,8 +168,8 @@ def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
 def uniqify_map_lines(dup_ids_maplinetup_list: list) -> list:  # List[(MapLineTup, tuple)]
     sample_ids_count = proc_helper.MyCounter([x[0].SampleID for x in dup_ids_maplinetup_list])
     most_common = proc_helper.MyCounter(dict(sample_ids_count.most_common(1)))
-    while most_common.total() > 1:
-        most_common_sample_id, most_common_count = most_common.items()
+    while most_common and most_common.total() > 1:
+        most_common_sample_id, most_common_count = list(most_common.items())[0]
         for ind in range(len(dup_ids_maplinetup_list)):
             map_line_obj = dup_ids_maplinetup_list[ind][0]
             file_pair = dup_ids_maplinetup_list[ind][1]
@@ -688,7 +688,6 @@ def run_imngs2(
             PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
             # Filtering fastq files if they are already in processed directories
             # Sometimes failed processing leaves fastq files in the processing diectories
-
             mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             # running preprocessing
@@ -727,7 +726,7 @@ def run_imngs2(
         try:
             if not bool(samples_dirs):
                 msg = "No samples were completely processed or had same processing "\
-                      "argument set as given argument set. SKIPPING Analysisi!"
+                      "argument set as given argument set. SKIPPING Analysis!"
                 raise ValueError(msg)
             analysis_dir = fastq_file_dir.joinpath(f"Analysis_{proc_helper.generate_timestamp()}")
             analysis_dir.mkdir(parents=True, exist_ok=True)
