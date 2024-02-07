@@ -27,9 +27,8 @@ DEFAULT_ARG_FILE_NAME = "IMNGS2Pipeline_args.yml"
 ARGS_YAML_FILE = Path(PurePath("/base/" + DEFAULT_ARG_FILE_NAME)).absolute()
 MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.csv")).absolute()
 DBS_DIR = "/base/databases/"
-max_pool = int(cpu_count() * 0.3)
+max_pool = int(cpu_count() * 0.7)
 POOL_SIZE = max_pool if max_pool > 0 else 1
-max_batch = int(POOL_SIZE * 0.8)
 # Preparing the logger
 PREP_LOG = proc_helper.gimmelogger(
     "run_imngs2",
@@ -754,13 +753,14 @@ def run_imngs2(
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
             samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name=TAXED_ZOTU_FILE_NAME)
-            print(samp_zotu_seq_files)
+
             zotu_file_path, sotu_file_path = main_analysis(
                 analysis_dir=analysis_dir,
                 spike_stat_file=combined_spike_stats_path,
                 fastqs_dir=str(FASTQ_DIR),
                 args_file_path=args_yml_file,
                 dbs_loc=dbs_dir,
+                threads=POOL_SIZE
             )
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
@@ -811,10 +811,18 @@ if __name__ == "__main__":
                         action="store_true",
                         help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
                         " to <--input-directory>, print help text and exits.")
+    parser.add_argument("-t", "--threads",
+                        type=int,
+                        help="Number of threads to use for parallel processing",
+                        default=POOL_SIZE)
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    try:
+        POOL_SIZE = int(args.threads)
+    except Exception as exc:
+        PREP_LOG.warning(f"Could not parse threads argument. Using default value of {POOL_SIZE}. Error: {exc}")
     expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
     expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.csv").absolute()
     cli_args_file = INPUT_DIR.joinpath(args.yml_file) if args.yml_file else expected_yml_file
