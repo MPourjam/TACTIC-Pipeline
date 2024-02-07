@@ -479,7 +479,7 @@ def remove_spikes(
         raise ValueError(msg)
 
     # putting parent path into the spike_mapping_file
-    parent_path = files_paths_abs[0].relative_to(FASTQ_DIR)
+    parent_path = files_paths_abs[0].relative_to(FASTQ_DIR).parent
 
     # postponing file openning to avoid race condition if ran parallel
     real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
@@ -754,6 +754,7 @@ def run_imngs2(
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
             samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name=TAXED_ZOTU_FILE_NAME)
+            print(samp_zotu_seq_files)
             zotu_file_path, sotu_file_path = main_analysis(
                 analysis_dir=analysis_dir,
                 spike_stat_file=combined_spike_stats_path,

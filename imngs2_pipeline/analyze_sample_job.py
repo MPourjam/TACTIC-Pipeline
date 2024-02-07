@@ -831,13 +831,14 @@ def uniqify_map_lines(map_lines_dict: dict) -> dict:
     return map_lines_dict
 
 
-def parse_spike_stat_file(spike_stat_file: str) -> dict:
+def parse_spike_stat_file(spike_stat_file: str, fastq_dir: str, parsed_spike_stat_path: str) -> dict:
     """
     Given a spike_stat file, it will parse it and return a dictionary
     containing the spike count and the original weight of each spike
     """
     spike_stat_file = Path(PurePath(spike_stat_file)).absolute()
     samples = {}
+    fastq_dir = Path(PurePath(fastq_dir)).absolute()
     with open(spike_stat_file, 'r') as stats_h:
         for line in stats_h:
             if line.startswith("#"):
@@ -856,14 +857,18 @@ def parse_spike_stat_file(spike_stat_file: str) -> dict:
                     original_total_weight_in_g = float("nan")
                 amount = round(float(fields[3]), 5)
                 parent_path = str(fields[4]).strip()
-                samples[Path(PurePath(parent_path)).joinpath(sample_id)] = (sample_id, spike_reads, original_total_weight_in_g, amount, parent_path)
+                abs_parent = fastq_dir.joinpath(Path(PurePath(parent_path)))
+                full_id = abs_parent.joinpath(sample_id)
+                samples[full_id] = (sample_id, spike_reads, original_total_weight_in_g, amount, abs_parent)
 
     samples = uniqify_map_lines(samples)
-    parsed_spike_stat_file = spike_stat_file.parent.joinpath(f"parsed_{spike_stat_file.name}")
+    parsed_spike_stat_file = spike_stat_file.parent.joinpath(f"parsed_{spike_stat_file.name}") if not parsed_spike_stat_path else parsed_spike_stat_path
     # write the parsed spike stat file
     with open(parsed_spike_stat_file, 'w') as parsed_stats_h:
         parsed_stats_h.write(f"{SPIKE_STAT_HEADER}\n")
         for sample_id, values in samples.items():
+            values = list(values)
+            values[4] = values[4].relative_to(fastq_dir)
             parsed_stats_h.write("\t".join([str(el) for el in values]) + "\n")
     ANA_LOG.info(f'Parsed spike stat file written to {str(parsed_spike_stat_file)}')
     return samples, parsed_spike_stat_file
@@ -881,7 +886,7 @@ def main(
     analysis_dir: The destination directory to save results
     """
     # NOTE: Changing to fastqs_dir. All parent_path in spike_stat_file are relative to fastqs_dir
-    chdir(fastqs_dir)
+    # chdir(fastqs_dir)
     spike_stat_file = Path(PurePath(spike_stat_file))
     assert spike_stat_file.is_file(), "spike_stat_file must be a path to a file"
 
@@ -899,12 +904,18 @@ def main(
     ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
     # Parsing spike_stat_file
     try:
-        map_lines_dict, parse_spike_stat_file_path = parse_spike_stat_file(spike_stat_file)
+        parsed_spike_stat_file_path = Path(PurePath(ANALYSIS_DIR + 'spike_mapping_file.csv'))
+        map_lines_dict, parsed_spike_stat_file_path = parse_spike_stat_file(
+            spike_stat_file,
+            fastq_dir=fastqs_dir,
+            parsed_spike_stat_path=parsed_spike_stat_file_path)
     except Exception as exc:
         raise ValueError(f"spike_stat_file: {str(exc)}")
-    sample_seq_files_path = [(Path(PurePath(el)).joinpath(TAXED_ZOTU_FILE_NAME), entries[0]) for el, entries in map_lines_dict.items()]
-    print(sample_seq_files_path)
-    if any([True for el, sam_id in sample_seq_files_path if not Path(PurePath(el)).is_file()]):
+    sample_seq_files_path = []
+    for full_id, entries in map_lines_dict.items():
+        sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(TAXED_ZOTU_FILE_NAME), entries[0]))
+
+    if any([True for el in sample_seq_files_path if not Path(PurePath(el[0])).is_file()]):
         raise ValueError("sample_seq_files_path must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
@@ -975,8 +986,8 @@ def main(
     # Normalizing Tables
     if spike_stat_file:
         try:
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), parse_spike_stat_file_path)
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), parse_spike_stat_file_path)
+            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), parsed_spike_stat_file_path)
+            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), parsed_spike_stat_file_path)
         except Exception as exc:
             ANA_LOG.warning(f"Normalization Faild: {exc}")
 
