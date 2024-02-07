@@ -6,6 +6,7 @@ import statistics
 import subprocess
 import pandas as pd
 from os import chdir, system
+from multiprocessing import cpu_count
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
 from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
@@ -32,6 +33,9 @@ global SPIKE_STAT_HEADER, TAXED_ZOTU_FILE_NAME
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+max_pool = int(cpu_count() * 0.7)
+global POOL_SIZE
+POOL_SIZE = max_pool if max_pool > 0 else 1
 
 
 # overwriting system_sub() to run it with subprocess.run
@@ -383,7 +387,7 @@ def select_zotu_seqs():
 def addTax():
     classifier_dir = '/crc/crc/binaries/sina/'
     cmd_part_0 = 'sina --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv '
+    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out test.fasta'
     cmd_part_3 = ' > /dev/null 2>/dev/null'
     system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
@@ -407,7 +411,7 @@ def addTax_new(zotu_fasta_path):
     os.chdir(dirname)
     classifier_dir = '/crc/crc/binaries/sina/'
     cmd_part_0 = 'sina --in ' + str(zotu_fasta_path) + ' --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv '
+    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out test_{}'.format(filename)
     cmd_part_3 = ' > /dev/null 2>/dev/null'
     system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
@@ -618,7 +622,7 @@ def sina_alignment():
     classifier_dir = '/crc/crc/binaries/sina/'
     cmd_part_0_0 = 'sina --in zotus_with_taxonomy.fasta --search --meta-fmt csv '
     cmd_part_0_1 = 'sina --in sotus_with_taxonomy.fasta --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv '
+    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     cmd_part_2_0 = '--db ' + SINA_ARB + ' --out test_z.fasta'
     cmd_part_2_1 = '--db ' + SINA_ARB + ' --out test_s.fasta'
     cmd_part_3 = ' >/dev/null 2>/dev/null'
@@ -879,18 +883,22 @@ def main(
         spike_stat_file: str,
         fastqs_dir: str,
         args_file_path: str = "",
-        dbs_loc: str = DB_LOC):
+        dbs_loc: str = DB_LOC,
+        threads=POOL_SIZE):
     """
     sample_seq_files_path: a list of file path to
      each samples' sequence file which is going to be combined with other samples passed to analysis.
     analysis_dir: The destination directory to save results
     """
-    # NOTE: Changing to fastqs_dir. All parent_path in spike_stat_file are relative to fastqs_dir
-    # chdir(fastqs_dir)
     spike_stat_file = Path(PurePath(spike_stat_file))
     assert spike_stat_file.is_file(), "spike_stat_file must be a path to a file"
 
     global ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC
+    # updating POOL_SIZE
+    try:
+        POOL_SIZE = int(threads)
+    except ValueError:
+        ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
     DB_LOC = Path(PurePath(dbs_loc))
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
@@ -939,7 +947,7 @@ def main(
     except Exception as exc:
         raise ValueError(f"Split: {str(exc)}")
     try:
-        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=TIC_Result_DIR)
+        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=TIC_Result_DIR, threads=POOL_SIZE)
     except Exception as exc:
         raise ValueError(f"Main: {str(exc)}")
     if os.path.isdir(TIC_Output_DIR):
