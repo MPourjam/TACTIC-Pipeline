@@ -676,6 +676,8 @@ def run_imngs2(
     chdir(fastq_file_dir)
     try:
         shutil.copy(str(args_yml_file), str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME)))
+    except shutil.SameFileError:
+        pass
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
         pass
@@ -777,11 +779,11 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--input-directory",
                         type=str,
                         help="Every needed file and directory should be findable relative to this directory",
-                        default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
+                        default=".")  # WORKDIR of container is /base/inputs
     parser.add_argument("-d", "--fastq-directory",
                         type=str,
                         help=help_text,
-                        default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
+                        default=".")  # WORKDIR of container is /base/inputs
     # >BEGIN: Arguments need to be parsed from input and fastq directory
     parser.add_argument("-y", "--yml-file",
                         type=str,
@@ -818,7 +820,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
+    print(INPUT_DIR)
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    print(FASTQ_DIR)
     try:
         POOL_SIZE = int(args.threads)
     except Exception as exc:
