@@ -6,9 +6,10 @@ import statistics
 import subprocess
 import pandas as pd
 from os import chdir, system
+from multiprocessing import cpu_count
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
-from .processing_helper import get_base_name, IMNGS2ArgsParser, gimmelogger
+from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
 from sys import version_info
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # pip2 install pathlib2
@@ -28,9 +29,13 @@ ref16RNAdb_1 = DB_LOC + "silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = DB_LOC + "silva-arc-16s-id95.fasta"
 SORT_ME_RNA_BIN = BIN_DIR + "sortmerna"
 USEARCH_TAIL = '> /dev/null 2>&1'
-global SPIKE_STAT_HEADER
-row_fmt = "{}\t{}\t{}\t{}"
-SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount")
+global SPIKE_STAT_HEADER, TAXED_ZOTU_FILE_NAME
+SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
+SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
+TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+max_pool = int(cpu_count() * 0.7)
+global POOL_SIZE
+POOL_SIZE = max_pool if max_pool > 0 else 1
 
 
 # overwriting system_sub() to run it with subprocess.run
@@ -96,10 +101,9 @@ def onelinefasta(fastafilepath):
                                        "f": filename.replace(' ', '\ ')}))  # handling space in name of file
 
 
-def append_reads(taxed_ZOTUs_file_path, analysis_dir):
+def append_reads(taxed_ZOTUs_file_path, sample_id, analysis_dir):
     chdir(analysis_dir)
     taxed_ZOTUs_file_path = os.path.abspath(taxed_ZOTUs_file_path)
-    sample_id = get_base_name(os.path.split(taxed_ZOTUs_file_path)[0])
     dataset_name = f"{sample_id}"
     cmd = USEARCH_11_BIN + ' -fastx_relabel ' + taxed_ZOTUs_file_path + ' -prefix ' + dataset_name
     cmd += '. -fastaout new -keep_annots'
@@ -383,7 +387,7 @@ def select_zotu_seqs():
 def addTax():
     classifier_dir = '/crc/crc/binaries/sina/'
     cmd_part_0 = 'sina --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv '
+    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out test.fasta'
     cmd_part_3 = ' > /dev/null 2>/dev/null'
     system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
@@ -407,7 +411,7 @@ def addTax_new(zotu_fasta_path):
     os.chdir(dirname)
     classifier_dir = '/crc/crc/binaries/sina/'
     cmd_part_0 = 'sina --in ' + str(zotu_fasta_path) + ' --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv '
+    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out test_{}'.format(filename)
     cmd_part_3 = ' > /dev/null 2>/dev/null'
     system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
@@ -618,7 +622,7 @@ def sina_alignment():
     classifier_dir = '/crc/crc/binaries/sina/'
     cmd_part_0_0 = 'sina --in zotus_with_taxonomy.fasta --search --meta-fmt csv '
     cmd_part_0_1 = 'sina --in sotus_with_taxonomy.fasta --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv '
+    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     cmd_part_2_0 = '--db ' + SINA_ARB + ' --out test_z.fasta'
     cmd_part_2_1 = '--db ' + SINA_ARB + ' --out test_s.fasta'
     cmd_part_3 = ' >/dev/null 2>/dev/null'
@@ -751,13 +755,13 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
                 continue
             else:
                 fields = line.strip().split("\t")
-                sample_id = fields[0]
+                sample_id = str(fields[0]).strip()
                 spike_reads = int(fields[1])
                 try:
-                    original_total_weight_in_g = float(fields[2])
+                    original_total_weight_in_g = round(float(fields[2]), 5)
                 except ValueError:
                     original_total_weight_in_g = float("nan")
-                amount = float(fields[3])
+                amount = round(float(fields[3]), 5)
                 if not math.isnan(original_total_weight_in_g):
                     observed_weights.append(original_total_weight_in_g)
                 samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
@@ -766,57 +770,135 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
     n = 0
     for values in samples.values():
         count, _, amount = values
-        if amount != 0:
+        if amount != round(float(0), 5):
             sum_ += count
             n += 1
 
-    mean = (sum_ / n)
+    mean = round(float(sum_ / n), 5)
     ANA_LOG.debug(f'mean={mean}')
 
     otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
+    otu_table = otu_table.T
+    if mean == round(float(1 / n), 5):
+        return
     for file_id, values in samples.items():
         count, weight, amount = values
         thismean = mean
         factor = None
+        file_id = str(file_id).strip()
         try:
-            if amount == 0 or count == 0:  # no spike sample
-                # normalize to 10_000
-                row_sum = otu_table[file_id].sum()
-                otu_table[file_id] = otu_table[file_id] * (10000 / row_sum)
-            else:
-                # do spike normalization
-                if math.isnan(weight):
-                    if len(observed_weights) == 0:
-                        weight = 1  # fallback to 1
-                    else:
-                        weight = statistics.median(observed_weights)  # fallback to median weight
-                factor = 600 / (amount * 100)
-                otu_table[file_id] = (otu_table[0] * thismean) / (count * weight * factor)
-            # Writing the table
-            normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
-            otu_table.to_csv(str(normalized_otu_path), sep="\t")
-            ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
-            # correct rights of output folders
-            system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
+            # do spike normalization
+            if math.isnan(weight):
+                if len(observed_weights) == 0:
+                    weight = 1  # fallback to 1
+                else:
+                    weight = statistics.median(observed_weights)  # fallback to median weight
+            factor = 600 / (amount * 100)
+            otu_table.loc[file_id] = (otu_table.loc[file_id] * thismean) / (count * weight * factor)
         except KeyError:
             ANA_LOG.warning(f"{file_id} is in mapping file but not in OTU Table")
-        except Exception:
-            ANA_LOG.warning("No Normalization Done.")
+        except Exception as exc:
+            ANA_LOG.warning(f"No Normalization Done. {exc}")
+
+    # Writing the table
+    normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
+    otu_table.T.to_csv(str(normalized_otu_path), sep="\t")
+    ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
+    # correct rights of output folders
+    system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
+
+
+def uniqify_map_lines(map_lines_dict: dict) -> dict:
+    """
+    Given a list of map lines, it will return a list of map line tuples with
+    """
+    keys_list = list([entries[0] for ky, entries in map_lines_dict.items()])
+    items_list = list(map_lines_dict.items())
+    sample_ids_count = MyCounter(keys_list)
+    most_common = MyCounter(dict(sample_ids_count.most_common(1)))
+    while most_common and most_common.total() > 1:
+        most_common_sample_id, most_common_count = list(most_common.items())[0]
+        for ind in range(len(keys_list)):
+            sam_id = keys_list[ind]
+            entries = items_list[ind][1]
+            long_id = items_list[ind][0]
+            if most_common[sam_id]:
+                # updating the sample id
+                sam_id = str(most_common_sample_id) + "__" + str(most_common_count)
+                entries[0] = sam_id
+            map_lines_dict[long_id] = entries
+        # End Phase of loop
+        keys_list = list([entries[0] for ky, entries in map_lines_dict.items()])
+        sample_ids_count = MyCounter(keys_list)
+        most_common = MyCounter(dict(sample_ids_count.most_common(1)))
+
+    return map_lines_dict
+
+
+def parse_spike_stat_file(spike_stat_file: str, fastq_dir: str, parsed_spike_stat_path: str) -> dict:
+    """
+    Given a spike_stat file, it will parse it and return a dictionary
+    containing the spike count and the original weight of each spike
+    """
+    spike_stat_file = Path(PurePath(spike_stat_file)).absolute()
+    samples = {}
+    fastq_dir = Path(PurePath(fastq_dir)).absolute()
+    with open(spike_stat_file, 'r') as stats_h:
+        for line in stats_h:
+            if line.startswith("#"):
+                if SPIKE_STAT_HEADER not in line.strip():
+                    raise ValueError(f"Header: {line.strip()} does not match {SPIKE_STAT_HEADER}")
+                continue
+            elif line == "\n":
+                continue
+            else:
+                fields = line.strip().split("\t")
+                sample_id = str(fields[0]).strip()
+                spike_reads = int(fields[1])
+                try:
+                    original_total_weight_in_g = round(float(fields[2]), 5)
+                except ValueError:
+                    original_total_weight_in_g = float("nan")
+                amount = round(float(fields[3]), 5)
+                parent_path = str(fields[4]).strip()
+                abs_parent = fastq_dir.joinpath(Path(PurePath(parent_path)))
+                full_id = abs_parent.joinpath(sample_id)
+                samples[full_id] = (sample_id, spike_reads, original_total_weight_in_g, amount, abs_parent)
+
+    samples = uniqify_map_lines(samples)
+    parsed_spike_stat_file = spike_stat_file.parent.joinpath(f"parsed_{spike_stat_file.name}") if not parsed_spike_stat_path else parsed_spike_stat_path
+    # write the parsed spike stat file
+    with open(parsed_spike_stat_file, 'w') as parsed_stats_h:
+        parsed_stats_h.write(f"{SPIKE_STAT_HEADER}\n")
+        for sample_id, values in samples.items():
+            values = list(values)
+            values[4] = values[4].relative_to(fastq_dir)
+            parsed_stats_h.write("\t".join([str(el) for el in values]) + "\n")
+    ANA_LOG.info(f'Parsed spike stat file written to {str(parsed_spike_stat_file)}')
+    return samples, parsed_spike_stat_file
 
 
 def main(
-        sample_seq_files_path: list,
         analysis_dir: str,
+        spike_stat_file: str,
+        fastqs_dir: str,
         args_file_path: str = "",
-        spike_stat_file: str = "",
-        dbs_loc: str = DB_LOC):
+        dbs_loc: str = DB_LOC,
+        threads=POOL_SIZE):
     """
     sample_seq_files_path: a list of file path to
      each samples' sequence file which is going to be combined with other samples passed to analysis.
     analysis_dir: The destination directory to save results
     """
-    spike_stat_file = Path(PurePath(spike_stat_file)) if spike_stat_file else ""
+    spike_stat_file = Path(PurePath(spike_stat_file))
+    assert spike_stat_file.is_file(), "spike_stat_file must be a path to a file"
+
     global ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC
+    # updating POOL_SIZE
+    try:
+        POOL_SIZE = int(threads)
+    except ValueError:
+        ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
     DB_LOC = Path(PurePath(dbs_loc))
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
@@ -828,13 +910,25 @@ def main(
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
     ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"
     ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
-    sample_seq_files_path = [Path(PurePath(el)).absolute() for el in sample_seq_files_path]
-    if any([True for el in sample_seq_files_path if not Path(PurePath(el)).is_file()]):
+    # Parsing spike_stat_file
+    try:
+        parsed_spike_stat_file_path = Path(PurePath(ANALYSIS_DIR + 'spike_mapping_file.csv'))
+        map_lines_dict, parsed_spike_stat_file_path = parse_spike_stat_file(
+            spike_stat_file,
+            fastq_dir=fastqs_dir,
+            parsed_spike_stat_path=parsed_spike_stat_file_path)
+    except Exception as exc:
+        raise ValueError(f"spike_stat_file: {str(exc)}")
+    sample_seq_files_path = []
+    for full_id, entries in map_lines_dict.items():
+        sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(TAXED_ZOTU_FILE_NAME), entries[0]))
+
+    if any([True for el in sample_seq_files_path if not Path(PurePath(el[0])).is_file()]):
         raise ValueError("sample_seq_files_path must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
-    for sample in sample_seq_files_path:
-        append_reads(sample, ANALYSIS_DIR)
+    for sample, sam_id in sample_seq_files_path:
+        append_reads(sample, sam_id, ANALYSIS_DIR)
     ANA_LOG.info('READS CONCATENATED')
     chdir(ANALYSIS_DIR)
     trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
@@ -853,7 +947,7 @@ def main(
     except Exception as exc:
         raise ValueError(f"Split: {str(exc)}")
     try:
-        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=TIC_Result_DIR)
+        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=TIC_Result_DIR, threads=POOL_SIZE)
     except Exception as exc:
         raise ValueError(f"Main: {str(exc)}")
     if os.path.isdir(TIC_Output_DIR):
@@ -900,8 +994,8 @@ def main(
     # Normalizing Tables
     if spike_stat_file:
         try:
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), spike_stat_file)
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), spike_stat_file)
+            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), parsed_spike_stat_file_path)
+            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), parsed_spike_stat_file_path)
         except Exception as exc:
             ANA_LOG.warning(f"Normalization Faild: {exc}")
 
