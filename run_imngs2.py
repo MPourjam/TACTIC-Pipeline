@@ -2,6 +2,7 @@
 import re
 import argparse
 import shutil
+import sys
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
@@ -10,8 +11,7 @@ from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
 from typing import List
-from sys import version_info
-if version_info[0] < 3:
+if sys.version_info[0] < 3:
     from pathlib2 import Path, PurePath, PureWindowsPath, PurePosixPath  # pip2 install pathlib2
 else:
     from pathlib import Path, PurePath, PureWindowsPath, PurePosixPath
@@ -43,6 +43,22 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+
+
+def correct_created_files_modes(mode=777) -> bool:
+    """
+    It corrects the mode of created files by the pipeline.
+    """
+    mode = "0o" + str(mode)
+    to_change_mode = proc_helper.find_files_and_dirs_owned_by_root(INPUT_DIR)
+    for fi in to_change_mode:
+        fi = Path(PurePath(fi)).absolute()
+        try:
+            fi.chmod(mode)
+        except Exception as exc:
+            PREP_LOG.warning(f"Could not change mode of {fi}. {exc}")
+
+    return mode
 
 
 def is_in_processed_dir(fastq_path: Path, sample_id: str = None) -> bool:
@@ -775,6 +791,11 @@ def run_imngs2(
     # TODO Only Normalizing
     if not skip_analysis and mapping_file_path.is_file() and zotu_file_path and sotu_file_path:
         pass
+
+    # change mode of files
+    correct_created_files_modes()
+
+    sys.exit(0)
 
 
 if __name__ == "__main__":
