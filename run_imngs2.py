@@ -147,7 +147,7 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
             this_out[1] = False
 
     if not this_out[1]:
-        PREP_LOG.info(f"Sample '{base_name}' is already processed with given arguemnt set. "
+        PREP_LOG.info(f"Sample '{base_name}' is already processed with given argument set. "
                       f"Skipping processing and using results in {this_out[0]}")
 
     return tuple(this_out)
@@ -377,14 +377,14 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             except Exception:
                 PREP_LOG.warning(f"Could not parse weight amount from mapping file. Line: {line}\n"
                                  f" Check the mapping file format. Columns should be"
-                                 f" separated by TAB. Continuing wiht default value of NAN")
+                                 f" separated by TAB. Continuing with default value of NAN")
             try:
                 amount = fields[index_of_amounts_col].strip()
                 hypo_fields[2] = amount
             except Exception:
                 PREP_LOG.warning(f"Could not parse spike amount from mapping file. Line: {line}\n"
                                  f" Check the mapping file format. Columns should be"
-                                 f" separated by TAB. Continuing wiht default value of 0")
+                                 f" separated by TAB. Continuing with default value of 0")
             try:
                 parent_path = fields[index_of_parent_path_col]
                 parent_path = parent_path.strip().rstrip("\\").rstrip("/")
@@ -392,14 +392,14 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             except Exception:
                 PREP_LOG.warning(f"Could not parse parent path from mapping file. Line: {line}\n"
                                  f" Check the mapping file format. Columns should be"
-                                 f" separated by TAB. Continuing wiht default value of 0.\n"
+                                 f" separated by TAB. Continuing with default value of 0.\n"
                                  f" If you are using a mapping_file without 'parent_path' column then ignroe this warning.")
             # warn if weight is not a valid number
             try:
                 float(hypo_fields[1])
             except ValueError:
                 PREP_LOG.warning(
-                    f'Weight {total_weight_in_g!r} is not a valid floating point number for {sample_id!r}. Weigth will be processed as NAN.')
+                    f'Weight {total_weight_in_g!r} is not a valid floating point number for {sample_id!r}. Weight will be processed as NAN.')
                 hypo_fields[1] = "NAN"
 
             # if amount cannot be parsed to float change to 0
@@ -480,7 +480,7 @@ def remove_spikes(
     # putting parent path into the spike_mapping_file
     parent_path = files_paths_abs[0].relative_to(FASTQ_DIR).parent
 
-    # postponing file openning to avoid race condition if ran parallel
+    # postponing file opening to avoid race condition if ran parallel
     real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
     out_tup = (spike_reads_c, spike_stat_mapping_path, tuple(fastq_files_abs_path))
     with open(spike_stat_mapping_path, 'a') as stats_h:
@@ -517,7 +517,7 @@ def run_preprocessing(
         return sample_dir
     try:
         if not hasattr(seq_files_t, "__iter__") or len(seq_files_t) > 2:
-            msg = "seq_files_t must be an iterable of max lenght 2"
+            msg = "seq_files_t must be an iterable of max length 2"
             # PREP_LOG.error(msg)
             raise ValueError(msg)
         # Creating the preprocessing directory
@@ -539,8 +539,8 @@ def run_preprocessing(
             return sample_dir
 
         # TODO:NOTE decide if we need to process the sample or not
-        # 1- argumnt check
-        # 2- checking if some processed version already exist
+        # 1- argument check
+        # 2- checking if some processed version already exists
         # 3- Choosing the one compliant to current argument set and return success. Otherwise new processing.
 
         sample_dir.mkdir(parents=True, exist_ok=True)
@@ -688,7 +688,7 @@ def run_imngs2(
     combined_spike_stats_path = default_spike_stat_compiled if not given_spike_stat_file.is_file() else given_spike_stat_file
     reduced_samples_dirs = []
     mapping_file_path = Path(PurePath(str(mapping_file))).absolute()  # it will return a path to current directory if mapping_file = ""
-    # Analysis defualt vars
+    # Analysis default vars
     zotu_file_path, sotu_file_path = ("", "")
 
     if not skip_preprocess:
@@ -697,9 +697,9 @@ def run_imngs2(
             PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
             seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
             seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
-            PREP_LOG.info("{} sampels were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
+            PREP_LOG.info("{} samples were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
             # Filtering fastq files if they are already in processed directories
-            # Sometimes failed processing leaves fastq files in the processing diectories
+            # Sometimes failed processing leaves fastq files in the processing directories
             mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             # running preprocessing
@@ -710,14 +710,14 @@ def run_imngs2(
                 for res in res_list:
                     res.wait(720)  # After 12 minutes it terminates the thread
             samples_dirs = [el.get() for el in res_list]
-            # NOTE result form run_preprocessing could be "" which meand the preprocessing has failed
+            # NOTE result from run_preprocessing could be "" which means the preprocessing has failed
             samples_dirs = [el for el in samples_dirs if el]
         except Exception as exc:
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True
             samples_dirs = []
     else:
-        PREP_LOG.warning(f"Skipping Preprocessing. Processing sammples in directory {fastq_file_dir}")
+        PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
         samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="*_processed/**/" + TAXED_ZOTU_FILE_NAME)
         samples_dirs = [Path(PurePath(el)).parent for el in samp_zotu_seq_files]
 
@@ -746,7 +746,7 @@ def run_imngs2(
                 raise ValueError(msg)
             analysis_dir = fastq_file_dir.joinpath(f"Analysis_{proc_helper.generate_timestamp()}")
             analysis_dir.mkdir(parents=True, exist_ok=True)
-            # we do the step down because if skip_preprocess is True then tha path to preprocess would be given not all smaple_dirs
+            # we do the step down because if skip_preprocess is True then the path to preprocess would be given not all smaple_dirs
             if str(combined_spike_stats_path) != str(default_spike_stat_compiled):
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
             reduced_samples_dirs, _ = combine_spike_stats_file(*samples_dirs, combined_spike_stat=combined_spike_stats_path)
@@ -830,7 +830,7 @@ if __name__ == "__main__":
     expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
     expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.csv").absolute()
     cli_args_file = INPUT_DIR.joinpath(args.yml_file) if args.yml_file else expected_yml_file
-    # This will return longest path. mapping file could be anywhere. Difining lower directories as fastq_directory will limit the searched files
+    # This will return longest path. mapping file could be anywhere. Defining lower directories as fastq_directory will limit the searched files
     # and then less rows in mapping_file to be found.
     cli_map_file = INPUT_DIR.joinpath(args.mapping_file) if args.mapping_file else ""
     # Exposing default argument files.
