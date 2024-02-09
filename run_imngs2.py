@@ -25,11 +25,10 @@ PROC_DIR_SUFFIX = "__processed"
 global DEFAULT_ARG_FILE_NAME
 DEFAULT_ARG_FILE_NAME = "IMNGS2Pipeline_args.yml"
 ARGS_YAML_FILE = Path(PurePath("/base/" + DEFAULT_ARG_FILE_NAME)).absolute()
-MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.tsv")).absolute()
+MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.csv")).absolute()
 DBS_DIR = "/base/databases/"
-max_pool = int(cpu_count() * 0.3)
+max_pool = int(cpu_count() * 0.7)
 POOL_SIZE = max_pool if max_pool > 0 else 1
-max_batch = int(POOL_SIZE * 0.8)
 # Preparing the logger
 PREP_LOG = proc_helper.gimmelogger(
     "run_imngs2",
@@ -37,12 +36,13 @@ PREP_LOG = proc_helper.gimmelogger(
     only_file=False)
 MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "spike_amount", "parent_path")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2], MAPPING_FILE_COLS[3]])
-global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER, PATH_SEP, DEFAULT_MAP_LINE
+global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER, PATH_SEP, DEFAULT_MAP_LINE, SPIKE_STAT_FILE_COLS, TAXED_ZOTU_FILE_NAME
 DEFAULT_MAP_LINE = MapLineTup("", float("NAN"), "0", "")
 PATH_SEP = "_-_"
-SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.tsv"
-row_fmt = "{}\t{}\t{}\t{}"
-SPIKE_STAT_HEADER = row_fmt.format("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount")
+SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
+SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
+SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
+TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
 
 
 def is_in_processed_dir(fastq_path: Path, sample_id: str = None) -> bool:
@@ -108,7 +108,7 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     my_dir = Path(PurePath(my_dir)).absolute()
     should_be_there = [
         DEFAULT_ARG_FILE_NAME,
-        "taxed_ZOTUs.fasta",
+        TAXED_ZOTU_FILE_NAME,
         SPIKE_STAT_FILE_NAME
     ]
     logic_test = [False for fi in should_be_there]
@@ -175,7 +175,7 @@ def uniqify_map_lines(dup_ids_maplinetup_list: list) -> list:  # List[(MapLineTu
             file_pair = dup_ids_maplinetup_list[ind][1]
             if most_common[map_line_obj.SampleID]:
                 new_map_line = MapLineTup(
-                    str(map_line_obj[3]) + PATH_SEP + str(most_common_sample_id) + "__" + str(most_common_count),
+                    str(most_common_sample_id) + "__" + str(most_common_count),
                     map_line_obj[1],
                     map_line_obj[2],
                     map_line_obj[3],
@@ -375,24 +375,25 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 total_weight_in_g = fields[index_of_weight_col].strip()
                 hypo_fields[1] = total_weight_in_g
             except Exception:
-                PREP_LOG.warning(f"Could not parse weight amount from mapping file. Error on line: {line}\n"
-                                 f" Check the mapping file format. columns should be"
+                PREP_LOG.warning(f"Could not parse weight amount from mapping file. Line: {line}\n"
+                                 f" Check the mapping file format. Columns should be"
                                  f" separated by TAB. Continuing wiht default value of NAN")
             try:
                 amount = fields[index_of_amounts_col].strip()
                 hypo_fields[2] = amount
             except Exception:
-                PREP_LOG.warning(f"Could not parse spike amount from mapping file. Error on line: {line}\n"
-                                 f" Check the mapping file format. columns should be"
+                PREP_LOG.warning(f"Could not parse spike amount from mapping file. Line: {line}\n"
+                                 f" Check the mapping file format. Columns should be"
                                  f" separated by TAB. Continuing wiht default value of 0")
             try:
                 parent_path = fields[index_of_parent_path_col]
                 parent_path = parent_path.strip().rstrip("\\").rstrip("/")
                 hypo_fields[3] = parent_path
             except Exception:
-                PREP_LOG.debug(f"Could not parse parent path from mapping file. Error on line: {line}\n"
-                               f" Check the mapping file format. columns should be"
-                               f" separated by TAB. Continuing wiht default value of 0")
+                PREP_LOG.warning(f"Could not parse parent path from mapping file. Line: {line}\n"
+                                 f" Check the mapping file format. Columns should be"
+                                 f" separated by TAB. Continuing wiht default value of 0.\n"
+                                 f" If you are using a mapping_file without 'parent_path' column then ignroe this warning.")
             # warn if weight is not a valid number
             try:
                 float(hypo_fields[1])
@@ -453,7 +454,6 @@ def remove_spikes(
         - spike_amount: int = amount of spike in nanogram
 
     """
-    row_fmt = "{}\t{}\t{}\t{}"
     header_rgx = re.compile(SPIKE_STAT_HEADER)
     files_paths_abs = [Path(PurePath(fi_pa)) for fi_pa in files_paths if Path(PurePath(fi_pa)).is_file()]
     spike_stat_mapping_path = files_paths_abs[0].parent.joinpath(SPIKE_STAT_FILE_NAME)
@@ -477,12 +477,22 @@ def remove_spikes(
         PREP_LOG.error(msg)
         raise ValueError(msg)
 
+    # putting parent path into the spike_mapping_file
+    parent_path = files_paths_abs[0].relative_to(FASTQ_DIR).parent
+
     # postponing file openning to avoid race condition if ran parallel
     real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
     out_tup = (spike_reads_c, spike_stat_mapping_path, tuple(fastq_files_abs_path))
     with open(spike_stat_mapping_path, 'a') as stats_h:
-        # appending
-        stats_h.write(row_fmt.format(sample_id, spike_reads_c, sample_weight, spike_amount) + "\n")
+        # appending\
+        new_row = [
+            str(sample_id),
+            str(spike_reads_c),
+            str(sample_weight),
+            str(spike_amount),
+            str(parent_path)
+        ]
+        stats_h.write("\t".join(new_row) + "\n")
 
     PREP_LOG.info(f"Spike removal done for {sample_id}. Spike Reads: {spike_reads_c}\tnon-spike reads: {real_reads_c}")
 
@@ -603,7 +613,7 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
                 row_values = sam_stat_file_fio.readline().strip()
             header_line_mo = header_rgx.match(header)
             if not header_line_mo:
-                msg = f"Existing spike_stat_file: {ssfp} does not have correct format of : {SPIKE_STAT_HEADER}"
+                msg = f"Existing spike_stat_file: {ssfp} does not have correct format of: {SPIKE_STAT_HEADER}"
                 PREP_LOG.error(msg)
                 continue
             combined_stat_file_fio.write(row_values + "\n")
@@ -612,7 +622,7 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
     return samples_dirs_path, combined_spike_stat
 
 
-def gather_files(*preproc_dirs_path, file_name="taxed_ZOTUs.fasta"):
+def gather_files(*preproc_dirs_path, file_name=TAXED_ZOTU_FILE_NAME):
     # print(preproc_dirs_path)
     sam_dirs = []
     preproc_dirs_path_deepests = []
@@ -666,6 +676,8 @@ def run_imngs2(
     chdir(fastq_file_dir)
     try:
         shutil.copy(str(args_yml_file), str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME)))
+    except shutil.SameFileError:
+        pass
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
         pass
@@ -706,7 +718,7 @@ def run_imngs2(
             samples_dirs = []
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing sammples in directory {fastq_file_dir}")
-        samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="taxed_ZOTUs.fasta")
+        samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="*_processed/**/" + TAXED_ZOTU_FILE_NAME)
         samples_dirs = [Path(PurePath(el)).parent for el in samp_zotu_seq_files]
 
     # TODO:NOTE the function to decide if the preprocessed samples should go for analysis or not come here.
@@ -720,6 +732,10 @@ def run_imngs2(
         if valid_for_analysis(curr_dir, args_yml_file):
             filtered_samples_dir.append(curr_dir)
     samples_dirs = filtered_samples_dir
+    # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
+    # we should get sure that only one processed set from each sample is passed for analysis
+    samples_dirs_non_redundant = {str(Path(PurePath(sam_dir))).split(PROC_DIR_SUFFIX)[0]: sam_dir for sam_dir in samples_dirs}
+    samples_dirs = list(samples_dirs_non_redundant.values())
 
     # Runing analysis
     if not skip_analysis:
@@ -738,8 +754,16 @@ def run_imngs2(
             if missed_samples:
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
-            samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name="taxed_ZOTUs.fasta")
-            zotu_file_path, sotu_file_path = main_analysis(samp_zotu_seq_files, analysis_dir, args_yml_file, combined_spike_stats_path, dbs_loc=dbs_dir)
+            samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name=TAXED_ZOTU_FILE_NAME)
+
+            zotu_file_path, sotu_file_path = main_analysis(
+                analysis_dir=analysis_dir,
+                spike_stat_file=combined_spike_stats_path,
+                fastqs_dir=str(FASTQ_DIR),
+                args_file_path=args_yml_file,
+                dbs_loc=dbs_dir,
+                threads=POOL_SIZE
+            )
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
 
@@ -755,11 +779,11 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--input-directory",
                         type=str,
                         help="Every needed file and directory should be findable relative to this directory",
-                        default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
+                        default=".")  # WORKDIR of container is /base/inputs
     parser.add_argument("-d", "--fastq-directory",
                         type=str,
                         help=help_text,
-                        default=str(INPUT_DIR))  # WORKDIR of container is /base/inputs
+                        default=".")  # WORKDIR of container is /base/inputs
     # >BEGIN: Arguments need to be parsed from input and fastq directory
     parser.add_argument("-y", "--yml-file",
                         type=str,
@@ -787,14 +811,24 @@ if __name__ == "__main__":
                         help="Should skip analysis step")
     parser.add_argument("-tf", "--place-template-files",
                         action="store_true",
-                        help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.tsv)"
+                        help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
                         " to <--input-directory>, print help text and exits.")
+    parser.add_argument("-t", "--threads",
+                        type=int,
+                        help="Number of threads to use for parallel processing",
+                        default=POOL_SIZE)
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
+    print(INPUT_DIR)
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    print(FASTQ_DIR)
+    try:
+        POOL_SIZE = int(args.threads)
+    except Exception as exc:
+        PREP_LOG.warning(f"Could not parse threads argument. Using default value of {POOL_SIZE}. Error: {exc}")
     expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
-    expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.tsv").absolute()
+    expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.csv").absolute()
     cli_args_file = INPUT_DIR.joinpath(args.yml_file) if args.yml_file else expected_yml_file
     # This will return longest path. mapping file could be anywhere. Difining lower directories as fastq_directory will limit the searched files
     # and then less rows in mapping_file to be found.
@@ -812,10 +846,10 @@ if __name__ == "__main__":
     if args.place_template_files:
         shutil.copy(
             str(MAP_FILE),
-            str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.tsv"))
+            str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.csv"))
         )
         # log
-        PREP_LOG.info(f"Mapping file template files written to {str(FASTQ_DIR.joinpath('mapping_file_TEMPLATE.tsv').relative_to(INPUT_DIR))}")
+        PREP_LOG.info(f"Mapping file template files written to {str(FASTQ_DIR.joinpath('mapping_file_TEMPLATE.csv').relative_to(INPUT_DIR))}")
         exit(0)
     else:
         if args.db_directory != DBS_DIR:

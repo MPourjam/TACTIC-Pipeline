@@ -20,7 +20,7 @@ BIN_DIR = "/base/binaries/"
 USEARCH_8_BIN = BIN_DIR + "usearch8.1"
 USEARCH_11_BIN = BIN_DIR + "usearch_11_64 -strand both"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
-USEARCH8_1 = USEARCH_8_BIN + " -threads 4"
+USEARCH8_1 = USEARCH_8_BIN + " -threads 1"
 SINA_BIN = BIN_DIR + 'sina/sina'
 DBS_DIR = "/base/databases/"
 GOLD_REFDB_USEARCH = DBS_DIR + 'SILVA-bac-16s-90.udb'
@@ -255,7 +255,7 @@ def run_FastQC(forward_file, reverse_file):
     out_dir = 'fastqc_output'
     mymkdir(out_dir)
     cmd_0 = "fastqc " + forward_file
-    cmd_1 = " --outdir " + out_dir + " --format fastq --threads 6 --quiet"
+    cmd_1 = " --outdir " + out_dir + " --format fastq --threads 1 --quiet"
     if not reverse_file == '':
         cmd_0 = cmd_0 + " " + reverse_file
     try:
@@ -383,7 +383,7 @@ def addTax(input_id):
     """
     filebasename = 'aligned_' + str(input_id)
     cmd_part_0 = SINA_BIN + ' --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
-    cmd_part_1 = '--threads 4 --lca-fields tax_slv --turn all '
+    cmd_part_1 = '--threads 1 --lca-fields tax_slv --turn all '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out ' + filebasename + '.fasta'
     cmd_part_3 = ' >/dev/null 2>/dev/null'
     # print(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
