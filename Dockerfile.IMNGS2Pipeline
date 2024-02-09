@@ -15,7 +15,7 @@ COPY databases/ /base/databases/
 COPY imngs2_pipeline /base/imngs2_pipeline/
 COPY run_imngs2.py /base/run_imngs2.py
 COPY IMNGS2Pipeline_args.yml /base/IMNGS2Pipeline_args.yml
-COPY mapping_file_TEMPLATE.tsv /base/mapping_file_TEMPLATE.tsv
+COPY mapping_file_TEMPLATE.csv /base/mapping_file_TEMPLATE.csv
 
 
 #########################
