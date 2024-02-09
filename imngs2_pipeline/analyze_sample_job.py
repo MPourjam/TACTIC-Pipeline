@@ -747,6 +747,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
     spikes_stats_path = Path(PurePath(spikes_stats_path)).absolute()
     samples = {}
     observed_weights = []
+    observed_spike_amounts = []
     with open(spikes_stats_path, 'r') as stats_h:
         for line in stats_h:
             if line.startswith("#"):
@@ -758,10 +759,12 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
                 sample_id = str(fields[0]).strip()
                 spike_reads = int(fields[1])
                 try:
-                    original_total_weight_in_g = round(float(fields[2]), 5)
+                    original_total_weight_in_g = float(fields[2])
                 except ValueError:
                     original_total_weight_in_g = float("nan")
-                amount = round(float(fields[3]), 5)
+                amount = float(fields[3])
+                if not math.isnan(amount) or not math.isclose(amount, 0, rel_tol=1e-5):
+                    observed_spike_amounts.append(amount)
                 if not math.isnan(original_total_weight_in_g):
                     observed_weights.append(original_total_weight_in_g)
                 samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
@@ -770,17 +773,18 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
     n = 0
     for values in samples.values():
         count, _, amount = values
-        if amount != round(float(0), 5):
+        if not math.isclose(amount, float(0), rel_tol=1e-5) or not math.isnan(amount):
             sum_ += count
             n += 1
 
-    mean = round(float(sum_ / n), 5)
+    mean = float(sum_ / n)
     ANA_LOG.debug(f'mean={mean}')
 
     otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
     otu_table = otu_table.T
-    if mean == round(float(1 / n), 5):
+    if math.isclose(mean, float(sum_ / n), rel_tol=1e-5):
         return
+    normalization_done = {sam_name: True for sam_name, values in samples.items()}
     for file_id, values in samples.items():
         count, weight, amount = values
         thismean = mean
@@ -788,26 +792,35 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
         file_id = str(file_id).strip()
         try:
             # do spike normalization
-            if math.isnan(weight):
+            if math.isnan(weight) or math.isclose(weight, 0, rel_tol=1e-5):
                 if len(observed_weights) == 0:
                     weight = 1  # fallback to 1
                 else:
                     weight = statistics.median(observed_weights)  # fallback to median weight
+            # At this point we are sure that we have at least one value in observed_spike_amounts
+            # Otherwise we would have returned in line 20 of this function
+            if math.isclose(amount, 0, rel_tol=1e-5) or math.isnan(amount) or amount == 0:
+                amount = statistics.median(observed_spike_amounts)  # fallback to median amount
             factor = 600 / (amount * 100)
             otu_table.loc[file_id] = (otu_table.loc[file_id] * thismean) / (count * weight * factor)
         except KeyError:
             ANA_LOG.warning(f"{file_id} is in mapping file but not in OTU Table")
+            normalization_done[file_id] = False
         except ZeroDivisionError:
+            normalization_done[file_id] = False
             pass
-        except Exception as exc:
-            ANA_LOG.warning(f"No Normalization Done. {exc}")
+        except Exception:
+            normalization_done[file_id] = False
 
-    # Writing the table
-    normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
-    otu_table.T.to_csv(str(normalized_otu_path), sep="\t")
-    ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
-    # correct rights of output folders
-    system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
+    if not all(list(normalization_done.values())):
+        # Writing the table
+        normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
+        otu_table.T.to_csv(str(normalized_otu_path), sep="\t")
+        ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
+        # correct rights of output folders
+        system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
+    else:
+        ANA_LOG.warning(f"Normalization failed for {otu_table_path.name}")
 
 
 def uniqify_map_lines(map_lines_dict: dict) -> dict:
