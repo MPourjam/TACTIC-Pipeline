@@ -923,8 +923,9 @@ def main(
     for full_id, entries in map_lines_dict.items():
         sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(TAXED_ZOTU_FILE_NAME), entries[0]))
 
-    if any([True for el in sample_seq_files_path if not Path(PurePath(el[0])).is_file()]):
-        raise ValueError("sample_seq_files_path must contain path to each samples sequence file!")
+    for taxed_path, sam_id in sample_seq_files_path:
+        if not taxed_path.is_file():
+            raise ValueError(f"{str(taxed_path)} must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
     for sample, sam_id in sample_seq_files_path:
