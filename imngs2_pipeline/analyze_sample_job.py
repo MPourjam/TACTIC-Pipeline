@@ -797,6 +797,8 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
             otu_table.loc[file_id] = (otu_table.loc[file_id] * thismean) / (count * weight * factor)
         except KeyError:
             ANA_LOG.warning(f"{file_id} is in mapping file but not in OTU Table")
+        except ZeroDivisionError:
+            pass
         except Exception as exc:
             ANA_LOG.warning(f"No Normalization Done. {exc}")
 
