@@ -127,7 +127,7 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
     given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
     sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
     if not given_argset_file or not sample_base_path:
-        raise ValueError(f"Not Valid sample_base_path or not valid argument file. Both should be string or Path object.")
+        raise ValueError("Not Valid sample_base_path or not valid argument file. Both should be string or Path object.")
 
     processed_dir_path = Path(PurePath(str(sample_base_path))).absolute()
     base_name = processed_dir_path.name.replace(PROC_DIR_SUFFIX, "")
@@ -373,6 +373,8 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 raise ValueError(f"Could not parse SampleID from mapping file. Error on line: {line}")
             try:
                 total_weight_in_g = fields[index_of_weight_col].strip()
+                # Check if the float value is in german format and if change the format to english
+                total_weight_in_g = total_weight_in_g.replace(",", ".")
                 hypo_fields[1] = total_weight_in_g
             except Exception:
                 PREP_LOG.warning(f"Could not parse weight amount from mapping file. Line: {line}\n"
@@ -380,6 +382,8 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                                  f" separated by TAB. Continuing wiht default value of NAN")
             try:
                 amount = fields[index_of_amounts_col].strip()
+                # Check if the float value is in german format and if change the format to english
+                amount = amount.replace(",", ".")
                 hypo_fields[2] = amount
             except Exception:
                 PREP_LOG.warning(f"Could not parse spike amount from mapping file. Line: {line}\n"
