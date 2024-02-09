@@ -49,7 +49,7 @@ def correct_created_files_modes(mode=777) -> bool:
     """
     It corrects the mode of created files by the pipeline.
     """
-    mode = "0o" + str(mode)
+    mode = int("0o" + str(mode), 8)
     to_change_mode = proc_helper.find_files_and_dirs_owned_by_root(INPUT_DIR)
     for fi in to_change_mode:
         fi = Path(PurePath(fi)).absolute()
