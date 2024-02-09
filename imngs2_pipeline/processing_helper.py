@@ -40,7 +40,7 @@ except ModuleNotFoundError:
     import os
 
     def file_size(f):
-        return os.path.getsize(os.path.realpath(f.name))
+        return ospath.getsize(ospath.realpath(f.name))
 
     def lock_file(f):
         msvcrt.locking(f.fileno(), msvcrt.LK_RLCK, file_size(f))
@@ -62,6 +62,39 @@ reve_file_indicators = [
     "_R2",
     "@R"
 ]
+
+# Write a function to check if the file or directory belongs to root and then change its mode 777
+# and then change it back to 755 after the operation is done.
+# This is to prevent the permission errors in the docker container.
+# Also, the user should be able to change the mode of the file or directory back to 755 if they want to.
+
+
+def find_files_and_dirs_owned_by_root(directory):
+    root_files_and_dirs = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            filepath = ospath.join(root, file)
+            try:
+                # Get file owner information
+                file_stat = os.stat(filepath)
+                file_owner = file_stat.st_uid
+                # Check if the owner is root (uid 0)
+                if file_owner == 0:
+                    root_files_and_dirs.append(filepath)
+            except Exception as e:
+                print(f"Error while processing {filepath}: {e}")
+        for dir_name in dirs:
+            dir_path = ospath.join(root, dir_name)
+            try:
+                # Get directory owner information
+                dir_stat = os.stat(dir_path)
+                dir_owner = dir_stat.st_uid
+                # Check if the owner is root (uid 0)
+                if dir_owner == 0:
+                    root_files_and_dirs.append(dir_path)
+            except Exception as e:
+                print(f"Error while processing {dir_path}: {e}")
+    return root_files_and_dirs
 
 
 def generate_timestamp(thread_safe=False):
