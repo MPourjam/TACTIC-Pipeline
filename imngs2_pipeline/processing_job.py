@@ -385,7 +385,7 @@ def addTax(input_id):
     cmd_part_0 = SINA_BIN + ' --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
     cmd_part_1 = '--threads 1 --lca-fields tax_slv --turn all '
     cmd_part_2 = '--db ' + SINA_ARB + ' --out ' + filebasename + '.fasta'
-    cmd_part_3 = ' >/dev/null 2>/dev/null'
+    cmd_part_3 = ''  # >/dev/null 2>/dev/null'  # for better logging
     # print(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     out_file = open('classifiedF.txt', 'w+')
