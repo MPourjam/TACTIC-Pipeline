@@ -163,7 +163,7 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
             this_out[1] = False
 
     if not this_out[1]:
-        PREP_LOG.info(f"Sample '{base_name}' is already processed with given arguemnt set. "
+        PREP_LOG.info(f"Sample '{this_out[0]}' is already processed with given arguemnt set. "
                       f"Skipping processing and using results in {this_out[0]}")
 
     return tuple(this_out)
@@ -499,6 +499,7 @@ def remove_spikes(
 
     # putting parent path into the spike_mapping_file
     parent_path = files_paths_abs[0].relative_to(FASTQ_DIR).parent
+    print(parent_path)
 
     # postponing file openning to avoid race condition if ran parallel
     real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
@@ -700,7 +701,7 @@ def run_imngs2(
         pass
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
-        pass
+        sys.exit(1) 
     # preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     # preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = fastq_file_dir.joinpath(SPIKE_STAT_FILE_NAME)
@@ -736,6 +737,7 @@ def run_imngs2(
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True
             samples_dirs = []
+            sys.exit(1)
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing sammples in directory {fastq_file_dir}")
         samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="*_processed/**/" + TAXED_ZOTU_FILE_NAME)
@@ -786,6 +788,7 @@ def run_imngs2(
             )
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
+            sys.exit(1)
 
     ##################
     # TODO Only Normalizing
