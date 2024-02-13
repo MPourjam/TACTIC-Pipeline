@@ -130,7 +130,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         check_expected_files_exist(latest_analysis_folder)
 
 
-def test_flat_autodiscover():
+def test_flat_autodiscover(build_image):
     def setup_file_structure(run_dir: str):
         # copy the data to the temporary directory
         subprocess.run(["cp", "-r", data, run_dir])
@@ -145,7 +145,7 @@ def test_flat_autodiscover():
         run_container(setup_file_structure)
 
 
-def test_subfolder_autodiscover():
+def test_subfolder_autodiscover(build_image):
     def setup_file_structure(run_dir: str):
         # make a subfolder and copy the data to the temporary directory
         subfolder = os.path.join(run_dir, "subfolder")
