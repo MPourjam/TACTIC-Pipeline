@@ -8,7 +8,7 @@ pytest
 ```
 
 The test have a higher runtime, as the setup builds the latest container, and runs the 
-pipeline on some test data. 
+pipeline on some test data. (21 minutes on my machine for the current test cases)
 The test data is truncated to reduce the runtime of the tests and keep the file size small.
 
 Currently, the results are just checked for the presence of the output files.
