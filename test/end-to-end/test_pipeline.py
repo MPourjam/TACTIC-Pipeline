@@ -10,7 +10,7 @@ import tempfile
 
 
 IMAGE_NAME = "tic-pipeline-test"
-data = "/home/zen/Documents/cf_microbiome/IMNGS2Pipeline/test/data/truncated"
+data = "test/data/truncated"
 
 
 @pytest.fixture(scope="session")
