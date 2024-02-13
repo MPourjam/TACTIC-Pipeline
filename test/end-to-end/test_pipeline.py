@@ -141,8 +141,7 @@ def test_flat_autodiscover(build_image):
         subprocess.run(["rmdir", f"{run_dir}/{os.path.basename(data)}"])
         return None, None
 
-    with suppress(PermissionError):
-        run_container(setup_file_structure)
+    run_container(setup_file_structure)
 
 
 def test_subfolder_autodiscover(build_image):
@@ -153,8 +152,7 @@ def test_subfolder_autodiscover(build_image):
         subprocess.run(["cp", "-r", data, subfolder])
         return None, None
 
-    with suppress(PermissionError):
-        run_container(setup_file_structure)
+    run_container(setup_file_structure)
 
 
 def test_flat_mapping(build_image):
@@ -178,8 +176,7 @@ def test_flat_mapping(build_image):
 
         return mapping_file, None
 
-    with suppress(PermissionError):
-        run_container(setup_file_structure)
+    run_container(setup_file_structure)
 
 
 def test_subfolder_mapping(build_image):
@@ -199,5 +196,4 @@ def test_subfolder_mapping(build_image):
 
         return mapping_file, None
 
-    with suppress(PermissionError):
-        run_container(setup_file_structure)
+    run_container(setup_file_structure)
