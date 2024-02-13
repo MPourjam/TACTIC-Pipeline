@@ -2,6 +2,7 @@
 import re
 import argparse
 import shutil
+import sys
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
@@ -10,8 +11,7 @@ from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
 from typing import List
-from sys import version_info
-if version_info[0] < 3:
+if sys.version_info[0] < 3:
     from pathlib2 import Path, PurePath, PureWindowsPath, PurePosixPath  # pip2 install pathlib2
 else:
     from pathlib import Path, PurePath, PureWindowsPath, PurePosixPath
@@ -43,6 +43,22 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+
+
+def correct_created_files_modes(mode=777) -> bool:
+    """
+    It corrects the mode of created files by the pipeline.
+    """
+    mode = int("0o" + str(mode), 8)
+    to_change_mode = proc_helper.find_files_and_dirs_owned_by_root(INPUT_DIR)
+    for fi in to_change_mode:
+        fi = Path(PurePath(fi)).absolute()
+        try:
+            fi.chmod(mode)
+        except Exception as exc:
+            PREP_LOG.warning(f"Could not change mode of {fi}. {exc}")
+
+    return mode
 
 
 def is_in_processed_dir(fastq_path: Path, sample_id: str = None) -> bool:
@@ -127,7 +143,7 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
     given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
     sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
     if not given_argset_file or not sample_base_path:
-        raise ValueError(f"Not Valid sample_base_path or not valid argument file. Both should be string or Path object.")
+        raise ValueError("Not Valid sample_base_path or not valid argument file. Both should be string or Path object.")
 
     processed_dir_path = Path(PurePath(str(sample_base_path))).absolute()
     base_name = processed_dir_path.name.replace(PROC_DIR_SUFFIX, "")
@@ -147,7 +163,7 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
             this_out[1] = False
 
     if not this_out[1]:
-        PREP_LOG.info(f"Sample '{base_name}' is already processed with given argument set. "
+        PREP_LOG.info(f"Sample '{this_out[0]}' is already processed with given argument set. "
                       f"Skipping processing and using results in {this_out[0]}")
 
     return tuple(this_out)
@@ -373,6 +389,8 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 raise ValueError(f"Could not parse SampleID from mapping file. Error on line: {line}")
             try:
                 total_weight_in_g = fields[index_of_weight_col].strip()
+                # Check if the float value is in german format and if change the format to english
+                total_weight_in_g = total_weight_in_g.replace(",", ".")
                 hypo_fields[1] = total_weight_in_g
             except Exception:
                 PREP_LOG.warning(f"Could not parse weight amount from mapping file. Line: {line}\n"
@@ -380,6 +398,8 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                                  f" separated by TAB. Continuing with default value of NAN")
             try:
                 amount = fields[index_of_amounts_col].strip()
+                # Check if the float value is in german format and if change the format to english
+                amount = amount.replace(",", ".")
                 hypo_fields[2] = amount
             except Exception:
                 PREP_LOG.warning(f"Could not parse spike amount from mapping file. Line: {line}\n"
@@ -479,6 +499,7 @@ def remove_spikes(
 
     # putting parent path into the spike_mapping_file
     parent_path = files_paths_abs[0].relative_to(FASTQ_DIR).parent
+    print(parent_path)
 
     # postponing file opening to avoid race condition if ran parallel
     real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
@@ -680,7 +701,7 @@ def run_imngs2(
         pass
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
-        pass
+        sys.exit(1) 
     # preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     # preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = fastq_file_dir.joinpath(SPIKE_STAT_FILE_NAME)
@@ -716,6 +737,7 @@ def run_imngs2(
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True
             samples_dirs = []
+            sys.exit(1)
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
         samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="*_processed/**/" + TAXED_ZOTU_FILE_NAME)
@@ -766,11 +788,17 @@ def run_imngs2(
             )
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
+            sys.exit(1)
 
     ##################
     # TODO Only Normalizing
     if not skip_analysis and mapping_file_path.is_file() and zotu_file_path and sotu_file_path:
         pass
+
+    # change mode of files
+    correct_created_files_modes()
+
+    sys.exit(0)
 
 
 if __name__ == "__main__":
