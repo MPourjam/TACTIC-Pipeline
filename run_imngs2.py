@@ -10,7 +10,7 @@ from imngs2_pipeline.analyze_sample_job import main as main_analysis
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from multiprocessing import cpu_count, Pool
-from typing import List
+from typing import List, Tuple
 if sys.version_info[0] < 3:
     from pathlib2 import Path, PurePath, PureWindowsPath, PurePosixPath  # pip2 install pathlib2
 else:
@@ -138,7 +138,7 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     return all(logic_test)
 
 
-def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -> (Path, bool):
+def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -> Tuple[str, bool]:
     this_out = ["", True]
     given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
     sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
@@ -302,9 +302,9 @@ def is_correct_parent(
 
 def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     """
+    mapping_file_path: should be a path to mapping file
     files_tups: should be a list of files path tuples. i.e: [(<forward_path>, <reverse_path>), ...]
     """
-    mapping_file_path = Path(PurePath(mapping_file_path)).absolute()
     valid_ids = []
     mapping_lines = []  # List[(MapLineTup, tuple)] -> from mapping file, full line for each relevant sample
     index_of_sample_id_col = None
@@ -328,11 +328,16 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
         mapping_lines.append((_row_vals_tup, file_pair))
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
-    if not mapping_file_path.is_file():
-        PREP_LOG.warning("Parsing of mapping file failed. Continuing with fake mapping file.")
+    if not mapping_file_path:
+        PREP_LOG.info("No Mapping file provided. Using default values for sample preprocessing.")
         return mapping_lines
+    mapping_file_path = Path(PurePath(mapping_file_path)).absolute()
+    # if mapping_file_path is not empty string and is not a file then raise an error
+    if not mapping_file_path.is_file():
+        PREP_LOG.error(f"Mapping file: {mapping_file_path} does not exist!")
+        raise FileNotFoundError(f"Mapping file: {mapping_file_path} does not exist!")
 
-    PREP_LOG.warning(f"When mapping file is provided ({mapping_file_path}), only samples in mapping file will get processed!!!")
+    PREP_LOG.info(f"When mapping file is provided ({mapping_file_path}), only samples in mapping file will get processed!!!")
     # If mapping_file_is there then renew the mapping_lines
     mapping_lines = []  # List[(MapLineTup, file_pair)] -> from mapping file, full line for each relevant sample
 
@@ -391,20 +396,20 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 total_weight_in_g = fields[index_of_weight_col].strip()
                 # Check if the float value is in german format and if change the format to english
                 total_weight_in_g = total_weight_in_g.replace(",", ".")
-                hypo_fields[1] = total_weight_in_g
+                hypo_fields[1] = float(total_weight_in_g)
             except Exception:
-                PREP_LOG.warning(f"Could not parse weight amount from mapping file. Line: {line}\n"
+                raise ValueError(f"Could not parse weight amount from mapping file. Line: {line}\n"
                                  f" Check the mapping file format. Columns should be"
-                                 f" separated by TAB. Continuing with default value of NAN")
+                                 f" separated by TAB. Put NAN for weight if you don't have weight.")
             try:
                 amount = fields[index_of_amounts_col].strip()
                 # Check if the float value is in german format and if change the format to english
                 amount = amount.replace(",", ".")
-                hypo_fields[2] = amount
+                hypo_fields[2] = float(amount)
             except Exception:
-                PREP_LOG.warning(f"Could not parse spike amount from mapping file. Line: {line}\n"
+                raise ValueError(f"Could not parse spike amount from mapping file. Line: {line}\n"
                                  f" Check the mapping file format. Columns should be"
-                                 f" separated by TAB. Continuing with default value of 0")
+                                 f" separated by TAB. Put default value of 0 if you don't have spike amount.")
             try:
                 parent_path = fields[index_of_parent_path_col]
                 parent_path = parent_path.strip().rstrip("\\").rstrip("/")
@@ -414,19 +419,6 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                                  f" Check the mapping file format. Columns should be"
                                  f" separated by TAB. Continuing with default value of 0.\n"
                                  f" If you are using a mapping_file without 'parent_path' column then ignroe this warning.")
-            # warn if weight is not a valid number
-            try:
-                float(hypo_fields[1])
-            except ValueError:
-                PREP_LOG.warning(
-                    f'Weight {total_weight_in_g!r} is not a valid floating point number for {sample_id!r}. Weight will be processed as NAN.')
-                hypo_fields[1] = "NAN"
-
-            # if amount cannot be parsed to float change to 0
-            try:
-                float(hypo_fields[2])
-            except ValueError:
-                hypo_fields[2] = "0"
 
             valid_ids.append(sample_id)
             map_line = MapLineTup(
@@ -701,14 +693,14 @@ def run_imngs2(
         pass
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
-        sys.exit(1) 
+        sys.exit(1)
     # preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     # preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = fastq_file_dir.joinpath(SPIKE_STAT_FILE_NAME)
     given_spike_stat_file = Path(PurePath(spike_stat_file)).absolute()
     combined_spike_stats_path = default_spike_stat_compiled if not given_spike_stat_file.is_file() else given_spike_stat_file
     reduced_samples_dirs = []
-    mapping_file_path = Path(PurePath(str(mapping_file))).absolute()  # it will return a path to current directory if mapping_file = ""
+    mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else ""  # it will return a path to current directory if mapping_file = ""
     # Analysis default vars
     zotu_file_path, sotu_file_path = ("", "")
 
@@ -792,7 +784,7 @@ def run_imngs2(
 
     ##################
     # TODO Only Normalizing
-    if not skip_analysis and mapping_file_path.is_file() and zotu_file_path and sotu_file_path:
+    if not skip_analysis and mapping_file_path and zotu_file_path and sotu_file_path:
         pass
 
     # change mode of files
@@ -848,9 +840,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
-    print(INPUT_DIR)
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
-    print(FASTQ_DIR)
     try:
         POOL_SIZE = int(args.threads)
     except Exception as exc:
