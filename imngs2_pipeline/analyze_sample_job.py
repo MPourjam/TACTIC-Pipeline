@@ -123,7 +123,7 @@ def trim_sides(five_end_trim, three_end_trim):
 
 def dereplication():
     cmd_part_0 = USEARCH_11_BIN + " -fastx_uniques analysis.fasta -relabel Zotu"
-    cmd_part_0 += " -fastaout derep.fasta -tabbedout relabel.tab"
+    cmd_part_0 += " -fastaout derep.fasta -tabbedout relabel.tab --threads " + str(POOL_SIZE)
     cmd_part_0 += " > /dev/null 2>/dev/null"
     # dereplicate reads and anotate them by multiplicity
     system_sub(cmd_part_0)
@@ -762,13 +762,15 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
                     original_total_weight_in_g = float(fields[2])
                 except ValueError:
                     original_total_weight_in_g = float("nan")
-                amount = float(fields[3])
+                try:
+                    amount = float(fields[3])
+                except ValueError:
+                    amount = float("0")
                 if not math.isnan(amount) or not math.isclose(amount, 0, rel_tol=1e-5):
                     observed_spike_amounts.append(amount)
                 if not math.isnan(original_total_weight_in_g):
                     observed_weights.append(original_total_weight_in_g)
                 samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
-
     sum_ = 1
     n = 0
     for values in samples.values():
@@ -778,11 +780,10 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
             n += 1
 
     mean = float(sum_ / n)
-    ANA_LOG.debug(f'mean={mean}')
 
     otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
     otu_table = otu_table.T
-    if math.isclose(mean, float(sum_ / n), rel_tol=1e-5):
+    if math.isclose(mean, float(1 / n), rel_tol=1e-5):
         return
     normalization_done = {sam_name: True for sam_name, values in samples.items()}
     for file_id, values in samples.items():
@@ -799,8 +800,11 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
                     weight = statistics.median(observed_weights)  # fallback to median weight
             # At this point we are sure that we have at least one value in observed_spike_amounts
             # Otherwise we would have returned in line 20 of this function
-            if math.isclose(amount, 0, rel_tol=1e-5) or math.isnan(amount) or amount == 0:
-                amount = statistics.median(observed_spike_amounts)  # fallback to median amount
+            if math.isnan(amount):
+                if len(observed_spike_amounts) == 0:
+                    amount = 0.0
+                else:
+                    amount = statistics.median(observed_spike_amounts)
             factor = 600 / (amount * 100)
             otu_table.loc[file_id] = (otu_table.loc[file_id] * thismean) / (count * weight * factor)
         except KeyError:
@@ -812,7 +816,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
         except Exception:
             normalization_done[file_id] = False
 
-    if not all(list(normalization_done.values())):
+    if all(list(normalization_done.values())):
         # Writing the table
         normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
         otu_table.T.to_csv(str(normalized_otu_path), sep="\t")
@@ -1008,12 +1012,11 @@ def main(
     cleanup()
     ANA_LOG.info('Cleanup DONE')
     # Normalizing Tables
-    if spike_stat_file:
-        try:
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), parsed_spike_stat_file_path)
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), parsed_spike_stat_file_path)
-        except Exception as exc:
-            ANA_LOG.warning(f"Normalization Faild: {exc}")
+    try:
+        normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), parsed_spike_stat_file_path)
+        normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), parsed_spike_stat_file_path)
+    except Exception as exc:
+        ANA_LOG.warning(f"Normalization Faild: {exc}")
 
     create_zip()
     ANA_LOG.info('ANALYSIS DONE')
