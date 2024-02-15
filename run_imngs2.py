@@ -229,6 +229,7 @@ def convert_mapping_entries_to_dict(map_line_entries_list: list) -> dict:  # Lis
 
     mapping_line_dict = {element[0].SampleID: element for element in map_line_entries_list}
     assert (len(mapping_line_dict) == init_count), "Different length for map_line_entries list and output dictionary"
+    print(mapping_line_dict)
     return mapping_line_dict
 
 
@@ -244,7 +245,7 @@ def correct_path_for_windows(input_path: str) -> Path:
     elif "/" in input_path:
         return PurePosixPath(input_path)
 
-    return PurePath(FASTQ_DIR)
+    return PurePath(input_path)
 
 
 def is_correct_parent(
@@ -300,6 +301,62 @@ def is_correct_parent(
     return True
 
 
+def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineTup], Tuple[str, str]]], args_yml_path: str) -> list:
+    """
+    Only processed samples in the given mapping file will be sent for analysis.
+    mapping_line_tup_list: list of tuples of mapping file lines and file pairs. e.g:
+        [
+            (
+                MapLineTup(SampleID='truncSRR13005876_S1_L001', total_weight_in_g=1.0, spike_amount=6.0, parent_path='truncated'),
+                ('/base/inputs/truncated/truncSRR13005876_S1_L001_R1_001.fastq', '/base/inputs/truncated/truncSRR13005876_S1_L001_R2_001.fastq')
+            ),
+            ...
+        ]
+    args_yml_path: path to the argument file
+    """
+    # find the taxed_zotu.fasta files in the processed samples
+    # get the parent of the processed samples
+    taxed_files_list = []
+    for x in mapping_line_tup_list:
+        # NOTE What if the name of processed directory does not match <SampleID> + PROC_DIR_SUFFIX
+        # NOTE the sample ID in mapping_line_tup_list could be uniqified before if the base name of fastq files are not unique
+        # with __<number> suffix that's why we use get_base_name to get the base name of fastq files
+        sample_id = proc_helper.get_base_name(x[1][0])
+        fastq_files_parent_dir = Path(PurePath(x[1][0])).parent.joinpath(f"{str(sample_id)}{PROC_DIR_SUFFIX}")
+        gathered_files = []
+        for found_file in fastq_files_parent_dir.rglob(f"**/{TAXED_ZOTU_FILE_NAME}"):
+            if check_taxed_zotus_fasta(found_file):
+                gathered_files.append(found_file)
+            else:
+                PREP_LOG.warning(f"{str(found_file.relative_to(FASTQ_DIR))} file is not formatted correctly."
+                                 " Proper fasta header format: '>SEQID;size=XXX;tax=KKK,PPP;CCC;OOO")
+
+        taxed_files_list.extend(gathered_files)
+
+    # So far we have all taxed_zotu.fasta files of given samples in mapping file
+    # Now we need to filter out the samples that are not in the mapping file
+    samples_dirs = [Path(PurePath(el)).parent for el in taxed_files_list]
+    # TODO:NOTE the function to decide if the preprocessed samples should go for analysis or not come here.
+    # we filter selected samples_dirs if they should be passed for analysis or not
+    # 1- Argument set of selected sample should be the same as given one in the argument
+    # 2- It should have "taxed_zotu.fasta"
+    # Show warning if the sample is filtered out with a reason
+    filtered_samples_dir = []
+    for ind in range(len(samples_dirs)):
+        curr_dir = samples_dirs[ind]
+        if valid_for_analysis(curr_dir, args_yml_path):
+            filtered_samples_dir.append(curr_dir)
+        else:
+            PREP_LOG.warning(f"{curr_dir.relative_to(FASTQ_DIR)} is not a correctly processed.")
+    samples_dirs = filtered_samples_dir
+    # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
+    # we should get sure that only one processed set from each sample is passed for analysis
+    samples_dirs_non_redundant = {str(Path(PurePath(sam_dir))).split(PROC_DIR_SUFFIX)[0]: sam_dir for sam_dir in samples_dirs}
+    samples_dirs = list(samples_dirs_non_redundant.values())
+
+    return samples_dirs
+
+
 def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     """
     mapping_file_path: should be a path to mapping file
@@ -319,11 +376,12 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
 
     for file_pair in files_tups:
         sample_id = proc_helper.get_base_name(file_pair[0])
+        curr_parent = Path(PurePath(file_pair[0])).parent.relative_to(FASTQ_DIR)
         _row_vals_tup = MapLineTup(
             sample_id,
             DEFAULT_MAP_LINE.total_weight_in_g,
             DEFAULT_MAP_LINE.spike_amount,
-            DEFAULT_MAP_LINE.parent_path
+            "" if str(curr_parent) == "." else str(curr_parent)
         )
         mapping_lines.append((_row_vals_tup, file_pair))
     # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
@@ -491,7 +549,6 @@ def remove_spikes(
 
     # putting parent path into the spike_mapping_file
     parent_path = files_paths_abs[0].relative_to(FASTQ_DIR).parent
-    print(parent_path)
 
     # postponing file opening to avoid race condition if ran parallel
     real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
@@ -635,39 +692,18 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
     return samples_dirs_path, combined_spike_stat
 
 
-def gather_files(*preproc_dirs_path, file_name=TAXED_ZOTU_FILE_NAME):
-    # print(preproc_dirs_path)
-    sam_dirs = []
-    preproc_dirs_path_deepests = []
-    for prep_dir in preproc_dirs_path:
-        prep_dir = Path(PurePath(prep_dir)).absolute()
-        if not prep_dir.is_dir():
-            continue
-        preproc_dirs_path_deepests.append(str(prep_dir))
-    for prep_dir in preproc_dirs_path_deepests:
-        prep_dir = Path(PurePath(prep_dir))
-        for diri in range(len(preproc_dirs_path_deepests)):
-            added_prep_dir = Path(PurePath(preproc_dirs_path_deepests[diri]))
-            deeper_path = added_prep_dir if len(added_prep_dir.parts) > len(prep_dir.parts) else prep_dir
-            shallower_path = prep_dir if deeper_path == added_prep_dir else added_prep_dir
-            if str(shallower_path) in str(deeper_path):
-                preproc_dirs_path_deepests[diri] = str(deeper_path)
-
-    preproc_dirs_path = list(set(preproc_dirs_path_deepests))
+def check_taxed_zotus_fasta(file_path: str) -> bool:
+    format_is_correct = True
     size_rgx = re.compile(r"size=([0-9]+);")
     tax_rgx = re.compile(r"tax=([^;]+){0,7};")
-    for ds in preproc_dirs_path:
-        for fs in Path(PurePath(ds)).rglob(file_name):
-            with open(fs) as fs_fio:
-                line = fs_fio.readline().strip()
-                size_mo = size_rgx.search(line)
-                tax_mo = tax_rgx.search(line)
-                if not all([line, line.startswith(">"), size_mo, tax_mo]):
-                    PREP_LOG.warning(f"{str(fs)} file is not formatted correctly. Proper fasta header format: '>SEQID;size=XXX;tax=KKK,PPP;CCC;OOO")
-                    continue
-            sam_dirs.append(str(fs))
+    with open(file_path) as fs_fio:
+        line = fs_fio.readline().strip()
+        size_mo = size_rgx.search(line)
+        tax_mo = tax_rgx.search(line)
+        if not all([line, line.startswith(">"), size_mo, tax_mo]):
+            format_is_correct = False
 
-    return sam_dirs
+    return format_is_correct
 
 
 def run_imngs2(
@@ -703,17 +739,17 @@ def run_imngs2(
     mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else ""  # it will return a path to current directory if mapping_file = ""
     # Analysis default vars
     zotu_file_path, sotu_file_path = ("", "")
-
+    # Preparing mapping file entries
+    # Gathering sequence files
+    PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
+    seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
+    seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
+    PREP_LOG.info("{} samples were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
+    # Filtering fastq files if they are already in processed directories
+    # Sometimes failed processing leaves fastq files in the processing directories
+    mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
     if not skip_preprocess:
         try:
-            # Gathering sequence files
-            PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
-            seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
-            seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
-            PREP_LOG.info("{} samples were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
-            # Filtering fastq files if they are already in processed directories
-            # Sometimes failed processing leaves fastq files in the processing directories
-            mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             # running preprocessing
             with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
@@ -732,24 +768,8 @@ def run_imngs2(
             sys.exit(1)
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
-        samp_zotu_seq_files = gather_files(*[fastq_file_dir], file_name="*_processed/**/" + TAXED_ZOTU_FILE_NAME)
-        samples_dirs = [Path(PurePath(el)).parent for el in samp_zotu_seq_files]
-
-    # TODO:NOTE the function to decide if the preprocessed samples should go for analysis or not come here.
-    # we filter selected samples_dirs if they should be passed for analysis or not
-    # 1- Argument set of selected sample should be the same as given one in the argument
-    # 2- It should have "taxed_zotu.fasta"
-    # Show warning if the sample is filtered out with a reason
-    filtered_samples_dir = []
-    for ind in range(len(samples_dirs)):
-        curr_dir = samples_dirs[ind]
-        if valid_for_analysis(curr_dir, args_yml_file):
-            filtered_samples_dir.append(curr_dir)
-    samples_dirs = filtered_samples_dir
-    # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
-    # we should get sure that only one processed set from each sample is passed for analysis
-    samples_dirs_non_redundant = {str(Path(PurePath(sam_dir))).split(PROC_DIR_SUFFIX)[0]: sam_dir for sam_dir in samples_dirs}
-    samples_dirs = list(samples_dirs_non_redundant.values())
+        samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
+        print(samples_dirs)
 
     # Runing analysis
     if not skip_analysis:
@@ -768,8 +788,6 @@ def run_imngs2(
             if missed_samples:
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
-            samp_zotu_seq_files = gather_files(*reduced_samples_dirs, file_name=TAXED_ZOTU_FILE_NAME)
-
             zotu_file_path, sotu_file_path = main_analysis(
                 analysis_dir=analysis_dir,
                 spike_stat_file=combined_spike_stats_path,
