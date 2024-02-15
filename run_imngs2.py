@@ -229,7 +229,6 @@ def convert_mapping_entries_to_dict(map_line_entries_list: list) -> dict:  # Lis
 
     mapping_line_dict = {element[0].SampleID: element for element in map_line_entries_list}
     assert (len(mapping_line_dict) == init_count), "Different length for map_line_entries list and output dictionary"
-    print(mapping_line_dict)
     return mapping_line_dict
 
 
@@ -769,7 +768,6 @@ def run_imngs2(
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
         samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
-        print(samples_dirs)
 
     # Runing analysis
     if not skip_analysis:
