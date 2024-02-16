@@ -1,5 +1,6 @@
 #! /usr/local/bin/python
 import re
+import signal
 import argparse
 import shutil
 import sys
@@ -43,6 +44,19 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+
+
+def handle_system_signals(signum, frame):
+    """
+    Handles system signals to change the permission of created files and directories by the pipeline.
+    """
+    _ = correct_created_files_modes()
+    sys.exit(1)
+
+
+# Register the signal handler
+signal.signal(signal.SIGINT, handle_system_signals)
+signal.signal(signal.SIGTERM, handle_system_signals)
 
 
 def correct_created_files_modes(mode=777) -> bool:
