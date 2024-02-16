@@ -1,15 +1,13 @@
 import os
 import re
-import math
 import shutil
-import statistics
 import subprocess
-import pandas as pd
 from os import chdir, system
 from multiprocessing import cpu_count
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
 from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
+from .spike_normalizer import normalize_otu_table
 from sys import version_info
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # pip2 install pathlib2
@@ -738,95 +736,6 @@ def fasta_name_with_space(filepath):
     system_sub("mv {} {}".format(fout_path, filepath))
 
 
-def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
-    """
-    Given a path to a OTU table and a path to a spike_stat table file, it will
-    normalize the OTU table according to spike count in spike_stat_file
-    """
-    otu_table_path = Path(PurePath(otu_table_path)).absolute()
-    spikes_stats_path = Path(PurePath(spikes_stats_path)).absolute()
-    samples = {}
-    observed_weights = []
-    observed_spike_amounts = []
-    with open(spikes_stats_path, 'r') as stats_h:
-        for line in stats_h:
-            if line.startswith("#"):
-                assert (SPIKE_STAT_HEADER in line.strip())
-            elif line == "\n":
-                continue
-            else:
-                fields = line.strip().split("\t")
-                sample_id = str(fields[0]).strip()
-                spike_reads = int(fields[1])
-                try:
-                    original_total_weight_in_g = float(fields[2])
-                except ValueError:
-                    original_total_weight_in_g = float("nan")
-                try:
-                    amount = float(fields[3])
-                except ValueError:
-                    amount = float("0")
-                if not math.isnan(amount) or not math.isclose(amount, 0, rel_tol=1e-5):
-                    observed_spike_amounts.append(amount)
-                if not math.isnan(original_total_weight_in_g):
-                    observed_weights.append(original_total_weight_in_g)
-                samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
-    sum_ = 1
-    n = 0
-    for values in samples.values():
-        count, _, amount = values
-        if not math.isclose(amount, float(0), rel_tol=1e-5) or not math.isnan(amount):
-            sum_ += count
-            n += 1
-
-    mean = float(sum_ / n)
-
-    otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
-    otu_table = otu_table.T
-    if math.isclose(mean, float(1 / n), rel_tol=1e-5):
-        return
-    normalization_done = {sam_name: True for sam_name, values in samples.items()}
-    for file_id, values in samples.items():
-        count, weight, amount = values
-        thismean = mean
-        factor = None
-        file_id = str(file_id).strip()
-        try:
-            # do spike normalization
-            if math.isnan(weight) or math.isclose(weight, 0, rel_tol=1e-5):
-                if len(observed_weights) == 0:
-                    weight = 1  # fallback to 1
-                else:
-                    weight = statistics.median(observed_weights)  # fallback to median weight
-            # At this point we are sure that we have at least one value in observed_spike_amounts
-            # Otherwise we would have returned in line 20 of this function
-            if math.isnan(amount):
-                if len(observed_spike_amounts) == 0:
-                    amount = 0.0
-                else:
-                    amount = statistics.median(observed_spike_amounts)
-            factor = 600 / (amount * 100)
-            otu_table.loc[file_id] = (otu_table.loc[file_id] * thismean) / (count * weight * factor)
-        except KeyError:
-            ANA_LOG.warning(f"{file_id} is in mapping file but not in OTU Table")
-            normalization_done[file_id] = False
-        except ZeroDivisionError:
-            normalization_done[file_id] = False
-            pass
-        except Exception:
-            normalization_done[file_id] = False
-
-    if all(list(normalization_done.values())):
-        # Writing the table
-        normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
-        otu_table.T.to_csv(str(normalized_otu_path), sep="\t")
-        ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
-        # correct rights of output folders
-        system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
-    else:
-        ANA_LOG.warning(f"Normalization failed for {otu_table_path.name}")
-
-
 def uniqify_map_lines(map_lines_dict: dict) -> dict:
     """
     Given a list of map lines, it will return a list of map line tuples with
@@ -1013,11 +922,25 @@ def main(
     ANA_LOG.info('Cleanup DONE')
     # Normalizing Tables
     try:
-        normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), parsed_spike_stat_file_path)
-        normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), parsed_spike_stat_file_path)
+        zotu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name))), str(parsed_spike_stat_file_path))
     except Exception as exc:
-        ANA_LOG.warning(f"Normalization Faild: {exc}")
-
+        ANA_LOG.warning(f"No Normalization applied on {ZOTUs_table_name}: {exc}")
+    else:
+        zotu_norm_methods = list(zotu_norm_methods)
+        norm_m_len = len(zotu_norm_methods)
+        first_part = ", ".join(zotu_norm_methods[:-1]) if norm_m_len > 0 else "No"
+        last_part = first_part + " and " + str(zotu_norm_methods[-1]) if norm_m_len > 1 else first_part
+        ANA_LOG.info(f"{last_part} normalization method(s) applied on {ZOTUs_table_name}")
+    try:
+        otu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name))), str(parsed_spike_stat_file_path))
+    except Exception as exc:
+        ANA_LOG.info(f"No Normalization applied on {SOTUs_table_name}: {exc}")
+    else:
+        otu_norm_methods = list(otu_norm_methods)
+        norm_m_len = len(otu_norm_methods)
+        first_part = ", ".join(otu_norm_methods[:-1]) if norm_m_len > 0 else "No"
+        last_part = first_part + " and " + str(otu_norm_methods[-1]) if norm_m_len > 1 else first_part
+        ANA_LOG.info(f"{last_part} normalization method(s) applied on {SOTUs_table_name}")
     create_zip()
     ANA_LOG.info('ANALYSIS DONE')
     return ANALYSIS_DIR + ZOTUs_table_name, ANALYSIS_DIR + SOTUs_table_name
