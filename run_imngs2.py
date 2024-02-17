@@ -448,23 +448,28 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             raise Exception(msg)
 
         # injecting parent_path
-        index_of_parent_path_col = index_of_parent_path_col if index_of_parent_path_col else len(MAPPING_FILE_COLS)
+        index_of_parent_path_col = index_of_parent_path_col if index_of_parent_path_col else len(columns)
         # looping over lines
         for line in mapping_file_h:
             line = line.strip().rstrip()
             if line.startswith('#'):
                 continue
             # placing default values
-            hypo_fields = ["", "NAN", "0", ""]
+            hypo_fields = [
+                "",
+                str(DEFAULT_MAP_LINE.total_weight_in_g),
+                str(DEFAULT_MAP_LINE.spike_amount),
+                str(DEFAULT_MAP_LINE.parent_path)
+            ]
             # Parsing lines
             fields = line.split('\t')
             try:
-                sample_id = fields[index_of_sample_id_col].strip()
+                sample_id = str(fields[index_of_sample_id_col]).strip()
                 hypo_fields[0] = sample_id
             except Exception:
                 raise ValueError(f"Could not parse SampleID from mapping file. Error on line: {line}")
             try:
-                total_weight_in_g = fields[index_of_weight_col].strip()
+                total_weight_in_g = str(fields[index_of_weight_col]).strip()
                 # Check if the float value is in german format and if change the format to english
                 total_weight_in_g = total_weight_in_g.replace(",", ".")
                 hypo_fields[1] = float(total_weight_in_g)
@@ -473,7 +478,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                                  f" Check the mapping file format. Columns should be"
                                  f" separated by TAB. Put NAN for weight if you don't have weight.")
             try:
-                amount = fields[index_of_amounts_col].strip()
+                amount = str(fields[index_of_amounts_col]).strip()
                 # Check if the float value is in german format and if change the format to english
                 amount = amount.replace(",", ".")
                 hypo_fields[2] = float(amount)
