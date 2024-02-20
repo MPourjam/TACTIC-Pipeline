@@ -926,21 +926,13 @@ def main(
     except Exception as exc:
         ANA_LOG.warning(f"No Normalization applied on {ZOTUs_table_name}: {exc}")
     else:
-        zotu_norm_methods = list(zotu_norm_methods)
-        norm_m_len = len(zotu_norm_methods)
-        first_part = ", ".join(zotu_norm_methods[:-1]) if norm_m_len > 0 else "No"
-        last_part = first_part + " and " + str(zotu_norm_methods[-1]) if norm_m_len > 1 else first_part
-        ANA_LOG.info(f"{last_part} normalization method(s) applied on {ZOTUs_table_name}")
+        ANA_LOG.info(f"{zotu_norm_methods} normalization method(s) applied on {ZOTUs_table_name}")
     try:
         otu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name))), str(parsed_spike_stat_file_path))
     except Exception as exc:
         ANA_LOG.info(f"No Normalization applied on {SOTUs_table_name}: {exc}")
     else:
-        otu_norm_methods = list(otu_norm_methods)
-        norm_m_len = len(otu_norm_methods)
-        first_part = ", ".join(otu_norm_methods[:-1]) if norm_m_len > 0 else "No"
-        last_part = first_part + " and " + str(otu_norm_methods[-1]) if norm_m_len > 1 else first_part
-        ANA_LOG.info(f"{last_part} normalization method(s) applied on {SOTUs_table_name}")
+        ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {SOTUs_table_name}")
     create_zip()
     ANA_LOG.info('ANALYSIS DONE')
     return ANALYSIS_DIR + ZOTUs_table_name, ANALYSIS_DIR + SOTUs_table_name

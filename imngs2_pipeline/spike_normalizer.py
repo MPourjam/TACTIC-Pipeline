@@ -4,8 +4,9 @@ import subprocess
 import math
 import statistics
 import pandas as pd
+from enum import Enum
 # from imngs2_pipeline.processing_helper import gimmelogger
-from processing_helper import gimmelogger
+from .processing_helper import gimmelogger
 
 from sys import version_info
 if version_info[0] < 3:
@@ -20,6 +21,13 @@ NORM_LOG = gimmelogger(
     log_file=Path.cwd().joinpath("Analysis_log.txt"),
     only_file=True
 )
+
+
+class SpikeNormValidity(str, Enum):
+    NS = "NotSpiked"
+    NA = "NotApplicable"
+    PC = "PossibleContamination"
+    PS = "PossiblySpiked"
 
 
 def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_methods: set = {"Spike", "SampleMinCount"}) -> set:
@@ -47,8 +55,10 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
             else:
                 fields = line.strip().split("\t")
                 sample_id = fields[0]
+                # Inferring spike reads, weight and amount from the spike stats file
                 try:
-                    spike_reads = int(fields[1])
+                    spike_reads = str(fields[1]).replace(",", ".").split(".")[0]
+                    spike_reads = int(spike_reads)
                 except Exception:
                     NORM_LOG.warning(f"Could not parse spike reads for sample {sample_id}. Setting to 0.")
                     spike_reads = 0
@@ -60,6 +70,23 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
                     amount = float(fields[3])
                 except Exception:
                     amount = float("nan")
+                # Categorizing entries based on the validity of the spike normalization
+                if spike_reads == 0 and amount > 0.0:
+                    # This is a possible mistake so that normalization with spike is not applicable
+                    spike_nrom_validity = SpikeNormValidity.NA
+                elif spike_reads == 0 and (math.isclose(amount, 0, abs_tol=1e-5) or math.isnan(amount)):
+                    # The sample is not spiked
+                    spike_nrom_validity = SpikeNormValidity.NS
+                elif spike_reads > 0 and math.isclose(amount, 0, abs_tol=1e-5):
+                    # The sample is not spiked but has spiked reads count
+                    # This is a possible contamination so that we force spike_reads to be 0
+                    # Then SpikeNormValidity.PC is equal to SpikeNormValidity.NS
+                    spike_nrom_validity = SpikeNormValidity.PC
+                    spike_reads = 0
+                else:
+                    # The sample is spiked but might have missed values for weight or amount
+                    spike_nrom_validity = SpikeNormValidity.PS
+                # Collecting observed valid values for spike normalization
                 if spike_reads > 0:
                     sum += spike_reads
                     n += 1
@@ -68,14 +95,17 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
                     observed_amounts.append(amount)
                 if not math.isnan(original_total_weight_in_g):
                     observed_weights.append(original_total_weight_in_g)
-                samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
+                samples[sample_id] = (spike_reads, original_total_weight_in_g, amount, spike_nrom_validity)
 
     otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
 
-    if len(observed_amounts) == 0 or len(observed_counts) == 0:
+    spike_norm_invalid_samples = [sample_id for sample_id, values in samples.items() if values[3] not in {SpikeNormValidity.PS}]
+    if len(observed_amounts) == 0 or len(observed_counts) == 0 or any(spike_norm_invalid_samples):
         # delete "Spike" from norm_methods set if amount and count are not inferralbe from the rest of entries
-        NORM_LOG.warning(f"Normalization method 'Spike' is not applicable."
-                         " No valid spike reads or amount found in spike stats file.")
+        NORM_LOG.info(
+            f"Normalization method 'Spike' is not applicable."
+            " Some of entires in spike stats file are not valid"
+            " for spike normalization. Possible mixture of spiked and non-spiked samples!")
         norm_methods.discard("Spike")
     # Raise index error if not all otu_tables columns are in samples
     # Do not include the first and last column in the check
@@ -87,35 +117,24 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
         otu_table_copy = otu_table.copy()
         try:
             for file_id, values in samples.items():
-                count, weight, amount = values
+                count, weight, amount, spike_norm_validity = values
                 factor = None
                 if norm_method == "Spike":
                     thismean = sum / n  # mean of spike reads
-                    if math.isnan(weight):
+                    # Interpolation of missing values for weight and amount
+                    if math.isnan(amount):
+                        amount = statistics.median(observed_amounts)
+                    if math.isnan(weight) or math.isclose(weight, 0, abs_tol=1e-5):
                             if len(observed_weights) == 0:
                                 weight = 1  # fallback to 1
                             else:
                                 weight = statistics.median(observed_weights)  # fallback to median weight
-                    # At this point we are sure that either observed_amounts or observed_counts are not empty
-                    # If amount is 0 then we exclude this sample from normalization
-                    # if amount is nan then we use the median of the observed amounts
-                    if math.isclose(count, 0, abs_tol=1e-5):
-                        count = statistics.mean(observed_counts)
-                    # TODO: correct it
-                    if math.isnan(amount):
-                        amount = statistics.median(observed_amounts)
-                    # If count is 0 then the value is treated as missed and we exclude this sample from normalization
-                    elif math.isclose(amount, 0, abs_tol=1e-5):
-                        # NOTE: What if we put amount to 0.00001 when it is 0?
-                        # dropping the column from otu_table_copy
-                        # set thismean to 1 to avoid division by 0 and having spike_count_factor = 1 
-                        count = thismean
-                        amount = 0.0001
-
                     molarity_factor = 600 / (amount * 100)
                     spike_count_factor = thismean / count
                     # NOTE:TODO Having molarity factor and taking 600 Microliter of all samples
-                    # in the lab make normalization to weight meaningless
+                    # in the lab make normalization to weight meaningless?
+                    # factor = 600 / (amount * 100)
+                    # otu_table[file_id] = (otu_table[file_id] * thismean) / (count * weight * factor)
                     factor = spike_count_factor / (weight * molarity_factor)
                 elif norm_method == "SampleMinCount":
                     thismean = otu_table.iloc[:, :-1].sum().min()
