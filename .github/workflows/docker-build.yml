@@ -45,6 +45,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
+        file: "./Dockerfile.IMNGS2Pipeline"
         tags: ${{ steps.meta.outputs.tags }}
         outputs: type=tar,dest=image.tar
     - name: Compress image tar
