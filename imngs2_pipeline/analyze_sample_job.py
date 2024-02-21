@@ -36,8 +36,8 @@ POOL_SIZE = max_pool if max_pool > 0 else 1
 
 
 # overwriting system_sub() to run it with subprocess.run
-def system_sub(cmd_args_list: list, force_log: bool = False):
-    run_output, cmd_list = loud_subprocess(cmd_args_list)
+def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False):
+    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell)
     # logging
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
@@ -128,8 +128,7 @@ def trim_sides(five_end_trim, three_end_trim):
         '-stripleft',
         str(three_end_trim),
         '-fastaout',
-        'filtered1.fasta',
-        USEARCH_TAIL
+        'filtered1.fasta'
     ]
     system_sub(cmd_to_call_list, force_log=True)
     # cmd_2 = 'mv filtered1.fasta analysis.fasta'
@@ -350,9 +349,6 @@ def clusterOTUs():
         "1",
         "-uparseout",
         "z2o.tab",
-        ">",
-        "/dev/null",
-        "2>&1",
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("otus1.fa")
@@ -408,7 +404,6 @@ def keep_good_ZOTUs():
         "matched_ZOTUS.txt",
         "-fastaout",
         "nochi_ZOTUs.fasta",
-        USEARCH_TAIL
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("nochi_ZOTUs.fasta")
@@ -428,8 +423,7 @@ def build_ZOTU_table():
         "-otutabout",
         "zotu_table.txt",
         "-id",
-        "0.97",
-        USEARCH_TAIL
+        "0.97"
     ]
     system_sub(cmd_to_call_list, force_log=True)
 
@@ -511,8 +505,7 @@ def select_zotu_seqs():
         "-labels",
         "ZOTU_map.tab",
         "-fastaout",
-        "ZOTUs-Seqs.fasta",
-        USEARCH_TAIL
+        "ZOTUs-Seqs.fasta"
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("ZOTUs-Seqs.fasta")
@@ -541,10 +534,7 @@ def addTax():
         "--db",
         SINA_ARB,
         "--out",
-        "test.fasta",
-        ">",
-        "/dev/null",
-        "2>&1",
+        "test.fasta"
     ]
     system_sub(cmd_to_call_list, force_log=True)
 
@@ -587,9 +577,6 @@ def addTax_new(zotu_fasta_path):
         SINA_ARB,
         "--out",
         "test_{}".format(filename),
-        ">",
-        "/dev/null",
-        "2>&1",
     ]
     system_sub(cmd_to_call_list, force_log=True)
 
@@ -847,9 +834,6 @@ def sina_alignment():
         SINA_ARB,
         "--out",
         "test_z.fasta",
-        ">",
-        "/dev/null",
-        "2>&1",
     ]
     system_sub(cmd_to_call_list, force_log=True)
     # system_sub(classifier_dir + cmd_part_0_1 + cmd_part_1 + cmd_part_2_1 + cmd_part_3)
@@ -868,9 +852,6 @@ def sina_alignment():
         SINA_ARB,
         "--out",
         "test_s.fasta",
-        ">",
-        "/dev/null",
-        "2>&1",
     ]
     system_sub(cmd_to_call_list, force_log=True)
 
@@ -962,7 +943,7 @@ def create_trees():
         ">",
         "sotu_aml.tre",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, shell=True)
     cmd_to_call_list = [
         BIN_DIR + "FastTree",
         "-gtr",
@@ -974,7 +955,7 @@ def create_trees():
         ">",
         "zotu_aml.tre",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, shell=True)
 
 
 def cleanup():
@@ -982,7 +963,7 @@ def cleanup():
                  "for_tree_test_s.fasta", "for_tree_test_z.fasta", "test_s.fasta", "test_z.fasta",
                  "test_s.csv", "test_z.csv", "log_file.txt"]
     for f in to_remove:
-        system_sub(["rm", "-f", f])
+        system_sub(["rm", "-f", f], shell=True)
 
 
 def create_zip():
@@ -1209,7 +1190,7 @@ def main(
     chdir(ANALYSIS_DIR)
     shutil.rmtree(TIC_Result_DIR)
     ##################
-    system_sub("mv ./TICOut/* .".split(""))
+    system_sub("mv ./TICOut/* .".split(""), shell=True)
     shutil.rmtree("./TICOut")
     cleanup()
     ANA_LOG.info('Cleanup DONE')

@@ -66,7 +66,7 @@ reve_file_indicators = [
 
 
 # overwriting system_sub() to run it with subprocess.run
-def loud_subprocess(cmd_args_list: list):
+def loud_subprocess(cmd_args_list: list, shell_bool: bool = False):
     dev_null_rgx = re.compile(r"(\s+)?([12]?>)(\s+)?(/dev/null|&1|&2))")
     if not isinstance(cmd_args_list, list):
         raise ValueError("cmd_args_list should be a list")
@@ -81,7 +81,7 @@ def loud_subprocess(cmd_args_list: list):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding='utf-8',
-        shell=False,
+        shell=shell_bool,
     )
     return run_output, cmd_list
 
