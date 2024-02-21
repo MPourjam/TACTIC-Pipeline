@@ -1,12 +1,11 @@
 import os
 import re
 import shutil
-import subprocess
 from os import chdir
 from multiprocessing import cpu_count
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
-from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
+from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter, loud_subprocess
 from .spike_normalizer import normalize_otu_table
 from sys import version_info
 if version_info[0] < 3:
@@ -38,26 +37,9 @@ POOL_SIZE = max_pool if max_pool > 0 else 1
 
 # overwriting system_sub() to run it with subprocess.run
 def system_sub(cmd_args_list: list, force_log: bool = False):
-    dev_null_rgx = re.compile(r"(\s+)?([12]?>)(\s+)?(/dev/null|&1|&2))")
-    if not isinstance(cmd_args_list, list):
-        raise ValueError("cmd_args_list should be a list")
-    cmd_string = "\tXX\t".join(cmd_args_list)
-    # remove any null redirector from the given command
-    # remove  > /dev/null 2>&1
-    cmd_string = re.sub(dev_null_rgx, "", cmd_string)
-    cmd_list = cmd_string.split("\tXX\t")
-    cmds_to_write_log = ["usearch", "sina", "sortmerna"]
-    capture_output_bool = any([True for el in cmds_to_write_log[:2] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
-    # If capture_output_bool is true then do not redirect to /dev/null
-    run_output = subprocess.run(
-        cmd_list,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        encoding='utf-8',
-        shell=False,
-    )
+    run_output, cmd_list = loud_subprocess(cmd_args_list)
     # logging
-    if capture_output_bool or force_log:
+    if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
         msg += f"STDOUT: {run_output.stdout}\n\n"
         ANA_LOG.info(msg)
@@ -122,7 +104,7 @@ def append_reads(taxed_ZOTUs_file_path, sample_id, analysis_dir):
     ]
     # cmd = USEARCH_11_BIN + ' -fastx_relabel ' + taxed_ZOTUs_file_path + ' -prefix ' + dataset_name
     # cmd += '. -fastaout new -keep_annots'
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     cmd_to_call_list = [
         "cat",
         "new",
@@ -149,7 +131,7 @@ def trim_sides(five_end_trim, three_end_trim):
         'filtered1.fasta',
         USEARCH_TAIL
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     # cmd_2 = 'mv filtered1.fasta analysis.fasta'
     cmd_to_call_list = [
         "mv",
@@ -180,7 +162,7 @@ def dereplication():
         str(POOL_SIZE),
     ]
     # dereplicate reads and anotate them by multiplicity
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("derep.fasta")
     contents = open('relabel.tab', 'r')
     zotus_dict = dict()
@@ -276,7 +258,7 @@ def sort_seqs():
         "-fastaout",
         "sorted.fasta",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("sorted.fasta")
 
 
@@ -295,7 +277,7 @@ def clusterZOTUs():
         "-zotus",
         "zotus.fasta",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("zotus.fasta")
     cmd_to_call_list = [
         "rm",
@@ -334,7 +316,7 @@ def filter16S():
         "--num_alignments",
         "1",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     system_sub(["rm", "-r", "idx", "kvdb"])
 
 
@@ -372,7 +354,7 @@ def clusterOTUs():
         "/dev/null",
         "2>&1",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("otus1.fa")
 
 
@@ -428,7 +410,7 @@ def keep_good_ZOTUs():
         "nochi_ZOTUs.fasta",
         USEARCH_TAIL
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("nochi_ZOTUs.fasta")
 
 
@@ -449,7 +431,7 @@ def build_ZOTU_table():
         "0.97",
         USEARCH_TAIL
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
 
 
 def get_samples_sizes(input_file):
@@ -532,7 +514,7 @@ def select_zotu_seqs():
         "ZOTUs-Seqs.fasta",
         USEARCH_TAIL
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("ZOTUs-Seqs.fasta")
     system_sub(["rm", "filtered_zotu_table_list.txt"])
     addTax_new("ZOTUs-Seqs.fasta")
@@ -564,7 +546,7 @@ def addTax():
         "/dev/null",
         "2>&1",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
 
     out_file = open('classifiedF.txt', 'w+')
     silva_contents_header = read_file('test.csv')
@@ -609,7 +591,7 @@ def addTax_new(zotu_fasta_path):
         "/dev/null",
         "2>&1",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
 
     new_taxed_path = os.path.join(dirname, "taxed_{}".format(filename))
     out_file = open(new_taxed_path, 'w+')
@@ -869,7 +851,7 @@ def sina_alignment():
         "/dev/null",
         "2>&1",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
     # system_sub(classifier_dir + cmd_part_0_1 + cmd_part_1 + cmd_part_2_1 + cmd_part_3)
     cmd_to_call_list = [
         classifier_dir + "sina",
@@ -890,7 +872,7 @@ def sina_alignment():
         "/dev/null",
         "2>&1",
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
 
 
 def extract_columns(input_file_name):

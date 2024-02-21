@@ -1,4 +1,5 @@
 import pickle as pk
+import re
 import yaml
 import logging
 import subprocess
@@ -63,10 +64,26 @@ reve_file_indicators = [
     "@R"
 ]
 
-# Write a function to check if the file or directory belongs to root and then change its mode 777
-# and then change it back to 755 after the operation is done.
-# This is to prevent the permission errors in the docker container.
-# Also, the user should be able to change the mode of the file or directory back to 755 if they want to.
+
+# overwriting system_sub() to run it with subprocess.run
+def loud_subprocess(cmd_args_list: list):
+    dev_null_rgx = re.compile(r"(\s+)?([12]?>)(\s+)?(/dev/null|&1|&2))")
+    if not isinstance(cmd_args_list, list):
+        raise ValueError("cmd_args_list should be a list")
+    cmd_string = "\t\t".join(cmd_args_list)
+    # remove any null redirector from the given command
+    # remove  > /dev/null 2>&1
+    cmd_string = re.sub(dev_null_rgx, "", cmd_string)
+    cmd_list = cmd_string.split("\t\t")
+    # If capture_output_bool is true then do not redirect to /dev/null
+    run_output = subprocess.run(
+        cmd_list,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding='utf-8',
+        shell=False,
+    )
+    return run_output, cmd_list
 
 
 def find_files_and_dirs_owned_by_root(directory):
@@ -231,7 +248,7 @@ def gzip_to_fastq(*files):
         tmp_file = str(file_dir.joinpath("_{}_".format(tstmp)))
         f = str(f)
         if 'zip' in str(typ):
-            run_output = subprocess.run(
+            _ = subprocess.run(
                 [
                     "gunzip",
                     "--stdout",
@@ -241,7 +258,7 @@ def gzip_to_fastq(*files):
                 ],
                 capture_output=True,
                 text=True)
-            run_output = subprocess.run(
+            _ = subprocess.run(
                 [
                     "rm",
                     "-r",
@@ -249,7 +266,7 @@ def gzip_to_fastq(*files):
                 ],
                 capture_output=True,
                 text=True)
-            run_output = subprocess.run(
+            _ = subprocess.run(
                 [
                     "mv",
                     f"{tmp_file}",
@@ -259,7 +276,7 @@ def gzip_to_fastq(*files):
                 text=True)
             fastq_paths.append(asciifile)
         elif 'zip' in str(app):  # For zipped files
-            run_output = subprocess.run(
+            _ = subprocess.run(
                 [
                     "unzip",
                     f"{f}",
@@ -268,7 +285,7 @@ def gzip_to_fastq(*files):
                 ],
                 capture_output=True,
                 text=True)
-            run_output = subprocess.run(
+            _ = subprocess.run(
                 [
                     "rm",
                     "-r",
@@ -276,7 +293,7 @@ def gzip_to_fastq(*files):
                 ],
                 capture_output=True,
                 text=True)
-            run_output = subprocess.run(
+            _ = subprocess.run(
                 [
                     "mv",
                     f"{tmp_file}",
@@ -290,7 +307,7 @@ def gzip_to_fastq(*files):
                 with open(f, "r+") as fi:
                     line = fi.readline()
                 if len(line) == len(line.encode()):  # If it's ascii
-                    run_output = subprocess.run(
+                    _ = subprocess.run(
                         [
                             "mv",
                             f"{f}",
