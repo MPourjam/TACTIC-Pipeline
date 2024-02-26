@@ -666,8 +666,12 @@ def run_preprocessing(
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
+        PREP_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
         shutil.rmtree(str(sample_dir))
-        PREP_LOG.warning("Failed while processing {}, Deleting {}".format(sample_dir.name, sample_dir))
+        # If parent of sample_dir is empty then remove it
+        if not list(sample_dir.parent.iterdir()):
+            shutil.rmtree(str(sample_dir.parent))
+        sample_dir = None
 
     return sample_dir
 
@@ -683,7 +687,7 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
             if not sam_dir_path.is_dir():
                 raise ValueError(f"{sam_dir_path} does not exist!")
         except Exception as exc:
-            PREP_LOG.warning(f"Invalid sample directory for {sam_dir}. {exc}")
+            PREP_LOG.warning(f"Invalid sample directory for {exc}")
             continue
         samples_dirs_path.append(sam_dir_path)
 
@@ -789,7 +793,7 @@ def run_imngs2(
         samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
 
     # Runing analysis
-    if not skip_analysis:
+    if not skip_analysis and bool(samples_dirs):
         try:
             if not bool(samples_dirs):
                 msg = "No samples were completely processed or had same processing "\
