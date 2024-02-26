@@ -1,0 +1,7 @@
+*.pyc
+
+# test artifacts
+image.tar*
+
+# ide artifacts
+.idea
