@@ -118,7 +118,8 @@ if (TRUE){
 #---------------------------------------
 # RANK ABUNDANCE PLOT
 #---------------------------------------
-order_norm_counts <- sort(my_otu_table, decreasing=TRUE)
+my_otu_table_t <- as.data.frame(t(my_otu_table))
+order_norm_counts <- t(my_otu_table_t[order(my_otu_table_t$size, decreasing=TRUE), , drop=FALSE])
 abund_data <- data.frame(counts = c(t(order_norm_counts)), positions=1:length(order_norm_counts))
 
 g1 <- ggplot(abund_data, aes(x=positions,y=counts)) + geom_line(color='red') + geom_point()
@@ -132,16 +133,17 @@ ggsave('rank_abundance_plot.png', g3)
 #---------------------------------------
 inext_out <- iNEXT(otu_table[,1], q=c(0), datatype="abundance")
 df <- fortify(inext_out, type=1)
+
 df.point <- df[which(df$method=="observed"),]
 df.line <- df[which(df$method!="observed"),]
-df.line$method <- factor(df.line$method, c("interpolated",  "extrapolated"),c("interpolation",  "extrapolation"))
+df.line$method <- factor(df.line$method, c("rarefaction",  "extrapolation"), c("interpolation",  "extrapolation"))
 
-g4 <- ggplot(df, aes(x=x, y=y, colour=site)) + geom_point(aes(shape=site), size=5, data=df.point) 
+g4 <- ggplot(df, aes(x=x, y=y, colour=method)) + guides(colour="none") + geom_point(aes(shape=method), size=5, data=df.point) + guides(shape="none")
 g5 <- g4 + geom_line(aes(linetype=method), lwd=1.5, data=df.line)
-g6 <- g5 + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,fill=site, colour=NULL), alpha=0.2) 
-g7 <- g6 + labs(x="Number of reads" , y="Number of OTUs") 
+g6 <- g5 + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr, fill=method, colour=NULL), alpha=0.2) + guides(fill="none")
+g7 <- g6 + labs(x="Number of reads" , y="Number of zOTUs") 
 g8 <- g7 + theme(legend.position = "bottom", legend.title=element_blank(),text=element_text(size=18),
                  panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                  panel.background = element_blank(), axis.line = element_line(colour = "black"))
-ggsave('rarafaction_curve.png', g8)
+ggsave('rarefaction_curve.png', g8)
 }
