@@ -5,14 +5,13 @@ from collections import Counter
 from statistics import stdev, mean
 from .processing_helper import TaskPickle
 from re import search
-from .processing_helper import IMNGS2ArgsParser, gimmelogger, loud_subprocess
-import mimetypes as mtypes
+from .processing_helper import IMNGS2ArgsParser, gimmelogger, loud_subprocess, calc_covered_region
 import re
 import random
 import shutil
 import glob
 import logging
-import time
+import zipfile
 
 
 BIN_DIR = "/base/binaries/"
@@ -35,16 +34,15 @@ S_FLAT_LOCATION = '/base/s_flat.txt'
 
 
 # overwriting system to run it with subprocess.run
-def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False):
-    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell)
+def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False, capture_output: bool = False, quiet: bool = False):
+    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
     # logging
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        msg += f"STDOUT: {run_output.stdout}\n\n"
+        # msg += f"STDOUT: {run_output.stdout}\n\n"
         log.info(msg)
-        if run_output.stderr:
-            log.error(f"STDERR: {run_output.stderr}\n\n")
-            raise Exception(f"Error in running command {' '.join(cmd_list)}")
+    if run_output.stderr and not quiet:
+        raise Exception(f"Error in running command {' '.join(cmd_list)}: {run_output.stderr}")
     return run_output
 
 
@@ -78,8 +76,8 @@ def calc_spikes(*fastq_files, spike_amount):
         if len(fastq_names) == 2:
             cmd = [bowtie2, "-x", SPIKESIDX, "-1", fastqs_abs_paths[0], "-2",
                    fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
-                   fastq_unaligned, USEARCH_TAIL]
-            _ = system_sub(cmd)
+                   fastq_unaligned]
+            _ = system_sub(cmd, capture_output=True)
             spike_counter = 0
             for fi in [fastq_aligned + ".1", fastq_aligned + ".2"]:
                 with open(fi, 'r') as fastq_al:
@@ -92,9 +90,9 @@ def calc_spikes(*fastq_files, spike_amount):
 
         elif len(fastq_names) == 1:
             cmd = [bowtie2, "-x", SPIKESIDX, "-U", fastqs_abs_paths[0], "--al-conc",
-                   fastq_aligned, "--un-conc", fastq_unaligned, USEARCH_TAIL]
+                   fastq_aligned, "--un-conc", fastq_unaligned]
             # system(" ".join(cmd))
-            _ = system_sub(cmd)
+            _ = system_sub(cmd, capture_output=True)
             files_inspike = listdir(spike_res_dir)
             spike_counter = 0
             for fi in [f for f in files_inspike if search(fastq_aligned, path.abspath(f))]:
@@ -110,102 +108,6 @@ def calc_spikes(*fastq_files, spike_amount):
         unaligned_reads, _ = calc_spikes(*fastqs_abs_paths, spike_amount=0)
         # to pass it as reads_number and spike number to seq_met model
         return unaligned_reads, spike_counter
-
-
-def gzip_to_fastq(*files):
-    '''
-    It takes files gunzip or zip them and returns the name with proper fastq fuffix.
-    '''
-    file_path = [path.abspath(f) for f in files if f]
-    file_path = [f for f in file_path if path.isfile(f)]
-    if len(files) != len(file_path):
-        raise TypeError("Some given arguments are not files.")
-    fastq_paths = []
-    for f_abs in file_path:
-        tstmp = str(time.time()).replace(".", "_")
-        f_real = path.realpath(f_abs)
-        app, typ = mtypes.guess_type(f_real)
-        file_dir, file_name = path.split(f_abs)
-        file_name = file_name.replace(".", "_").replace("_gz", "").replace("_bz2", "")
-        asciifile_name = file_name.replace(" ", "").replace("_fastq", "") + ".fastq"
-        asciifile = path.join(file_dir, asciifile_name)
-        tmp_file = path.join(file_dir, "_{}_".format(tstmp))
-        if 'zip' in str(typ):
-            # system("gunzip --stdout {} > {}".format(f_real, tmp_file))
-            system_sub(
-                [
-                    "gunzip",
-                    "--stdout",
-                    f_real,
-                    ">",
-                    tmp_file
-                ]
-            )
-            # system("rm -r {}".format(f_abs))
-            system_sub(
-                [
-                    "rm",
-                    "-r",
-                    f_abs
-                ]
-            )
-            # system("mv {} {}".format(tmp_file, asciifile))
-            system_sub(
-                [
-                    "mv",
-                    tmp_file,
-                    asciifile
-                ]
-            )
-            fastq_paths.append(asciifile)
-        elif 'zip' in str(app):  # For zipped files
-            # system("unzip {} -d {}".format(f_real, tmp_file))
-            system_sub(
-                [
-                    "unzip",
-                    f_real,
-                    "-d",
-                    tmp_file
-                ]
-            )
-            # system("rm -r {}".format(f_abs))
-            system_sub(
-                [
-                    "rm",
-                    "-r",
-                    f_abs
-                ]
-            )
-            # system("mv {} {}".format(tmp_file, asciifile))
-            system_sub(
-                [
-                    "mv",
-                    tmp_file,
-                    asciifile
-                ]
-            )
-            fastq_paths.append(asciifile)
-        else:
-            try:
-                with open(f_real, "r+") as fi:
-                    line = fi.readline()
-                if len(line) == len(line.encode()):  # If it's ascii
-                    if str(f_abs) != str(asciifile):  # Avoiding moving a file to itself
-                        # system("mv {} {}".format(f_abs, asciifile))
-                        system_sub(
-                            [
-                                "mv",
-                                f_abs,
-                                asciifile
-                            ]
-                        )
-                    fastq_paths.append(asciifile)
-            except Exception as e:
-                raise TypeError("{}\t{}".format(f_abs, e))
-    if len(file_path) != len(fastq_paths):
-        raise TypeError("Some files could not get converted or were not in utf-8 format!")
-    # returns absolute paths
-    return fastq_paths
 
 
 def seqFileStats(seqFileName):
@@ -241,12 +143,7 @@ def read_file(filename):
 
 
 def unzip():
-    system_sub(
-        [
-            "unzip",
-            "upload.zip"
-        ]
-    )
+    shutil.unpack_archive("upload.zip")
 
 
 def clean_FastQC(input_file, reverse_file=False):
@@ -256,20 +153,12 @@ def clean_FastQC(input_file, reverse_file=False):
         # cmd_0 = 'unzip {} > /dev/null 2>&1'.format(zipf)
         # cmd_1 = 'mv ' + dir_name + '/Images/per_base_quality.png ../R{}-per_base_quality.png'.format(i + 1)
         # cmd_2 = 'rm -r {} {} {} > /dev/null 2>&1'.format(dir_name, "*.html", zipf)
+        # system(cmd_0)
+        # system(cmd_1)
+        # system(cmd_2)
         try:
-            system_sub(
-                [
-                    "unzip",
-                    zipf,
-                ]
-            )
-            system_sub(
-                [
-                    "mv",
-                    dir_name + "/Images/per_base_quality.png",
-                    "../R{}-per_base_quality.png".format(i + 1)
-                ]
-            )
+            shutil.unpack_archive(zipf)
+            shutil.move(dir_name + "/Images/per_base_quality.png", "../R{}-per_base_quality.png".format(i + 1))
             system_sub(
                 [
                     "rm",
@@ -278,11 +167,9 @@ def clean_FastQC(input_file, reverse_file=False):
                     "*.html",
                     zipf
                 ],
-                shell=True
+                shell=True,
+                capture_output=False
             )
-            # system(cmd_0)
-            # system(cmd_1)
-            # system(cmd_2)
         except BaseException:
             pass
     # system("cd ../ && rm -r fastqc_output > /dev/null 2>&1")
@@ -295,7 +182,8 @@ def clean_FastQC(input_file, reverse_file=False):
             "-r",
             "fastqc_output"
         ],
-        shell=True
+        shell=True,
+        capture_output=False
     )
 
 
@@ -315,7 +203,7 @@ def merge_pairs(forward_file, reverse_file):
     # print(cmd_0 + cmd_1 + cmd_2)
     # system_sub(cmd_0 + cmd_1 + cmd_2)
     cmd_to_call_list = [
-        USEARCH_11_BIN,
+        *list(USEARCH_11_BIN.split(" ")),
         "-fastq_mergepairs",
         forward_file,
         "-reverse",
@@ -340,7 +228,7 @@ def trim_sides():
     # system_sub(cmd_0 + cmd_1)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-fastx_truncate",
             "merged.fastq",
             "-stripright",
@@ -359,7 +247,7 @@ def filter_merged_reads():
     # system_sub(cmd_0 + cmd_1)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-fastq_filter",
             "filtered1.fastq",
             "-fastq_maxee_rate",
@@ -383,12 +271,12 @@ def run_FastQC(forward_file, reverse_file):
     # cmd_1 = " --outdir " + out_dir + " --format fastq --threads 1 --quiet"
     # if not reverse_file == '':
     #     cmd_0 = cmd_0 + " " + reverse_file
-    files = forward_file + " " + reverse_file if reverse_file else forward_file
     try:
         system_sub(
             [
                 "fastqc",
-                *list(files.split(" ")),
+                forward_file,
+                reverse_file if reverse_file else "",
                 "--outdir",
                 out_dir,
                 "--format",
@@ -416,11 +304,13 @@ def dereplicate_seqs():
     # system_sub(cmd_0 + cmd_1)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-fastx_uniques",
             "filtered2.fasta",
             "-fastaout",
-            "derep.fasta"
+            "derep.fasta",
+            "-sizein",
+            "-sizeout"
         ]
     )
     line_n = 0
@@ -439,12 +329,14 @@ def sort_seqs():
     # system_sub(cmd_0 + cmd_1)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-sortbysize",
             "derep.fasta",
             "-fastaout",
             "sorted.fasta"
-        ]
+        ],
+        capture_output=False,
+        force_log=True
     )
 
 
@@ -454,7 +346,7 @@ def trim_one_side(forward_file):
     # system_sub(cmd_0 + cmd_1)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-fastx_truncate",
             forward_file,
             "-stripleft",
@@ -474,7 +366,7 @@ def filter_merged_one_side(forward_file):
     # system_sub(cmd_0 + cmd_1 + cmd_2)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-fastq_filter",
             "filtered1.fastq",
             "-fastq_truncqual",
@@ -498,7 +390,7 @@ def clusterZOTUs():
     # system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-unoise3",
             "sorted.fasta",
             "-minsize",
@@ -573,7 +465,7 @@ def build_ZOTU_table():
     # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-otutab",
             "derep.fasta",
             "-zotus",
@@ -615,7 +507,7 @@ def select_zotu_seqs():
     # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-fastx_getseqs",
             "good_ZOTUs.fa",
             "-labels",
@@ -656,9 +548,10 @@ def addTax(input_id):
             "--db",
             SINA_ARB,
             "--out",
-            filebasename
+            filebasename + ".fasta"
         ],
-        force_log=True
+        force_log=True,
+        capture_output=False
     )
 
     out_file = open('classifiedF.txt', 'w+')
@@ -737,53 +630,29 @@ def addKrona(KRONA_TOOL):
         [
             KRONA_TOOL,
             "./krona.txt"
-        ]
+        ],
+        capture_output=True
     )
     # system("rm krona.txt")
     system_sub(
         [
             "rm",
             "krona.txt"
-        ]
+        ],
+        capture_output=True
     )
 
 
 def create_zip(input_id):
-    # cmd_1 = 'zip ../' + str(input_id) + '_processed.zip ZOTUs-table.final.tab '
-    # cmd_1 += 'taxed_ZOTUs.fasta *.png *.html'
-    # system(cmd_1)
-    system_sub(
-        [
-            "zip",
-            f"../{input_id}_processed.zip",
-            "ZOTUs-table.final.tab",
-            "taxed_ZOTUs.fasta",
-            "*.png",
-            "*.html"
-        ],
-        shell=True
-    )
-    # gziping the silva alignment to save space
-    # cmd_2 = "tar -czf aligned_" + str(input_id) + ".fasta.tar.gz aligned_" + str(input_id) + ".fasta"
-    # system(cmd_2)
-    system_sub(
-        [
-            "tar",
-            "-czf",
-            f"aligned_{input_id}.fasta.tar.gz",
-            f"aligned_{input_id}.fasta"
-        ]
-    )
-    # cmd_3 = "tar -czf derep.fasta.tar.gz derep.fasta"
-    # system(cmd_3)
-    system_sub(
-        [
-            "tar",
-            "-czf",
-            "derep.fasta.tar.gz",
-            "derep.fasta"
-        ]
-    )
+    with zipfile.ZipFile(f"../{input_id}_processed.zip", "w") as zipf:
+        zipf.write("ZOTUs-table.final.tab")
+        zipf.write("taxed_ZOTUs.fasta")
+        for file in glob.glob("*.png"):
+            zipf.write(file)
+        for file in glob.glob("*.html"):
+            zipf.write(file)
+    shutil.make_archive(f"aligned_{input_id}.fasta", "gztar", ".", f"aligned_{input_id}.fasta")
+    shutil.make_archive("derep.fasta", "gztar", ".", "derep.fasta")
 
 
 def create_udb(input_id):
@@ -791,7 +660,7 @@ def create_udb(input_id):
     # system_sub(cmd_0 + USEARCH_TAIL)
     system_sub(
         [
-            USEARCH_11_BIN,
+            *list(USEARCH_11_BIN.split(" ")),
             "-makeudb_ublast",
             "taxed_ZOTUs.fasta",
             "-output",
@@ -810,6 +679,7 @@ def cleanup(input_id, full_clean=False, dir_path=None):
     if full_clean:
         # deleted_files = "$(ls | grep -v *.pk)"
         # deleted_dirs = "-r " + deleted_files
+        deleted_dirs = ["$(ls | grep -v *.pk)"]
         system_sub(
             [
                 "rm",
@@ -856,21 +726,21 @@ def cleanup(input_id, full_clean=False, dir_path=None):
             'out',
             'idx'
         ]
-    # system('rm ' + deleted_files + " 2> /dev/null")
-    system_sub(
-        [
-            "rm",
-            *deleted_files
-        ], shell=True
-    )
-    # system('rm ' + deleted_dirs + " 2> /dev/null")
-    system_sub(
-        [
-            "rm",
-            "-r",
-            *deleted_dirs
-        ]
-    )
+        # system('rm ' + deleted_files + " 2> /dev/null")
+        system_sub(
+            [
+                "rm",
+                *deleted_files
+            ], shell=True
+        )
+        # system('rm ' + deleted_dirs + " 2> /dev/null")
+        system_sub(
+            [
+                "rm",
+                "-r",
+                *deleted_dirs
+            ]
+        )
 
 
 def update_s_flat(input_id, origin):
@@ -1098,7 +968,10 @@ def main_processing(
             [
                 "Rscript",
                 R_processing_stat
-            ]
+            ],
+            force_log=False,
+            capture_output=True,
+            quiet=True
         )
         log.info('Relabing DONE')
         # udb for both similarity queries
@@ -1106,6 +979,12 @@ def main_processing(
         log.info('UDB created')
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
+        calced_regions = calc_covered_region(start_mode, end_mode)
+        # Writing the start and end mode to the a file
+        with open('silva_start_end.txt', 'w+') as s_e_file:
+            # writing header
+            s_e_file.write("SilvaAlignmentStartPos\tSilvaAlignementEndPos\tCoveredRegion\n")
+            s_e_file.write(str(start_mode) + '\t' + str(end_mode) + '\t' + str(calced_regions) + '\n')
         create_zip(input_id)
         log.info('Zipped!')
         cleanup(input_id)

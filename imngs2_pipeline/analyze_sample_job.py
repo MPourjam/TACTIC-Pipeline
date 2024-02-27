@@ -35,17 +35,15 @@ global POOL_SIZE
 POOL_SIZE = max_pool if max_pool > 0 else 1
 
 
-# overwriting system_sub() to run it with subprocess.run
-def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False):
-    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell)
+def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False, capture_output: bool = False, quiet: bool = False):
+    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
     # logging
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        msg += f"STDOUT: {run_output.stdout}\n\n"
+        # msg += f"STDOUT: {run_output.stdout}\n\n"
         ANA_LOG.info(msg)
-        if run_output.stderr:
-            ANA_LOG.error(f"STDERR: {run_output.stderr}\n\n")
-            raise Exception(f"Error in running command {' '.join(cmd_list)}")
+    if run_output.stderr and not quiet:
+        raise Exception(f"Error in running command {' '.join(cmd_list)}: {run_output.stderr}")
     return run_output
 
 
@@ -79,13 +77,7 @@ def onelinefasta(fastafilepath):
                 onelinefa.write(line[:-1])
             line = f.readline()
         onelinefa.write("\n")
-    f.close()
-    cmd_to_call_list = [
-        "mv",
-        newfile_temp_name,
-        filename,
-    ]
-    system_sub(cmd_to_call_list)  # handling space in name of file
+    shutil.move(newfile_temp_name, filename)  # handling space in name of file
 
 
 def append_reads(taxed_ZOTUs_file_path, sample_id, analysis_dir):
@@ -105,14 +97,10 @@ def append_reads(taxed_ZOTUs_file_path, sample_id, analysis_dir):
     # cmd = USEARCH_11_BIN + ' -fastx_relabel ' + taxed_ZOTUs_file_path + ' -prefix ' + dataset_name
     # cmd += '. -fastaout new -keep_annots'
     system_sub(cmd_to_call_list, force_log=True)
-    cmd_to_call_list = [
-        "cat",
-        "new",
-        ">>",
-        f"{analysis_dir}analysis.fasta",
-    ]
-    system_sub(cmd_to_call_list)
-    onelinefasta('{}analysis.fasta'.format(analysis_dir))
+    with open('new', 'r') as new_file:
+        with open('analysis.fasta', 'a') as analysis_file:
+            analysis_file.write(new_file.read())
+    onelinefasta('analysis.fasta')
 
 
 def trim_sides(five_end_trim, three_end_trim):
@@ -197,7 +185,7 @@ def dereplication():
             curr_sample = sample_name_regex.search(val).group(1)
             if curr_sample not in samples_list:
                 samples_list.append(curr_sample)
-
+    # print(zotus_dict)
     zotu_hit_dict = dict()
     for key, values_list in zotus_dict.items():
         # We rely on uniqness of dataset ids by the db
@@ -958,16 +946,22 @@ def create_trees():
     system_sub(cmd_to_call_list, shell=True)
 
 
-def cleanup():
+def cleanup(directory: str):
+    directory = Path(PurePath(directory)).absolute()
     to_remove = ["new", "derep.fasta", "ZOTU_map.tab", "derep_with_tax.fasta", "zotu_to_sotu_map.tab",
                  "for_tree_test_s.fasta", "for_tree_test_z.fasta", "test_s.fasta", "test_z.fasta",
                  "test_s.csv", "test_z.csv", "log_file.txt"]
     for f in to_remove:
-        system_sub(["rm", "-f", f], shell=True)
+        file_path = directory.joinpath(f)
+        if file_path.exists():
+            if file_path.is_file():
+                file_path.unlink()
+            elif file_path.is_dir():
+                shutil.rmtree(file_path)
 
 
 def create_zip():
-    system_sub('zip -r ../Analysis.zip .'.split(" "))
+    system_sub('zip -r ../Analysis.zip .'.split(" "), capture_output=True, shell=True)
 
 
 def addKrona(KRONA_TOOL):
@@ -1140,17 +1134,17 @@ def main(
     #################
     ## TIC is here ##
     #################
-    TIC_Result_DIR = os.path.join(os.path.abspath(ANALYSIS_DIR), "TICResult")
-    TIC_Output_DIR = os.path.join(os.path.abspath(ANALYSIS_DIR), "TICOut")
-    dereplicated_fasta_path = os.path.join(os.path.abspath(ANALYSIS_DIR), "derep_with_tax.fasta")
-    if os.path.isdir(TIC_Result_DIR):
-        shutil.rmtree(TIC_Result_DIR)
+    TIC_Result_DIR = Path(ANALYSIS_DIR).joinpath("TICResult")
+    TIC_Output_DIR = Path(ANALYSIS_DIR).joinpath("TICOut")
+    dereplicated_fasta_path = Path(ANALYSIS_DIR).joinpath("derep_with_tax.fasta")
+    if TIC_Result_DIR.is_dir():
+        shutil.rmtree(str(TIC_Result_DIR))
     try:
-        split_based_on_taxonomy(TIC_Result_DIR, "derep_with_tax.fasta")
+        split_based_on_taxonomy(str(TIC_Result_DIR), "derep_with_tax.fasta")
     except Exception as exc:
         raise ValueError(f"Split: {str(exc)}")
     try:
-        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=TIC_Result_DIR, threads=POOL_SIZE)
+        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=str(TIC_Result_DIR), threads=POOL_SIZE)
     except Exception as exc:
         raise ValueError(f"Main: {str(exc)}")
     if os.path.isdir(TIC_Output_DIR):
@@ -1166,11 +1160,11 @@ def main(
     main_create_args = [
         "python3.7",
         "/base/imngs2_pipeline/TIC/create_fasta_and_table.py",  # 0
-        TIC_Output_DIR,  # OUTPUT_FOLDER
+        str(TIC_Output_DIR),  # OUTPUT_FOLDER
         ZOTUs_fasta_name,  # OUTPUT_ASV_FASTA_WITH_TAXONOMY
         ZOTUs_table_name,  # OUTPUT_ASV_TABLE
-        TIC_Result_DIR,  # CLUSTERING_DIRECTORY
-        dereplicated_fasta_path,  # INPUT_FASTA_CLUSTERING  # 5
+        str(TIC_Result_DIR),  # CLUSTERING_DIRECTORY
+        str(dereplicated_fasta_path),  # INPUT_FASTA_CLUSTERING  # 5
         "/usr/local/bin/ktImportText",  # KRONA_TOOL
         SOTUs_fasta_name,  # OUTPUT_SOTU_FASTA_WITH_TAXONOMY
         SINA_ARB,  # SILVA_ARB
@@ -1183,16 +1177,17 @@ def main(
         str(ARGS_CLS.create_table.sample_wise_correction)  #
     ]
     try:
-        system_sub(main_create_args)
+        system_sub(main_create_args, capture_output=False, shell=False)
     except Exception as exc:
         raise ValueError(f"Table: {str(exc)}")
-
+    ANA_LOG.info("TIC Done")
     chdir(ANALYSIS_DIR)
     shutil.rmtree(TIC_Result_DIR)
-    ##################
-    system_sub("mv ./TICOut/* .".split(""), shell=True)
-    shutil.rmtree("./TICOut")
-    cleanup()
+    for file in TIC_Output_DIR.glob("*"):
+        shutil.copy(file, ANALYSIS_DIR)
+        file.unlink()
+    shutil.rmtree(TIC_Output_DIR)
+    cleanup(ANALYSIS_DIR)
     ANA_LOG.info('Cleanup DONE')
     # Normalizing Tables
     try:
@@ -1207,6 +1202,12 @@ def main(
         ANA_LOG.info(f"No Normalization applied on {SOTUs_table_name}: {exc}")
     else:
         ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {SOTUs_table_name}")
-    create_zip()
+    # creating zip file
+    shutil.make_archive(ANALYSIS_DIR, 'zip', ANALYSIS_DIR)
+    ANA_LOG.info('Zip file created')
+    try:
+        shutil.rmtree(ANALYSIS_DIR)
+    except Exception:
+        pass
     ANA_LOG.info('ANALYSIS DONE')
     return ANALYSIS_DIR + ZOTUs_table_name, ANALYSIS_DIR + SOTUs_table_name

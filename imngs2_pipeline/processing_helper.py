@@ -3,12 +3,13 @@ import re
 import yaml
 import logging
 import subprocess
-import time
 import gzip
+import shutil
 import zipfile
 import inspect
 import threading
 from os import getcwd
+from collections import namedtuple
 from mimetypes import guess_type
 from datetime import datetime as dt
 from collections.abc import MutableMapping
@@ -64,10 +65,71 @@ reve_file_indicators = [
     "@R"
 ]
 
+# The Start and end positions are according to reference Escherichia Coli K12 subst. MG1655
+os_16S = namedtuple("pos_16S", "start end")
+# pos_sil = namedtuple("pos_sil", "start end")
+SixteenS_regions_dict = {
+    "V1": [
+        os_16S(69, 99),
+        [1159, 1772]
+    ],
+    "V2": [
+        os_16S(137, 242),
+        [2083, 5291]
+    ],
+    "V3": [
+        os_16S(433, 497),
+        [9817, 10302]
+    ],
+    "V4": [
+        os_16S(576, 682),
+        [15643, 21773]
+    ],
+    "V5": [
+        os_16S(822, 879),
+        [25499, 26987]
+    ],
+    "V6": [
+        os_16S(986, 1043),
+        [31188, 32827]
+    ],
+    "V7": [
+        os_16S(1117, 1173),
+        [35463, 37685]
+    ],
+    "V8": [
+        os_16S(1243, 1294),
+        [40315, 40874]
+    ],
+    "V9": [
+        os_16S(1435, 1465),
+        [42608, 43016]
+    ],
+}
+
+
+def calc_covered_region(start: int, end: int, regions_dict: dict = SixteenS_regions_dict):
+    # Calculating Regions
+    regions_coved = "NA"
+    covered_regions = {
+        k[1:] for k, v in regions_dict.items()
+        if (start <= v[1][0] and end >= v[1][1])
+    }
+    if covered_regions:
+        regions_coved = "V{}{}".format(
+            min(covered_regions),
+            [
+                '-V%s' % (max(covered_regions))
+                if (len(covered_regions) > 1)
+                else ''
+            ][0])
+
+    return regions_coved
+
 
 # overwriting system_sub() to run it with subprocess.run
-def loud_subprocess(cmd_args_list: list, shell_bool: bool = False):
-    dev_null_rgx = re.compile(r"(\s+)?([12]?>)(\s+)?(/dev/null|&1|&2))")
+def loud_subprocess(cmd_args_list: list, shell_bool: bool = False, cap_output: bool = False):
+    dev_null_rgx = re.compile(r'(\s+)?([12]?>)(\s+)?(/dev/null|&1|&2)')
     if not isinstance(cmd_args_list, list):
         raise ValueError("cmd_args_list should be a list")
     cmd_string = "\t\t".join(cmd_args_list)
@@ -78,8 +140,7 @@ def loud_subprocess(cmd_args_list: list, shell_bool: bool = False):
     # If capture_output_bool is true then do not redirect to /dev/null
     run_output = subprocess.run(
         cmd_list,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=cap_output,
         encoding='utf-8',
         shell=shell_bool,
     )
@@ -239,82 +300,36 @@ def gzip_to_fastq(*files):
         raise TypeError("Some given arguments are not files.")
     fastq_paths = []
     for f in file_path:
-        tstmp = str(time.time()).replace(".", "_")
         app, typ = mtypes.guess_type(f)
         file_dir, file_name = f.parent, str(f.name)
         file_name = file_name.replace(".", "_").replace("_gz", "").replace("_bz2", "")
         asciifile_name = file_name.replace(" ", "").replace("_fastq", "") + ".fastq"
         asciifile = str(file_dir.joinpath(asciifile_name))
-        tmp_file = str(file_dir.joinpath("_{}_".format(tstmp)))
-        f = str(f)
+        # derefrencing f if it's a link
+        f_real = f.resolve()
         if 'zip' in str(typ):
-            _ = subprocess.run(
-                [
-                    "gunzip",
-                    "--stdout",
-                    f"{f}",
-                    ">",
-                    f"{tmp_file}"
-                ],
-                capture_output=True,
-                text=True)
-            _ = subprocess.run(
-                [
-                    "rm",
-                    "-r",
-                    "{}".format(f)
-                ],
-                capture_output=True,
-                text=True)
-            _ = subprocess.run(
-                [
-                    "mv",
-                    f"{tmp_file}",
-                    f"{asciifile}"
-                ],
-                capture_output=True,
-                text=True)
-            fastq_paths.append(asciifile)
+            # For gzipped files
+            with gzip.open(f_real, 'rb') as gz_file:
+                with open(asciifile, 'wb') as ascii_file:
+                    shutil.copyfileobj(gz_file, ascii_file)
+                # Remove the original gzip file
+                os.remove(f)
+                fastq_paths.append(asciifile)
         elif 'zip' in str(app):  # For zipped files
-            _ = subprocess.run(
-                [
-                    "unzip",
-                    f"{f}",
-                    "-d",
-                    f"{tmp_file}"
-                ],
-                capture_output=True,
-                text=True)
-            _ = subprocess.run(
-                [
-                    "rm",
-                    "-r",
-                    f"{f}"
-                ],
-                capture_output=True,
-                text=True)
-            _ = subprocess.run(
-                [
-                    "mv",
-                    f"{tmp_file}",
-                    f"{asciifile}"
-                ],
-                capture_output=True,
-                text=True)
+            with zipfile.ZipFile(f_real, 'r') as zip_ref:
+                zip_ref.extractall(asciifile)
+            # Remove the original zip file
+            os.remove(f)
             fastq_paths.append(asciifile)
         else:
             try:
-                with open(f, "r+") as fi:
+                with open(f_real, "r+") as fi:
                     line = fi.readline()
                 if len(line) == len(line.encode()):  # If it's ascii
-                    _ = subprocess.run(
-                        [
-                            "mv",
-                            f"{f}",
-                            f"{asciifile}"
-                        ],
-                        capture_output=True,
-                        text=True)
+                    try:
+                        shutil.move(f, asciifile)
+                    except shutil.SameFileError:
+                        pass
                     fastq_paths.append(asciifile)
             except Exception as e:
                 print("{}\t{}".format(f, e))
