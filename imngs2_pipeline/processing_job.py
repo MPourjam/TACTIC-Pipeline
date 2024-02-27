@@ -1,4 +1,4 @@
-from os import (chdir, mkdir, listdir,
+from os import (chdir, mkdir, listdir, remove,
                 makedirs, path, getcwd
                 )
 from collections import Counter
@@ -674,27 +674,18 @@ def cleanup(input_id, full_clean=False, dir_path=None):
     """
     NOTE Be careful where you run this command.
     """
-    if dir_path:
-        chdir(dir_path)
+    if not dir_path:
+        dir_path = getcwd()
+    chdir(dir_path)
     if full_clean:
-        # deleted_files = "$(ls | grep -v *.pk)"
-        # deleted_dirs = "-r " + deleted_files
-        deleted_dirs = ["$(ls | grep -v *.pk)"]
-        system_sub(
-            [
-                "rm",
-                "$(ls | grep -v *.pk)"
-            ],
-            shell=True)
+        files = [f for f in listdir(dir_path) if not f.endswith(".pk")]
+        for file in files:
+            file_path = path.join(dir_path, file)
+            if path.isfile(file_path):
+                remove(file_path)
+            elif path.isdir(file_path):
+                shutil.rmtree(str(file_path))
     else:
-        # deleted_files = 'zotu_table.txt good_ZOTUs.fa test.csv filtered1.fastq filtered2.fasta'
-        # deleted_files += ' aligned_' + str(input_id) + '.csv aligned_' + str(input_id) + '.fasta merged.fastq'
-        # deleted_files += ' sorted.fasta zotus.fasta otus1.fa z2o.tab mOTUs-Seqs.fasta ZOTUs-Table.tab'
-        # # derep.fasta get deleted and we keep the gzipped one according to Ilias, preserve it for diversity analysis
-        # deleted_files += ' classifiedF.txt abundant_zotus_table.txt denoising.tab derep.fasta'
-        # deleted_files += ' matched_ZOTUS.txt ZOTUs.fasta ZOTUs-Seqs.fasta zotu_table_filtered.txt nochi-ZOTUs.fasta'
-        # deleted_files += ' *.fastq*'
-        # deleted_dirs = ' -r kvdb out idx'
         deleted_files = [
             'zotu_table.txt',
             'good_ZOTUs.fa',
@@ -719,28 +710,19 @@ def cleanup(input_id, full_clean=False, dir_path=None):
             'ZOTUs-Seqs.fasta',
             'zotu_table_filtered.txt',
             'nochi-ZOTUs.fasta',
-            '*.fastq*'
         ]
         deleted_dirs = [
             'kvdb',
             'out',
-            'idx'
+            'idx',
+            'fastqc_output'
         ]
-        # system('rm ' + deleted_files + " 2> /dev/null")
-        system_sub(
-            [
-                "rm",
-                *deleted_files
-            ], shell=True
-        )
-        # system('rm ' + deleted_dirs + " 2> /dev/null")
-        system_sub(
-            [
-                "rm",
-                "-r",
-                *deleted_dirs
-            ]
-        )
+        for entry in listdir(dir_path):
+            entry_path = path.join(dir_path, entry)
+            if (entry in deleted_files or entry.endswith(".fastq")) and path.isfile(entry_path):
+                remove(str(entry_path))
+            elif entry in deleted_dirs and path.isdir(entry_path):
+                shutil.rmtree(str(entry_path))
 
 
 def update_s_flat(input_id, origin):
