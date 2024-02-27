@@ -6,10 +6,11 @@ import shutil
 import sys
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
-from imngs2_pipeline.processing_job import calc_spikes, gzip_to_fastq
+from imngs2_pipeline.processing_job import calc_spikes
 from imngs2_pipeline.analyze_sample_job import main as main_analysis
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
+from imngs2_pipeline.processing_helper import gzip_to_fastq
 from multiprocessing import cpu_count, Pool
 from typing import List, Tuple
 if sys.version_info[0] < 3:
@@ -160,7 +161,6 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
         raise ValueError("Not Valid sample_base_path or not valid argument file. Both should be string or Path object.")
 
     processed_dir_path = Path(PurePath(str(sample_base_path))).absolute()
-    base_name = processed_dir_path.name.replace(PROC_DIR_SUFFIX, "")
 
     if not str(sample_base_path).endswith(PROC_DIR_SUFFIX):
         processed_dir_path = Path(PurePath(str(sample_base_path) + PROC_DIR_SUFFIX))
@@ -638,6 +638,7 @@ def run_preprocessing(
             new_paths[ind] = new_path
             # Copying files
             symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
+
         # We do spike removal if necessary and add a line to spike_stats file for spike normalization
         new_paths = [el for el in new_paths if bool(el)]
         # removing spikes and decompressing files below
@@ -666,8 +667,12 @@ def run_preprocessing(
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
-        shutil.rmtree(str(sample_dir))
-        PREP_LOG.warning("Failed while processing {}, Deleting {}".format(sample_dir.name, sample_dir))
+        PREP_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
+        # shutil.rmtree(str(sample_dir))
+        # If parent of sample_dir is empty then remove it
+        if not list(sample_dir.parent.iterdir()):
+            shutil.rmtree(str(sample_dir.parent))
+        sample_dir = None
 
     return sample_dir
 
@@ -683,7 +688,7 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
             if not sam_dir_path.is_dir():
                 raise ValueError(f"{sam_dir_path} does not exist!")
         except Exception as exc:
-            PREP_LOG.warning(f"Invalid sample directory for {sam_dir}. {exc}")
+            PREP_LOG.warning(f"Invalid sample directory for {exc}")
             continue
         samples_dirs_path.append(sam_dir_path)
 
@@ -789,7 +794,7 @@ def run_imngs2(
         samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
 
     # Runing analysis
-    if not skip_analysis:
+    if not skip_analysis and bool(samples_dirs):
         try:
             if not bool(samples_dirs):
                 msg = "No samples were completely processed or had same processing "\
