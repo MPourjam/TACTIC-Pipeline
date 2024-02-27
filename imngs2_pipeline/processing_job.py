@@ -715,7 +715,8 @@ def cleanup(input_id, full_clean=False, dir_path=None):
             'kvdb',
             'out',
             'idx',
-            'fastqc_output'
+            'fastqc_output',
+            'spike_result'
         ]
         for entry in listdir(dir_path):
             entry_path = path.join(dir_path, entry)
