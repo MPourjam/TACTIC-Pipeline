@@ -1204,15 +1204,11 @@ def main(
         ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {SOTUs_table_name}")
     # creating zip file
     shutil.make_archive(
-        ANALYSIS_DIR,
+        Path(ANALYSIS_DIR).parent.joinpath("Analysis"),
         'zip',
         root_dir=str(Path(ANALYSIS_DIR).parent),
         base_dir=str(Path(ANALYSIS_DIR).relative_to(Path(ANALYSIS_DIR).parent))
     )
     ANA_LOG.info('Zip file created')
-    try:
-        shutil.rmtree(ANALYSIS_DIR)
-    except Exception:
-        pass
     ANA_LOG.info('ANALYSIS DONE')
     return ANALYSIS_DIR + ZOTUs_table_name, ANALYSIS_DIR + SOTUs_table_name
