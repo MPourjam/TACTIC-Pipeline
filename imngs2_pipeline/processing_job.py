@@ -40,11 +40,11 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
         # msg += f"STDOUT: {run_output.stdout}\n\n"
-        log.info(msg)
+        PREPPROC_LOG.info(msg)
     if run_output.stderr and not quiet:
         raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     if run_output.stderr and quiet:
-        log.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+        PREPPROC_LOG.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     return run_output
 
 
@@ -850,9 +850,9 @@ def main_processing(
         input_id,
         args_file_path: str = "",
         spike_amount: int = 0):
-    global log
+    global PREPPROC_LOG
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
-    log = gimmelogger(
+    PREPPROC_LOG = gimmelogger(
         logger_name=f"run_imngs2.preprocessing_{str(input_id)}",
         log_file=logger_file_path,
         only_file=True
@@ -906,48 +906,48 @@ def main_processing(
         if len(files_paths) == 1:
             files_paths.append("")
         forward_file, reverse_file = files_paths
-        log.info("Spike removal started.")
+        PREPPROC_LOG.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
-        log.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
+        PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is CRUCIAL to be here
-        log.info('fastQC DONE')
+        PREPPROC_LOG.info('fastQC DONE')
         if reverse_file:
             merge_pairs(forward_file, reverse_file)
-            log.info('Merging Pairs DONE')
+            PREPPROC_LOG.info('Merging Pairs DONE')
             trim_sides()
-            log.info('Trim Sides DONE')
+            PREPPROC_LOG.info('Trim Sides DONE')
             filter_merged_reads()
-            log.info('Filter merged DONE')
+            PREPPROC_LOG.info('Filter merged DONE')
         else:
             trim_one_side(forward_file)
-            log.info('Trim One Side DONE')
+            PREPPROC_LOG.info('Trim One Side DONE')
             filter_merged_one_side(forward_file)
-            log.info('Filter one DONE')
+            PREPPROC_LOG.info('Filter one DONE')
         dereped_read_n = dereplicate_seqs()
         read_report = write_reads_report(input_id,
                                          Dereplicated_reads=dereped_read_n)
-        log.debug(read_report)
-        log.info('Dereplication DONE')
+        PREPPROC_LOG.debug(read_report)
+        PREPPROC_LOG.info('Dereplication DONE')
         sort_seqs()
-        log.info('Sorting DONE')
+        PREPPROC_LOG.info('Sorting DONE')
         clusterZOTUs()
-        log.info('Cluster ZOTUs DONE')
+        PREPPROC_LOG.info('Cluster ZOTUs DONE')
         filter16S()
-        log.info('Filtered out non 16S ZOTUs')
+        PREPPROC_LOG.info('Filtered out non 16S ZOTUs')
         # prepare_zotus()  # Adds size=1 to end of zotus header
         build_ZOTU_table()
-        log.info('Build ZOTU table')
+        PREPPROC_LOG.info('Build ZOTU table')
         filter_zotu_abundance()  # ignore this step because the required abundance is 0
-        log.info('ZOTUs Abundance Filtered')
+        PREPPROC_LOG.info('ZOTUs Abundance Filtered')
         select_zotu_seqs()
-        log.info('Select ZOTUs Filtered')
+        PREPPROC_LOG.info('Select ZOTUs Filtered')
         addTax(input_id)
-        log.info('Sina taxonomy added.')
+        PREPPROC_LOG.info('Sina taxonomy added.')
         create_final_ZOTU_table()
         add_taxonomy_to_fasta()
         addKrona(krona_importtext)
-        log.info("Krona graph added.")
+        PREPPROC_LOG.info("Krona graph added.")
         # system('Rscript {} >/dev/null 2>/dev/null'.format(R_processing_stat))
         system_sub(
             [
@@ -958,10 +958,10 @@ def main_processing(
             capture_output=True,
             quiet=True
         )
-        log.info('Relabing DONE')
+        PREPPROC_LOG.info('Relabing DONE')
         # udb for both similarity queries
         create_udb(input_id)
-        log.info('UDB created')
+        PREPPROC_LOG.info('UDB created')
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         calced_regions = calc_covered_region(start_mode, end_mode)
@@ -971,12 +971,12 @@ def main_processing(
             s_e_file.write("SilvaAlignmentStartPos\tSilvaAlignementEndPos\tCoveredRegion\n")
             s_e_file.write(str(start_mode) + '\t' + str(end_mode) + '\t' + str(calced_regions) + '\n')
         create_zip(input_id)
-        log.info('Zipped!')
+        PREPPROC_LOG.info('Zipped!')
         cleanup(input_id)
-        log.info("Cleaned up: {}".format(input_id))
+        PREPPROC_LOG.info("Cleaned up: {}".format(input_id))
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
-        log.error(err_msg)
+        PREPPROC_LOG.error(err_msg)
         update_task_pko("Error", str(err_msg).strip())
         cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
         pko.close()
