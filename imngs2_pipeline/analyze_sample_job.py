@@ -43,7 +43,9 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
         # msg += f"STDOUT: {run_output.stdout}\n\n"
         ANA_LOG.info(msg)
     if run_output.stderr and not quiet:
-        raise Exception(f"Error in running command {' '.join(cmd_list)}: {run_output.stderr}")
+        raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    if run_output.stderr and quiet:
+        ANA_LOG.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     return run_output
 
 
