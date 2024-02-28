@@ -42,7 +42,9 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
         # msg += f"STDOUT: {run_output.stdout}\n\n"
         log.info(msg)
     if run_output.stderr and not quiet:
-        raise Exception(f"Error in running command {' '.join(cmd_list)}: {run_output.stderr}")
+        raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    if run_output.stderr and quiet:
+        log.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     return run_output
 
 
@@ -77,7 +79,7 @@ def calc_spikes(*fastq_files, spike_amount):
             cmd = [bowtie2, "-x", SPIKESIDX, "-1", fastqs_abs_paths[0], "-2",
                    fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
                    fastq_unaligned]
-            _ = system_sub(cmd, capture_output=True)
+            _ = system_sub(cmd, capture_output=True, quiet=True)
             spike_counter = 0
             for fi in [fastq_aligned + ".1", fastq_aligned + ".2"]:
                 with open(fi, 'r') as fastq_al:
@@ -92,7 +94,7 @@ def calc_spikes(*fastq_files, spike_amount):
             cmd = [bowtie2, "-x", SPIKESIDX, "-U", fastqs_abs_paths[0], "--al-conc",
                    fastq_aligned, "--un-conc", fastq_unaligned]
             # system(" ".join(cmd))
-            _ = system_sub(cmd, capture_output=True)
+            _ = system_sub(cmd, capture_output=True, quiet=True)
             files_inspike = listdir(spike_res_dir)
             spike_counter = 0
             for fi in [f for f in files_inspike if search(fastq_aligned, path.abspath(f))]:
@@ -715,7 +717,8 @@ def cleanup(input_id, full_clean=False, dir_path=None):
             'kvdb',
             'out',
             'idx',
-            'fastqc_output'
+            'fastqc_output',
+            'spike_result'
         ]
         for entry in listdir(dir_path):
             entry_path = path.join(dir_path, entry)
@@ -905,7 +908,7 @@ def main_processing(
         forward_file, reverse_file = files_paths
         log.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
-        log.info("Actual_reads:{}\tSpike_reads:{}".format(real_reads_c, spike_reads_c))
+        log.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is CRUCIAL to be here
         log.info('fastQC DONE')
