@@ -1,8 +1,9 @@
 import contextlib
 import subprocess
 from typing import Callable, Tuple, Optional
-from contextlib import suppress
+# from contextlib import suppress
 
+import zipfile
 import pytest
 import os
 import glob
@@ -64,7 +65,8 @@ def check_expected_files_exist(analysis_folder: str):
     └── ZOTUs-Tree-nj.tre
     ```
     """
-    for file in [
+    return_bool = True
+    files_to_be_there = [
         "Analysis_log.txt",
         "Map-GOTU-FOTU.tab",
         "Map-SOTU-GOTU.tab",
@@ -76,8 +78,22 @@ def check_expected_files_exist(analysis_folder: str):
         "ZOTUs-Seqs.fasta",
         "ZOTUs-Table.tab",
         "ZOTUs-Tree-nj.tre",
-    ]:
-        assert os.path.exists(os.path.join(analysis_folder, file))
+    ]
+    for file in files_to_be_there:
+        # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
+        if analysis_folder.endswith(".zip") and os.path.isfile(os.path.join(analysis_folder, file)):
+            with zipfile.ZipFile(analysis_folder, "r") as z:
+                try:
+                    z.getinfo(file)
+                except KeyError:
+                    return_bool = False
+                break
+        else:
+            if not os.path.exists(os.path.join(analysis_folder, file)):
+                return_bool = False
+                break
+
+    return return_bool
 
 
 def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Optional[str]]]) -> None:
@@ -95,16 +111,18 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         if yaml_file:
             cmd += ["--yml-file", os.path.basename(yaml_file)]
 
-        print(f"{' '.join(cmd)}")
-
+        # Write the command to a file
+        with open(f"{run_dir}/cmd.txt", "w") as f:
+            f.write(" ".join(cmd))
+        print(f"{cmd = }")
         # run docker cmd with the image
         result = subprocess.run(
             cmd,
-            capture_output=True, text=True
+            capture_output=False, text=True
         )
 
         # print the output of the container
-        print(f"{result.stdout = }")
+        # print(f"{result.stdout = }")
 
         assert result.returncode == 0
 
@@ -114,7 +132,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         latest_analysis_folder = ""
         for analysis_folder in glob.glob(f"{run_dir}/Analysis_*"):
             print(f"{analysis_folder = }")
-            _, date, time = os.path.basename(analysis_folder).split("_")
+            _, date, time = str(os.path.basename(analysis_folder).split(".")[0]).split("_")
             date = int(date)
             time = int(time)
 
@@ -126,8 +144,8 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
 
         print(f"{latest_analysis_folder = }")
         assert latest_analysis_folder != ""
-
-        check_expected_files_exist(latest_analysis_folder)
+        file_set_complete = check_expected_files_exist(latest_analysis_folder)
+        assert file_set_complete
 
 
 def test_flat_autodiscover(build_image):
