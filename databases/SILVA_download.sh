@@ -22,9 +22,9 @@ if [[ -f silva-bac-16s-id90.fasta.gz ]]; then
 fi
 
 # Creating a link in dataset_dir to these three files
-ln -s ${parent_path}/SILVA_${version}.1_SSURef_NR99_12_06_20_opt.arb ${database_dir}/SILVA_${version}.1_SSURef_NR99_12_06_20_opt.arb
-ln -s ${parent_path}/silva-arc-16s-id95.fasta ${database_dir}/silva-arc-16s-id95.fasta
-ln -s ${parent_path}/silva-bac-16s-id90.fasta ${database_dir}/silva-bac-16s-id90.fasta
+ln -sf ${parent_path}/SILVA_${version}.1_SSURef_NR99_12_06_20_opt.arb ${database_dir}/SILVA_${version}.1_SSURef_NR99_12_06_20_opt.arb
+ln -sf ${parent_path}/silva-arc-16s-id95.fasta ${database_dir}/silva-arc-16s-id95.fasta
+ln -sf ${parent_path}/silva-bac-16s-id90.fasta ${database_dir}/silva-bac-16s-id90.fasta
 
 
 
