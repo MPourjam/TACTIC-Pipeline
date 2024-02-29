@@ -1,15 +1,12 @@
 import os
 import re
-import math
 import shutil
-import statistics
-import subprocess
-import pandas as pd
-from os import chdir, system
+from os import chdir
 from multiprocessing import cpu_count
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
-from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
+from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter, loud_subprocess
+from .spike_normalizer import normalize_otu_table
 from sys import version_info
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # pip2 install pathlib2
@@ -38,32 +35,18 @@ global POOL_SIZE
 POOL_SIZE = max_pool if max_pool > 0 else 1
 
 
-# overwriting system_sub() to run it with subprocess.run
-def system_sub(cmd):
-    cmd_list = [el for el in str(cmd).split(" ") if bool(el)]  # To reomove extra spaces in a command
-    cmds_to_write_log = ["usearch", "sina", "sortmerna"]
-    capture_output_bool = any([True for el in cmds_to_write_log[:2] if el in str(cmd_list[0])])  # Excluding sina and sortmerna from logging
-    where_to_cut = len(cmd_list)
-    # removing redirector to files
-    for ind, arg_ in enumerate(cmd_list):
-        if "dev/null" in arg_:
-            where_to_cut = ind - 1
-            break
-    # If capture_output_bool is true then do not redirect to /dev/null
-    cmd_list = cmd_list[:where_to_cut]
-    run_output = subprocess.run(
-        cmd_list,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        encoding='utf-8',
-        shell=False,
-    )
+def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False, capture_output: bool = False, quiet: bool = False):
+    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
     # logging
-    if capture_output_bool:
+    if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        if run_output.stderr:
-            msg += str(run_output.stderr)
-            ANA_LOG.info(msg)
+        # msg += f"STDOUT: {run_output.stdout}\n\n"
+        ANA_LOG.info(msg)
+    if run_output.stderr and not quiet:
+        raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    if run_output.stderr and quiet:
+        ANA_LOG.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    return run_output
 
 
 def read_file(filename):
@@ -96,37 +79,79 @@ def onelinefasta(fastafilepath):
                 onelinefa.write(line[:-1])
             line = f.readline()
         onelinefa.write("\n")
-    f.close()
-    system_sub('mv {fbase} {f}'.format(**{"fbase": newfile_temp_name.replace(' ', '\ '),
-                                       "f": filename.replace(' ', '\ ')}))  # handling space in name of file
+    shutil.move(newfile_temp_name, filename)  # handling space in name of file
 
 
 def append_reads(taxed_ZOTUs_file_path, sample_id, analysis_dir):
     chdir(analysis_dir)
     taxed_ZOTUs_file_path = os.path.abspath(taxed_ZOTUs_file_path)
     dataset_name = f"{sample_id}"
-    cmd = USEARCH_11_BIN + ' -fastx_relabel ' + taxed_ZOTUs_file_path + ' -prefix ' + dataset_name
-    cmd += '. -fastaout new -keep_annots'
-    system_sub(cmd)
-    system('cat new >> ' + analysis_dir + 'analysis.fasta')
-    onelinefasta('{}analysis.fasta'.format(analysis_dir))
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        '-fastx_relabel',
+        taxed_ZOTUs_file_path,
+        '-prefix',
+        f"{dataset_name}.",
+        '-fastaout',
+        'new',
+        '-keep_annots',
+    ]
+    # cmd = USEARCH_11_BIN + ' -fastx_relabel ' + taxed_ZOTUs_file_path + ' -prefix ' + dataset_name
+    # cmd += '. -fastaout new -keep_annots'
+    system_sub(cmd_to_call_list, force_log=True)
+    with open('new', 'r') as new_file:
+        with open('analysis.fasta', 'a') as analysis_file:
+            analysis_file.write(new_file.read())
+    onelinefasta('analysis.fasta')
 
 
 def trim_sides(five_end_trim, three_end_trim):
-    cmd_0 = USEARCH_11_BIN + " -fastx_truncate analysis.fasta -stripright " + str(five_end_trim)
-    cmd_1 = " -stripleft " + str(three_end_trim) + " -fastaout filtered1.fasta "
-    system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
-    cmd_2 = 'mv filtered1.fasta analysis.fasta'
-    system_sub(cmd_2)
+    # cmd_0 = USEARCH_11_BIN + " -fastx_truncate analysis.fasta -stripright " + str(five_end_trim)
+    # cmd_1 = " -stripleft " + str(three_end_trim) + " -fastaout filtered1.fasta "
+    # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        '-fastx_truncate',
+        'analysis.fasta',
+        '-stripright',
+        str(five_end_trim),
+        '-stripleft',
+        str(three_end_trim),
+        '-fastaout',
+        'filtered1.fasta'
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
+    # cmd_2 = 'mv filtered1.fasta analysis.fasta'
+    cmd_to_call_list = [
+        "mv",
+        "filtered1.fasta",
+        "analysis.fasta",
+    ]
+    system_sub(cmd_to_call_list)
     onelinefasta('analysis.fasta')
 
 
 def dereplication():
-    cmd_part_0 = USEARCH_11_BIN + " -fastx_uniques analysis.fasta -relabel Zotu"
-    cmd_part_0 += " -fastaout derep.fasta -tabbedout relabel.tab"
-    cmd_part_0 += " > /dev/null 2>/dev/null"
+    # cmd_part_0 = USEARCH_11_BIN + " -fastx_uniques analysis.fasta -relabel Zotu"
+    # cmd_part_0 += " -fastaout derep.fasta -tabbedout relabel.tab --threads " + str(POOL_SIZE)
+    # cmd_part_0 += " > /dev/null 2>/dev/null"
+    # system_sub(cmd_part_0)
+
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-fastx_uniques",
+        "analysis.fasta",
+        "-relabel",
+        "Zotu",
+        "-fastaout",
+        "derep.fasta",
+        "-tabbedout",
+        "relabel.tab",
+        "--threads",
+        str(POOL_SIZE),
+    ]
     # dereplicate reads and anotate them by multiplicity
-    system_sub(cmd_part_0)
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("derep.fasta")
     contents = open('relabel.tab', 'r')
     zotus_dict = dict()
@@ -162,7 +187,7 @@ def dereplication():
             curr_sample = sample_name_regex.search(val).group(1)
             if curr_sample not in samples_list:
                 samples_list.append(curr_sample)
-
+    # print(zotus_dict)
     zotu_hit_dict = dict()
     for key, values_list in zotus_dict.items():
         # We rely on uniqness of dataset ids by the db
@@ -203,37 +228,85 @@ def dereplication():
                 new_line = derep_line + "\n"
             derep_tax_fio.write(new_line)
             derep_line = derep_fio.readline()
-
-    system_sub('rm relabel.tab analysis.fasta')
+    cmd_to_call_list = [
+        "rm",
+        "relabel.tab",
+        "analysis.fasta",
+    ]
+    system_sub(cmd_to_call_list)
 
 
 def sort_seqs():
-    cmd_0 = USEARCH_11_BIN + ' -sortbysize derep.fasta -fastaout sorted.fasta'
-    cmd_1 = ' ' + USEARCH_TAIL
-    system_sub(cmd_0 + cmd_1)
+    # cmd_0 = USEARCH_11_BIN + ' -sortbysize derep.fasta -fastaout sorted.fasta'
+    # cmd_1 = ' ' + USEARCH_TAIL
+    # system_sub(cmd_0 + cmd_1)
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-sortbysize",
+        "derep.fasta",
+        "-fastaout",
+        "sorted.fasta",
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("sorted.fasta")
 
 
 # cluster sequences to OTUs
 def clusterZOTUs():
-    cmd_part_0 = USEARCH_11_BIN + ' -unoise3 sorted.fasta -minsize 4 -zotus zotus.fasta'
-    cmd_part_1 = ' ' + USEARCH_TAIL
-    # clusering of seq in OTUs (clustered)
-    system_sub(cmd_part_0 + cmd_part_1)
-    system_sub('rm derep.fasta sorted.fasta')
+    # cmd_part_0 = USEARCH_11_BIN + ' -unoise3 sorted.fasta -minsize 4 -zotus zotus.fasta'
+    # cmd_part_1 = ' ' + USEARCH_TAIL
+    # # clusering of seq in OTUs (clustered)
+    # system_sub(cmd_part_0 + cmd_part_1)
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-unoise3",
+        "sorted.fasta",
+        "-minsize",
+        "4",
+        "-zotus",
+        "zotus.fasta",
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("zotus.fasta")
+    cmd_to_call_list = [
+        "rm",
+        "sorted.fasta",
+        "derep.fasta",
+    ]
+    system_sub(cmd_to_call_list)
 
 
 # Filter non 16S sequences
 def filter16S():
-    cmd_0 = SORT_ME_RNA_BIN + " --ref " + ref16RNAdb_1 + " --ref " + ref16RNAdb_2 + " --reads "
-    cmd_1 = " zotus.fasta --fastx --aligned good-ZOTUs --other non16SrRNA --workdir . -e 0.1 --num_alignments 1"  # --aligned
-    cmd_2 = " > /dev/null 2>&1"
+    # cmd_0 = SORT_ME_RNA_BIN + " --ref " + ref16RNAdb_1 + " --ref " + ref16RNAdb_2 + " --reads "
+    # cmd_1 = " zotus.fasta --fastx --aligned good-ZOTUs --other non16SrRNA --workdir . -e 0.1 --num_alignments 1"  # --aligned
+    # cmd_2 = " > /dev/null 2>&1"
     # run a RNA filtering step
     # (The program currently do not distinquish between 16S and 18S)
-    system_sub(cmd_0 + cmd_1 + cmd_2)
+    # system_sub(cmd_0 + cmd_1 + cmd_2)
     # system_sub('mv out/aligned.fasta good-ZOTUs.fasta')
-    system_sub('rm -r idx kvdb')
+    cmd_to_call_list = [
+        SORT_ME_RNA_BIN,
+        "--ref",
+        ref16RNAdb_1,
+        "--ref",
+        ref16RNAdb_2,
+        "--reads",
+        "zotus.fasta",
+        "--fastx",
+        "--aligned",
+        "good-ZOTUs",
+        "--other",
+        "non16SrRNA",
+        "--workdir",
+        ".",
+        "-e",
+        "0.1",
+        "--num_alignments",
+        "1",
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
+    system_sub(["rm", "-r", "idx", "kvdb"])
 
 
 def prepare_zotus():
@@ -250,11 +323,24 @@ def prepare_zotus():
 
 # cluster sequences to OTUs
 def clusterOTUs():
-    cmd_part_0 = USEARCH_11_BIN + ' -cluster_otus good-ZOTUs-sized.fasta -fulldp -otus otus1.fa -minsize 1 '
-    cmd_part_1 = ' -uparseout z2o.tab'
-    cmd_part_2 = ' > /dev/null 2>/dev/null'
+    # cmd_part_0 = USEARCH_11_BIN + ' -cluster_otus good-ZOTUs-sized.fasta -fulldp -otus otus1.fa -minsize 1 '
+    # cmd_part_1 = ' -uparseout z2o.tab'
+    # cmd_part_2 = ' > /dev/null 2>/dev/null'
     # clusering of seq in OTUs (clustered)
-    system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2)
+    # system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2)
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-cluster_otus",
+        "good-ZOTUs-sized.fasta",
+        "-fulldp",
+        "-otus",
+        "otus1.fa",
+        "-minsize",
+        "1",
+        "-uparseout",
+        "z2o.tab",
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("otus1.fa")
 
 
@@ -268,7 +354,7 @@ def remove_size_from_OTUS():
         else:
             out_file.write(line + '\n')
     out_file.close()
-    system_sub('rm otus1.fa')
+    system_sub(["rm", "otus1.fa"])
 
 
 def assign_zotus_to_otus():
@@ -293,20 +379,43 @@ def assign_zotus_to_otus():
     for key in valid_zotus_dict.keys():
         out_file_2.write(key + '\n')
     out_file_2.close()
-    system_sub('rm z2o.tab')
+    system_sub(["rm", "z2o.tab"])
 
 
 def keep_good_ZOTUs():
-    cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs good-ZOTUs.fasta -labels '  # aligned_16S_ZOTUS.fa -> good-ZOTUs.fasta
-    cmd_1 = 'matched_ZOTUS.txt -fastaout nochi_ZOTUs.fasta '
-    system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    # cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs good-ZOTUs.fasta -labels '  # aligned_16S_ZOTUS.fa -> good-ZOTUs.fasta
+    # cmd_1 = 'matched_ZOTUS.txt -fastaout nochi_ZOTUs.fasta '
+    # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-fastx_getseqs",
+        "good-ZOTUs.fasta",
+        "-labels",
+        "matched_ZOTUS.txt",
+        "-fastaout",
+        "nochi_ZOTUs.fasta",
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("nochi_ZOTUs.fasta")
 
 
 def build_ZOTU_table():
-    cmd_0 = USEARCH_11_BIN + ' -otutab analysis.fasta -top_hit_only -zotus nochi_ZOTUs.fasta '
-    cmd_1 = ' -otutabout zotu_table.txt -id 0.97'
-    system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    # cmd_0 = USEARCH_11_BIN + ' -otutab analysis.fasta -top_hit_only -zotus nochi_ZOTUs.fasta '
+    # cmd_1 = ' -otutabout zotu_table.txt -id 0.97'
+    # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-otutab",
+        "analysis.fasta",
+        "-top_hit_only",
+        "-zotus",
+        "nochi_ZOTUs.fasta",
+        "-otutabout",
+        "zotu_table.txt",
+        "-id",
+        "0.97"
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
 
 
 def get_samples_sizes(input_file):
@@ -343,7 +452,7 @@ def filter_zotu_abundance(abund_limit):
         if any([x >= abund_limit for x in curr_abundances]):
             out_file.write(line + '\n')
     out_file.close()
-    system_sub("mv filtered_zotu_table.txt ZOTU_map.tab")
+    system_sub(["mv", "filtered_zotu_table.txt", "ZOTU_map.tab"])
     zotus_tax_dict = dict()
     map_f = open("ZOTU_map.tab", "r")
     map_line = map_f.readline()
@@ -376,21 +485,49 @@ def filter_zotu_abundance(abund_limit):
 
 
 def select_zotu_seqs():
-    cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs nochi_ZOTUs.fasta -labels '  # good-ZOTUs.fasta -> nochi_ZOTUs.fasta
-    cmd_1 = 'filtered_zotu_table_list.txt -fastaout ZOTUs-Seqs.fasta '
-    system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
-    system_sub('rm filtered_zotu_table_list.txt')
+    # cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs nochi_ZOTUs.fasta -labels '  # good-ZOTUs.fasta -> nochi_ZOTUs.fasta
+    # cmd_1 = 'filtered_zotu_table_list.txt -fastaout ZOTUs-Seqs.fasta '
+    # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-fastx_getseqs",
+        "nochi_ZOTUs.fasta",
+        "-labels",
+        "ZOTU_map.tab",
+        "-fastaout",
+        "ZOTUs-Seqs.fasta"
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("ZOTUs-Seqs.fasta")
+    system_sub(["rm", "filtered_zotu_table_list.txt"])
     addTax_new("ZOTUs-Seqs.fasta")
 
 
 def addTax():
     classifier_dir = '/crc/crc/binaries/sina/'
-    cmd_part_0 = 'sina --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
-    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
-    cmd_part_2 = '--db ' + SINA_ARB + ' --out test.fasta'
-    cmd_part_3 = ' > /dev/null 2>/dev/null'
-    system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
+    # cmd_part_0 = 'sina --in ZOTUs-Seqs.fasta --search --meta-fmt csv '
+    # cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
+    # cmd_part_2 = '--db ' + SINA_ARB + ' --out test.fasta'
+    # cmd_part_3 = ' > /dev/null 2>/dev/null'
+    # system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
+    cmd_to_call_list = [
+        classifier_dir + "sina",
+        "--in",
+        "ZOTUs-Seqs.fasta",
+        "--search",
+        "--meta-fmt",
+        "csv",
+        "--threads",
+        str(POOL_SIZE),
+        "--lca-fields",
+        "tax_slv",
+        "--db",
+        SINA_ARB,
+        "--out",
+        "test.fasta"
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
+
     out_file = open('classifiedF.txt', 'w+')
     silva_contents_header = read_file('test.csv')
     silva_contents = silva_contents_header[1:]
@@ -410,11 +547,28 @@ def addTax_new(zotu_fasta_path):
     dirname, filename = os.path.split(zotu_fasta_path)
     os.chdir(dirname)
     classifier_dir = '/crc/crc/binaries/sina/'
-    cmd_part_0 = 'sina --in ' + str(zotu_fasta_path) + ' --search --meta-fmt csv '
-    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
-    cmd_part_2 = '--db ' + SINA_ARB + ' --out test_{}'.format(filename)
-    cmd_part_3 = ' > /dev/null 2>/dev/null'
-    system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
+    # cmd_part_0 = 'sina --in ' + str(zotu_fasta_path) + ' --search --meta-fmt csv '
+    # cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
+    # cmd_part_2 = '--db ' + SINA_ARB + ' --out test_{}'.format(filename)
+    # cmd_part_3 = ' > /dev/null 2>/dev/null'
+    # system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
+    cmd_to_call_list = [
+        classifier_dir + "sina",
+        "--in",
+        str(zotu_fasta_path),
+        "--search",
+        "--meta-fmt",
+        "csv",
+        "--threads",
+        str(POOL_SIZE),
+        "--lca-fields",
+        "tax_slv",
+        "--db",
+        SINA_ARB,
+        "--out",
+        "test_{}".format(filename),
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
 
     new_taxed_path = os.path.join(dirname, "taxed_{}".format(filename))
     out_file = open(new_taxed_path, 'w+')
@@ -506,12 +660,39 @@ def create_tree(sample):
                 fas.write(">" + str(sotu_name) + "\n")
                 fas.write(str(seq) + "\n")
     # create both trees
-    cmd_part_0 = 'FastTree -quiet -nosupport -gtr -nt filtered_aligned.fasta'
-    cmd_part_1 = ' > ' + sample + '_FastTree.tre'
-    system_sub(cmd_part_0 + cmd_part_1)
-    cmd_2_part_0 = BIN_DIR + 'rapidnj filtered_aligned.fasta --input-format fa --cores 6 --alignment-type d '
-    cmd_2_part_1 = '--output-format t --no-negative-length -x ' + sample + '_rapidNJ_tree.tre'
-    system_sub(cmd_2_part_0 + cmd_2_part_1)
+    # cmd_part_0 = 'FastTree -quiet -nosupport -gtr -nt filtered_aligned.fasta'
+    # cmd_part_1 = ' > ' + sample + '_FastTree.tre'
+    # system_sub(cmd_part_0 + cmd_part_1)
+    cmd_to_call_list = [
+        "FastTree",
+        "-quiet",
+        "-nosupport",
+        "-gtr",
+        "-nt",
+        "filtered_aligned.fasta",
+        ">",
+        sample + "_FastTree.tre",
+    ]
+    system_sub(cmd_to_call_list)
+    # cmd_2_part_0 = BIN_DIR + 'rapidnj filtered_aligned.fasta --input-format fa --cores 6 --alignment-type d '
+    # cmd_2_part_1 = '--output-format t --no-negative-length -x ' + sample + '_rapidNJ_tree.tre'
+    # system_sub(cmd_2_part_0 + cmd_2_part_1)
+    cmd_to_call_list = [
+        BIN_DIR + "rapidnj",
+        "filtered_aligned.fasta",
+        "--input-format",
+        "fa",
+        "--cores",
+        "6",
+        "--alignment-type",
+        "d",
+        "--output-format",
+        "t",
+        "--no-negative-length",
+        "-x",
+        sample + "_rapidNJ_tree.tre",
+    ]
+    system_sub(cmd_to_call_list)
 
 
 def cleanup_old():
@@ -527,12 +708,13 @@ def cleanup_old():
         abspath_f = os.path.abspath(f)
         if not any([re.search(tk, f) for tk in to_keep]) and os.path.isfile(abspath_f):
             to_rem.append(f)
-    system_sub('rm -f {}'.format(" ".join(to_rem)))
+    cmd_to_call_list = ["rm", "-f"] + to_rem
+    system_sub(cmd_to_call_list)
 
 
 def rename_final_files():
-    system_sub("mv zotus_table.tab ZOTUs-table.final.tab")
-    system_sub("mv sotus_table.tab OTUs-table.final.tab")
+    system_sub("mv zotus_table.tab ZOTUs-table.final.tab".split(" "))
+    system_sub("mv sotus_table.tab OTUs-table.final.tab".split(" "))
 
 
 def create_krona():
@@ -544,8 +726,8 @@ def create_krona():
         size = OTUFinal_list[0]
         krona_text.write(size + '\t' + taxo + '\n')
     krona_text.close()
-    system_sub("ktImportText krona.txt")
-    system_sub("rm krona.txt")
+    system_sub("ktImportText krona.txt".split(" "))
+    system_sub("rm krona.txt".split(" "))
 
 
 def create_OTUs_from_ZOTUS_table():
@@ -620,14 +802,48 @@ def create_OTUs_from_ZOTUS_table():
 
 def sina_alignment():
     classifier_dir = '/crc/crc/binaries/sina/'
-    cmd_part_0_0 = 'sina --in zotus_with_taxonomy.fasta --search --meta-fmt csv '
-    cmd_part_0_1 = 'sina --in sotus_with_taxonomy.fasta --search --meta-fmt csv '
-    cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
-    cmd_part_2_0 = '--db ' + SINA_ARB + ' --out test_z.fasta'
-    cmd_part_2_1 = '--db ' + SINA_ARB + ' --out test_s.fasta'
-    cmd_part_3 = ' >/dev/null 2>/dev/null'
-    system_sub(classifier_dir + cmd_part_0_0 + cmd_part_1 + cmd_part_2_0 + cmd_part_3)
-    system_sub(classifier_dir + cmd_part_0_1 + cmd_part_1 + cmd_part_2_1 + cmd_part_3)
+    # cmd_part_0_0 = 'sina --in zotus_with_taxonomy.fasta --search --meta-fmt csv '
+    # cmd_part_0_1 = 'sina --in sotus_with_taxonomy.fasta --search --meta-fmt csv '
+    # cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
+    # cmd_part_2_0 = '--db ' + SINA_ARB + ' --out test_z.fasta'
+    # cmd_part_2_1 = '--db ' + SINA_ARB + ' --out test_s.fasta'
+    # cmd_part_3 = ' >/dev/null 2>/dev/null'
+    # system_sub(classifier_dir + cmd_part_0_0 + cmd_part_1 + cmd_part_2_0 + cmd_part_3)
+    cmd_to_call_list = [
+        classifier_dir + "sina",
+        "--in",
+        "zotus_with_taxonomy.fasta",
+        "--search",
+        "--meta-fmt",
+        "csv",
+        "--threads",
+        str(POOL_SIZE),
+        "--lca-fields",
+        "tax_slv",
+        "--db",
+        SINA_ARB,
+        "--out",
+        "test_z.fasta",
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
+    # system_sub(classifier_dir + cmd_part_0_1 + cmd_part_1 + cmd_part_2_1 + cmd_part_3)
+    cmd_to_call_list = [
+        classifier_dir + "sina",
+        "--in",
+        "sotus_with_taxonomy.fasta",
+        "--search",
+        "--meta-fmt",
+        "csv",
+        "--threads",
+        str(POOL_SIZE),
+        "--lca-fields",
+        "tax_slv",
+        "--db",
+        SINA_ARB,
+        "--out",
+        "test_s.fasta",
+    ]
+    system_sub(cmd_to_call_list, force_log=True)
 
 
 def extract_columns(input_file_name):
@@ -678,26 +894,76 @@ def create_trees():
         system_sub('mv corr_header_{} {}'.format(f, f))
     for f in ['test_s.fasta', 'test_z.fasta']:
         extract_columns(f)
-    cmd1 = "/crc/crc/binaries/rapidnj for_tree_test_s.fasta -n -o t -x sotu_nj.tre"
-    cmd2 = "/crc/crc/binaries/rapidnj for_tree_test_z.fasta -n -o t -x zotu_nj.tre"
-    cmd3 = "/crc/crc/binaries/FastTree -gtr -gamma -quiet -nt < for_tree_test_s.fasta > sotu_aml.tre"
-    cmd4 = "/crc/crc/binaries/FastTree -gtr -gamma -quiet -nt < for_tree_test_z.fasta > zotu_aml.tre"
-    system_sub(cmd1)
-    system_sub(cmd2)
-    system_sub(cmd3)
-    system_sub(cmd4)
+    # cmd1 = "/crc/crc/binaries/rapidnj for_tree_test_s.fasta -n -o t -x sotu_nj.tre"
+    # cmd2 = "/crc/crc/binaries/rapidnj for_tree_test_z.fasta -n -o t -x zotu_nj.tre"
+    # cmd3 = "/crc/crc/binaries/FastTree -gtr -gamma -quiet -nt < for_tree_test_s.fasta > sotu_aml.tre"
+    # cmd4 = "/crc/crc/binaries/FastTree -gtr -gamma -quiet -nt < for_tree_test_z.fasta > zotu_aml.tre"
+    # system_sub(cmd1)
+    # system_sub(cmd2)
+    # system_sub(cmd3)
+    # system_sub(cmd4)
+    cmd_to_call_list = [
+        BIN_DIR + "rapidnj",
+        "for_tree_test_s.fasta",
+        "-n",
+        "-o",
+        "t",
+        "-x",
+        "sotu_nj.tre",
+    ]
+    system_sub(cmd_to_call_list)
+    cmd_to_call_list = [
+        BIN_DIR + "rapidnj",
+        "for_tree_test_z.fasta",
+        "-n",
+        "-o",
+        "t",
+        "-x",
+        "zotu_nj.tre",
+    ]
+    system_sub(cmd_to_call_list)
+    cmd_to_call_list = [
+        BIN_DIR + "FastTree",
+        "-gtr",
+        "-gamma",
+        "-quiet",
+        "-nt",
+        "<",
+        "for_tree_test_s.fasta",
+        ">",
+        "sotu_aml.tre",
+    ]
+    system_sub(cmd_to_call_list, shell=True)
+    cmd_to_call_list = [
+        BIN_DIR + "FastTree",
+        "-gtr",
+        "-gamma",
+        "-quiet",
+        "-nt",
+        "<",
+        "for_tree_test_z.fasta",
+        ">",
+        "zotu_aml.tre",
+    ]
+    system_sub(cmd_to_call_list, shell=True)
 
 
-def cleanup():
+def cleanup(directory: str):
+    directory = Path(PurePath(directory)).absolute()
     to_remove = ["new", "derep.fasta", "ZOTU_map.tab", "derep_with_tax.fasta", "zotu_to_sotu_map.tab",
                  "for_tree_test_s.fasta", "for_tree_test_z.fasta", "test_s.fasta", "test_z.fasta",
                  "test_s.csv", "test_z.csv", "log_file.txt"]
     for f in to_remove:
-        system_sub('rm ' + f)
+        file_path = directory.joinpath(f)
+        if file_path.exists():
+            if file_path.is_file():
+                file_path.unlink()
+            elif file_path.is_dir():
+                shutil.rmtree(file_path)
 
 
 def create_zip():
-    system_sub('zip -r ../Analysis.zip .')
+    system_sub('zip -r ../Analysis.zip .'.split(" "), capture_output=True, shell=True)
 
 
 def addKrona(KRONA_TOOL):
@@ -715,8 +981,9 @@ def addKrona(KRONA_TOOL):
     for tax, size in krona_dct.items():
         krona_text.write(str(size) + '\t' + tax + '\n')
     krona_text.close()
-    system_sub("{} ./krona.txt".format(KRONA_TOOL))
-    system_sub("rm ./krona.txt")
+    cmd_to_call_list = [KRONA_TOOL, "krona.txt"]
+    system_sub(cmd_to_call_list)
+    system_sub("rm ./krona.txt".split(""))
 
 
 def fasta_name_with_space(filepath):
@@ -735,92 +1002,8 @@ def fasta_name_with_space(filepath):
         line = fopen.readline()
     fopen.close()
     fout.close()
-    system_sub("mv {} {}".format(fout_path, filepath))
-
-
-def normalize_otu_table(otu_table_path: str, spikes_stats_path: str):
-    """
-    Given a path to a OTU table and a path to a spike_stat table file, it will
-    normalize the OTU table according to spike count in spike_stat_file
-    """
-    otu_table_path = Path(PurePath(otu_table_path)).absolute()
-    spikes_stats_path = Path(PurePath(spikes_stats_path)).absolute()
-    samples = {}
-    observed_weights = []
-    observed_spike_amounts = []
-    with open(spikes_stats_path, 'r') as stats_h:
-        for line in stats_h:
-            if line.startswith("#"):
-                assert (SPIKE_STAT_HEADER in line.strip())
-            elif line == "\n":
-                continue
-            else:
-                fields = line.strip().split("\t")
-                sample_id = str(fields[0]).strip()
-                spike_reads = int(fields[1])
-                try:
-                    original_total_weight_in_g = float(fields[2])
-                except ValueError:
-                    original_total_weight_in_g = float("nan")
-                amount = float(fields[3])
-                if not math.isnan(amount) or not math.isclose(amount, 0, rel_tol=1e-5):
-                    observed_spike_amounts.append(amount)
-                if not math.isnan(original_total_weight_in_g):
-                    observed_weights.append(original_total_weight_in_g)
-                samples[sample_id] = (spike_reads, original_total_weight_in_g, amount)
-
-    sum_ = 1
-    n = 0
-    for values in samples.values():
-        count, _, amount = values
-        if not math.isclose(amount, float(0), rel_tol=1e-5) or not math.isnan(amount):
-            sum_ += count
-            n += 1
-
-    mean = float(sum_ / n)
-    ANA_LOG.debug(f'mean={mean}')
-
-    otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
-    otu_table = otu_table.T
-    if math.isclose(mean, float(sum_ / n), rel_tol=1e-5):
-        return
-    normalization_done = {sam_name: True for sam_name, values in samples.items()}
-    for file_id, values in samples.items():
-        count, weight, amount = values
-        thismean = mean
-        factor = None
-        file_id = str(file_id).strip()
-        try:
-            # do spike normalization
-            if math.isnan(weight) or math.isclose(weight, 0, rel_tol=1e-5):
-                if len(observed_weights) == 0:
-                    weight = 1  # fallback to 1
-                else:
-                    weight = statistics.median(observed_weights)  # fallback to median weight
-            # At this point we are sure that we have at least one value in observed_spike_amounts
-            # Otherwise we would have returned in line 20 of this function
-            if math.isclose(amount, 0, rel_tol=1e-5) or math.isnan(amount) or amount == 0:
-                amount = statistics.median(observed_spike_amounts)  # fallback to median amount
-            factor = 600 / (amount * 100)
-            otu_table.loc[file_id] = (otu_table.loc[file_id] * thismean) / (count * weight * factor)
-        except KeyError:
-            ANA_LOG.warning(f"{file_id} is in mapping file but not in OTU Table")
-            normalization_done[file_id] = False
-        except ZeroDivisionError:
-            normalization_done[file_id] = False
-            pass
-        except Exception:
-            normalization_done[file_id] = False
-
-    if not all(list(normalization_done.values())):
-        # Writing the table
-        normalized_otu_path = otu_table_path.parent.joinpath(f"SpikeNormalized-{otu_table_path.name}")
-        otu_table.T.to_csv(str(normalized_otu_path), sep="\t")
-        ANA_LOG.info(f'Wrote normalized OTU Table to {str(normalized_otu_path)}')
-        # correct rights of output folders
-        system_sub(" ".join(['chmod', '777', '-R', str(normalized_otu_path)]))
-    else:
-        ANA_LOG.warning(f"Normalization failed for {otu_table_path.name}")
+    cmd_to_call_list = ["mv", fout_path, filepath]
+    system_sub(cmd_to_call_list)
 
 
 def uniqify_map_lines(map_lines_dict: dict) -> dict:
@@ -875,7 +1058,12 @@ def parse_spike_stat_file(spike_stat_file: str, fastq_dir: str, parsed_spike_sta
                 except ValueError:
                     original_total_weight_in_g = float("nan")
                 amount = round(float(fields[3]), 5)
-                parent_path = str(fields[4]).strip()
+                try:
+                    parent_path = str(fields[4]).strip()
+                    # strip initial / or \
+                    parent_path = parent_path.lstrip("/").lstrip("\\")
+                except IndexError:
+                    parent_path = ""
                 abs_parent = fastq_dir.joinpath(Path(PurePath(parent_path)))
                 full_id = abs_parent.joinpath(sample_id)
                 samples[full_id] = (sample_id, spike_reads, original_total_weight_in_g, amount, abs_parent)
@@ -953,17 +1141,17 @@ def main(
     #################
     ## TIC is here ##
     #################
-    TIC_Result_DIR = os.path.join(os.path.abspath(ANALYSIS_DIR), "TICResult")
-    TIC_Output_DIR = os.path.join(os.path.abspath(ANALYSIS_DIR), "TICOut")
-    dereplicated_fasta_path = os.path.join(os.path.abspath(ANALYSIS_DIR), "derep_with_tax.fasta")
-    if os.path.isdir(TIC_Result_DIR):
-        shutil.rmtree(TIC_Result_DIR)
+    TIC_Result_DIR = Path(ANALYSIS_DIR).joinpath("TICResult")
+    TIC_Output_DIR = Path(ANALYSIS_DIR).joinpath("TICOut")
+    dereplicated_fasta_path = Path(ANALYSIS_DIR).joinpath("derep_with_tax.fasta")
+    if TIC_Result_DIR.is_dir():
+        shutil.rmtree(str(TIC_Result_DIR))
     try:
-        split_based_on_taxonomy(TIC_Result_DIR, "derep_with_tax.fasta")
+        split_based_on_taxonomy(str(TIC_Result_DIR), "derep_with_tax.fasta")
     except Exception as exc:
         raise ValueError(f"Split: {str(exc)}")
     try:
-        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=TIC_Result_DIR, threads=POOL_SIZE)
+        main_complex_TIC(tool=USEARCH_11_BIN, data_dir=str(TIC_Result_DIR), threads=POOL_SIZE)
     except Exception as exc:
         raise ValueError(f"Main: {str(exc)}")
     if os.path.isdir(TIC_Output_DIR):
@@ -979,11 +1167,11 @@ def main(
     main_create_args = [
         "python3.7",
         "/base/imngs2_pipeline/TIC/create_fasta_and_table.py",  # 0
-        TIC_Output_DIR,  # OUTPUT_FOLDER
+        str(TIC_Output_DIR),  # OUTPUT_FOLDER
         ZOTUs_fasta_name,  # OUTPUT_ASV_FASTA_WITH_TAXONOMY
         ZOTUs_table_name,  # OUTPUT_ASV_TABLE
-        TIC_Result_DIR,  # CLUSTERING_DIRECTORY
-        dereplicated_fasta_path,  # INPUT_FASTA_CLUSTERING  # 5
+        str(TIC_Result_DIR),  # CLUSTERING_DIRECTORY
+        str(dereplicated_fasta_path),  # INPUT_FASTA_CLUSTERING  # 5
         "/usr/local/bin/ktImportText",  # KRONA_TOOL
         SOTUs_fasta_name,  # OUTPUT_SOTU_FASTA_WITH_TAXONOMY
         SINA_ARB,  # SILVA_ARB
@@ -996,25 +1184,38 @@ def main(
         str(ARGS_CLS.create_table.sample_wise_correction)  #
     ]
     try:
-        system_sub(" ".join(main_create_args))
+        system_sub(main_create_args, capture_output=False, shell=False)
     except Exception as exc:
         raise ValueError(f"Table: {str(exc)}")
-
+    ANA_LOG.info("TIC Done")
     chdir(ANALYSIS_DIR)
     shutil.rmtree(TIC_Result_DIR)
-    ##################
-    system("mv ./TICOut/* .")
-    shutil.rmtree("./TICOut")
-    cleanup()
+    for file in TIC_Output_DIR.glob("*"):
+        shutil.copy(file, ANALYSIS_DIR)
+        file.unlink()
+    shutil.rmtree(TIC_Output_DIR)
+    cleanup(ANALYSIS_DIR)
     ANA_LOG.info('Cleanup DONE')
     # Normalizing Tables
-    if spike_stat_file:
-        try:
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name)), parsed_spike_stat_file_path)
-            normalize_otu_table(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name)), parsed_spike_stat_file_path)
-        except Exception as exc:
-            ANA_LOG.warning(f"Normalization Faild: {exc}")
-
-    create_zip()
+    try:
+        zotu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name))), str(parsed_spike_stat_file_path))
+    except Exception as exc:
+        ANA_LOG.warning(f"No Normalization applied on {ZOTUs_table_name}: {exc}")
+    else:
+        ANA_LOG.info(f"{zotu_norm_methods} normalization method(s) applied on {ZOTUs_table_name}")
+    try:
+        otu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + SOTUs_table_name))), str(parsed_spike_stat_file_path))
+    except Exception as exc:
+        ANA_LOG.info(f"No Normalization applied on {SOTUs_table_name}: {exc}")
+    else:
+        ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {SOTUs_table_name}")
+    # creating zip file
+    shutil.make_archive(
+        Path(ANALYSIS_DIR).parent.joinpath("Analysis"),
+        'zip',
+        root_dir=str(Path(ANALYSIS_DIR).parent),
+        base_dir=str(Path(ANALYSIS_DIR).relative_to(Path(ANALYSIS_DIR).parent))
+    )
+    ANA_LOG.info('Zip file created')
     ANA_LOG.info('ANALYSIS DONE')
     return ANALYSIS_DIR + ZOTUs_table_name, ANALYSIS_DIR + SOTUs_table_name
