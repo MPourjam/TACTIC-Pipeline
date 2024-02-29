@@ -1058,7 +1058,12 @@ def parse_spike_stat_file(spike_stat_file: str, fastq_dir: str, parsed_spike_sta
                 except ValueError:
                     original_total_weight_in_g = float("nan")
                 amount = round(float(fields[3]), 5)
-                parent_path = str(fields[4]).strip()
+                try:
+                    parent_path = str(fields[4]).strip()
+                    # strip initial / or \
+                    parent_path = parent_path.lstrip("/").lstrip("\\")
+                except IndexError:
+                    parent_path = ""
                 abs_parent = fastq_dir.joinpath(Path(PurePath(parent_path)))
                 full_id = abs_parent.joinpath(sample_id)
                 samples[full_id] = (sample_id, spike_reads, original_total_weight_in_g, amount, abs_parent)

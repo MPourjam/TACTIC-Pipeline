@@ -1,11 +1,15 @@
 from os import (chdir, mkdir, listdir, remove,
-                makedirs, path, getcwd
+                path, getcwd
                 )
 from collections import Counter
 from statistics import stdev, mean
 from .processing_helper import TaskPickle
-from re import search
-from .processing_helper import IMNGS2ArgsParser, gimmelogger, loud_subprocess, calc_covered_region
+from .processing_helper import (
+    IMNGS2ArgsParser,
+    gimmelogger,
+    loud_subprocess,
+    calc_covered_region,
+    calc_spikes)
 import re
 import random
 import shutil
@@ -46,70 +50,6 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
     if run_output.stderr and quiet:
         log.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     return run_output
-
-
-def calc_spikes(*fastq_files, spike_amount):
-    '''
-    fastq_files must not be gzipped or zippped.
-    '''
-    cur_dir = getcwd()
-    fastq_names = [f for f in fastq_files if bool(f)]
-    fastqs_abs_paths = [path.abspath(path.join(cur_dir, f)) for f in fastq_names]
-    if str(spike_amount) == "0":
-        f = fastqs_abs_paths[0]
-        with open(f, 'r') as fqfile:
-            line_count = 0
-            line = fqfile.readline()
-            while line:
-                line_count += 1
-                line = fqfile.readline()
-        line_count = line_count // 4  # (total number of reads, spike reads)
-        return line_count, 0  # non_spike_reads spike_reads
-    else:
-        spike_amount = float("{}e-9".format(spike_amount))  # ng to g
-        name_regx = r"[a-zA-Z0-9\-]+"
-        spike_res_dir = path.split(fastqs_abs_paths[0])[0] + "/spike_result/"
-        makedirs(spike_res_dir, mode=777, exist_ok=True)
-        _, forw_name = path.split(fastqs_abs_paths[0])
-        fastq_aligned = forw_name[search(name_regx, forw_name).start():search(name_regx, forw_name).end()]
-        fastq_aligned = path.join(spike_res_dir, fastq_aligned)
-        fastq_unaligned = fastq_aligned + "_unal"
-
-        if len(fastq_names) == 2:
-            cmd = [bowtie2, "-x", SPIKESIDX, "-1", fastqs_abs_paths[0], "-2",
-                   fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
-                   fastq_unaligned]
-            _ = system_sub(cmd, capture_output=True, quiet=True)
-            spike_counter = 0
-            for fi in [fastq_aligned + ".1", fastq_aligned + ".2"]:
-                with open(fi, 'r') as fastq_al:
-                    for _ in fastq_al:
-                        spike_counter += 1
-            spike_counter = int(spike_counter // 4) // 2
-            if spike_counter != 0:
-                shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
-                shutil.copy(fastq_unaligned + ".2", fastqs_abs_paths[1])
-
-        elif len(fastq_names) == 1:
-            cmd = [bowtie2, "-x", SPIKESIDX, "-U", fastqs_abs_paths[0], "--al-conc",
-                   fastq_aligned, "--un-conc", fastq_unaligned]
-            # system(" ".join(cmd))
-            _ = system_sub(cmd, capture_output=True, quiet=True)
-            files_inspike = listdir(spike_res_dir)
-            spike_counter = 0
-            for fi in [f for f in files_inspike if search(fastq_aligned, path.abspath(f))]:
-                with open(fi, 'r') as fastq_al:
-                    for _ in fastq_al:
-                        spike_counter += 1
-            spike_counter = spike_counter // 4
-            # Check if the unaligned file is empty
-            if spike_counter != 0:
-                shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
-
-        shutil.rmtree(spike_res_dir, ignore_errors=True)
-        unaligned_reads, _ = calc_spikes(*fastqs_abs_paths, spike_amount=0)
-        # to pass it as reads_number and spike number to seq_met model
-        return unaligned_reads, spike_counter
 
 
 def seqFileStats(seqFileName):
