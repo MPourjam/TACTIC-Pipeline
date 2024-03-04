@@ -576,7 +576,8 @@ def run_preprocessing(
         args_yml_path: str,
         sample_id: str = "",  # If it's not provided then the base name of forward file
         sample_weight: float = float("NAN"),  # spike normalizer handles this
-        spike_amount: float = 0.0):
+        spike_amount: float = 0.0,
+        usearch_11_bin: str = USEARCH_11_BIN):
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -642,6 +643,7 @@ def run_preprocessing(
             input_id=sample_id,
             args_file_path=sample_arg_file,
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
+            usearch_11_bin=usearch_11_bin
         )
     except Exception as exc:
         msg = f"{exc}"
