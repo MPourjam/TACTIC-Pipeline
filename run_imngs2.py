@@ -866,7 +866,8 @@ if __name__ == "__main__":
     parser.add_argument("-ut", "--usearch-bin",
                         type=str,
                         help="Path to binary of usearch version 11. Default is 11.0.667_i86linux32.",
-                        default=USEARCH_11_BIN)
+                        default=USEARCH_11_BIN,
+                        required=False)
     parser.add_argument("-db", "--db-directory",
                         type=str,
                         help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
@@ -890,7 +891,15 @@ if __name__ == "__main__":
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
     # TODO Later we need to force the user to provide the path to usearch binary. For now we only continue with the default one.
-    USEARCH_11_BIN = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if args.usearch_tool else USEARCH_11_BIN
+    given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if args.usearch_tool else USEARCH_11_BIN
+    # warning the cli users for the given usearch file
+    if not Path(PurePath(given_usearch_bin)).is_file():
+        PREP_LOG.warning(f"Provided usearch binary file: {given_usearch_bin} does not exist. Falling back to default usearch binary file: {USEARCH_11_BIN}")
+    elif Path(PurePath(given_usearch_bin)) == USEARCH_11_BIN:
+        PREP_LOG.info(f"Provided usearch binary file: {given_usearch_bin} is the same as default usearch binary file: {USEARCH_11_BIN}")
+    else:
+        USEARCH_11_BIN = given_usearch_bin
+
     try:
         POOL_SIZE = int(args.threads)
     except Exception as exc:
