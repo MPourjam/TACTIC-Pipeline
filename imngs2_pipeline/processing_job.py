@@ -102,32 +102,12 @@ def clean_FastQC(input_file, reverse_file=False):
         try:
             shutil.unpack_archive(zipf)
             shutil.move(dir_name + "/Images/per_base_quality.png", "../R{}-per_base_quality.png".format(i + 1))
-            system_sub(
-                [
-                    "rm",
-                    "-r",
-                    dir_name,
-                    "*.html",
-                    zipf
-                ],
-                shell=True,
-                capture_output=False
-            )
+            shutil.rmtree(dir_name)
+            remove(zipf)
         except BaseException:
             pass
     # system("cd ../ && rm -r fastqc_output > /dev/null 2>&1")
-    system_sub(
-        [
-            "cd",
-            "../",
-            "&&",
-            "rm",
-            "-r",
-            "fastqc_output"
-        ],
-        shell=True,
-        capture_output=False
-    )
+    shutil.rmtree("../fastqc_output", ignore_errors=True)
 
 
 def mymkdir(input_dir):
@@ -494,7 +474,8 @@ def addTax(input_id):
             filebasename + ".fasta"
         ],
         force_log=True,
-        capture_output=False
+        capture_output=True,
+        quiet=True
     )
 
     out_file = open('classifiedF.txt', 'w+')
@@ -587,9 +568,24 @@ def addKrona(KRONA_TOOL):
 
 
 def create_zip(input_id):
+    files_to_zip = [
+        "ZOTUs-table.final.tab",
+        "taxed_ZOTUs.fasta",
+        "spike_stat_mapping_file.csv",
+        "krona.html",
+        "silva_start_end.txt",
+        "reads_report.txt",
+        "IMNGS2Pipeline.log"
+    ]
+
     with zipfile.ZipFile(f"../{input_id}_processed.zip", "w") as zipf:
-        zipf.write("ZOTUs-table.final.tab")
-        zipf.write("taxed_ZOTUs.fasta")
+        for file_tozip in files_to_zip:
+            # try to write the file to the zip and if it fails, ignore it
+            try:
+                zipf.write(file_tozip)
+            except FileNotFoundError:
+                pass
+
         for file in glob.glob("*.png"):
             zipf.write(file)
         for file in glob.glob("*.html"):
