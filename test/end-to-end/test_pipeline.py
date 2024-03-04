@@ -232,7 +232,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         )
 
         assert result.returncode == 0
-
+        file_set_complete = False
         if not arg_set.skip_analysis:
             # get latest analysis folder. those are marked with a timestamp
             latest_analysis_folder_date = 0
@@ -252,9 +252,8 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             print("latest_analysis_folder =", latest_analysis_folder)
             assert latest_analysis_folder != ""
             file_set_complete = check_expected_files_exist(latest_analysis_folder)
-            assert file_set_complete
         elif not arg_set.skip_preprocess and arg_set.skip_analysis:
-            file_set_complete = 0
+            file_set_complete_counter = 0
             dirs_checked = 0
             # find all directories with the regex pattern of r'.*__processed/[0-9]{8}_[0-9]{6}' in the run_dir and use re.search
             for preprocessed_folder in glob.glob(run_dir + "/**/*__processed/", recursive=True):
@@ -263,10 +262,9 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                     if re.match(r"[0-9]{8}_[0-9]{6}", tmstmp_dir):
                         dirs_checked += 1
                         print("preprocessed_folder =", tmstmp_dir)
-                        file_set_complete += int(chek_explected_preprocessing_files(tmstmp_dir))
-            assert bool(dirs_checked > 0 and file_set_complete == dirs_checked)
-        else:
-            assert False
+                        file_set_complete_counter += int(chek_explected_preprocessing_files(tmstmp_dir))
+            file_set_complete = bool(dirs_checked > 0 and file_set_complete_counter == dirs_checked)
+        assert file_set_complete
 
 
 def test_flat_autodiscover(build_image):
@@ -354,18 +352,22 @@ def test_preprocessing(build_image):
 
 
 @pytest.mark.xfail
-def test_custom_usearch_bin(build_image):
+def test_custom_usearch_bin_arg(build_image):
     def setup_file_structure(run_dir: str):
         # copy the contents of data to the temporary directory
         subprocess.run(["cp", "-r", data, run_dir])
-        sf_name = os.path.basename(data)
+        # move the contents of the data folder to the run_dir
+        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
+            subprocess.run(["mv", file, run_dir])
+        # rm the empty folder
+        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
         # setting args
-        args_set = ArgumentSet(run_dir, run_dir, skip_analysis=True)
+        args_set = ArgumentSet(run_dir, run_dir)
         # create a mapping file
         mapping_file = os.path.join(run_dir, "mapping_file.csv")
         samples = [
-            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, sf_name),
-            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, sf_name),
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
@@ -375,6 +377,74 @@ def test_custom_usearch_bin(build_image):
         with open(bin_file, "w") as f:
             f.write("FAKE USEARCH BIN")
         args_set.usearch_bin = bin_file
+        args_set.skip_analysis = True
+
+        return args_set
+
+    run_container(setup_file_structure)
+
+
+def test_custom_usearch_bin_preprocessing(build_image):
+    def setup_file_structure(run_dir: str):
+        # copy the contents of data to the temporary directory
+        subprocess.run(["cp", "-r", data, run_dir])
+        # move the contents of the data folder to the run_dir
+        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
+            subprocess.run(["mv", file, run_dir])
+        # rm the empty folder
+        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
+        # setting args
+        args_set = ArgumentSet(run_dir, run_dir)
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = mapping_file
+        # create a fake bin file in run_dir
+        custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
+        subprocess.run([
+            "cp",
+            "binaries/usearch_11_64",
+            custom_usearch_path
+        ])
+        args_set.usearch_bin = custom_usearch_path
+        args_set.skip_analysis = True
+
+        return args_set
+
+    run_container(setup_file_structure)
+
+
+def test_custom_usearch_bin_full_analysis(build_image):
+    def setup_file_structure(run_dir: str):
+        # copy the contents of data to the temporary directory
+        subprocess.run(["cp", "-r", data, run_dir])
+        # move the contents of the data folder to the run_dir
+        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
+            subprocess.run(["mv", file, run_dir])
+        # rm the empty folder
+        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
+        # setting args
+        args_set = ArgumentSet(run_dir, run_dir)
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = mapping_file
+        # create a fake bin file in run_dir
+        custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
+        subprocess.run([
+            "cp",
+            "binaries/usearch_11_64",
+            custom_usearch_path
+        ])
+        args_set.usearch_bin = custom_usearch_path
 
         return args_set
 
