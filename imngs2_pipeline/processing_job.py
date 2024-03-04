@@ -20,7 +20,8 @@ import zipfile
 
 BIN_DIR = "/base/binaries/"
 USEARCH_8_BIN = BIN_DIR + "usearch8.1"
-USEARCH_11_BIN = BIN_DIR + "usearch_11_64 -strand both"
+USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
+USEARCH_11_BIN = USEARCH_11_BIN + " -strand both"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
 USEARCH8_1 = USEARCH_8_BIN + " -threads 1"
 SINA_BIN = BIN_DIR + 'sina/sina'
@@ -789,8 +790,11 @@ def main_processing(
         reverse_file,
         input_id,
         args_file_path: str = "",
-        spike_amount: int = 0):
-    global PREPPROC_LOG
+        spike_amount: int = 0,
+        usearch_11_bin: str = USEARCH_11_BIN):
+    global PREPPROC_LOG, USEARCH_11_BIN
+    # usearch_11_bin must be a global variable and pointing to a file
+    USEARCH_11_BIN = usearch_11_bin + " -strand both"
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
     PREPPROC_LOG = gimmelogger(
         logger_name=f"run_imngs2.preprocessing_{str(input_id)}",

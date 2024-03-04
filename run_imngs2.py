@@ -19,7 +19,7 @@ else:
 
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS
-global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX
+global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX, USEARCH_11_BIN, USEARCH_8_BIN
 INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
 FASTQ_DIR = INPUT_DIR
 PROC_DIR_SUFFIX = "__processed"
@@ -44,6 +44,10 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+# Usearch Tool
+BIN_DIR = "/base/binaries/"
+USEARCH_8_BIN = BIN_DIR + "usearch8.1"
+USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
 
 
 def handle_system_signals(signum, frame):
@@ -487,7 +491,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                     forw_file_name = ""
                 correct_parent = is_correct_parent(file_tup[0], map_line.parent_path)
                 if sample_id in forw_file_name and correct_parent:  # sample_id could also be partial path of file_names
-                    #update parent path to the correct one
+                    # update parent path to the correct one
                     map_line = MapLineTup(
                         map_line.SampleID,
                         map_line.total_weight_in_g,
@@ -717,7 +721,12 @@ def run_imngs2(
         mapping_file: str = "",
         spike_stat_file: str = "",
         skip_preprocess: bool = False,
-        skip_analysis: bool = False):
+        skip_analysis: bool = False,
+        usearch_11_bin: str = USEARCH_11_BIN):
+    # NOTE if the function run_imngs2() is imported then the default global variables will be used
+    global USEARCH_11_BIN, FASTQ_DIR
+    FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
+    USEARCH_11_BIN = str(Path(PurePath(usearch_11_bin)).absolute())
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir))
@@ -768,6 +777,7 @@ def run_imngs2(
                             arg_tup[0].SampleID,  # sample_id
                             float(arg_tup[0].total_weight_in_g),  # sample_weight
                             float(arg_tup[0].spike_amount),   # spike_amount
+                            USEARCH_11_BIN,
                         )
                     )
                     res_list.append(res)
@@ -809,7 +819,8 @@ def run_imngs2(
                 fastqs_dir=str(FASTQ_DIR),
                 args_file_path=args_yml_file,
                 dbs_loc=dbs_dir,
-                threads=POOL_SIZE
+                threads=POOL_SIZE,
+                usearch_11_bin=USEARCH_11_BIN,
             )
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
@@ -852,6 +863,10 @@ if __name__ == "__main__":
                         help=f"The path to a mapping file defining spike count, sample weight and spike amount for each sample.\n{SPIKE_STAT_HEADER}.\n"
                         "Relative to <--input-directory>")
     # <END
+    parser.add_argument("-ut", "--usearch-bin",
+                        type=str,
+                        help="Path to binary of usearch version 11. Default is 11.0.667_i86linux32.",
+                        default=USEARCH_11_BIN)
     parser.add_argument("-db", "--db-directory",
                         type=str,
                         help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
@@ -874,6 +889,8 @@ if __name__ == "__main__":
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    # TODO Later we need to force the user to provide the path to usearch binary. For now we only continue with the default one.
+    USEARCH_11_BIN = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if args.usearch_tool else USEARCH_11_BIN
     try:
         POOL_SIZE = int(args.threads)
     except Exception as exc:
@@ -914,4 +931,5 @@ if __name__ == "__main__":
             spike_stat_file=cli_spike_stat_file,
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
+            usearch_11_bin=USEARCH_11_BIN
         )

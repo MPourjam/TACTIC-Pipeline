@@ -1087,16 +1087,20 @@ def main(
         fastqs_dir: str,
         args_file_path: str = "",
         dbs_loc: str = DB_LOC,
-        threads=POOL_SIZE):
+        threads=POOL_SIZE,
+        usearch_11_bin: str = USEARCH_11_BIN):
     """
     sample_seq_files_path: a list of file path to
      each samples' sequence file which is going to be combined with other samples passed to analysis.
     analysis_dir: The destination directory to save results
     """
+    global USEARCH_11_BIN, POOL_SIZE, ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC
+    # updating USEARCH_11_BIN
+    USEARCH_11_BIN = usearch_11_bin
+
     spike_stat_file = Path(PurePath(spike_stat_file))
     assert spike_stat_file.is_file(), "spike_stat_file must be a path to a file"
 
-    global ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC
     # updating POOL_SIZE
     try:
         POOL_SIZE = int(threads)
