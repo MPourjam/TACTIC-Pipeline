@@ -9,6 +9,7 @@ import os
 import glob
 import tempfile
 import re
+import shutil
 
 
 IMAGE_NAME = "tic-pipeline-test"
@@ -36,7 +37,7 @@ class ArgumentSet:
     skip_preprocess = False
     skip_analysis = False
     place_template_file = False
-    threads = 1
+    threads = 0
 
     def __init__(self, input_dir, fastq_dir, **kwargs):
         self.input_dir = input_dir
@@ -45,7 +46,11 @@ class ArgumentSet:
             setattr(self, key, value)
 
     def to_args(self):
-        args = ["--input-dir", self.input_dir, "--fastq-dir", self.fastq_dir]
+        args = []
+        if self.input_dir:
+            args += ["--input-dir", self.input_dir]
+        if self.fastq_dir:
+            args += ["--fastq-dir", self.fastq_dir]
         if self.yml_file:
             args += ["--yml-file", self.yml_file]
         if self.mapping_file:
@@ -97,7 +102,7 @@ class MappingFile:
                 f.write(entry.csv_line(sep) + "\n")
 
 
-def chek_explected_preprocessing_files(preprocessed_dir: str) -> bool:
+def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
     """
     The preprocessed folder should contain the following files:
     ```
@@ -127,34 +132,38 @@ def chek_explected_preprocessing_files(preprocessed_dir: str) -> bool:
         re.compile(r"taxed_ZOTUs\.fasta"),  # also in zip file
         re.compile(r"silva_start_end\.txt"),
         re.compile(r"ZOTUs-table\.final\.tab"),  # also in zip file
-        re.compile(r"div_metrics\.tab"),
         re.compile(r"reads_report\.txt"),
         re.compile(r"derep\.fasta\.tar\.gz"),
         re.compile(r"R1-per_base_quality\.png"),  # also in zip file
         re.compile(r"R2-per_base_quality\.png"),  # also in zip file
         re.compile(r"aligned_.*\.fasta\.tar\.gz"),
-        re.compile(r"other\.non16rRNA\.fasta"),
-        re.compile(r"rank_abundance_plot\.png"),  # also in zip file
-        re.compile(r"rarefaction_curve\.png"),  # also in zip file
         re.compile(r"text\.krona\.html"),  # also in zip file
         re.compile(r".*\.udb"),
+        # NOTE below are some files which could not get produced if some R packages are not installed
+        # re.compile(r"div_metrics\.tab"),
+        # re.compile(r"other\.non16rRNA\.fasta"),
+        # re.compile(r"rank_abundance_plot\.png"),  # also in zip file
+        # re.compile(r"rarefaction_curve\.png"),  # also in zip file
     ]
     existing_files_list = []
     # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
     if preprocessed_dir.endswith(".zip") and os.path.isfile(os.path.join(preprocessed_dir)):
         with zipfile.ZipFile(preprocessed_dir, "r") as z:
             existing_files_list = z.namelist()
-        files_to_be_there = [files_to_be_there[ind] for ind in [2, 4, 8, 9, 12, 13, 14]]
+        files_to_be_there = [files_to_be_there[ind] for ind in [2, 4, 7, 8, 10]]
     else:
         existing_files_list = os.listdir(preprocessed_dir)
     # use re search to check if patterns in files_to_be_there exist in the existing_files_list
+    shoud_be_there = 0
+    is_there = 0
     for file_there in files_to_be_there:
-        is_there = False
+        shoud_be_there += 1
         for existing_f in existing_files_list:
             if re.search(file_there, existing_f):
-                is_there = True
+                is_there += 1
                 break
-        return_bool = return_bool and is_there
+
+    return_bool = shoud_be_there == is_there
 
     return return_bool
 
@@ -259,10 +268,10 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             for preprocessed_folder in glob.glob(run_dir + "/**/*__processed/", recursive=True):
                 # list directories in preprocessing folder and check if they match the pattern
                 for tmstmp_dir in glob.glob(preprocessed_folder + "/*", recursive=True):
-                    if re.match(r"[0-9]{8}_[0-9]{6}", tmstmp_dir):
+                    if re.search(r"[0-9]{8}_[0-9]{6}", tmstmp_dir):
                         dirs_checked += 1
                         print("preprocessed_folder =", tmstmp_dir)
-                        file_set_complete_counter += int(chek_explected_preprocessing_files(tmstmp_dir))
+                        file_set_complete_counter += int(check_expected_preprocessed_files(tmstmp_dir))
             file_set_complete = bool(dirs_checked > 0 and file_set_complete_counter == dirs_checked)
         assert file_set_complete
 
@@ -305,7 +314,7 @@ def test_flat_mapping(build_image):
         for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
             subprocess.run(["mv", file, run_dir])
         # rm the empty folder
-        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
 
         # setting args
         args_set = ArgumentSet("", "")
@@ -332,8 +341,7 @@ def test_preprocessing(build_image):
         for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
             subprocess.run(["mv", file, run_dir])
         # rm the empty folder
-        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
-
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -360,8 +368,8 @@ def test_custom_usearch_bin_arg(build_image):
         # move the contents of the data folder to the run_dir
         for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
             subprocess.run(["mv", file, run_dir])
-        # rm the empty folder
-        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
+        # rm the folder
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -392,25 +400,21 @@ def test_custom_usearch_bin_preprocessing(build_image):
         # move the contents of the data folder to the run_dir
         for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
             subprocess.run(["mv", file, run_dir])
-        # rm the empty folder
-        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
+        # rm the folder
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
         # setting args
-        args_set = ArgumentSet(run_dir, run_dir)
+        args_set = ArgumentSet("", "")
         # create a mapping file
         mapping_file = os.path.join(run_dir, "mapping_file.csv")
         samples = [
-            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         # create a fake bin file in run_dir
         custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
-        subprocess.run([
-            "cp",
-            "binaries/usearch_11_64",
-            custom_usearch_path
-        ])
+        shutil.copy("binaries/usearch_11_64", custom_usearch_path)
         args_set.usearch_bin = "usearch11_custom"
         args_set.skip_analysis = True
 
@@ -426,10 +430,10 @@ def test_custom_usearch_bin_full_analysis(build_image):
         # move the contents of the data folder to the run_dir
         for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
             subprocess.run(["mv", file, run_dir])
-        # rm the empty folder
-        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
+        # rm the folder
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
         # setting args
-        args_set = ArgumentSet(run_dir, run_dir)
+        args_set = ArgumentSet("", "")
         # create a mapping file
         mapping_file = os.path.join(run_dir, "mapping_file.csv")
         samples = [
@@ -440,11 +444,7 @@ def test_custom_usearch_bin_full_analysis(build_image):
         args_set.mapping_file = "mapping_file.csv"
         # create a fake bin file in run_dir
         custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
-        subprocess.run([
-            "cp",
-            "binaries/usearch_11_64",
-            custom_usearch_path
-        ])
+        shutil.copy("binaries/usearch_11_64", custom_usearch_path)
         args_set.usearch_bin = "usearch11_custom"
 
         return args_set
