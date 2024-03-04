@@ -277,7 +277,7 @@ def test_flat_autodiscover(build_image):
         # rm the empty folder
         subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
         # setting args
-        args_set = ArgumentSet(run_dir, run_dir)
+        args_set = ArgumentSet("", "")
 
         return args_set
 
@@ -291,7 +291,7 @@ def test_subfolder_autodiscover(build_image):
         os.makedirs(subfolder)
         subprocess.run(["cp", "-r", data, subfolder])
         # setting args
-        args_set = ArgumentSet(run_dir, subfolder)
+        args_set = ArgumentSet("", "subfolder")
         return args_set
 
     run_container(setup_file_structure)
@@ -308,7 +308,7 @@ def test_flat_mapping(build_image):
         subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
 
         # setting args
-        args_set = ArgumentSet(run_dir, run_dir)
+        args_set = ArgumentSet("", "")
         # create a mapping file
         mapping_file = os.path.join(run_dir, "mapping_file.csv")
         samples = [
@@ -317,7 +317,7 @@ def test_flat_mapping(build_image):
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
-        args_set.mapping_file = mapping_file
+        args_set.mapping_file = "mapping_file.csv"
 
         return args_set
 
@@ -335,7 +335,7 @@ def test_preprocessing(build_image):
         subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
 
         # setting args
-        args_set = ArgumentSet(run_dir, run_dir, skip_analysis=True)
+        args_set = ArgumentSet("", "")
         # create a mapping file
         mapping_file = os.path.join(run_dir, "mapping_file.csv")
         samples = [
@@ -344,7 +344,8 @@ def test_preprocessing(build_image):
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
-        args_set.mapping_file = mapping_file
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.skip_analysis = True
 
         return args_set
 
@@ -362,7 +363,7 @@ def test_custom_usearch_bin_arg(build_image):
         # rm the empty folder
         subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
         # setting args
-        args_set = ArgumentSet(run_dir, run_dir)
+        args_set = ArgumentSet("", "")
         # create a mapping file
         mapping_file = os.path.join(run_dir, "mapping_file.csv")
         samples = [
@@ -371,12 +372,12 @@ def test_custom_usearch_bin_arg(build_image):
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
-        args_set.mapping_file = mapping_file
+        args_set.mapping_file = "mapping_file.csv"
         # create a fake bin file in run_dir
         bin_file = os.path.join(run_dir, "usearch_custom")
         with open(bin_file, "w") as f:
             f.write("FAKE USEARCH BIN")
-        args_set.usearch_bin = bin_file
+        args_set.usearch_bin = "usearch_custom"
         args_set.skip_analysis = True
 
         return args_set
@@ -402,7 +403,7 @@ def test_custom_usearch_bin_preprocessing(build_image):
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
-        args_set.mapping_file = mapping_file
+        args_set.mapping_file = "mapping_file.csv"
         # create a fake bin file in run_dir
         custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
         subprocess.run([
@@ -410,7 +411,7 @@ def test_custom_usearch_bin_preprocessing(build_image):
             "binaries/usearch_11_64",
             custom_usearch_path
         ])
-        args_set.usearch_bin = custom_usearch_path
+        args_set.usearch_bin = "usearch11_custom"
         args_set.skip_analysis = True
 
         return args_set
@@ -436,7 +437,7 @@ def test_custom_usearch_bin_full_analysis(build_image):
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
-        args_set.mapping_file = mapping_file
+        args_set.mapping_file = "mapping_file.csv"
         # create a fake bin file in run_dir
         custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
         subprocess.run([
@@ -444,7 +445,7 @@ def test_custom_usearch_bin_full_analysis(build_image):
             "binaries/usearch_11_64",
             custom_usearch_path
         ])
-        args_set.usearch_bin = custom_usearch_path
+        args_set.usearch_bin = "usearch11_custom"
 
         return args_set
 
