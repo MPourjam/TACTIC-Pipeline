@@ -891,7 +891,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
-    FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    # If they are the same it returns unchanged. If fastq_dir is subpath of input it returns the longest one
+    FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()
     # TODO Later we need to force the user to provide the path to usearch binary. For now we only continue with the default one.
     given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if args.usearch_bin else USEARCH_11_BIN
     # warning the cli users for the given usearch file

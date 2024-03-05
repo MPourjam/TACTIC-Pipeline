@@ -1,6 +1,6 @@
 import contextlib
 import subprocess
-from typing import Callable, Tuple, Optional
+from typing import Callable, Tuple, Optional, List
 # from contextlib import suppress
 
 import zipfile
@@ -18,6 +18,9 @@ data = "test/data/truncated"
 
 @pytest.fixture(scope="session")
 def build_image():
+    if os.path.isfile("/.dockerenv"):
+        # We are already testing in the docker container
+        return
     print("Building the image using file system image")
     # build the image using tar file target
     # docker buildx build -f Dockerfile.IMNGS2Pipeline --output type=tar,dest=image.tar .
@@ -92,7 +95,7 @@ class MappingFile:
         def csv_line(self, sep: str) -> str:
             return sep.join([self.sample_id, str(self.total_weight_in_g), str(self.spike_amount), self.parent_path])
 
-    def __init__(self, entries: list[Entry]):
+    def __init__(self, entries: List[Entry]):
         self.entries = entries
 
     def write(self, file: str, sep: str = "\t"):
@@ -227,12 +230,18 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         # copy the data to the temporary directory
         arg_set = setup_file_structure(run_dir)
 
-        cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "run_imngs2"]
+        # if we are in a container created with image name IMAGE_NAME, the input directory we run run_imngs2 in /base/run_imngs2.py
+        # cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "python", "/base/run_imngs2.py"]
+        if os.path.isfile("/.dockerenv"):  # then we are in a container
+            cmd = ["python", "/base/run_imngs2.py"]
+            arg_set.input_dir = run_dir
+        else:
+            cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "run_imngs2"]
         cmd += arg_set.to_args()
 
         # Write the command to a file
         with open(run_dir + "/cmd.txt", "w") as f:
-            f.write(" ".join(cmd))
+            f.write(" ".join(cmd) + "\n")
         print("cmd =", cmd)
         # run docker cmd with the image
         result = subprocess.run(
@@ -242,12 +251,13 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
 
         assert result.returncode == 0
         file_set_complete = False
+        fastq_dir = os.path.join(run_dir, arg_set.fastq_dir)
         if not arg_set.skip_analysis:
             # get latest analysis folder. those are marked with a timestamp
             latest_analysis_folder_date = 0
             latest_analysis_folder_time = 0
             latest_analysis_folder = ""
-            for analysis_folder in glob.glob(run_dir + "/Analysis_*"):
+            for analysis_folder in glob.glob(fastq_dir + "/Analysis_*"):
                 print("analysis_folder =", analysis_folder)
                 _, date, time = str(os.path.basename(analysis_folder).split(".")[0]).split("_")
                 date = int(date)
@@ -265,7 +275,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             file_set_complete_counter = 0
             dirs_checked = 0
             # find all directories with the regex pattern of r'.*__processed/[0-9]{8}_[0-9]{6}' in the run_dir and use re.search
-            for preprocessed_folder in glob.glob(run_dir + "/**/*__processed/", recursive=True):
+            for preprocessed_folder in glob.glob(fastq_dir + "/**/*__processed/", recursive=True):
                 # list directories in preprocessing folder and check if they match the pattern
                 for tmstmp_dir in glob.glob(preprocessed_folder + "/*", recursive=True):
                     if re.search(r"[0-9]{8}_[0-9]{6}", tmstmp_dir):
