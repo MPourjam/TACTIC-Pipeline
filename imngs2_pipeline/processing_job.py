@@ -16,6 +16,7 @@ import shutil
 import glob
 import logging
 import zipfile
+import subprocess
 
 
 BIN_DIR = "/base/binaries/"
@@ -142,7 +143,7 @@ def merge_pairs(forward_file, reverse_file):
         "-fastq_maxmergelen",
         str(ARGS_CLS.merge_pairs.fastq_maxmergelen),
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
 
 
 def trim_sides():
@@ -160,7 +161,8 @@ def trim_sides():
             str(ARGS_CLS.trim_both_sides.stripleft),
             "-fastqout",
             "filtered1.fastq"
-        ]
+        ],
+        force_log=True
     )
 
 
@@ -168,7 +170,7 @@ def filter_merged_reads():
     # cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
     # cmd_1 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
     # system_sub(cmd_0 + cmd_1)
-    system_sub(
+    subprocess.run(
         [
             *list(USEARCH_11_BIN.split(" ")),
             "-fastq_filter",
@@ -177,7 +179,8 @@ def filter_merged_reads():
             str(ARGS_CLS.filter_merged.fastq_maxee_rate),
             "-fastaout",
             "filtered2.fasta"
-        ]
+        ],
+        force_log=True
     )
     system_sub(
         [
@@ -234,7 +237,8 @@ def dereplicate_seqs():
             "derep.fasta",
             "-sizein",
             "-sizeout"
-        ]
+        ],
+        force_log=True
     )
     line_n = 0
     with open('derep.fasta') as derep:
@@ -276,7 +280,8 @@ def trim_one_side(forward_file):
             str(ARGS_CLS.trim_one_side.stripleft),
             "-fastqout",
             "filtered1.fastq"
-        ]
+        ],
+        force_log=True
     )
 
 
@@ -300,7 +305,8 @@ def filter_merged_one_side(forward_file):
             str(minLength),
             "-fastaout",
             "filtered2.fasta"
-        ]
+        ],
+        force_log=True
     )
 
 
