@@ -7,11 +7,7 @@ from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
 from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter, loud_subprocess
 from .spike_normalizer import normalize_otu_table
-from sys import version_info
-if version_info[0] < 3:
-    from pathlib2 import Path, PurePath  # pip2 install pathlib2
-else:
-    from pathlib import Path, PurePath
+from pathlib import Path, PurePath
 
 
 BIN_DIR = "/base/binaries/"
