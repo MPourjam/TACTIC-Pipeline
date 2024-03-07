@@ -40,8 +40,13 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
     # logging
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        # msg += f"STDOUT: {run_output.stdout}\n\n"
         ANA_LOG.info(msg)
+    # catch also MemoryError
+    if run_output.returncode == 137:  # Process killed due to memory limit
+        err_msg = f"Memory Error: Command {' '.join(cmd_list)} exceeded memory limit."
+        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
+        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
+        raise MemoryError(err_msg)
     if run_output.stderr and not quiet:
         raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     if run_output.stderr and quiet:

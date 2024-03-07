@@ -645,11 +645,18 @@ def run_preprocessing(
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
             usearch_11_bin=usearch_11_bin
         )
+    except MemoryError as mem_exc:
+        PREP_LOG.error(f"{mem_exc}")
+        PREP_LOG.warning("Failed while processing {}, Deleting !!! {}".format(sample_dir.relative_to(FASTQ_DIR)), str(mem_exc))
+        # If parent of sample_dir is empty then remove it
+        if not list(sample_dir.parent.iterdir()):
+            shutil.rmtree(str(sample_dir.parent))
+        sample_dir = None
+        sys.exit(137)
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
         PREP_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
-        # shutil.rmtree(str(sample_dir))
         # If parent of sample_dir is empty then remove it
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
@@ -824,6 +831,9 @@ def run_imngs2(
                 threads=POOL_SIZE,
                 usearch_11_bin=USEARCH_11_BIN,
             )
+        except MemoryError as exc:
+            PREP_LOG.error(f"Analysis stopped: {exc}")
+            sys.exit(137)
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
             sys.exit(1)
@@ -905,7 +915,7 @@ if __name__ == "__main__":
 
     try:
         POOL_SIZE = int(args.threads)
-    except Exception as exc:
+    except ValueError as exc:
         PREP_LOG.warning(f"Could not parse threads argument. Using default value of {POOL_SIZE}. Error: {exc}")
     expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
     expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.csv").absolute()

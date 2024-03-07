@@ -45,8 +45,12 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
     # logging
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        # msg += f"STDOUT: {run_output.stdout}\n\n"
         PREPPROC_LOG.info(msg)
+    if run_output.returncode == 137:  # Process killed due to memory limit
+        err_msg = f"Command {' '.join(cmd_list)} exceeded memory limit."
+        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
+        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
+        raise MemoryError(err_msg)
     if run_output.stderr and not quiet:
         raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     if run_output.stderr and quiet:
@@ -170,7 +174,7 @@ def filter_merged_reads():
     # cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
     # cmd_1 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
     # system_sub(cmd_0 + cmd_1)
-    subprocess.run(
+    system_sub(
         [
             *list(USEARCH_11_BIN.split(" ")),
             "-fastq_filter",
@@ -623,7 +627,7 @@ def cleanup(input_id, full_clean=False, dir_path=None):
         dir_path = getcwd()
     chdir(dir_path)
     if full_clean:
-        files = [f for f in listdir(dir_path) if not f.endswith(".pk")]
+        files = [f for f in listdir(dir_path) if not f.endswith("_logs.txt")]
         for file in files:
             file_path = path.join(dir_path, file)
             if path.isfile(file_path):
@@ -920,6 +924,13 @@ def main_processing(
         PREPPROC_LOG.info('Zipped!')
         cleanup(input_id)
         PREPPROC_LOG.info("Cleaned up: {}".format(input_id))
+    except MemoryError as e:
+        err_msg = str(e)
+        PREPPROC_LOG.error(err_msg)
+        update_task_pko("Error", str(err_msg).strip())
+        cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
+        pko.close()
+        raise MemoryError(err_msg)
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
         PREPPROC_LOG.error(err_msg)
