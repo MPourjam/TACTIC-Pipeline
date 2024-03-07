@@ -16,7 +16,6 @@ import shutil
 import glob
 import logging
 import zipfile
-import subprocess
 
 
 BIN_DIR = "/base/binaries/"
@@ -924,13 +923,6 @@ def main_processing(
         PREPPROC_LOG.info('Zipped!')
         cleanup(input_id)
         PREPPROC_LOG.info("Cleaned up: {}".format(input_id))
-    except MemoryError as e:
-        err_msg = str(e)
-        PREPPROC_LOG.error(err_msg)
-        update_task_pko("Error", str(err_msg).strip())
-        cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
-        pko.close()
-        raise MemoryError(err_msg)
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
         PREPPROC_LOG.error(err_msg)

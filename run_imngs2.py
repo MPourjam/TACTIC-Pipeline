@@ -646,8 +646,10 @@ def run_preprocessing(
             usearch_11_bin=usearch_11_bin
         )
     except MemoryError as mem_exc:
-        PREP_LOG.error(f"{mem_exc}")
-        PREP_LOG.warning("Failed while processing {}, Deleting !!! {}".format(sample_dir.relative_to(FASTQ_DIR)), str(mem_exc))
+        err_msg = f"{mem_exc}"
+        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
+        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
+        PREP_LOG.error(f"{err_msg}")
         # If parent of sample_dir is empty then remove it
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
