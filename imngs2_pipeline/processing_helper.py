@@ -51,6 +51,7 @@ except ModuleNotFoundError:
     def unlock_file(f):
         msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, file_size(f))
 
+# Setting
 global bowtie2, SPIKESIDX
 BIN_DIR = "/base/binaries/"
 bowtie2 = BIN_DIR + "bowtie2/bowtie2"
@@ -99,18 +100,22 @@ SixteenS_regions_dict = {
 }
 
 forw_file_indicators = [
-    "_R1_",
-    "_F_",
-    "_R1",
-    "@F"
+    re.compile(r".*(_R1_).*"),
+    re.compile(r".*(_1)\.(fastq|fq)(\.gz)?"),
+    re.compile(r".*(_R1).*"),
+    re.compile(r".*(_F_).*"),
+    re.compile(r".*(@F).*"),
 ]
 
 reve_file_indicators = [
-    "_R2_",
-    "_R_",
-    "_R2",
-    "@R"
+    re.compile(r".*(_R2_).*"),
+    re.compile(r".*(_2)\.(fastq|fq)(\.gz)?"),
+    re.compile(r".*(_R2).*"),
+    re.compile(r".*(_R_).*"),
+    re.compile(r".*(@R).*"),
 ]
+
+paired_files_indicators = list(zip(forw_file_indicators, reve_file_indicators))
 
 
 def calc_covered_region(start: int, end: int, regions_dict: dict = SixteenS_regions_dict):
@@ -319,9 +324,16 @@ def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple
     while file_path.suffixes:
         file_path = Path(PurePath(file_path.parent)).absolute().joinpath(file_path.stem)
 
-    for ind in forw_file_indicators + reve_file_indicators:
-        if ind in file_name:
-            file_name = str(file_name.split(ind)[0])
+    for forw_ind_reg, reve_ind_reg in paired_files_indicators:
+        forw_ind_reg_mo = forw_ind_reg.search(file_name)
+        reve_ind_reg_mo = reve_ind_reg.search(file_name)
+        if forw_ind_reg_mo:
+            # split by first group of matched indicator
+            file_name = str(file_name.split(str(forw_ind_reg_mo.group(1)))[0])
+            break
+        elif reve_ind_reg_mo:
+            # split by first group of matched indicator
+            file_name = str(file_name.split(str(reve_ind_reg_mo.group(1)))[0])
             break
     new_name = parent_path.joinpath(file_name).absolute().relative_to(include_path)
     new_name = str(Path(PurePath(str(new_name).replace(*replace_sep))))
@@ -371,7 +383,7 @@ def is_seq_file(file_path, seq_file_format="any"):
 
 
 def is_forward_file(file_name):
-    return any([True for indi in forw_file_indicators if indi in file_name])
+    return any([True for indi_reg in forw_file_indicators if bool(indi_reg.search(file_name))])
 
 
 def find_reverse_file(file_path):
@@ -381,15 +393,27 @@ def find_reverse_file(file_path):
     logic. i.e: _R2_ is the reverse of _R1_ and not of @F
     """
     file_path = Path(PurePath(file_path))
-    reverse_name = [
-        file_path.name.replace(str(indic), str(reve_file_indicators[i]))
-        for i, indic in enumerate(forw_file_indicators) if indic in file_path.name]
-    reverse_name = str(reverse_name[0]) if reverse_name[0:1] else ""
-    reverse_file_path = file_path.parent.joinpath(reverse_name)
-    if reverse_file_path.is_file():
-        return str(reverse_file_path)
-    else:
-        return ""
+    file_name_parts = (file_path.name, file_path.name)
+    reverse_name = ""
+    rev_file_reg = re.compile(r"")
+    stem_path = get_base_name(str(file_path))
+    for forw_indic_reg, reve_indic_reg in paired_files_indicators:
+        forw_indic_reg_mo = forw_indic_reg.search(file_path.name)
+        if bool(forw_indic_reg_mo):
+            file_name_parts = file_path.name.split(forw_indic_reg_mo.group(1))
+            rev_file_reg = reve_indic_reg
+            break
+    # Finding most compatibe reverse file
+    for caught_file in file_path.parent.glob(f"*{stem_path}*"):
+        reve_reg_mo = rev_file_reg.search(caught_file.name)
+        if reve_reg_mo and reve_reg_mo.groups():
+            reve_file_parts = caught_file.name.split(reve_reg_mo.group(1))
+            if reve_file_parts == file_name_parts:
+                reverse_name = caught_file.name
+                break
+
+    reverse_file_path = file_path.parent.joinpath(reverse_name) if reverse_name else ""
+    return reverse_file_path
 
 
 def pair_seq_files(directory):

@@ -790,10 +790,9 @@ def write_reads_report(input_id, **kwargs):
 
 def main_processing(
         input_dir,
-        paired,
-        forward_file,
-        reverse_file,
-        input_id,
+        forward_file: str,
+        reverse_file: str,
+        input_id: str,
         args_file_path: str = "",
         spike_amount: int = 0,
         usearch_11_bin: str = USEARCH_11_BIN):
@@ -806,6 +805,10 @@ def main_processing(
         log_file=logger_file_path,
         only_file=True
     )
+    paired = "Yes" if reverse_file else "No"
+    forward_file = path.join(input_dir, forward_file) if forward_file else ""
+    reverse_file = path.join(input_dir, reverse_file) if reverse_file else ""
+    files_paths = [forward_file, reverse_file]
     # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
@@ -848,13 +851,6 @@ def main_processing(
         else:
             pko = TaskPickle(pk_file)
         chdir(input_dir)
-        # Grabbing the TaskPickle for update
-        f_path = path.join(input_dir, forward_file) if forward_file else ""
-        r_path = path.join(input_dir, reverse_file) if reverse_file else ""
-        files_paths = [f_path, r_path]
-        if len(files_paths) == 1:
-            files_paths.append("")
-        forward_file, reverse_file = files_paths
         PREPPROC_LOG.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))

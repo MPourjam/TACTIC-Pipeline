@@ -365,8 +365,9 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     # Preparing default argument for each sample preprocessing
 
     for file_pair in files_tups:
-        sample_id = proc_helper.get_base_name(file_pair[0])
-        curr_parent = Path(PurePath(file_pair[0])).parent.relative_to(FASTQ_DIR)
+        forw_file = Path(PurePath(file_pair[0])).absolute()
+        sample_id = proc_helper.get_base_name(forw_file)
+        curr_parent = forw_file.parent.relative_to(FASTQ_DIR)
         _row_vals_tup = MapLineTup(
             sample_id,
             DEFAULT_MAP_LINE.total_weight_in_g,
@@ -595,7 +596,8 @@ def run_preprocessing(
             raise ValueError(msg)
         # Creating the preprocessing directory
         seq_files_t = [Path(PurePath(sfi)).absolute() for sfi in seq_files_t]
-        if not any([True for fastq_fi_path in seq_files_t if fastq_fi_path.is_file()]):
+        seq_files_t = [sfi for sfi in seq_files_t if sfi.is_file()]
+        if not any(seq_files_t):
             # returning if no provided fastq_file path is actually a file
             return sample_dir
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
@@ -606,7 +608,6 @@ def run_preprocessing(
         sample_id = sample_id if sample_id else sample_base_name
         base_path_dir = file_full_path.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
         sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
-
         sample_dir = Path(PurePath(sample_dir))
         if not shall_continue:
             return sample_dir
@@ -620,6 +621,7 @@ def run_preprocessing(
             symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
 
         # We do spike removal if necessary and add a line to spike_stats file for spike normalization
+        # We only carry valid files in fastq_files_tuple
         new_paths = [el for el in new_paths if bool(el)]
         # removing spikes and decompressing files below
         spike_reads_c, spike_stat_mapping_path, fastq_files_tuple = remove_spikes(
@@ -637,9 +639,8 @@ def run_preprocessing(
         # Running preprocessing
         sample_dir = preprocessing(
             input_dir=sample_dir,
-            paired="Yes" if len(fastq_files_tuple) == 2 else "No",
             forward_file=fastq_files_tuple[0],
-            reverse_file=fastq_files_tuple[1],
+            reverse_file=fastq_files_tuple[1] if len(fastq_files_tuple) == 2 else "",
             input_id=sample_id,
             args_file_path=sample_arg_file,
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
