@@ -794,7 +794,9 @@ def run_imngs2(
                     )
                     res_list.append(res)
                 for res in res_list:
-                    res.wait(720)  # After 12 minutes it terminates the thread
+                    if not res.wait(720):  # After 12 minutes it terminates the thread
+                        PREP_LOG.error(f"Preprocessing for {res.get()} is taking too long. Terminating the thread!")
+                        res.terminate()
 
             samples_dirs = [el.get() for el in res_list]
             # NOTE result from run_preprocessing could be "" which means the preprocessing has failed
