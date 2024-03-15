@@ -20,7 +20,8 @@ import zipfile
 
 BIN_DIR = "/base/binaries/"
 USEARCH_8_BIN = BIN_DIR + "usearch8.1"
-USEARCH_11_BIN = BIN_DIR + "usearch_11_64 -strand both"
+USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
+USEARCH_11_BIN = USEARCH_11_BIN + " -strand both"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
 USEARCH8_1 = USEARCH_8_BIN + " -threads 1"
 SINA_BIN = BIN_DIR + 'sina/sina'
@@ -43,8 +44,12 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
     # logging
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        # msg += f"STDOUT: {run_output.stdout}\n\n"
         PREPPROC_LOG.info(msg)
+    if run_output.returncode == 137:  # Process killed due to memory limit
+        err_msg = f"Command {' '.join(cmd_list)} exceeded memory limit."
+        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
+        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
+        raise MemoryError(err_msg)
     if run_output.stderr and not quiet:
         raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     if run_output.stderr and quiet:
@@ -101,32 +106,12 @@ def clean_FastQC(input_file, reverse_file=False):
         try:
             shutil.unpack_archive(zipf)
             shutil.move(dir_name + "/Images/per_base_quality.png", "../R{}-per_base_quality.png".format(i + 1))
-            system_sub(
-                [
-                    "rm",
-                    "-r",
-                    dir_name,
-                    "*.html",
-                    zipf
-                ],
-                shell=True,
-                capture_output=False
-            )
+            shutil.rmtree(dir_name)
+            remove(zipf)
         except BaseException:
             pass
     # system("cd ../ && rm -r fastqc_output > /dev/null 2>&1")
-    system_sub(
-        [
-            "cd",
-            "../",
-            "&&",
-            "rm",
-            "-r",
-            "fastqc_output"
-        ],
-        shell=True,
-        capture_output=False
-    )
+    shutil.rmtree("../fastqc_output", ignore_errors=True)
 
 
 def mymkdir(input_dir):
@@ -161,7 +146,7 @@ def merge_pairs(forward_file, reverse_file):
         "-fastq_maxmergelen",
         str(ARGS_CLS.merge_pairs.fastq_maxmergelen),
     ]
-    system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list, force_log=True)
 
 
 def trim_sides():
@@ -179,7 +164,8 @@ def trim_sides():
             str(ARGS_CLS.trim_both_sides.stripleft),
             "-fastqout",
             "filtered1.fastq"
-        ]
+        ],
+        force_log=True
     )
 
 
@@ -196,7 +182,8 @@ def filter_merged_reads():
             str(ARGS_CLS.filter_merged.fastq_maxee_rate),
             "-fastaout",
             "filtered2.fasta"
-        ]
+        ],
+        force_log=True
     )
     system_sub(
         [
@@ -253,7 +240,8 @@ def dereplicate_seqs():
             "derep.fasta",
             "-sizein",
             "-sizeout"
-        ]
+        ],
+        force_log=True
     )
     line_n = 0
     with open('derep.fasta') as derep:
@@ -295,7 +283,8 @@ def trim_one_side(forward_file):
             str(ARGS_CLS.trim_one_side.stripleft),
             "-fastqout",
             "filtered1.fastq"
-        ]
+        ],
+        force_log=True
     )
 
 
@@ -319,7 +308,8 @@ def filter_merged_one_side(forward_file):
             str(minLength),
             "-fastaout",
             "filtered2.fasta"
-        ]
+        ],
+        force_log=True
     )
 
 
@@ -493,7 +483,8 @@ def addTax(input_id):
             filebasename + ".fasta"
         ],
         force_log=True,
-        capture_output=False
+        capture_output=True,
+        quiet=True
     )
 
     out_file = open('classifiedF.txt', 'w+')
@@ -586,9 +577,24 @@ def addKrona(KRONA_TOOL):
 
 
 def create_zip(input_id):
+    files_to_zip = [
+        "ZOTUs-table.final.tab",
+        "taxed_ZOTUs.fasta",
+        "spike_stat_mapping_file.csv",
+        "krona.html",
+        "silva_start_end.txt",
+        "reads_report.txt",
+        "IMNGS2Pipeline.log"
+    ]
+
     with zipfile.ZipFile(f"../{input_id}_processed.zip", "w") as zipf:
-        zipf.write("ZOTUs-table.final.tab")
-        zipf.write("taxed_ZOTUs.fasta")
+        for file_tozip in files_to_zip:
+            # try to write the file to the zip and if it fails, ignore it
+            try:
+                zipf.write(file_tozip)
+            except FileNotFoundError:
+                pass
+
         for file in glob.glob("*.png"):
             zipf.write(file)
         for file in glob.glob("*.html"):
@@ -620,7 +626,7 @@ def cleanup(input_id, full_clean=False, dir_path=None):
         dir_path = getcwd()
     chdir(dir_path)
     if full_clean:
-        files = [f for f in listdir(dir_path) if not f.endswith(".pk")]
+        files = [f for f in listdir(dir_path) if not f.endswith("_logs.txt")]
         for file in files:
             file_path = path.join(dir_path, file)
             if path.isfile(file_path):
@@ -784,19 +790,25 @@ def write_reads_report(input_id, **kwargs):
 
 def main_processing(
         input_dir,
-        paired,
-        forward_file,
-        reverse_file,
-        input_id,
+        forward_file: str,
+        reverse_file: str,
+        input_id: str,
         args_file_path: str = "",
-        spike_amount: int = 0):
-    global PREPPROC_LOG
+        spike_amount: int = 0,
+        usearch_11_bin: str = USEARCH_11_BIN):
+    global PREPPROC_LOG, USEARCH_11_BIN
+    # usearch_11_bin must be a global variable and pointing to a file
+    USEARCH_11_BIN = usearch_11_bin + " -strand both"
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
     PREPPROC_LOG = gimmelogger(
         logger_name=f"run_imngs2.preprocessing_{str(input_id)}",
         log_file=logger_file_path,
         only_file=True
     )
+    paired = "Yes" if reverse_file else "No"
+    forward_file = path.join(input_dir, forward_file) if forward_file else ""
+    reverse_file = path.join(input_dir, reverse_file) if reverse_file else ""
+    files_paths = [forward_file, reverse_file]
     # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
@@ -839,13 +851,6 @@ def main_processing(
         else:
             pko = TaskPickle(pk_file)
         chdir(input_dir)
-        # Grabbing the TaskPickle for update
-        f_path = path.join(input_dir, forward_file) if forward_file else ""
-        r_path = path.join(input_dir, reverse_file) if reverse_file else ""
-        files_paths = [f_path, r_path]
-        if len(files_paths) == 1:
-            files_paths.append("")
-        forward_file, reverse_file = files_paths
         PREPPROC_LOG.info("Spike removal started.")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))

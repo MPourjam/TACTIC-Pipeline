@@ -19,7 +19,7 @@ else:
 
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS
-global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX
+global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX, USEARCH_11_BIN, USEARCH_8_BIN
 INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
 FASTQ_DIR = INPUT_DIR
 PROC_DIR_SUFFIX = "__processed"
@@ -44,6 +44,10 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+# Usearch Tool
+BIN_DIR = "/base/binaries/"
+USEARCH_8_BIN = BIN_DIR + "usearch8.1"
+USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
 
 
 def handle_system_signals(signum, frame):
@@ -361,8 +365,9 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     # Preparing default argument for each sample preprocessing
 
     for file_pair in files_tups:
-        sample_id = proc_helper.get_base_name(file_pair[0])
-        curr_parent = Path(PurePath(file_pair[0])).parent.relative_to(FASTQ_DIR)
+        forw_file = Path(PurePath(file_pair[0])).absolute()
+        sample_id = proc_helper.get_base_name(forw_file)
+        curr_parent = forw_file.parent.relative_to(FASTQ_DIR)
         _row_vals_tup = MapLineTup(
             sample_id,
             DEFAULT_MAP_LINE.total_weight_in_g,
@@ -487,7 +492,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                     forw_file_name = ""
                 correct_parent = is_correct_parent(file_tup[0], map_line.parent_path)
                 if sample_id in forw_file_name and correct_parent:  # sample_id could also be partial path of file_names
-                    #update parent path to the correct one
+                    # update parent path to the correct one
                     map_line = MapLineTup(
                         map_line.SampleID,
                         map_line.total_weight_in_g,
@@ -572,7 +577,8 @@ def run_preprocessing(
         args_yml_path: str,
         sample_id: str = "",  # If it's not provided then the base name of forward file
         sample_weight: float = float("NAN"),  # spike normalizer handles this
-        spike_amount: float = 0.0):
+        spike_amount: float = 0.0,
+        usearch_11_bin: str = USEARCH_11_BIN):
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -590,7 +596,8 @@ def run_preprocessing(
             raise ValueError(msg)
         # Creating the preprocessing directory
         seq_files_t = [Path(PurePath(sfi)).absolute() for sfi in seq_files_t]
-        if not any([True for fastq_fi_path in seq_files_t if fastq_fi_path.is_file()]):
+        seq_files_t = [sfi for sfi in seq_files_t if sfi.is_file()]
+        if not any(seq_files_t):
             # returning if no provided fastq_file path is actually a file
             return sample_dir
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
@@ -601,7 +608,6 @@ def run_preprocessing(
         sample_id = sample_id if sample_id else sample_base_name
         base_path_dir = file_full_path.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
         sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
-
         sample_dir = Path(PurePath(sample_dir))
         if not shall_continue:
             return sample_dir
@@ -615,6 +621,7 @@ def run_preprocessing(
             symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
 
         # We do spike removal if necessary and add a line to spike_stats file for spike normalization
+        # We only carry valid files in fastq_files_tuple
         new_paths = [el for el in new_paths if bool(el)]
         # removing spikes and decompressing files below
         spike_reads_c, spike_stat_mapping_path, fastq_files_tuple = remove_spikes(
@@ -632,18 +639,27 @@ def run_preprocessing(
         # Running preprocessing
         sample_dir = preprocessing(
             input_dir=sample_dir,
-            paired="Yes" if len(fastq_files_tuple) == 2 else "No",
             forward_file=fastq_files_tuple[0],
-            reverse_file=fastq_files_tuple[1],
+            reverse_file=fastq_files_tuple[1] if len(fastq_files_tuple) == 2 else "",
             input_id=sample_id,
             args_file_path=sample_arg_file,
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
+            usearch_11_bin=usearch_11_bin
         )
+    except MemoryError as mem_exc:
+        err_msg = f"{mem_exc}"
+        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
+        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
+        PREP_LOG.error(f"{err_msg}")
+        # If parent of sample_dir is empty then remove it
+        if not list(sample_dir.parent.iterdir()):
+            shutil.rmtree(str(sample_dir.parent))
+        sample_dir = None
+        sys.exit(137)
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
         PREP_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
-        # shutil.rmtree(str(sample_dir))
         # If parent of sample_dir is empty then remove it
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
@@ -717,7 +733,12 @@ def run_imngs2(
         mapping_file: str = "",
         spike_stat_file: str = "",
         skip_preprocess: bool = False,
-        skip_analysis: bool = False):
+        skip_analysis: bool = False,
+        usearch_11_bin: str = USEARCH_11_BIN):
+    # NOTE if the function run_imngs2() is imported then the default global variables will be used
+    global USEARCH_11_BIN, FASTQ_DIR
+    FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
+    USEARCH_11_BIN = str(Path(PurePath(usearch_11_bin)).absolute())
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir))
@@ -768,6 +789,7 @@ def run_imngs2(
                             arg_tup[0].SampleID,  # sample_id
                             float(arg_tup[0].total_weight_in_g),  # sample_weight
                             float(arg_tup[0].spike_amount),   # spike_amount
+                            USEARCH_11_BIN,
                         )
                     )
                     res_list.append(res)
@@ -809,8 +831,12 @@ def run_imngs2(
                 fastqs_dir=str(FASTQ_DIR),
                 args_file_path=args_yml_file,
                 dbs_loc=dbs_dir,
-                threads=POOL_SIZE
+                threads=POOL_SIZE,
+                usearch_11_bin=USEARCH_11_BIN,
             )
+        except MemoryError as exc:
+            PREP_LOG.error(f"Analysis stopped: {exc}")
+            sys.exit(137)
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
             sys.exit(1)
@@ -852,6 +878,11 @@ if __name__ == "__main__":
                         help=f"The path to a mapping file defining spike count, sample weight and spike amount for each sample.\n{SPIKE_STAT_HEADER}.\n"
                         "Relative to <--input-directory>")
     # <END
+    parser.add_argument("-ut", "--usearch-bin",
+                        type=str,
+                        help="Path to binary of usearch version 11. Default is 11.0.667_i86linux32.",
+                        default=USEARCH_11_BIN,
+                        required=False)
     parser.add_argument("-db", "--db-directory",
                         type=str,
                         help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
@@ -873,10 +904,21 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
-    FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()  # If they are the same it returns unchanged
+    # If they are the same it returns unchanged. If fastq_dir is subpath of input it returns the longest one
+    FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()
+    # TODO Later we need to force the user to provide the path to usearch binary. For now we only continue with the default one.
+    given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if args.usearch_bin else USEARCH_11_BIN
+    # warning the cli users for the given usearch file
+    if not Path(PurePath(given_usearch_bin)).is_file():
+        PREP_LOG.warning(f"Provided usearch binary file: {given_usearch_bin} does not exist. Falling back to default usearch binary file: {USEARCH_11_BIN}")
+    elif Path(PurePath(given_usearch_bin)) == USEARCH_11_BIN:
+        PREP_LOG.info(f"Provided usearch binary file: {given_usearch_bin} is the same as default usearch binary file: {USEARCH_11_BIN}")
+    else:
+        USEARCH_11_BIN = given_usearch_bin
+
     try:
         POOL_SIZE = int(args.threads)
-    except Exception as exc:
+    except ValueError as exc:
         PREP_LOG.warning(f"Could not parse threads argument. Using default value of {POOL_SIZE}. Error: {exc}")
     expected_yml_file = INPUT_DIR.joinpath(DEFAULT_ARG_FILE_NAME).absolute()
     expected_mapping_file = FASTQ_DIR.joinpath("mapping_file.csv").absolute()
@@ -914,4 +956,5 @@ if __name__ == "__main__":
             spike_stat_file=cli_spike_stat_file,
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
+            usearch_11_bin=USEARCH_11_BIN
         )
