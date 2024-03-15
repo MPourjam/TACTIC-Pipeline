@@ -3,7 +3,7 @@ from os import chdir, system, mkdir, remove
 from os.path import isfile, getsize, isdir
 from shutil import copyfile
 from tqdm import tqdm
-import billiard as multiprocessing
+import multiprocessing
 from glob import glob
 from random import shuffle
 
@@ -256,7 +256,7 @@ def search_unknown_families_in_known_genera(family_level_fastas):
 # split list of files for threads
 def split_list(alist, wanted_parts=1):
     length = len(alist)
-    return [alist[i*length // wanted_parts: (i+1)*length // wanted_parts]
+    return [alist[i * length // wanted_parts: (i + 1) * length // wanted_parts]
             for i in range(wanted_parts)]
 
 
@@ -1031,9 +1031,9 @@ if __name__ == '__main__':
 
 # user input 97 transform it to 0.97
 # same for genus and family
-    species_similarity = float(args.species_similarity)/float(100)
-    genera_similarity = float(args.genus_similarity)/float(100)
-    family_similarity = float(args.family_similarity)/float(100)
+    species_similarity = float(args.species_similarity) / float(100)
+    genera_similarity = float(args.genus_similarity) / float(100)
+    family_similarity = float(args.family_similarity) / float(100)
     MAIN_DIR = str(args.data_dir)
     TOOL = str(args.tool)
     THREADS = int(args.threads)

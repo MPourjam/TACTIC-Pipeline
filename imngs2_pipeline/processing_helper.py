@@ -1,15 +1,20 @@
 import pickle as pk
+import re
 import yaml
 import logging
 import subprocess
-import time
+import math
 import gzip
+import shutil
 import zipfile
 import inspect
-from os import getcwd
+import threading
+from os import getcwd, makedirs, listdir
+from collections import namedtuple
 from mimetypes import guess_type
 from datetime import datetime as dt
 from collections.abc import MutableMapping
+from collections import Counter
 import mimetypes as mtypes
 from os import path as ospath
 from os import remove
@@ -38,7 +43,7 @@ except ModuleNotFoundError:
     import os
 
     def file_size(f):
-        return os.path.getsize(os.path.realpath(f.name))
+        return ospath.getsize(ospath.realpath(f.name))
 
     def lock_file(f):
         msvcrt.locking(f.fileno(), msvcrt.LK_RLCK, file_size(f))
@@ -46,6 +51,52 @@ except ModuleNotFoundError:
     def unlock_file(f):
         msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, file_size(f))
 
+global bowtie2, SPIKESIDX
+BIN_DIR = "/base/binaries/"
+bowtie2 = BIN_DIR + "bowtie2/bowtie2"
+SPIKESIDX = "/base/spikesidx/spike"
+
+# The Start and end positions are according to reference Escherichia Coli K12 subst. MG1655
+os_16S = namedtuple("pos_16S", "start end")
+# pos_sil = namedtuple("pos_sil", "start end")
+SixteenS_regions_dict = {
+    "V1": [
+        os_16S(69, 99),
+        [1159, 1772]
+    ],
+    "V2": [
+        os_16S(137, 242),
+        [2083, 5291]
+    ],
+    "V3": [
+        os_16S(433, 497),
+        [9817, 10302]
+    ],
+    "V4": [
+        os_16S(576, 682),
+        [15643, 21773]
+    ],
+    "V5": [
+        os_16S(822, 879),
+        [25499, 26987]
+    ],
+    "V6": [
+        os_16S(986, 1043),
+        [31188, 32827]
+    ],
+    "V7": [
+        os_16S(1117, 1173),
+        [35463, 37685]
+    ],
+    "V8": [
+        os_16S(1243, 1294),
+        [40315, 40874]
+    ],
+    "V9": [
+        os_16S(1435, 1465),
+        [42608, 43016]
+    ],
+}
 
 forw_file_indicators = [
     "_R1_",
@@ -60,6 +111,203 @@ reve_file_indicators = [
     "_R2",
     "@R"
 ]
+
+
+def calc_covered_region(start: int, end: int, regions_dict: dict = SixteenS_regions_dict):
+    # Calculating Regions
+    regions_coved = "NA"
+    covered_regions = {
+        k[1:] for k, v in regions_dict.items()
+        if (start <= v[1][0] and end >= v[1][1])
+    }
+    if covered_regions:
+        regions_coved = "V{}{}".format(
+            min(covered_regions),
+            [
+                '-V%s' % (max(covered_regions))
+                if (len(covered_regions) > 1)
+                else ''
+            ][0])
+
+    return regions_coved
+
+
+# overwriting system_sub() to run it with subprocess.run
+def loud_subprocess(cmd_args_list: list, shell_bool: bool = False, cap_output: bool = False):
+    dev_null_rgx = re.compile(r'(\s+)?([12]?>)(\s+)?(/dev/null|&1|&2)')
+    if not isinstance(cmd_args_list, list):
+        raise ValueError("cmd_args_list should be a list")
+    cmd_string = "\t\t".join(cmd_args_list)
+    # remove any null redirector from the given command
+    # remove  > /dev/null 2>&1
+    cmd_string = re.sub(dev_null_rgx, "", cmd_string)
+    cmd_list = cmd_string.split("\t\t")
+    # If capture_output_bool is true then do not redirect to /dev/null
+    run_output = subprocess.run(
+        cmd_list,
+        capture_output=cap_output,
+        encoding='utf-8',
+        shell=shell_bool,
+    )
+
+    return run_output, cmd_list
+
+
+def gzip_to_fastq(*files) -> list:
+    '''
+    It takes files gunzip or zip them and returns the name with proper fastq fuffix.
+    '''
+    file_path = [Path(PurePath(f)) for f in files if f]
+    file_path = [f for f in file_path if f.is_file()]
+    if len(files) != len(file_path):
+        raise TypeError("Some given arguments are not files.")
+    fastq_paths = []
+    for f in file_path:
+        app, typ = mtypes.guess_type(f)
+        file_dir, file_name = f.parent, str(f.name)
+        file_name = file_name.replace(".", "_").replace("_gz", "").replace("_bz2", "")
+        asciifile_name = file_name.replace(" ", "").replace("_fastq", "") + ".fastq"
+        asciifile_name_normalized = ''.join(e for e in asciifile_name if e.isalnum() or e in ['_', '-', '.'])
+        asciifile = str(file_dir.joinpath(asciifile_name_normalized))
+        # derefrencing f if it's a link
+        f_real = f.resolve()
+        if 'zip' in str(typ):
+            # For gzipped files
+            with gzip.open(f_real, 'rb') as gz_file:
+                with open(asciifile, 'wb') as ascii_file:
+                    shutil.copyfileobj(gz_file, ascii_file)
+                # Remove the original gzip file
+            os.remove(f)
+            fastq_paths.append(asciifile)
+        elif 'zip' in str(app):  # For zipped files
+            with zipfile.ZipFile(f_real, 'r') as zip_ref:
+                zip_ref.extractall(asciifile)
+            # Remove the original zip file
+            os.remove(f)
+            fastq_paths.append(asciifile)
+        else:
+            try:
+                with open(f_real, "r+") as fi:
+                    line = fi.readline()
+                if len(line) == len(line.encode()):  # If it's ascii
+                    try:
+                        shutil.copy(f_real, asciifile)
+                    except shutil.SameFileError:
+                        pass
+                    fastq_paths.append(asciifile)
+            except Exception as e:
+                print("{}\t{}".format(f, e))
+                raise e
+    if len(file_path) != len(fastq_paths):
+        raise FileNotFoundError("Some files could not get converted or were not in utf-8 format!")
+    # returns absolute paths
+    return fastq_paths
+
+
+def calc_spikes(*fastq_files, spike_amount: float = 0.0):
+    '''
+    #NOTE fastq_files MUST NOT be gzipped or zippped.
+    spike_amount is in ng
+    '''
+    fastq_names = [ospath.abspath(f) for f in fastq_files if bool(f)]
+    fastqs_abs_paths = [ospath.abspath(f) for f in fastq_names if ospath.isfile(f)]
+    # Changing spike_amount to float
+    spike_amount = float(spike_amount)
+    if math.isclose(spike_amount, 0.0, abs_tol=1e-5):
+        f = fastqs_abs_paths[0]
+        with open(f, 'r') as fqfile:
+            line_count = 0
+            line = fqfile.readline()
+            while line:
+                line_count += 1
+                line = fqfile.readline()
+        line_count = line_count // 4  # (total number of reads, spike reads)
+        return line_count, 0  # non_spike_reads spike_reads
+    else:
+        spike_amount = float("{}e-9".format(spike_amount))  # ng to g
+        name_regx = r"[a-zA-Z0-9\-]+"
+        spike_res_dir = ospath.split(fastqs_abs_paths[0])[0] + "/spike_result/"
+        makedirs(spike_res_dir, mode=777, exist_ok=True)
+        _, forw_name = ospath.split(fastqs_abs_paths[0])
+        fastq_aligned = forw_name[re.search(name_regx, forw_name).start():re.search(name_regx, forw_name).end()]
+        fastq_aligned = ospath.join(spike_res_dir, fastq_aligned)
+        fastq_unaligned = fastq_aligned + "_unal"
+
+        if len(fastq_names) == 2:
+            cmd = [bowtie2, "-x", SPIKESIDX, "-1", fastqs_abs_paths[0], "-2",
+                   fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
+                   fastq_unaligned]
+            call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
+            spike_counter = 0
+            for fi in [fastq_aligned + ".1", fastq_aligned + ".2"]:
+                with open(fi, 'r') as fastq_al:
+                    for _ in fastq_al:
+                        spike_counter += 1
+            spike_counter = int(spike_counter // 4) // 2
+            if spike_counter != 0:
+                shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
+                shutil.copy(fastq_unaligned + ".2", fastqs_abs_paths[1])
+
+        elif len(fastq_names) == 1:
+            cmd = [bowtie2, "-x", SPIKESIDX, "-U", fastqs_abs_paths[0], "--al-conc",
+                   fastq_aligned, "--un-conc", fastq_unaligned]
+            # system(" ".join(cmd))
+            call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
+            files_inspike = listdir(spike_res_dir)
+            spike_counter = 0
+            for fi in [f for f in files_inspike if re.search(fastq_aligned, ospath.abspath(f))]:
+                with open(fi, 'r') as fastq_al:
+                    for _ in fastq_al:
+                        spike_counter += 1
+            spike_counter = spike_counter // 4
+            # Check if the unaligned file is empty
+            if spike_counter != 0:
+                shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
+
+        shutil.rmtree(spike_res_dir, ignore_errors=True)
+        unaligned_reads, _ = calc_spikes(*fastqs_abs_paths, spike_amount=0.0)
+        # to pass it as reads_number and spike number to seq_met model
+        return unaligned_reads, spike_counter
+
+
+def find_files_and_dirs_owned_by_root(directory):
+    root_files_and_dirs = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            filepath = ospath.join(root, file)
+            try:
+                # Get file owner information
+                file_stat = os.stat(filepath)
+                file_owner = file_stat.st_uid
+                # Check if the owner is root (uid 0)
+                if file_owner == 0:
+                    root_files_and_dirs.append(filepath)
+            except Exception as e:
+                print(f"Error while processing {filepath}: {e}")
+        for dir_name in dirs:
+            dir_path = ospath.join(root, dir_name)
+            try:
+                # Get directory owner information
+                dir_stat = os.stat(dir_path)
+                dir_owner = dir_stat.st_uid
+                # Check if the owner is root (uid 0)
+                if dir_owner == 0:
+                    root_files_and_dirs.append(dir_path)
+            except Exception as e:
+                print(f"Error while processing {dir_path}: {e}")
+    return root_files_and_dirs
+
+
+def generate_timestamp(thread_safe=False):
+    current_time = dt.now()
+    timestamp = current_time.strftime("%Y%m%d_%H%M%S")
+    if thread_safe:
+        # Get the current thread obj hex
+        thread_obj = threading.current_thread()
+        thread_obj = str(hash(id(thread_obj)))
+        timestamp += f"_{thread_obj}"
+
+    return timestamp
 
 
 def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple = ("", "")):
@@ -93,7 +341,8 @@ def is_seq_file(file_path, seq_file_format="any"):
     if seq_file_format not in format_opts:
         raise ValueError("seq_file_format must be 'fasta', 'fastq' or 'any'")
     seq_head_tag_list = [">"] if seq_file_format == "fasta" else ["@"] if seq_file_format == "fastq" else [">", "@"]
-    file_path = Path(PurePath(file_path))
+    # use realpath to derefrence links to original files
+    file_path = Path(PurePath(file_path)).resolve()
     if not file_path.is_file():
         return False
     app, typ = mtypes.guess_type(str(file_path))
@@ -148,8 +397,10 @@ def pair_seq_files(directory):
     paired_files = []
     if not direcotry_path.is_dir():
         return paired_files
+    # is_seq_file checks the format of file as well.
     skip_reverses = []
     for file_path in direcotry_path.rglob("*"):
+        file_path = Path(PurePath(file_path)).absolute()
         isSeqFile = is_seq_file(file_path)
         if isSeqFile and str(file_path) not in skip_reverses:
             if is_forward_file(file_path.name):
@@ -161,102 +412,6 @@ def pair_seq_files(directory):
                     skip_reverses.append(reve_file)
 
     return paired_files
-
-
-def gzip_to_fastq(*files):
-    '''
-    It takes files gunzip or zip them and returns the name with proper fastq fuffix.
-    '''
-    file_path = [Path(PurePath(f)) for f in files if f]
-    file_path = [f for f in file_path if f.is_file()]
-    if len(files) != len(file_path):
-        raise TypeError("Some given arguments are not files.")
-    fastq_paths = []
-    for f in file_path:
-        tstmp = str(time.time()).replace(".", "_")
-        app, typ = mtypes.guess_type(f)
-        file_dir, file_name = f.parent, str(f.name)
-        file_name = file_name.replace(".", "_").replace("_gz", "").replace("_bz2", "")
-        asciifile_name = file_name.replace(" ", "").replace("_fastq", "") + ".fastq"
-        asciifile = str(file_dir.joinpath(asciifile_name))
-        tmp_file = str(file_dir.joinpath("_{}_".format(tstmp)))
-        f = str(f)
-        if 'zip' in str(typ):
-            run_output = subprocess.run(
-                [
-                    "gunzip",
-                    "--stdout",
-                    f"{f}",
-                    ">",
-                    f"{tmp_file}"
-                ],
-                capture_output=True,
-                text=True)
-            run_output = subprocess.run(
-                [
-                    "rm",
-                    "-r",
-                    "{}".format(f)
-                ],
-                capture_output=True,
-                text=True)
-            run_output = subprocess.run(
-                [
-                    "mv",
-                    f"{tmp_file}",
-                    f"{asciifile}"
-                ],
-                capture_output=True,
-                text=True)
-            fastq_paths.append(asciifile)
-        elif 'zip' in str(app):  # For zipped files
-            run_output = subprocess.run(
-                [
-                    "unzip",
-                    f"{f}",
-                    "-d",
-                    f"{tmp_file}"
-                ],
-                capture_output=True,
-                text=True)
-            run_output = subprocess.run(
-                [
-                    "rm",
-                    "-r",
-                    f"{f}"
-                ],
-                capture_output=True,
-                text=True)
-            run_output = subprocess.run(
-                [
-                    "mv",
-                    f"{tmp_file}",
-                    f"{asciifile}"
-                ],
-                capture_output=True,
-                text=True)
-            fastq_paths.append(asciifile)
-        else:
-            try:
-                with open(f, "r+") as fi:
-                    line = fi.readline()
-                if len(line) == len(line.encode()):  # If it's ascii
-                    run_output = subprocess.run(
-                        [
-                            "mv",
-                            f"{f}",
-                            f"{asciifile}"
-                        ],
-                        capture_output=True,
-                        text=True)
-                    fastq_paths.append(asciifile)
-            except Exception as e:
-                print("{}\t{}".format(f, e))
-                raise e
-    if len(file_path) != len(fastq_paths):
-        raise TypeError("Some files could not get converted or were not in utf-8 format!")
-    # returns absolute paths
-    return fastq_paths
 
 
 def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = True):
@@ -337,7 +492,7 @@ class TaskPickle:
                  "forward_file": "",
                  "reverse_file": "",
                  "input_id": "",
-                 "spike_amount": 6
+                 "spike_amount": 6.0
                  }
 
     def check_args_dict(self, args_d=None) -> bool:
@@ -507,7 +662,7 @@ class TaskPickle:
                     return False
             elif k == "spike_amount":
                 try:
-                    v = int(v)
+                    v = float(v)
                 except Exception:
                     return False
             else:  # Existence of any other arguments
@@ -624,7 +779,9 @@ class ArgsParserUtil(ArgsParserDunderUtil):
         Parses a yaml to dictionary
         """
         yml_args_d = {}
-        yaml_path = Path(yaml_path)
+        yaml_path = Path(PurePath(str(yaml_path))).absolute() if yaml_path else Path(PurePath("."))
+        if not yaml_path.is_file():
+            return yml_args_d
         with open(yaml_path, "r") as yaml_stream:
             try:
                 yml_args_d = yaml.safe_load(yaml_stream)
@@ -632,6 +789,18 @@ class ArgsParserUtil(ArgsParserDunderUtil):
                 argparse_logger.warning(e)
 
         return yml_args_d
+
+    def __eq__(self, other):
+        if not isinstance(self, other.__class__):
+            return False
+        if not (hasattr(self, "default_args") or not hasattr(other, "default_args")):
+            return False
+        eq_tests = [False for fi in self.default_args.keys()]
+        for ind in range(len(self.default_args.keys())):
+            ke = list(self.default_args.keys())[ind]
+            el = self.default_args.get(ke, "A") == other.default_args.get(ke, "B")
+            eq_tests[ind] = el
+        return all(eq_tests)
 
 
 class SpikeRemovalArgs(ArgsParserUtil):
@@ -822,6 +991,25 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
         self.filter_zotu_abundance = FilterZOTUAbundanceArgs(config_dict)
         self.add_tax = AddTaxArgs(config_dict)
 
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        eq_tests = [
+            self.merge_pairs == other.merge_pairs,
+            self.trim_both_sides == other.trim_both_sides,
+            self.trim_one_side == other.trim_one_side,
+            self.filter_merged == other.filter_merged,
+            self.filter_single_reads == other.filter_single_reads,
+            self.dereplication == other.dereplication,
+            self.sort_seq == other.sort_seq,
+            self.cluster_zotus == other.cluster_zotus,
+            self.filter_16S == other.filter_16S,
+            self.build_zotus_table == other.build_zotus_table,
+            self.filter_zotu_abundance == other.filter_zotu_abundance,
+            self.add_tax == other.add_tax,
+        ]
+        return all(eq_tests)
+
 
 class AnalysisArgsParser(ArgsParserDunderUtil):
 
@@ -849,6 +1037,16 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
         self.complex_tic = ComplexTICArgs(config_dict)
         self.create_table = CreateTableTICArgs(config_dict)
 
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        eq_tests = [
+            self.trimsides == other.trimsides,
+            self.complex_tic == other.complex_tic,
+            self.create_table == other.create_table,
+        ]
+        return all(eq_tests)
+
 
 class IMNGS2ArgsParser(ArgsParserDunderUtil):
 
@@ -863,3 +1061,16 @@ class IMNGS2ArgsParser(ArgsParserDunderUtil):
         """
         self.preproc_args = PreprocessingArgsParser(config_yaml, config_dict)
         self.analysis_args = AnalysisArgsParser(config_yaml, config_dict)
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        prep_eq = self.preproc_args == other.preproc_args
+        analysis_eq = self.analysis_args == other.analysis_args
+        return prep_eq and analysis_eq
+
+
+class MyCounter(Counter):
+
+    def total(self):
+        return sum([va for ke, va in self.items()])
