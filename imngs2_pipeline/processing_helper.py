@@ -490,6 +490,10 @@ def flatten_dict(
     return dict(items)
 
 
+def slice_list(l: list, n: int) -> list:
+    return [l[i:i + n] for i in range(0, len(l), n)]
+
+
 class TaskPickle:
     status_keys_num = ["download",
                        "run"]

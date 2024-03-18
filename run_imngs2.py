@@ -9,8 +9,8 @@ from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.analyze_sample_job import main as main_analysis
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
-from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes
-from multiprocessing import cpu_count, Pool
+from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes, slice_list
+from multiprocessing import cpu_count, Queue, Process
 from typing import List, Tuple
 if sys.version_info[0] < 3:
     from pathlib2 import Path, PurePath, PureWindowsPath, PurePosixPath  # pip2 install pathlib2
@@ -668,6 +668,18 @@ def run_preprocessing(
     return sample_dir
 
 
+def parallel_preprocessing(args: tuple, process_queue: Queue):
+    """
+    It's a parallel function to run preprocessing on multiple samples.
+    """
+    try:
+        sample_dir = run_preprocessing(*args)
+        process_queue.put((args[2], sample_dir))
+    except Exception as exc:
+        process_queue.put((args[2], None))
+        PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {exc}")
+
+
 def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
     """
     It combines samples' spike_stat_file to one file to be input to spike normalization step
@@ -777,30 +789,41 @@ def run_imngs2(
         try:
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             # running preprocessing
-            with Pool(POOL_SIZE, maxtasksperchild=1) as pool:
-                # Running the preprocessor function only if parese_mapping_file has return one or two files path for the sample
-                res_list = []
-                for sample_id, arg_tup in mapping_line_tup_dict.items():
-                    res = pool.apply_async(
-                        run_preprocessing,
+            samples_dirs = []
+            res_dict = {}
+            task_batches = slice_list(list(mapping_line_tup_dict.items()), POOL_SIZE)
+            # create a queue for the tasks
+
+            for task_b in task_batches:
+                preproc_queue = Queue()
+                this_batch = []
+                for sample_id, arg_tup in task_b:
+                    proc = Process(
+                        target=parallel_preprocessing,
                         args=(
-                            arg_tup[1],  # tuple of fastq files
-                            str(args_yml_file),  # path to args file
-                            arg_tup[0].SampleID,  # sample_id
-                            float(arg_tup[0].total_weight_in_g),  # sample_weight
-                            float(arg_tup[0].spike_amount),   # spike_amount
-                            USEARCH_11_BIN,
+                            (
+                                arg_tup[1],  # tuple of fastq files
+                                str(args_yml_file),  # path to args file
+                                arg_tup[0].SampleID,  # sample_id
+                                float(arg_tup[0].total_weight_in_g),  # sample_weight
+                                float(arg_tup[0].spike_amount),   # spike_amount
+                                USEARCH_11_BIN,
+                            ),
+                            preproc_queue,
                         )
                     )
-                    res_list.append(res)
-                for res in res_list:
-                    if not res.wait(720):  # After 12 minutes it terminates the thread
-                        PREP_LOG.error(f"Preprocessing for {res.get()} is taking too long. Terminating the thread!")
-                        res.terminate()
-
-            samples_dirs = [el.get() for el in res_list]
-            # NOTE result from run_preprocessing could be "" which means the preprocessing has failed
-            samples_dirs = [el for el in samples_dirs if el]
+                    proc.start()
+                    this_batch.append(proc)
+                for proc in this_batch:
+                    proc.join(timeout=2400)  # 40 minutes of waiting
+                    if proc.is_alive():
+                        proc.terminate()
+                        proc.join()
+                while not preproc_queue.empty():
+                    sample_id, res = preproc_queue.get()
+                    if res:
+                        res_dict[sample_id] = res
+            samples_dirs = list(res_dict.values())
         except Exception as exc:
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True

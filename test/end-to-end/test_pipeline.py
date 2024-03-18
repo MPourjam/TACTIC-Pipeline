@@ -238,7 +238,6 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         else:
             cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "run_imngs2"]
         cmd += arg_set.to_args()
-
         # Write the command to a file
         with open(run_dir + "/cmd.txt", "w") as f:
             f.write(" ".join(cmd) + "\n")
@@ -456,6 +455,33 @@ def test_custom_usearch_bin_full_analysis(build_image):
         custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
         shutil.copy("binaries/usearch_11_64", custom_usearch_path)
         args_set.usearch_bin = "usearch11_custom"
+
+        return args_set
+
+    run_container(setup_file_structure)
+
+
+def test_thread_arg(build_image):
+    def setup_file_structure(run_dir: str):
+        # copy the contents of data to the temporary directory
+        subprocess.run(["cp", "-r", data, run_dir])
+        # move the contents of the data folder to the run_dir
+        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
+            subprocess.run(["mv", file, run_dir])
+        # rm the folder
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        # setting args
+        args_set = ArgumentSet("", "")
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.threads = 1
 
         return args_set
 
