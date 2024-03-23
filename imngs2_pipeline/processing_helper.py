@@ -490,8 +490,27 @@ def flatten_dict(
     return dict(items)
 
 
-def slice_list(l: list, n: int) -> list:
-    return [l[i:i + n] for i in range(0, len(l), n)]
+def slice_list(li: list, n: int) -> list:
+    return [li[i:i + n] for i in range(0, len(li), n)]
+
+
+def is_usearch_11(file: str) -> bool:
+    """
+    If the file is a binary of usearch 11 then it returns true
+    """
+    if not ospath.isfile(file):
+        return False
+    # Check if the file is a binary file
+    with open(file, "rb") as f:
+        header = f.read(4)
+        if header != b'\x7fELF':
+            return False
+    # if file --version returns 'usearch v11.0.667_i86linux32' then it's usearch 11
+    version_cmd = [file, "--version"]
+    version_out, _ = loud_subprocess(version_cmd, cap_output=True)
+    if "usearch v11" not in version_out.stdout:
+        return False
+    return True
 
 
 class TaskPickle:

@@ -19,7 +19,7 @@ else:
 
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS
-global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX, USEARCH_11_BIN, USEARCH_8_BIN
+global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX
 INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
 FASTQ_DIR = INPUT_DIR
 PROC_DIR_SUFFIX = "__processed"
@@ -44,10 +44,6 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
-# Usearch Tool
-BIN_DIR = "/base/binaries/"
-USEARCH_8_BIN = BIN_DIR + "usearch8.1"
-USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
 
 
 def handle_system_signals(signum, frame):
@@ -575,10 +571,10 @@ def remove_spikes(
 def run_preprocessing(
         seq_files_t: tuple,
         args_yml_path: str,
+        usearch_11_bin: str,
         sample_id: str = "",  # If it's not provided then the base name of forward file
         sample_weight: float = float("NAN"),  # spike normalizer handles this
-        spike_amount: float = 0.0,
-        usearch_11_bin: str = USEARCH_11_BIN):
+        spike_amount: float = 0.0):
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -740,17 +736,23 @@ def check_taxed_zotus_fasta(file_path: str) -> bool:
 
 def run_imngs2(
         fastq_file_dir: str,
+        usearch_11_bin: str,
         args_yml_file: str = str(ARGS_YAML_FILE),
         dbs_dir: str = str(DBS_DIR),
         mapping_file: str = "",
         spike_stat_file: str = "",
         skip_preprocess: bool = False,
-        skip_analysis: bool = False,
-        usearch_11_bin: str = USEARCH_11_BIN):
-    # NOTE if the function run_imngs2() is imported then the default global variables will be used
+        skip_analysis: bool = False):
+    # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     USEARCH_11_BIN = str(Path(PurePath(usearch_11_bin)).absolute())
+    if proc_helper.is_usearch_11(USEARCH_11_BIN):
+        PREP_LOG.info(f"Using USEARCH 11 binary: {USEARCH_11_BIN}")
+    else:
+        msg = f"Usearch binary: {USEARCH_11_BIN} is not version 11. Exiting!"
+        PREP_LOG.error(msg)
+        sys.exit(1)
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir))
@@ -804,10 +806,10 @@ def run_imngs2(
                             (
                                 arg_tup[1],  # tuple of fastq files
                                 str(args_yml_file),  # path to args file
+                                USEARCH_11_BIN,
                                 arg_tup[0].SampleID,  # sample_id
                                 float(arg_tup[0].total_weight_in_g),  # sample_weight
                                 float(arg_tup[0].spike_amount),   # spike_amount
-                                USEARCH_11_BIN,
                             ),
                             preproc_queue,
                         )
@@ -906,8 +908,7 @@ if __name__ == "__main__":
     parser.add_argument("-ut", "--usearch-bin",
                         type=str,
                         help="Path to binary of usearch version 11. Default is 11.0.667_i86linux32.",
-                        default=USEARCH_11_BIN,
-                        required=False)
+                        required=True)
     parser.add_argument("-db", "--db-directory",
                         type=str,
                         help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
@@ -932,15 +933,8 @@ if __name__ == "__main__":
     # If they are the same it returns unchanged. If fastq_dir is subpath of input it returns the longest one
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()
     # TODO Later we need to force the user to provide the path to usearch binary. For now we only continue with the default one.
-    given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if args.usearch_bin else USEARCH_11_BIN
+    given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute())
     # warning the cli users for the given usearch file
-    if not Path(PurePath(given_usearch_bin)).is_file():
-        PREP_LOG.warning(f"Provided usearch binary file: {given_usearch_bin} does not exist. Falling back to default usearch binary file: {USEARCH_11_BIN}")
-    elif Path(PurePath(given_usearch_bin)) == USEARCH_11_BIN:
-        PREP_LOG.info(f"Provided usearch binary file: {given_usearch_bin} is the same as default usearch binary file: {USEARCH_11_BIN}")
-    else:
-        USEARCH_11_BIN = given_usearch_bin
-
     try:
         POOL_SIZE = int(args.threads)
     except ValueError as exc:
@@ -981,5 +975,5 @@ if __name__ == "__main__":
             spike_stat_file=cli_spike_stat_file,
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
-            usearch_11_bin=USEARCH_11_BIN
+            usearch_11_bin=given_usearch_bin
         )
