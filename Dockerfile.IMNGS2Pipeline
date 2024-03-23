@@ -3,6 +3,9 @@ FROM mpourjam/python3.7_buster_r4.3.1
 #########################
 # Downloading Databases #
 #########################
+RUN mkdir -p /base/binaries
+RUN mkdir -p /base/databases
+COPY binaries/ /base/binaries/
 COPY databases/ /base/databases/
 RUN /bin/bash /base/databases/SILVA_download.sh
 
@@ -10,11 +13,8 @@ RUN /bin/bash /base/databases/SILVA_download.sh
 # Copying necessary files #
 ###########################
 RUN mkdir -p /base
-RUN mkdir -p /base/binaries
 RUN mkdir -p /base/spikesidx
-RUN mkdir -p /base/databases
 RUN mkdir -p /base/imngs2_pipeline
-COPY binaries/ /base/binaries/
 COPY spikesidx/ /base/spikesidx/
 COPY imngs2_pipeline /base/imngs2_pipeline/
 COPY run_imngs2.py /base/run_imngs2.py
