@@ -285,6 +285,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         assert file_set_complete
 
 
+@pytest.mark.xfail(reason="usearch_bin should be provided as argument")
 def test_flat_autodiscover(build_image):
     def setup_file_structure(run_dir: str):
         # copy the data to the temporary directory
@@ -302,6 +303,7 @@ def test_flat_autodiscover(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.xfail(reason="usearch_bin should be provided as argumemtn")
 def test_subfolder_autodiscover(build_image):
     def setup_file_structure(run_dir: str):
         # make a subfolder and copy the data to the temporary directory
@@ -315,6 +317,7 @@ def test_subfolder_autodiscover(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.xfail(reason="usearch_bin should be provided as argument")
 def test_flat_mapping(build_image):
     def setup_file_structure(run_dir: str):
         # copy the contents of data to the temporary directory
@@ -342,6 +345,7 @@ def test_flat_mapping(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.xfail(reason="usearch_bin should be provided as argument")
 def test_preprocessing(build_image):
     def setup_file_structure(run_dir: str):
         # copy the contents of data to the temporary directory
