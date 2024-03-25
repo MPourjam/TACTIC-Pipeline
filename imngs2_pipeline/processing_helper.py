@@ -9,7 +9,7 @@ import shutil
 import zipfile
 import inspect
 import threading
-from os import getcwd, makedirs, listdir
+from os import getcwd, makedirs, listdir, access, X_OK
 from collections import namedtuple
 from mimetypes import guess_type
 from datetime import datetime as dt
@@ -505,6 +505,10 @@ def is_usearch_11(file: str) -> bool:
         header = f.read(4)
         if header != b'\x7fELF':
             return False
+    # Check if the file is executable
+    if not ospath.isfile(file) or not access(file, X_OK):
+        # then we make file executable
+        os.chmod(file, 0o777)
     # if file --version returns 'usearch v11.0.667_i86linux32' then it's usearch 11
     version_cmd = [file, "--version"]
     version_out, _ = loud_subprocess(version_cmd, cap_output=True)
