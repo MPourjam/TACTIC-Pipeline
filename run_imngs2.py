@@ -334,10 +334,9 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
             filtered_samples_dir.append(curr_dir)
         else:
             PREP_LOG.warning(f"{curr_dir.relative_to(FASTQ_DIR)} is not a correctly processed.")
-    samples_dirs = filtered_samples_dir
     # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
     # we should get sure that only one processed set from each sample is passed for analysis
-    samples_dirs_non_redundant = {str(Path(PurePath(sam_dir))).split(PROC_DIR_SUFFIX)[0]: sam_dir for sam_dir in samples_dirs}
+    samples_dirs_non_redundant = {str(Path(PurePath(sam_dir))).split(PROC_DIR_SUFFIX)[0]: sam_dir for sam_dir in filtered_samples_dir}
     samples_dirs = list(samples_dirs_non_redundant.values())
 
     return samples_dirs
@@ -660,21 +659,21 @@ def run_preprocessing(
     return sample_dir
 
 
-def parallel_preprocessing(args: tuple, process_queue: Queue):
+def parallel_preprocessing(args: tuple, process_queue: Queue, res_dict_key: str):
     """
     It's a parallel function to run preprocessing on multiple samples.
     """
     try:
         sample_dir = run_preprocessing(*args)
-        process_queue.put((args[2], sample_dir))
+        process_queue.put((res_dict_key, sample_dir))
     except Exception as exc:
-        process_queue.put((args[2], None))
+        process_queue.put((res_dict_key, None))
         PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {exc}")
 
     return
 
 
-def combine_spike_stats_file(*samples_dirs, combined_spike_stat):
+def combine_spike_stats_file(samples_dirs: list, combined_spike_stat: str):
     """
     It combines samples' spike_stat_file to one file to be input to spike normalization step
     """
@@ -807,6 +806,7 @@ def run_imngs2(
                                 float(arg_tup[0].spike_amount),   # spike_amount
                             ),
                             preproc_queue,
+                            arg_tup[0].SampleID,  # res_dict_key must be unique to bound process to sample_id
                         )
                     )
                     proc.start()
@@ -831,7 +831,6 @@ def run_imngs2(
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
         samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
-
     # Runing analysis
     if not skip_analysis and bool(samples_dirs):
         try:
@@ -844,8 +843,8 @@ def run_imngs2(
             # we do the step down because if skip_preprocess is True then the path to preprocess would be given not all smaple_dirs
             if str(combined_spike_stats_path) != str(default_spike_stat_compiled):
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
-            reduced_samples_dirs, _ = combine_spike_stats_file(*samples_dirs, combined_spike_stat=combined_spike_stats_path)
-            missed_samples = [sam_dir for sam_dir in samples_dirs if str(sam_dir) not in reduced_samples_dirs]
+            reduced_samples_dirs, _ = combine_spike_stats_file(samples_dirs, combined_spike_stat=combined_spike_stats_path)
+            missed_samples = [sam_dir for sam_dir in samples_dirs if sam_dir not in reduced_samples_dirs]
             if missed_samples:
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
