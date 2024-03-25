@@ -153,7 +153,7 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
 
 
 def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -> Tuple[str, bool]:
-    this_out = ["", True]
+    this_out = [None, True]
     given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
     sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
     if not given_argset_file or not sample_base_path:
@@ -307,7 +307,7 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
         # NOTE What if the name of processed directory does not match <SampleID> + PROC_DIR_SUFFIX
         # NOTE the sample ID in mapping_line_tup_list could be uniqified before if the base name of fastq files are not unique
         # with __<number> suffix that's why we use get_base_name to get the base name of fastq files
-        sample_id = proc_helper.get_base_name(x[1][0])
+        sample_id = x[0][1]  # MapLineTup.SampleID
         fastq_files_parent_dir = Path(PurePath(x[1][0])).parent.joinpath(f"{str(sample_id)}{PROC_DIR_SUFFIX}")
         gathered_files = []
         for found_file in fastq_files_parent_dir.rglob(f"**/{TAXED_ZOTU_FILE_NAME}"):
@@ -572,7 +572,7 @@ def run_preprocessing(
         seq_files_t: tuple,
         args_yml_path: str,
         usearch_11_bin: str,
-        sample_id: str = "",  # If it's not provided then the base name of forward file
+        sample_id: str,
         sample_weight: float = float("NAN"),  # spike normalizer handles this
         spike_amount: float = 0.0):
     """
@@ -582,7 +582,7 @@ def run_preprocessing(
      It returns the path of direcotry in which the
      preprocessd files of sample are.
     """
-    sample_dir = ""
+    sample_dir = None
     if not any(seq_files_t):
         return sample_dir
     try:
@@ -598,13 +598,9 @@ def run_preprocessing(
             return sample_dir
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         file_full_path = seq_files_t[0]
-        # creating processing directory
-        sample_base_name = proc_helper.get_base_name(file_full_path)
-        # Replacing sample_id if not given with sample_base_name
-        sample_id = sample_id if sample_id else sample_base_name
-        base_path_dir = file_full_path.parent.joinpath(sample_base_name)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
+        base_path_dir = file_full_path.parent.joinpath(sample_id)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
         sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
-        sample_dir = Path(PurePath(sample_dir))
+        sample_dir = Path(PurePath(sample_dir)) if sample_dir else ""
         if not shall_continue:
             return sample_dir
 
@@ -675,27 +671,27 @@ def parallel_preprocessing(args: tuple, process_queue: Queue):
         process_queue.put((args[2], None))
         PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {exc}")
 
+    return
 
-def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
+
+def combine_spike_stats_file(*samples_dirs, combined_spike_stat):
     """
     It combines samples' spike_stat_file to one file to be input to spike normalization step
     """
     samples_dirs_path = []
+    combined_spike_stat = Path(PurePath(combined_spike_stat)).absolute()
     for sam_dir in samples_dirs:
-        try:
-            sam_dir_path = Path(PurePath(sam_dir)).absolute()
-            if not sam_dir_path.is_dir():
-                raise ValueError(f"{sam_dir_path} does not exist!")
-        except Exception as exc:
-            PREP_LOG.warning(f"Invalid sample directory for {exc}")
-            continue
+        sam_dir_path = Path(PurePath(sam_dir)).absolute()
+        if not sam_dir_path.is_dir():
+            raise FileNotFoundError(f"{sam_dir_path} does not exist!")
+        if not sam_dir.joinpath(SPIKE_STAT_FILE_NAME).is_file():
+            raise FileNotFoundError(f"{sam_dir_path} does not have spike_stat_file: {SPIKE_STAT_FILE_NAME}")
+        # cleaned sample dirs
         samples_dirs_path.append(sam_dir_path)
-
-    combined_spike_stat = Path(PurePath(combined_spike_stat))
-    if combined_spike_stat.is_dir():
-        combined_spike_stat = samples_dirs_path[0].parent.joinpath(SPIKE_STAT_FILE_NAME)
+        PREP_LOG.info(f"Found spike_stat_file in {sam_dir}. Listed for Combining...")
 
     sample_stat_files_paths = [sdir.joinpath(SPIKE_STAT_FILE_NAME) for sdir in samples_dirs_path]
+
     header_rgx = re.compile(SPIKE_STAT_HEADER)
     with open(combined_spike_stat, "w") as combined_stat_file_fio:
         combined_stat_file_fio.write(SPIKE_STAT_HEADER + "\n")
@@ -707,7 +703,7 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
             if not header_line_mo:
                 msg = f"Existing spike_stat_file: {ssfp} does not have correct format of: {SPIKE_STAT_HEADER}"
                 PREP_LOG.error(msg)
-                continue
+                raise ValueError(msg)
             # Updating parent path to include the parent of sample_stat_files_path
             parent_path = ssfp.parent.relative_to(FASTQ_DIR)
             parent_path = "" if str(parent_path) == "." else str(parent_path)
@@ -716,7 +712,6 @@ def combine_spike_stats_file(*samples_dirs, combined_spike_stat: str = "."):
             new_row_values = [row_vals_list[0], row_vals_list[1], row_vals_list[2], row_vals_list[3], parent_path]
             combined_stat_file_fio.write("\t".join(new_row_values) + "\n")
 
-    samples_dirs_path = [str(el) for el in samples_dirs_path]
     return samples_dirs_path, combined_spike_stat
 
 
@@ -825,6 +820,8 @@ def run_imngs2(
                     sample_id, res = preproc_queue.get()
                     if res:
                         res_dict[sample_id] = res
+                    else:
+                        PREP_LOG.warning(f"Failed to finalize preprocessing for {sample_id}")
             samples_dirs = list(res_dict.values())
         except Exception as exc:
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
@@ -845,7 +842,7 @@ def run_imngs2(
             analysis_dir = fastq_file_dir.joinpath(f"Analysis_{proc_helper.generate_timestamp()}")
             analysis_dir.mkdir(parents=True, exist_ok=True)
             # we do the step down because if skip_preprocess is True then the path to preprocess would be given not all smaple_dirs
-            if str(combined_spike_stats_path) != str(given_spike_stat_file):
+            if str(combined_spike_stats_path) != str(default_spike_stat_compiled):
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
             reduced_samples_dirs, _ = combine_spike_stats_file(*samples_dirs, combined_spike_stat=combined_spike_stats_path)
             missed_samples = [sam_dir for sam_dir in samples_dirs if str(sam_dir) not in reduced_samples_dirs]
