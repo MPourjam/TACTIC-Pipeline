@@ -5,3 +5,6 @@ image.tar*
 
 # ide artifacts
 .idea
+
+# usearch
+*usearch*
