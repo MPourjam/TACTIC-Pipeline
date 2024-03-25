@@ -10,6 +10,7 @@ import glob
 import tempfile
 import re
 import shutil
+import csv
 
 
 IMAGE_NAME = "tic-pipeline-test"
@@ -97,12 +98,14 @@ class MappingFile:
 
     def __init__(self, entries: List[Entry]):
         self.entries = entries
+        self.last_written_file = None
 
     def write(self, file: str, sep: str = "\t"):
         with open(file, "w") as f:
             f.write(sep.join(self.HEADER_ENTRIES) + "\n")
             for entry in self.entries:
                 f.write(entry.csv_line(sep) + "\n")
+        self.last_written_file = file
 
 
 def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
@@ -222,6 +225,37 @@ def check_expected_files_exist(analysis_folder: str) -> bool:
     return return_bool
 
 
+def check_otutable_format(otu_table: str, argument_set: ArgumentSet, run_dir: str) -> bool:
+    # Find all files named "spike_mapping_file.csv in fastq_dir which has a parent folder ending in "__processed"
+    fastq_dir = os.path.join(os.path.abspath(run_dir), argument_set.fastq_dir)
+    finished_processes = []
+    mapping_file_path = os.path.join(os.path.abspath(run_dir), argument_set.mapping_file)
+    if not os.path.isfile(mapping_file_path):
+        spike_mapping_files = glob.glob(fastq_dir + "**/*__processed/**/spike_mapping_file.csv", recursive=True)
+        for spike_map_f in spike_mapping_files:
+            # in case there is a file named taxed_ZOTUs.fasta in the same folder as spike_mapping_file.csv
+            if os.path.isfile(os.path.join(os.path.dirname(spike_map_f), "taxed_ZOTUs.fasta")):
+                # finished_processes.append(spike_map_f)
+                # read spike_map_f tsv into pythons dictionary use csv.DictReader
+                with open(spike_map_f, "r") as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        finished_processes.append(row["#SampleID"])
+    else:
+        with open(mapping_file_path, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                finished_processes.append(row["#SampleID"])
+    # if all samples in finished_processes are in the otu_table header then return true
+    with open(otu_table, "r") as f:
+        header = f.readline().strip().split("\t")
+        for sample in finished_processes:
+            if sample not in header:
+                return False
+
+    return True
+
+
 def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Optional[str]]]) -> None:
     # set up a temporary directory to run the pipeline
     with contextlib.nullcontext(tempfile.mkdtemp()) as run_dir:
@@ -283,6 +317,8 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                         file_set_complete_counter += int(check_expected_preprocessed_files(tmstmp_dir))
             file_set_complete = bool(dirs_checked > 0 and file_set_complete_counter == dirs_checked)
         assert file_set_complete
+        assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir)
+        assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir)
 
 
 @pytest.mark.xfail(reason="usearch_bin should be provided as argument")
@@ -451,6 +487,7 @@ def test_custom_usearch_bin_full_analysis(build_image):
         mapping_file = os.path.join(run_dir, "mapping_file.csv")
         samples = [
             MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
         ]
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
