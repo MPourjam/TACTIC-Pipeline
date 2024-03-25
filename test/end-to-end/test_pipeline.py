@@ -235,15 +235,13 @@ def check_otutable_format(otu_table: str, argument_set: ArgumentSet, run_dir: st
         for spike_map_f in spike_mapping_files:
             # in case there is a file named taxed_ZOTUs.fasta in the same folder as spike_mapping_file.csv
             if os.path.isfile(os.path.join(os.path.dirname(spike_map_f), "taxed_ZOTUs.fasta")):
-                # finished_processes.append(spike_map_f)
-                # read spike_map_f tsv into pythons dictionary use csv.DictReader
                 with open(spike_map_f, "r") as f:
-                    reader = csv.DictReader(f)
+                    reader = csv.DictReader(f, delimiter="\t")
                     for row in reader:
                         finished_processes.append(row["#SampleID"])
     else:
         with open(mapping_file_path, "r") as f:
-            reader = csv.DictReader(f)
+            reader = csv.DictReader(f, delimiter="\t")
             for row in reader:
                 finished_processes.append(row["#SampleID"])
     # if all samples in finished_processes are in the otu_table header then return true
@@ -317,8 +315,8 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                         file_set_complete_counter += int(check_expected_preprocessed_files(tmstmp_dir))
             file_set_complete = bool(dirs_checked > 0 and file_set_complete_counter == dirs_checked)
         assert file_set_complete
-        assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir)
-        assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir)
+        assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the ZOTU table"
+        assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
 
 
 @pytest.mark.xfail(reason="usearch_bin should be provided as argument")
