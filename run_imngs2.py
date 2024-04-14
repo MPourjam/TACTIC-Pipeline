@@ -284,7 +284,8 @@ def is_correct_parent(
     given_parent_path = given_parent_path.strip().lstrip("\\").lstrip("/")
     given_parent_path = correct_path_for_windows(str(given_parent_path))
     given_parent_path = str(FASTQ_DIR) if given_parent_path == "" else Path(PurePath(base_path)).joinpath(given_parent_path)
-    return given_parent_path == fastq_file.parent
+    # return given_parent_path == fastq_file.parent
+    return proc_helper.is_relative_to(fastq_file, given_parent_path)
 
 
 def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineTup], Tuple[str, str]]], args_yml_path: str) -> list:
@@ -497,6 +498,10 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                     file_pairs_tup = file_tup
                     del files_tups[ind]
                     break
+            found_fastqs = [True if fi else False for fi in file_pairs_tup]
+            # NOTE: We should warn the user if we consider a sample being single layout and not paired layout
+            if not all(found_fastqs):
+                PREP_LOG.warning(f"Could not match fastq  to sample_id: {sample_id} in mapping file.")
 
             mapping_lines.append((map_line, file_pairs_tup))
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)

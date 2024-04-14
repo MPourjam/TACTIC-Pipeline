@@ -438,6 +438,15 @@ def pair_seq_files(directory):
     return paired_files
 
 
+def is_relative_to(path, *other):
+    path = Path(PurePath(path))
+    try:
+        path.relative_to(*other)
+        return True
+    except ValueError:
+        return False
+
+
 def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = True):
     # finding caller file name and setting logger file path
     caller_frame = inspect.currentframe().f_back
