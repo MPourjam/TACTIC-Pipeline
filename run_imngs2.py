@@ -57,7 +57,7 @@ def handle_system_signals(signum, frame):
     sys.exit(1)
 
 
-def correct_created_files_modes(mode=777) -> bool:
+def correct_created_files_modes(mode=755) -> bool:
     """
     It corrects the mode of created files by the pipeline.
     """
