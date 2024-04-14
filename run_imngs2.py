@@ -2,6 +2,7 @@
 import re
 import signal
 import argparse
+import atexit
 import shutil
 import sys
 from os import symlink, chdir
@@ -51,12 +52,9 @@ def handle_system_signals(signum, frame):
     Handles system signals to change the permission of created files and directories by the pipeline.
     """
     _ = correct_created_files_modes()
+    # log the event
+    PREP_LOG.warning(f"Signal {signum} received.")
     sys.exit(1)
-
-
-# Register the signal handler
-signal.signal(signal.SIGINT, handle_system_signals)
-signal.signal(signal.SIGTERM, handle_system_signals)
 
 
 def correct_created_files_modes(mode=777) -> bool:
@@ -73,6 +71,13 @@ def correct_created_files_modes(mode=777) -> bool:
             PREP_LOG.warning(f"Could not change mode of {fi}. {exc}")
 
     return mode
+
+
+# Register the signal handler
+signal.signal(signal.SIGINT, handle_system_signals)
+signal.signal(signal.SIGTERM, handle_system_signals)
+# Registering exit function
+atexit.register(correct_created_files_modes)
 
 
 def is_in_processed_dir(fastq_path: Path, sample_id: str = None) -> bool:
