@@ -882,7 +882,7 @@ def main_processing(
         sort_seqs()
         PREPPROC_LOG.info('# Cluster ZOTUs: Started')
         clusterZOTUs()
-        PREPPROC_LOG.info('# Filtered non 16S sequences: Started')
+        PREPPROC_LOG.info('# Filter non 16S sequences: Started')
         filter16S()
         # prepare_zotus()  # Adds size=1 to end of zotus header
         PREPPROC_LOG.info('# Build ZOTU Table: Started')
