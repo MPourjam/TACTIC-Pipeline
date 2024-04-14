@@ -756,7 +756,7 @@ def run_imngs2(
     else:
         msg = f"Usearch binary: {USEARCH_11_BIN} is not version 11. Exiting!"
         PREP_LOG.error(msg)
-        sys.exit(1)
+        sys.exit(132)
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir))
