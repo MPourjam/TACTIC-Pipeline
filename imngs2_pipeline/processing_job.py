@@ -50,9 +50,11 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
         err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
         err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
         raise MemoryError(err_msg)
-    if run_output.stderr and not quiet:
+    elif run_output.returncode != 0 and not quiet:
         raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    if run_output.stderr and quiet:
+    elif run_output.returncode != 0 and quiet:
+        PREPPROC_LOG.error(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    elif run_output.returncode == 0 and run_output.stderr and not quiet:
         PREPPROC_LOG.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     return run_output
 
@@ -564,7 +566,8 @@ def addKrona(KRONA_TOOL):
             KRONA_TOOL,
             "./krona.txt"
         ],
-        capture_output=True
+        capture_output=True,
+        quiet=True
     )
     # system("rm krona.txt")
     system_sub(
@@ -572,7 +575,8 @@ def addKrona(KRONA_TOOL):
             "rm",
             "krona.txt"
         ],
-        capture_output=True
+        capture_output=True,
+        quiet=True
     )
 
 
@@ -851,48 +855,48 @@ def main_processing(
         else:
             pko = TaskPickle(pk_file)
         chdir(input_dir)
-        PREPPROC_LOG.info("Spike removal started.")
+        PREPPROC_LOG.info("# Spike Removal: Started")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
+        PREPPROC_LOG.info('# FastQC: Started')
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is CRUCIAL to be here
-        PREPPROC_LOG.info('fastQC DONE')
         if reverse_file:
+            PREPPROC_LOG.info('# Merging Pairs: Started')
             merge_pairs(forward_file, reverse_file)
-            PREPPROC_LOG.info('Merging Pairs DONE')
+            PREPPROC_LOG.info('# Trim Sides: Started')
             trim_sides()
-            PREPPROC_LOG.info('Trim Sides DONE')
+            PREPPROC_LOG.info('# Filter Merged Reads: Started')
             filter_merged_reads()
-            PREPPROC_LOG.info('Filter merged DONE')
         else:
+            PREPPROC_LOG.info('# Trim One Side: Started')
             trim_one_side(forward_file)
-            PREPPROC_LOG.info('Trim One Side DONE')
+            PREPPROC_LOG.info('# Filter Amplicons: Started')
             filter_merged_one_side(forward_file)
-            PREPPROC_LOG.info('Filter one DONE')
+        PREPPROC_LOG.info('# Dereplication: Started')
         dereped_read_n = dereplicate_seqs()
         read_report = write_reads_report(input_id,
                                          Dereplicated_reads=dereped_read_n)
         PREPPROC_LOG.debug(read_report)
-        PREPPROC_LOG.info('Dereplication DONE')
+        PREPPROC_LOG.info('# Sort Sequences: Started')
         sort_seqs()
-        PREPPROC_LOG.info('Sorting DONE')
+        PREPPROC_LOG.info('# Cluster ZOTUs: Started')
         clusterZOTUs()
-        PREPPROC_LOG.info('Cluster ZOTUs DONE')
+        PREPPROC_LOG.info('# Filtered non 16S sequences: Started')
         filter16S()
-        PREPPROC_LOG.info('Filtered out non 16S ZOTUs')
         # prepare_zotus()  # Adds size=1 to end of zotus header
+        PREPPROC_LOG.info('# Build ZOTU Table: Started')
         build_ZOTU_table()
-        PREPPROC_LOG.info('Build ZOTU table')
+        PREPPROC_LOG.info('# Filter ZOTUs by Abundance: Started')
         filter_zotu_abundance()  # ignore this step because the required abundance is 0
-        PREPPROC_LOG.info('ZOTUs Abundance Filtered')
+        PREPPROC_LOG.info('# Select ZOTU Sequences: Started')
         select_zotu_seqs()
-        PREPPROC_LOG.info('Select ZOTUs Filtered')
+        PREPPROC_LOG.info('# Add Taxonomy: Started')
         addTax(input_id)
-        PREPPROC_LOG.info('Sina taxonomy added.')
         create_final_ZOTU_table()
         add_taxonomy_to_fasta()
+        PREPPROC_LOG.info("# Add Krona Graph: Started")
         addKrona(krona_importtext)
-        PREPPROC_LOG.info("Krona graph added.")
         # system('Rscript {} >/dev/null 2>/dev/null'.format(R_processing_stat))
         system_sub(
             [
@@ -903,10 +907,9 @@ def main_processing(
             capture_output=True,
             quiet=True
         )
-        PREPPROC_LOG.info('Relabing DONE')
         # udb for both similarity queries
+        PREPPROC_LOG.info('# Create UDB: Started')
         create_udb(input_id)
-        PREPPROC_LOG.info('UDB created')
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
         calced_regions = calc_covered_region(start_mode, end_mode)
@@ -915,10 +918,10 @@ def main_processing(
             # writing header
             s_e_file.write("SilvaAlignmentStartPos\tSilvaAlignementEndPos\tCoveredRegion\n")
             s_e_file.write(str(start_mode) + '\t' + str(end_mode) + '\t' + str(calced_regions) + '\n')
+        PREPPROC_LOG.info('# Zip Up: Started')
         create_zip(input_id)
-        PREPPROC_LOG.info('Zipped!')
+        PREPPROC_LOG.info('# Clean Up: Started')
         cleanup(input_id)
-        PREPPROC_LOG.info("Cleaned up: {}".format(input_id))
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
         PREPPROC_LOG.error(err_msg)

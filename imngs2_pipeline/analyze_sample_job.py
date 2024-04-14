@@ -43,9 +43,11 @@ def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False
         err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
         err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
         raise MemoryError(err_msg)
-    if run_output.stderr and not quiet:
+    elif run_output.returncode != 0 and not quiet:
         raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    if run_output.stderr and quiet:
+    elif run_output.returncode != 0 and quiet:
+        ANA_LOG.warning(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    elif run_output.returncode == 0 and run_output.stderr and not quiet:
         ANA_LOG.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     return run_output
 
@@ -1136,19 +1138,22 @@ def main(
             raise ValueError(f"{str(taxed_path)} must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
+    ANA_LOG.info('### Analysis Started ###')
+    ANA_LOG.info('# Gathering Sequences: Started')
     for sample, sam_id in sample_seq_files_path:
         append_reads(sample, sam_id, ANALYSIS_DIR)
-    ANA_LOG.info('READS CONCATENATED')
     chdir(ANALYSIS_DIR)
     trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
+    ANA_LOG.info('# Dereplication: Started')
     dereplication()
-    ANA_LOG.info('Dereplication DONE')
     #################
     ## TIC is here ##
     #################
+    ANA_LOG.info("# TIC: Started")
     TIC_Result_DIR = Path(ANALYSIS_DIR).joinpath("TICResult")
     TIC_Output_DIR = Path(ANALYSIS_DIR).joinpath("TICOut")
     dereplicated_fasta_path = Path(ANALYSIS_DIR).joinpath("derep_with_tax.fasta")
+    ANA_LOG.info("# TIC: Splitting based on taxonomy")
     if TIC_Result_DIR.is_dir():
         shutil.rmtree(str(TIC_Result_DIR))
     try:
@@ -1169,6 +1174,7 @@ def main(
     ZOTUs_table_name = "ZOTUs-Table.tab"
     SOTUs_table_name = "SOTUs-Table.tab"
     chdir(ANALYSIS_DIR)
+    ANA_LOG.info("# TIC: Creating S/ZOTU Tables")
     main_create_args = [
         "python3.7",
         "/base/imngs2_pipeline/TIC/create_fasta_and_table.py",  # 0
@@ -1192,15 +1198,15 @@ def main(
         system_sub(main_create_args, capture_output=False, shell=False)
     except Exception as exc:
         raise ValueError(f"Table: {str(exc)}")
-    ANA_LOG.info("TIC Done")
     chdir(ANALYSIS_DIR)
+    ANA_LOG.info("# TIC: Cleaning up")
     shutil.rmtree(TIC_Result_DIR)
     for file in TIC_Output_DIR.glob("*"):
         shutil.copy(file, ANALYSIS_DIR)
         file.unlink()
     shutil.rmtree(TIC_Output_DIR)
+    ANA_LOG.info('# Final Cleanup: Started')
     cleanup(ANALYSIS_DIR)
-    ANA_LOG.info('Cleanup DONE')
     # Normalizing Tables
     try:
         zotu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name))), str(parsed_spike_stat_file_path))
