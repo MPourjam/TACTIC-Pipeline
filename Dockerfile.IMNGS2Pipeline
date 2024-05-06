@@ -3,14 +3,16 @@ FROM mpourjam/python3.7_buster_r4.3.1
 # Setting some environment variables
 # Install locales package
 RUN apt-get update && apt-get install -y locales
-
+RUN apt-get update --fix-missing
 # Generate the locale
-RUN locale-gen en_US.UTF-8
 
-# Set the locale for germany and language english with UTF-8
-ENV LANG de_DE.UTF-8
-ENV LANGUAGE de_DE:en
-ENV LC_ALL de_DE.UTF-8
+RUN touch /etc/locale.gen
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
 
 #########################
 # Downloading Databases #
