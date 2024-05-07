@@ -754,7 +754,7 @@ def run_imngs2(
     if ret_code != 0:
         PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")
         sys.exit(ret_code)
-    USEARCH_11_BIN = Path(PurePath(usearch_bin_path)).absolute()
+    USEARCH_11_BIN = str(Path(PurePath(usearch_bin_path)).absolute())
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir))
