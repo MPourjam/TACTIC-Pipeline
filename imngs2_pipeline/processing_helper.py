@@ -502,29 +502,6 @@ def slice_list(li: list, n: int) -> list:
     return [li[i:i + n] for i in range(0, len(li), n)]
 
 
-def is_usearch_11(file: str) -> bool:
-    """
-    If the file is a binary of usearch 11 then it returns true
-    """
-    if not ospath.isfile(file):
-        return False
-    # Check if the file is a binary file
-    with open(file, "rb") as f:
-        header = f.read(4)
-        if header != b'\x7fELF':
-            return False
-    # Check if the file is executable
-    if not ospath.isfile(file) or not access(file, X_OK):
-        # then we make file executable
-        os.chmod(file, 0o777)
-    # if file --version returns 'usearch v11.0.667_i86linux32' then it's usearch 11
-    version_cmd = [file, "--version"]
-    version_out, _ = loud_subprocess(version_cmd, cap_output=True)
-    if "usearch v11" not in version_out.stdout:
-        return False
-    return True
-
-
 class FileUtil:
     import gzip
     import zipfile
@@ -658,10 +635,13 @@ class Usearch(FileUtil):
         return ret_tup
 
     def __bool__(self):
-        return self.is_version()
+        return self.binfile != ""
 
     def __str__(self):
         return str(self.file)
+
+    def __repr__(self):
+        return f"Usearch {self.desired_version}" if self.binfile else "Usearch"
 
 
 class TaskPickle:
