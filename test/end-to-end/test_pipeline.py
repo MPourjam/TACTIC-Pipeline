@@ -2,7 +2,7 @@ import contextlib
 import subprocess
 from typing import Callable, Tuple, Optional, List
 # from contextlib import suppress
-
+import urllib.request as urequest
 import zipfile
 import pytest
 import os
@@ -15,6 +15,7 @@ import csv
 
 IMAGE_NAME = "tic-pipeline-test"
 data = "test/data/truncated"
+usearch_11_32_url = "https://drive5.com/downloads/usearch11.0.667_i86linux32.gz"
 
 
 @pytest.fixture(scope="session")
@@ -407,7 +408,7 @@ def test_preprocessing(build_image):
     run_container(setup_file_structure)
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(reason="usearch is not a bin file and it should eixt with error code 161")
 def test_custom_usearch_bin_arg(build_image):
     def setup_file_structure(run_dir: str):
         # copy the contents of data to the temporary directory
@@ -460,9 +461,9 @@ def test_custom_usearch_bin_preprocessing(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         # create a fake bin file in run_dir
-        custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
-        shutil.copy("binaries/usearch_11_64", custom_usearch_path)
-        args_set.usearch_bin = "usearch11_custom"
+        # downloading usearch from usearch_11_32_url and passing it as usearch11_custom
+        urequest.urlretrieve(usearch_11_32_url, os.path.join(run_dir, "usearch11.0.667_i86linux32.gz"))
+        args_set.usearch_bin = "usearch11.0.667_i86linux32.gz"
         args_set.skip_analysis = True
 
         return args_set
@@ -491,9 +492,9 @@ def test_custom_usearch_bin_full_analysis(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         # create a fake bin file in run_dir
-        custom_usearch_path = os.path.join(run_dir, "usearch11_custom")
-        shutil.copy("binaries/usearch_11_64", custom_usearch_path)
-        args_set.usearch_bin = "usearch11_custom"
+        # downloading usearch from usearch_11_32_url and passing it as usearch11_custom
+        urequest.urlretrieve(usearch_11_32_url, os.path.join(run_dir, "usearch11.0.667_i86linux32.gz"))
+        args_set.usearch_bin = "usearch11.0.667_i86linux32.gz"
 
         return args_set
 

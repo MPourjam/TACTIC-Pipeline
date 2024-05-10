@@ -11,7 +11,6 @@ import inspect
 import threading
 from os import getcwd, makedirs, listdir, access, X_OK
 from collections import namedtuple
-from mimetypes import guess_type
 from datetime import datetime as dt
 from collections.abc import MutableMapping
 from collections import Counter
@@ -503,27 +502,146 @@ def slice_list(li: list, n: int) -> list:
     return [li[i:i + n] for i in range(0, len(li), n)]
 
 
-def is_usearch_11(file: str) -> bool:
-    """
-    If the file is a binary of usearch 11 then it returns true
-    """
-    if not ospath.isfile(file):
-        return False
-    # Check if the file is a binary file
-    with open(file, "rb") as f:
-        header = f.read(4)
-        if header != b'\x7fELF':
+class FileUtil:
+    import gzip
+    import zipfile
+    import os
+    from pathlib import Path, PurePath
+
+    @staticmethod
+    def is_gzip(file_path):
+        file_path = Path(PurePath(file_path)).absolute()
+        try:
+            with gzip.open(file_path, 'rb') as f:
+                f.read(1)
+            return True
+        except OSError:
             return False
-    # Check if the file is executable
-    if not ospath.isfile(file) or not access(file, X_OK):
-        # then we make file executable
-        os.chmod(file, 0o777)
-    # if file --version returns 'usearch v11.0.667_i86linux32' then it's usearch 11
-    version_cmd = [file, "--version"]
-    version_out, _ = loud_subprocess(version_cmd, cap_output=True)
-    if "usearch v11" not in version_out.stdout:
-        return False
-    return True
+
+    @staticmethod
+    def is_zip(file_path):
+        file_path = Path(PurePath(file_path)).absolute()
+        try:
+            with zipfile.ZipFile(file_path, 'r') as f:
+                f.testzip()
+            return True
+        except zipfile.BadZipFile:
+            return False
+
+    @staticmethod
+    def gunzip(file_path: str) -> str:
+        """
+        It gunzips the file and returns the path of the binary file.
+        """
+        file_path = Path(PurePath(file_path)).absolute()
+        with gzip.open(file_path, 'rb') as f:
+            file_content = f.read()
+        bin_file = Path(PurePath(file_path).parent).joinpath(Path(PurePath(file_path).stem))
+        with open(bin_file, 'wb') as f:
+            f.write(file_content)
+        if FileUtil.is_binary(bin_file):
+            return str(bin_file)
+        return ""
+
+    @staticmethod
+    def is_binary(file_path: str) -> bool:
+        file_path = Path(PurePath(file_path)).absolute()
+        if not file_path.is_file():
+            return False
+        # Check if the file is a binary file
+        with open(file_path, "rb") as f:
+            header = f.read(4)
+            if header != b'\x7fELF':
+                return False
+        return True
+
+    @staticmethod
+    def change_mode(file_path: str, mode: int = 0o777):
+        file_path = Path(PurePath(file_path)).absolute()
+        file_path.chmod(mode)
+        return mode
+
+    @staticmethod
+    def is_executable(file_path: str) -> bool:
+        file_path = Path(PurePath(file_path)).absolute()
+        if not file_path.is_file() or not access(file_path, X_OK):
+            return False
+        return True
+
+
+class Usearch(FileUtil):
+    import subprocess
+    from pathlib import Path, PurePath
+
+    desired_version = "usearch v11"
+
+    def __init__(self, file: str, version: str = ""):
+        self.file = Path(PurePath(file)).absolute()
+        self.binfile = ""
+        if not self.file.is_file():
+            raise FileNotFoundError(f"File {file} does not exist.")
+        self.desired_version = version if version else self.desired_version
+
+    def which_usearch_version(self) -> str:
+        """
+        It returns the version of the usearch binary file.
+        """
+        version_cmd = [str(self.binfile), "--version"]
+        version_out = subprocess.run(version_cmd, capture_output=True, text=True)
+        return version_out.stdout
+
+    def is_version(self, version: str = "") -> bool:
+        """
+        It checks if the given version is the same as the desired version.
+        """
+        version = version if version else self.desired_version
+        return version in self.which_usearch_version()
+
+    def check_or_get_bin(self) -> (int, str):
+        """
+        It checks the given file path and if it's a gzip file then it looks for a linux binary file
+        made for i86 architecture and returns the path of the binary file.
+        In case the file is not a gzip then it checks if the file is binary and made for i86 architecture
+        and returns the path of the binary file.
+        """
+        ret_tup = (1, "")
+        if FileUtil.is_binary(self.file):
+            # if the file is a binary file
+            self.binfile = self.file
+        elif FileUtil.is_gzip(self.file):
+            # If the file is a gzip file
+            self.binfile = FileUtil.gunzip(self.file)
+        else:
+            # If the file is not a binary file
+            # then we check if the binary file is inside
+            bin_file = self.file.parent.joinpath(self.file.stem)
+            if FileUtil.is_binary(bin_file):
+                self.binfile = bin_file
+            else:
+                # if the binary file is not found
+                self.binfile = ""
+
+        if self.binfile:
+            # if the binary file is found then we make it executable
+            FileUtil.change_mode(self.binfile, 0o777)
+            # if the version is not the desired version then we return 162
+            ret_tup = (162, "")
+            if self.is_version():
+                ret_tup = (0, self.binfile)
+        else:
+            # if the binary file is not found then we return 161
+            ret_tup = (161, "")
+
+        return ret_tup
+
+    def __bool__(self):
+        return self.binfile != ""
+
+    def __str__(self):
+        return str(self.file)
+
+    def __repr__(self):
+        return f"Usearch {self.desired_version}" if self.binfile else "Usearch"
 
 
 class TaskPickle:
@@ -641,7 +759,7 @@ class TaskPickle:
         self.__path = ospath.realpath(filepath) if filepath else ospath.realpath(getcwd()).join(file_placeholder)
 
         if ospath.isfile(self.__path):
-            f_type, f_enc = guess_type(str(self.__path))
+            f_type, f_enc = mtypes.guess_type(str(self.__path))
             if "x-tex-pk" not in f_type:
                 raise FileExistsError("File is not a pickle file.")
             # with open(self.__path, "rb") as pkfile:

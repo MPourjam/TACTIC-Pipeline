@@ -750,13 +750,11 @@ def run_imngs2(
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
-    USEARCH_11_BIN = str(Path(PurePath(usearch_11_bin)).absolute())
-    if proc_helper.is_usearch_11(USEARCH_11_BIN):
-        PREP_LOG.info(f"Using USEARCH 11 binary: {USEARCH_11_BIN}")
-    else:
-        msg = f"Usearch binary: {USEARCH_11_BIN} is not version 11. Exiting!"
-        PREP_LOG.error(msg)
-        sys.exit(132)
+    ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
+    if ret_code != 0:
+        PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")
+        sys.exit(ret_code)
+    USEARCH_11_BIN = str(Path(PurePath(usearch_bin_path)).absolute())
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir))
