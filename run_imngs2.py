@@ -884,6 +884,10 @@ def run_imngs2(
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
             sys.exit(165)
+        else:
+            PREP_LOG.info(f"Analysis done. Results directory: {str(analysis_dir.relative_to(INPUT_DIR))}")
+    else:
+        PREP_LOG.warning("Skipping Analysis. No samples to analyze.")
 
     ##################
     # TODO Only Normalizing
