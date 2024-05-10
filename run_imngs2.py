@@ -53,11 +53,24 @@ def handle_system_signals(signum, frame):
     """
     _ = correct_created_files_modes()
     # log the event
-    PREP_LOG.warning(f"Signal {signum} received.")
-    sys.exit(1)
+    # if SIGTERM then exit with 143 (128 + 15) and if SIGKILL then exit with 137 (128 + 9)
+    if signum == 15:
+        PREP_LOG.warning(f"SIGTERM received.")
+        sys.exit(143)
+    elif signum == 9:
+        PREP_LOG.warning(f"SIGKILL received.")
+        sys.exit(137)
+    elif signum == 2:
+        PREP_LOG.warning(f"SIGINT received.")
+        sys.exit(130)
+    elif signum == 1:
+        PREP_LOG.warning(f"SIGHUP received.")
+        sys.exit(129)
+    else:
+        sys.exit(1)
 
 
-def correct_created_files_modes(mode=755) -> bool:
+def correct_created_files_modes(mode=777) -> bool:
     """
     It corrects the mode of created files by the pipeline.
     """
@@ -656,7 +669,7 @@ def run_preprocessing(
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
         sample_dir = None
-        sys.exit(137)
+        sys.exit(160)
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
@@ -770,7 +783,7 @@ def run_imngs2(
         pass
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
-        sys.exit(1)
+        sys.exit(163)  # https://github.com/MPourjam/IMNGS2Pipeline/issues/42
     # preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     # preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = fastq_file_dir.joinpath(SPIKE_STAT_FILE_NAME)
@@ -835,7 +848,7 @@ def run_imngs2(
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True
             samples_dirs = []
-            sys.exit(1)
+            sys.exit(164)
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
         samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
@@ -867,10 +880,10 @@ def run_imngs2(
             )
         except MemoryError as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
-            sys.exit(137)
+            sys.exit(160)
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
-            sys.exit(1)
+            sys.exit(165)
 
     ##################
     # TODO Only Normalizing

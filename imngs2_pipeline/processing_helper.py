@@ -287,7 +287,8 @@ def find_files_and_dirs_owned_by_root(directory):
                 if file_owner == 0:
                     root_files_and_dirs.append(filepath)
             except Exception as e:
-                print(f"Error while processing {filepath}: {e}")
+                root_files_and_dirs.append(filepath)
+                argparse_logger.error(f"Error while checking for permissions on {filepath}: {e}")
         for dir_name in dirs:
             dir_path = ospath.join(root, dir_name)
             try:
@@ -298,7 +299,8 @@ def find_files_and_dirs_owned_by_root(directory):
                 if dir_owner == 0:
                     root_files_and_dirs.append(dir_path)
             except Exception as e:
-                print(f"Error while processing {dir_path}: {e}")
+                root_files_and_dirs.append(dir_path)
+                argparse_logger.error(f"Error while checking for permissions on {dir_path}: {e}")
     return root_files_and_dirs
 
 
