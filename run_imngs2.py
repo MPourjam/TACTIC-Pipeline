@@ -60,6 +60,12 @@ def handle_system_signals(signum, frame):
     elif signum == 9:
         PREP_LOG.warning(f"SIGKILL received.")
         sys.exit(137)
+    elif signum == 2:
+        PREP_LOG.warning(f"SIGINT received.")
+        sys.exit(130)
+    elif signum == 1:
+        PREP_LOG.warning(f"SIGHUP received.")
+        sys.exit(129)
     else:
         sys.exit(1)
 
