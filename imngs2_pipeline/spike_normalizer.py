@@ -100,7 +100,16 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
     otu_table = pd.read_csv(otu_table_path, delimiter="\t", index_col=0)
 
     spike_norm_invalid_samples = [sample_id for sample_id, values in samples.items() if values[3] not in {SpikeNormValidity.PS}]
-    if len(observed_amounts) == 0 or len(observed_counts) == 0 or any(spike_norm_invalid_samples):
+    all_samples_not_spiked = all([values[3] == SpikeNormValidity.NS for values in samples.values()])
+
+    if all_samples_not_spiked:
+        # delete "Spike" from norm_methods set if all samples are not spiked
+        NORM_LOG.info(
+            f"Normalization method 'Spike' is not applicable."
+            " No spiked samples was found.")
+        norm_methods.discard("Spike")
+
+    elif len(observed_amounts) == 0 or len(observed_counts) == 0 or any(spike_norm_invalid_samples):
         # delete "Spike" from norm_methods set if amount and count are not inferralbe from the rest of entries
         NORM_LOG.info(
             f"Normalization method 'Spike' is not applicable."
