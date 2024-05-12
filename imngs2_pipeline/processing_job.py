@@ -16,6 +16,7 @@ import shutil
 import glob
 import logging
 import zipfile
+import math
 
 
 BIN_DIR = "/base/binaries/"
@@ -798,7 +799,7 @@ def main_processing(
         reverse_file: str,
         input_id: str,
         args_file_path: str = "",
-        spike_amount: int = 0,
+        spike_amount: float = 0.0,
         usearch_11_bin: str = USEARCH_11_BIN):
     global PREPPROC_LOG, USEARCH_11_BIN
     # usearch_11_bin must be a global variable and pointing to a file
@@ -856,6 +857,10 @@ def main_processing(
             pko = TaskPickle(pk_file)
         chdir(input_dir)
         PREPPROC_LOG.info("# Spike Removal: Started")
+        # spike_amount should not be negative
+        if not (math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0):
+            spike_amount = 0.0
+            PREPPROC_LOG.warning("Negative value for spike_amount replaced with default value (0.0)")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
         PREPPROC_LOG.info('# FastQC: Started')

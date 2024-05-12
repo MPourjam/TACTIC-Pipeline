@@ -4,6 +4,7 @@ import signal
 import argparse
 import atexit
 import shutil
+import math
 import sys
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
@@ -472,8 +473,11 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
             try:
                 amount = str(fields[index_of_amounts_col]).strip()
                 # Check if the float value is in german format and if change the format to english
-                amount = amount.replace(",", ".")
-                hypo_fields[2] = str(float(amount))
+                amount_f = float(amount.replace(",", "."))
+                if math.isnan(amount_f) or amount_f < 0.0:
+                    PREP_LOG.warning("Negative and NaN value for spike_amount replaced with default value (0.0)")
+                    amount_f = 0.0
+                hypo_fields[2] = str(amount_f)
             except Exception:
                 raise ValueError(f"Could not parse spike amount from mapping file. Line: {line}\n"
                                  f" Check the mapping file format. Columns should be"
