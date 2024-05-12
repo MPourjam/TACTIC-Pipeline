@@ -217,7 +217,7 @@ def calc_spikes(*fastq_files, spike_amount: float = 0.0):
     fastqs_abs_paths = [ospath.abspath(f) for f in fastq_names if ospath.isfile(f)]
     # Changing spike_amount to float
     spike_amount = float(spike_amount)
-    if math.isclose(spike_amount, 0.0, abs_tol=1e-5):
+    if math.isclose(spike_amount, 0.0, abs_tol=1e-5) or math.isnan(spike_amount) or spike_amount < 0.0:
         f = fastqs_abs_paths[0]
         with open(f, 'r') as fqfile:
             line_count = 0
