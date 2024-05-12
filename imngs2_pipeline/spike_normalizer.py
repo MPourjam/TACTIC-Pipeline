@@ -63,7 +63,10 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
                     NORM_LOG.warning(f"Could not parse spike reads for sample {sample_id}. Setting to 0.")
                     spike_reads = 0
                 try:
-                    original_total_weight_in_g = float(fields[2])
+                    original_total_weight_in_g = float(str(fields[2]).strip())
+                    if math.isclose(original_total_weight_in_g, 0.0, abs_tol=1e-5) or original_total_weight_in_g < 0.0:
+                        NORM_LOG.warning("Negative and 0.0 values for sample weight gets coerced to NaN.")
+                        raise ValueError
                 except ValueError:
                     original_total_weight_in_g = float("nan")
                 try:
@@ -133,7 +136,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
                     # Interpolation of missing values for weight and amount
                     if math.isnan(amount):
                         amount = statistics.median(observed_amounts)
-                    if math.isnan(weight) or math.isclose(weight, 0, abs_tol=1e-5):
+                    if math.isnan(weight) or math.isclose(weight, 0, abs_tol=1e-5) or weight < 0.0:
                             if len(observed_weights) == 0:
                                 weight = 1  # fallback to 1
                             else:
