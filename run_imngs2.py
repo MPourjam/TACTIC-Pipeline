@@ -918,7 +918,7 @@ def run_imngs2(
             missed_samples = [sam_dir for sam_dir in samples_dirs if sam_dir not in reduced_samples_dirs]
             if len(missed_samples) == len(samples_dirs):
                 PREP_LOG.error("All samples are failed to be processed. Exiting...")
-                exit_code = 165
+                exit_code = 168
                 sys.exit(exit_code)
             elif missed_samples:
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis.")
