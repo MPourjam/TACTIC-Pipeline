@@ -933,6 +933,9 @@ def run_imngs2(
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
             sys.exit(165)
+        except proc_helper.ArgsetException as argset_exc:
+            PREP_LOG.error(f"Analysis stopped: {argset_exc}")
+            sys.exit(164)
         else:
             PREP_LOG.info(f"Analysis done. Results directory: {str(analysis_dir.relative_to(INPUT_DIR))}")
     else:
