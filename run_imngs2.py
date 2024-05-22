@@ -195,6 +195,7 @@ def update_spike_amount(given_spike_amount, spike_stat_file: Path):  # it return
                 existing_spike_amount = spike_info[3]
                 second_part = spike_info[4:]
                 if str(existing_spike_amount).lower() != str(given_spike_amount).lower():
+                    PREP_LOG.info(f"Updating spike amount from {existing_spike_amount} to {given_spike_amount}")
                     new_line = "\t".join(first_part + [given_spike_amount] + second_part)
                     new_file.write(new_line + "\n")
                 else:
