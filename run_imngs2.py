@@ -709,6 +709,12 @@ def run_preprocessing(
             shutil.rmtree(str(sample_dir.parent))
         sample_dir = None
         sys.exit(160)
+    except proc_helper.ArgsetException as argset_exc:
+        PREP_LOG.error(f"Failed to run preprocessing for {sample_id}. {argset_exc}")
+        # If parent of sample_dir is empty then remove it
+        if not list(sample_dir.parent.iterdir()):
+            shutil.rmtree(str(sample_dir.parent))
+        sample_dir = None
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
@@ -728,6 +734,10 @@ def parallel_preprocessing(args: tuple, process_queue: Queue, res_dict_key: str)
     try:
         sample_dir = run_preprocessing(*args)
         process_queue.put((res_dict_key, sample_dir))
+    except proc_helper.ArgsetException as argset_exc:
+        process_queue.put((res_dict_key, None))
+        PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {argset_exc}")
+        sys.exit(164)
     except Exception as exc:
         process_queue.put((res_dict_key, None))
         PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {exc}")
