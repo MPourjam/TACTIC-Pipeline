@@ -56,16 +56,16 @@ def handle_system_signals(signum, frame):
     # log the event
     # if SIGTERM then exit with 143 (128 + 15) and if SIGKILL then exit with 137 (128 + 9)
     if signum == 15:
-        PREP_LOG.warning(f"SIGTERM received.")
+        PREP_LOG.warning("SIGTERM received.")
         sys.exit(143)
     elif signum == 9:
-        PREP_LOG.warning(f"SIGKILL received.")
+        PREP_LOG.warning("SIGKILL received.")
         sys.exit(137)
     elif signum == 2:
-        PREP_LOG.warning(f"SIGINT received.")
+        PREP_LOG.warning("SIGINT received.")
         sys.exit(130)
     elif signum == 1:
-        PREP_LOG.warning(f"SIGHUP received.")
+        PREP_LOG.warning("SIGHUP received.")
         sys.exit(129)
     else:
         sys.exit(1)
@@ -171,7 +171,40 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     return all(logic_test)
 
 
-def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -> Tuple[str, bool]:
+def update_spike_amount(given_spike_amount, spike_stat_file: Path):  # it returns nothing
+    """
+    Reads the spike_stat file of each processed sample and if the given spike amount is different it updates the spike amount.
+    NOTE: spike removal always gets run on samples so that we only need to update the spike amount in the spike_stat file.
+    """
+    spike_stat_file = Path(PurePath(spike_stat_file)).absolute() if isinstance(spike_stat_file, str) or isinstance(spike_stat_file, Path) else ""
+    if not spike_stat_file:
+        return False
+    new_spike_stat_file = spike_stat_file.parent.joinpath(f"{proc_helper.generate_timestamp()}_{SPIKE_STAT_FILE_NAME}")
+    if not spike_stat_file.is_file():
+        return False
+    given_spike_amount = str(given_spike_amount)
+    with open(spike_stat_file, 'r') as orig_file, open(new_spike_stat_file, 'w') as new_file:
+        lines = orig_file.readlines()
+        for line in lines:
+            if line.startswith("#SampleID"):
+                new_file.write(line)
+                continue
+            spike_info = line.strip().split("\t")
+            if len(spike_info) >= 5:
+                first_part = spike_info[:3]
+                existing_spike_amount = spike_info[3]
+                second_part = spike_info[4:]
+                if str(existing_spike_amount).lower() != str(given_spike_amount).lower():
+                    PREP_LOG.info(f"Updating spike amount from {existing_spike_amount} to {given_spike_amount}")
+                    new_line = "\t".join(first_part + [given_spike_amount] + second_part)
+                    new_file.write(new_line + "\n")
+                else:
+                    new_file.write(line)
+    # replace the old spike_stat file with the new one
+    shutil.move(new_spike_stat_file, spike_stat_file)
+
+
+def should_trigger_processing(sample_base_path: Path, given_argset_file: Path, given_spike_amount: str) -> Tuple[str, bool]:
     this_out = [None, True]
     given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
     sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
@@ -194,6 +227,8 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path) -
             continue
         is_already_processed = is_processed_dir_healthy(argfile.parent) and not is_argset_different(argfile, given_argset_file)
         if is_already_processed:
+            # if the sample is processed and the spike amount is different we only update the spike amount
+            update_spike_amount(given_spike_amount, argfile.parent.joinpath(SPIKE_STAT_FILE_NAME))
             this_out[0] = str(argfile.parent.absolute())
             this_out[1] = False
 
@@ -625,7 +660,7 @@ def run_preprocessing(
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         file_full_path = seq_files_t[0]
         base_path_dir = file_full_path.parent.joinpath(sample_id)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
-        sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path)
+        sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount))
         sample_dir = Path(PurePath(sample_dir)) if sample_dir else ""
         if not shall_continue:
             return sample_dir
