@@ -709,6 +709,12 @@ def run_preprocessing(
             shutil.rmtree(str(sample_dir.parent))
         sample_dir = None
         sys.exit(160)
+    except proc_helper.ArgsetException as argset_exc:
+        PREP_LOG.error(f"Failed to run preprocessing for {sample_id}. {argset_exc}")
+        # If parent of sample_dir is empty then remove it
+        if not list(sample_dir.parent.iterdir()):
+            shutil.rmtree(str(sample_dir.parent))
+        sample_dir = None
     except Exception as exc:
         msg = f"{exc}"
         PREP_LOG.error(msg)
@@ -728,6 +734,10 @@ def parallel_preprocessing(args: tuple, process_queue: Queue, res_dict_key: str)
     try:
         sample_dir = run_preprocessing(*args)
         process_queue.put((res_dict_key, sample_dir))
+    except proc_helper.ArgsetException as argset_exc:
+        process_queue.put((res_dict_key, None))
+        PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {argset_exc}")
+        sys.exit(164)
     except Exception as exc:
         process_queue.put((res_dict_key, None))
         PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {exc}")
@@ -735,7 +745,7 @@ def parallel_preprocessing(args: tuple, process_queue: Queue, res_dict_key: str)
     return
 
 
-def combine_spike_stats_file(samples_dirs: list, combined_spike_stat: str):
+def combine_spike_stats_file(samples_dirs: list, combined_spike_stat: str) -> Tuple[list, str]:
     """
     It combines samples' spike_stat_file to one file to be input to spike normalization step
     """
@@ -887,11 +897,12 @@ def run_imngs2(
             PREP_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True
             samples_dirs = []
-            sys.exit(164)
+            sys.exit(165)
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
         samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
     # Runing analysis
+    exit_code = 1  # general error
     if not skip_analysis and bool(samples_dirs):
         try:
             if not bool(samples_dirs):
@@ -905,24 +916,39 @@ def run_imngs2(
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
             reduced_samples_dirs, _ = combine_spike_stats_file(samples_dirs, combined_spike_stat=combined_spike_stats_path)
             missed_samples = [sam_dir for sam_dir in samples_dirs if sam_dir not in reduced_samples_dirs]
-            if missed_samples:
-                PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis. Please Check the file.")
+            if len(missed_samples) == len(samples_dirs):
+                PREP_LOG.error("All samples are failed to be processed. Exiting...")
+                exit_code = 168
+                sys.exit(exit_code)
+            elif missed_samples:
+                PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
-            zotu_file_path, sotu_file_path = main_analysis(
-                analysis_dir=analysis_dir,
-                spike_stat_file=combined_spike_stats_path,
-                fastqs_dir=str(FASTQ_DIR),
-                args_file_path=args_yml_file,
-                dbs_loc=dbs_dir,
-                threads=POOL_SIZE,
-                usearch_11_bin=USEARCH_11_BIN,
-            )
+                exit_code = 167
+            else:
+                PREP_LOG.info("All samples are processed and combined for spike normalization.")
+                exit_code = 0
+            try:
+                zotu_file_path, sotu_file_path = main_analysis(
+                    analysis_dir=analysis_dir,
+                    spike_stat_file=combined_spike_stats_path,
+                    fastqs_dir=str(FASTQ_DIR),
+                    args_file_path=args_yml_file,
+                    dbs_loc=dbs_dir,
+                    threads=POOL_SIZE,
+                    usearch_11_bin=USEARCH_11_BIN,
+                )
+            except Exception as exc:
+                exit_code = 166
+                raise exc
         except MemoryError as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
             sys.exit(160)
+        except proc_helper.ArgsetException as argset_exc:
+            PREP_LOG.error(f"Analysis stopped: {argset_exc}")
+            sys.exit(164)
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
-            sys.exit(165)
+            sys.exit(exit_code)
         else:
             PREP_LOG.info(f"Analysis done. Results directory: {str(analysis_dir.relative_to(INPUT_DIR))}")
     else:
@@ -936,7 +962,7 @@ def run_imngs2(
     # change mode of files
     correct_created_files_modes()
 
-    sys.exit(0)
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

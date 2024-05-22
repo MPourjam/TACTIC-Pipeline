@@ -117,6 +117,10 @@ reve_file_indicators = [
 paired_files_indicators = list(zip(forw_file_indicators, reve_file_indicators))
 
 
+class ArgsetException(Exception):
+    pass
+
+
 def calc_covered_region(start: int, end: int, regions_dict: dict = SixteenS_regions_dict):
     # Calculating Regions
     regions_coved = "NA"
@@ -917,7 +921,7 @@ class ArgsParserUtil(ArgsParserDunderUtil):
         Initializing
         """
         if not isinstance(args_d, dict):
-            raise ValueError(f"args_d must be a non-empty dictionary. {str(type(args_d))} is given.")
+            raise ArgsetException(f"args_d must be a non-empty dictionary. {str(type(args_d))} is given.")
         for key, val in self.default_args.items():
             setattr(self, key, val)
             # addTaxUpdating the argument value if it exists in args_d
@@ -968,6 +972,7 @@ class ArgsParserUtil(ArgsParserDunderUtil):
                 yml_args_d = yaml.safe_load(yaml_stream)
             except yaml.YAMLError as e:
                 argparse_logger.warning(e)
+                raise ArgsetException(f"Error while parsing the yaml file: {yaml_path}")
 
         return yml_args_d
 
@@ -1157,6 +1162,7 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             config_dict.update(yml_args_dict)
         except Exception as e:
             argparse_logger.warning(e)
+            raise ArgsetException("Error in updating the config_dict with yaml file.")
 
         # Updating attributes of class instance
         self.merge_pairs = MergePairsArgs(config_dict)
