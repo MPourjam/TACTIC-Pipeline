@@ -14,7 +14,7 @@ global TIC_LOG
 TIC_LOG = gimmelogger(
     logger_name="run_imngs2.analysis.TIC",
     # log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
-    only_file=False
+    only_file=True
 )
 
 
@@ -65,10 +65,10 @@ def vsearch_clustering(curr_fasta, similarity_limit):
     # cmd_0 = USEARCH_BIN_CLUST + curr_fasta + ' -id ' + similarity_limit + ' -strand both'
     # cmd_1 = ' -top_hits_only -centroids ' + centroids_file + ' -uc ' + uc_file + VSEARCH_TAIL
     # TIC_LOG.info(cmd_0 + cmd_1)
-    # system(cmd_0 + cmd_1)
+    # systm(cmd_0 + cmd_1)
     system_sub(
         [
-            USEARCH_BIN_CLUST,
+            *str(USEARCH_BIN_CLUST).strip().split(),
             curr_fasta,
             '-id',
             similarity_limit,
@@ -235,7 +235,7 @@ def vsearch_blast(curr_fasta, similarity_limit):
         # system(cmd_0 + cmd_1 + cmd_2)
         system_sub(
             [
-                USEARCH_BIN_BLAST,
+                *str(USEARCH_BIN_BLAST).strip().split(),
                 curr_fasta,
                 '-id',
                 similarity_limit,
