@@ -2,6 +2,15 @@ import argparse
 from tqdm import tqdm
 from os import mkdir
 from os import path as ospath
+from processing_helper import gimmelogger
+
+
+global TIC_LOG
+TIC_LOG = gimmelogger(
+    logger_name="run_imngs2.analysis.TIC",
+    # log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
+    only_file=True
+)
 
 
 def read_file(filename):
@@ -96,7 +105,7 @@ def split_based_on_taxonomy(data_dir: str, input_taxed_zotu: str):
     try:
         mkdir(MAIN_DIR)
     except BaseException:
-        print(MAIN_DIR + ' already present please select other directory or move the present directory to another location')
+        TIC_LOG.error(MAIN_DIR + ' already present please select other directory or move the present directory to another location')
         exit()
     # Correcting taxonomy for special characters
     tax_correct_tr_dict = {
@@ -109,6 +118,7 @@ def split_based_on_taxonomy(data_dir: str, input_taxed_zotu: str):
         ord(" "): '',
     }
     input_contents = read_file(input_file)
+    TIC_LOG.info(f"Splitting the input file based on taxonomy")
     for i in tqdm(range(0, len(input_contents), 2)):
         header = input_contents[i]
         sequence = input_contents[i+1]

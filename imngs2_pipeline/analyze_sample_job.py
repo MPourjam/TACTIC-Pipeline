@@ -5,7 +5,9 @@ from os import chdir
 from multiprocessing import cpu_count
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
-from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter, loud_subprocess
+from .TIC.create_fasta_and_table import main as create_fasta_and_table_main
+from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
+from .processing_helper import system_sub as sys_sub
 from .spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
 
@@ -31,25 +33,8 @@ global POOL_SIZE
 POOL_SIZE = max_pool if max_pool > 0 else 1
 
 
-def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False, capture_output: bool = False, quiet: bool = False):
-    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
-    # logging
-    if force_log:
-        msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        ANA_LOG.info(msg)
-    # catch also MemoryError
-    if run_output.returncode == 137:  # Process killed due to memory limit
-        err_msg = f"Memory Error: Command {' '.join(cmd_list)} exceeded memory limit."
-        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
-        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
-        raise MemoryError(err_msg)
-    elif run_output.returncode != 0 and not quiet:
-        raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    elif run_output.returncode != 0 and quiet:
-        ANA_LOG.warning(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    elif run_output.returncode == 0 and run_output.stderr and not quiet:
-        ANA_LOG.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    return run_output
+def system_sub(*args, **kwargs):
+    return sys_sub(*args, logger_obj=ANA_LOG, **kwargs)
 
 
 def read_file(filename):
@@ -1176,8 +1161,6 @@ def main(
     chdir(ANALYSIS_DIR)
     ANA_LOG.info("# TIC: Creating S/ZOTU Tables")
     main_create_args = [
-        "python3.7",
-        "/base/imngs2_pipeline/TIC/create_fasta_and_table.py",  # 0
         str(TIC_Output_DIR),  # OUTPUT_FOLDER
         ZOTUs_fasta_name,  # OUTPUT_ASV_FASTA_WITH_TAXONOMY
         ZOTUs_table_name,  # OUTPUT_ASV_TABLE
@@ -1195,7 +1178,8 @@ def main(
         str(ARGS_CLS.create_table.sample_wise_correction)  #
     ]
     try:
-        system_sub(main_create_args, capture_output=False, shell=False)
+        # print(main_create_args)
+        create_fasta_and_table_main(*main_create_args)
     except Exception as exc:
         raise ValueError(f"Table: {str(exc)}")
     chdir(ANALYSIS_DIR)

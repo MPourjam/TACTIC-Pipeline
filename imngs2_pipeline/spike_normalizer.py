@@ -5,14 +5,56 @@ import math
 import statistics
 import pandas as pd
 from enum import Enum
+import inspect
+import logging
 # from imngs2_pipeline.processing_helper import gimmelogger
-from .processing_helper import gimmelogger
-
 from sys import version_info
 if version_info[0] < 3:
-    from pathlib2 import Path  # pip2 install pathlib2
+    from pathlib2 import Path, PurePath  # pip2 install pathlib2
 else:
-    from pathlib import Path
+    from pathlib import Path, PurePath
+
+
+class SpikeNormValidity(str, Enum):
+    NS = "NotSpiked"
+    NA = "NotApplicable"
+    PC = "PossibleContamination"
+    PS = "PossiblySpiked"
+
+
+def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = True):
+    # finding caller file name and setting logger file path
+    caller_frame = inspect.currentframe().f_back
+    logger_name = Path(PurePath(caller_frame.f_code.co_filename)).stem if not logger_name else str(logger_name)
+    if not log_file:
+        log_file_path = Path(PurePath(inspect.getframeinfo(caller_frame).filename)).parent.joinpath(f"{logger_name}_log.txt")
+    else:
+        log_file_path = Path(PurePath(log_file)).absolute()
+
+    # Setting logger formatter with line number of source of log
+    formatter = logging.Formatter('%(asctime)s - %(name)s:%(filename)s:%(lineno)d - %(levelname)s - %(message)s')
+
+    logger = logging.getLogger(logger_name)
+    # set the logging level
+    logger.setLevel(logging.DEBUG)
+    # create a console and file handler
+    if not only_file:
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+        # create a formatter
+        # set the formatter to the console handler
+        ch.setFormatter(formatter)
+        # add the console handler to the logger
+        logger.addHandler(ch)
+    # Logger
+    if not log_file_path.parent.is_dir():
+        log_file_path.parent.mkdir(parents=True, exist_ok=True)
+    fh = logging.FileHandler(log_file_path, mode='w')
+    fh.setLevel(logging.INFO)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+
+    return logger
 
 
 global NORM_LOG
@@ -21,13 +63,6 @@ NORM_LOG = gimmelogger(
     log_file=Path.cwd().joinpath("Analysis_log.txt"),
     only_file=True
 )
-
-
-class SpikeNormValidity(str, Enum):
-    NS = "NotSpiked"
-    NA = "NotApplicable"
-    PC = "PossibleContamination"
-    PS = "PossiblySpiked"
 
 
 def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_methods: set = {"Spike", "SampleMinCount"}) -> set:
@@ -49,7 +84,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
     with open(spikes_stats_path, 'r') as stats_h:
         for line in stats_h:
             if line.startswith("#"):
-                assert('#SampleID\tSpikeReads\tspikes_total_weight_in_g\tspike_amount' in line.strip())
+                assert '#SampleID\tSpikeReads\tspikes_total_weight_in_g\tspike_amount' in line.strip()
             elif line == "\n":
                 continue
             else:
@@ -108,14 +143,14 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
     if all_samples_not_spiked:
         # delete "Spike" from norm_methods set if all samples are not spiked
         NORM_LOG.info(
-            f"Normalization method 'Spike' is not applicable."
+            "Normalization method 'Spike' is not applicable."
             " No spiked sample was found.")
         norm_methods.discard("Spike")
 
     elif len(observed_amounts) == 0 or len(observed_counts) == 0 or any(spike_norm_invalid_samples):
         # delete "Spike" from norm_methods set if amount and count are not inferralbe from the rest of entries
         NORM_LOG.info(
-            f"Normalization method 'Spike' is not applicable."
+            "Normalization method 'Spike' is not applicable."
             " Some of entires in spike stats file are not valid"
             " for spike normalization. Possible mixture of spiked and non-spiked samples!")
         norm_methods.discard("Spike")
@@ -137,10 +172,10 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
                     if math.isnan(amount):
                         amount = statistics.median(observed_amounts)
                     if math.isnan(weight) or math.isclose(weight, 0, abs_tol=1e-5) or weight < 0.0:
-                            if len(observed_weights) == 0:
-                                weight = 1  # fallback to 1
-                            else:
-                                weight = statistics.median(observed_weights)  # fallback to median weight
+                        if len(observed_weights) == 0:
+                            weight = 1  # fallback to 1
+                        else:
+                            weight = statistics.median(observed_weights)  # fallback to median weight
                     molarity_factor = 600 / (amount * 100)
                     spike_count_factor = thismean / count
                     # NOTE:TODO Having molarity factor and taking 600 Microliter of all samples
@@ -177,10 +212,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("otu_table_path", help="Path of original OTU Table. Output will be written to same folder", type=str)
     parser.add_argument("spikes_stats_path", help="Path to spike stats file.", type=str)
+    parser.add_argument("normalization_method", help="Spike or SampleMinCount or All", type=str)
     args = parser.parse_args()
 
     otu_table_path = args.otu_table_path
     spikes_stats_path = args.spikes_stats_path
+    norm_method = {args.normalization_method} if args.normalization_method != "All" else {"Spike", "SampleMinCount"}
 
     # call the function
-    normalized_otu_path = normalize_otu_table(otu_table_path, spikes_stats_path)
+    normalized_otu_path = normalize_otu_table(otu_table_path, spikes_stats_path, norm_method)
