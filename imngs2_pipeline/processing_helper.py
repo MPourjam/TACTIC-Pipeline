@@ -183,7 +183,7 @@ def system_sub(cmd_args_list: list,
                shell: bool = False,
                capture_output: bool = False,
                quiet: bool = False,
-               logger_obj: logging.Logger = LogPrint()):
+               logger_obj: logging.Logger = LogPrint("print_logger")):
     run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
 
     # logging

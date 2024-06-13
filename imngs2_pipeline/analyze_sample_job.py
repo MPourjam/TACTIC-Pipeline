@@ -5,6 +5,7 @@ from os import chdir
 from multiprocessing import cpu_count
 from .TIC.complex_TIC import main_complex_TIC
 from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
+from .TIC.create_fasta_and_table import main as create_fasta_and_table_main
 from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
 from .processing_helper import system_sub as sys_sub
 from .spike_normalizer import normalize_otu_table
@@ -1160,8 +1161,6 @@ def main(
     chdir(ANALYSIS_DIR)
     ANA_LOG.info("# TIC: Creating S/ZOTU Tables")
     main_create_args = [
-        "python3.7",
-        "/base/imngs2_pipeline/TIC/create_fasta_and_table.py",  # 0
         str(TIC_Output_DIR),  # OUTPUT_FOLDER
         ZOTUs_fasta_name,  # OUTPUT_ASV_FASTA_WITH_TAXONOMY
         ZOTUs_table_name,  # OUTPUT_ASV_TABLE
@@ -1179,7 +1178,8 @@ def main(
         str(ARGS_CLS.create_table.sample_wise_correction)  #
     ]
     try:
-        system_sub(main_create_args, capture_output=False, shell=False)
+        # print(main_create_args)
+        create_fasta_and_table_main(*main_create_args)
     except Exception as exc:
         raise ValueError(f"Table: {str(exc)}")
     chdir(ANALYSIS_DIR)
