@@ -1,11 +1,25 @@
 import argparse
-from os import chdir, system, mkdir, remove
+from os import chdir, mkdir, remove
 from os.path import isfile, getsize, isdir
 from shutil import copyfile
 from tqdm import tqdm
 import multiprocessing
 from glob import glob
 from random import shuffle
+from processing_helper import gimmelogger
+from processing_helper import system_sub as sys_sub
+
+
+global TIC_LOG
+TIC_LOG = gimmelogger(
+    logger_name="run_imngs2.analysis.TIC",
+    # log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
+    only_file=False
+)
+
+
+def system_sub(*args, **kwargs):
+    return sys_sub(*args, logger_obj=TIC_LOG, **kwargs)
 
 
 VSEARCH_TAIL = ' 1>/dev/null 2>/dev/null'
@@ -48,10 +62,25 @@ def vsearch_clustering(curr_fasta, similarity_limit):
     start_of_curr_fasta = curr_fasta.split('.')[0]
     centroids_file = start_of_curr_fasta + '.centroids.fasta'
     uc_file = start_of_curr_fasta + '.uc'
-    cmd_0 = USEARCH_BIN_CLUST + curr_fasta + ' -id ' + similarity_limit + ' -strand both'
-    cmd_1 = ' -top_hits_only -centroids ' + centroids_file + ' -uc ' + uc_file + VSEARCH_TAIL
-    # print(cmd_0 + cmd_1)
-    system(cmd_0 + cmd_1)
+    # cmd_0 = USEARCH_BIN_CLUST + curr_fasta + ' -id ' + similarity_limit + ' -strand both'
+    # cmd_1 = ' -top_hits_only -centroids ' + centroids_file + ' -uc ' + uc_file + VSEARCH_TAIL
+    # TIC_LOG.info(cmd_0 + cmd_1)
+    # system(cmd_0 + cmd_1)
+    system_sub(
+        [
+            USEARCH_BIN_CLUST,
+            curr_fasta,
+            '-id',
+            similarity_limit,
+            '-strand',
+            'both',
+            '-top_hits_only',
+            '-centroids',
+            centroids_file,
+            '-uc',
+            uc_file
+        ]
+    )
 
 
 def my_mkdir(curr_dir):
@@ -124,7 +153,7 @@ def update_species_centroids(curr_fasta):
         updated_fasta_file.write('>' + new_header + ';tax=' + new_taxonomy)
         updated_fasta_file.write(centroid_sequence + '\n')
         updated_fasta_file.close()
-        # print(MAIN_DIR + '/' + updated_fasta_file_name)
+        # TIC_LOG.info(MAIN_DIR + '/' + updated_fasta_file_name)
     remove(centroids_file)
 
 
@@ -148,7 +177,7 @@ def get_curr_level_fastas(num_underscores):
     for curr_fasta in all_fastas:
         if (curr_fasta.count('_') == num_underscores) and ('base' not in curr_fasta):
             curr_level_fastas.append(curr_fasta)
-    # print(curr_level_fastas)
+    # TIC_LOG.info(curr_level_fastas)
     return(curr_level_fastas)
 
 
@@ -158,7 +187,10 @@ def threaded_gather_species(all_species_centroids, thread_number, curr_level, su
         asked_taxonomy = curr_centroid_taxonomy.split('_')[:curr_level]
         target_name_of_level = '_'.join(asked_taxonomy)
         gathered_file_name = MAIN_DIR + '/' + target_name_of_level + suffix + '.thread.' + str(thread_number)
-        system('cat ' + curr_centroid + ' >> ' + gathered_file_name)
+        # system('cat ' + curr_centroid + ' >> ' + gathered_file_name)
+        with open(gathered_file_name, 'a') as f:
+            with open(curr_centroid, 'r') as f_centroid:
+                f.write(f_centroid.read())
 
 
 def gather_species(curr_level, suffix):
@@ -178,7 +210,10 @@ def gather_species(curr_level, suffix):
     threaded_fastas = glob('*' + suffix + '.thread.*')
     for threaded_fasta in threaded_fastas:
         final_name = threaded_fasta.split('.thread')[0]
-        system('cat ' + threaded_fasta + ' >> ' + final_name)
+        # system('cat ' + threaded_fasta + ' >> ' + final_name)
+        with open(final_name, 'a') as f:
+            with open(threaded_fasta, 'r') as f_threaded:
+                f.write(f_threaded.read())
         remove(threaded_fasta)
 
 
@@ -194,10 +229,30 @@ def vsearch_blast(curr_fasta, similarity_limit):
     if not isfile(targets_file):
         copyfile(curr_fasta, not_matched_file)
     else:
-        cmd_0 = USEARCH_BIN_BLAST + curr_fasta + ' -id ' + similarity_limit + ' -db ' + targets_file
-        cmd_1 = ' -dbmask none -qmask none -strand both -blast6out ' + b6_file
-        cmd_2 = ' -notmatched ' + not_matched_file + VSEARCH_TAIL
-        system(cmd_0 + cmd_1 + cmd_2)
+        # cmd_0 = USEARCH_BIN_BLAST + curr_fasta + ' -id ' + similarity_limit + ' -db ' + targets_file
+        # cmd_1 = ' -dbmask none -qmask none -strand both -blast6out ' + b6_file
+        # cmd_2 = ' -notmatched ' + not_matched_file + VSEARCH_TAIL
+        # system(cmd_0 + cmd_1 + cmd_2)
+        system_sub(
+            [
+                USEARCH_BIN_BLAST,
+                curr_fasta,
+                '-id',
+                similarity_limit,
+                '-db',
+                targets_file,
+                '-dbmask',
+                'none',
+                '-qmask',
+                'none',
+                '-strand',
+                'both',
+                '-blast6out',
+                b6_file,
+                '-notmatched',
+                not_matched_file
+            ]
+        )
         remove(targets_file)
     remove(curr_fasta)
 
@@ -215,7 +270,7 @@ def handle_blast_matches_species(curr_fasta):
     else:
         b6_contents = read_file(b6_file)
         for line in b6_contents:
-            # print(line)
+            # TIC_LOG.info(line)
             query = line.split('\t')[0]
             target = line.split('\t')[1]
             target_taxonomy = target.split('tax=')[1]
@@ -266,13 +321,16 @@ def threaded_gather_known_genera(all_species_centroids, thread_number, cut_limit
         if curr_centroid_taxonomy.count('_') == 6:
             gathered_file_name = MAIN_DIR + '/' + '_'.join(curr_centroid_taxonomy.split('_')[:-cut_limit])
             gathered_file_name += '.base.fasta.thread.' + str(thread_number)
-            system('cat ' + curr_centroid + ' >> ' + gathered_file_name)
+            # system('cat ' + curr_centroid + ' >> ' + gathered_file_name)
+            with open(gathered_file_name, 'a') as f:
+                with open(curr_centroid, 'r') as f_centroid:
+                    f.write(f_centroid.read())
 
 
 def gather_known_genera(cut_limit):
     chdir(MAIN_DIR + '/species_centroids')
     all_species_centroids = glob('**/*.fasta', recursive=True)
-    # print(all_species_centroids)
+    # TIC_LOG.info(all_species_centroids)
     shuffle(all_species_centroids)
     splitted_species_centroids_list = split_list(all_species_centroids, int(THREADS))
     processes = [multiprocessing.Process(target=threaded_gather_known_genera,
@@ -287,7 +345,11 @@ def gather_known_genera(cut_limit):
     threaded_fastas = glob('*.base.fasta.thread.*')
     for threaded_fasta in threaded_fastas:
         final_name = threaded_fasta.split('.thread')[0]
-        system('cat ' + threaded_fasta + ' >> ' + final_name)
+        # system('cat ' + threaded_fasta + ' >> ' + final_name)
+        with open(final_name, 'a') as f:
+            with open(threaded_fasta, 'r') as f_threaded:
+                f.write(f_threaded.read())
+
         remove(threaded_fasta)
 
 
@@ -297,7 +359,10 @@ def threaded_gather_unknown_genera(all_species_centroids, thread_number, undersc
         if curr_centroid_taxonomy.count('_') == underscores:
             gathered_file_name = '_'.join(curr_centroid_taxonomy.split('_')[:-cut_limit]) + '.genera_queries.fasta'
             gathered_file_name += '.thread.' + str(thread_number)
-            system('cat ' + curr_centroid + ' >> ' + MAIN_DIR + '/' + gathered_file_name)
+            # system('cat ' + curr_centroid + ' >> ' + MAIN_DIR + '/' + gathered_file_name)
+            with open(MAIN_DIR + '/' + gathered_file_name, 'a') as f:
+                with open(curr_centroid, 'r') as f_centroid:
+                    f.write(f_centroid.read())
 
 
 def gather_unknown_genera(underscores, cut_limit):
@@ -317,7 +382,10 @@ def gather_unknown_genera(underscores, cut_limit):
     threaded_fastas = glob('*.genera_queries.fasta.thread.*')
     for threaded_fasta in threaded_fastas:
         final_name = threaded_fasta.split('.thread')[0]
-        system('cat ' + threaded_fasta + ' >> ' + final_name)
+        # system('cat ' + threaded_fasta + ' >> ' + final_name)
+        with open(final_name, 'a') as f:
+            with open(threaded_fasta, 'r') as f_threaded:
+                f.write(f_threaded.read())
         remove(threaded_fasta)
 
 
@@ -334,7 +402,7 @@ def handle_blast_matches_genera(curr_fasta):
     else:
         b6_contents = read_file(b6_file)
         for line in b6_contents:
-            # print(line)
+            # TIC_LOG.info(line)
             query = line.split('\t')[0]
             target = line.split('\t')[1]
             target_taxonomy = target.split('tax=')[1]
@@ -342,12 +410,12 @@ def handle_blast_matches_genera(curr_fasta):
             initial_taxonomy = query.split('tax=')[1]
             initial_file_location_stats = MAIN_DIR + '/species_stats/' + '/'.join(initial_taxonomy.split(';')[:-2]) + '/'
             initial_stats_file = initial_file_location_stats + initial_taxonomy.replace(';', '_')[:-1] + '.stats'
-            # print(initial_stats_file)
+            # TIC_LOG.info(initial_stats_file)
             new_taxonomy = ';'.join(initial_taxonomy.split(';')[:-2]) + ';'
             new_taxonomy += found_genus + ';' + initial_taxonomy.split(';')[-2]
             new_stats_file_location_stats = MAIN_DIR + '/species_stats/' + '/'.join(new_taxonomy.split(';')[:-1]) + '/'
             new_stats_file_name = new_stats_file_location_stats + new_taxonomy.replace(';', '_') + '.stats'
-            # print(new_stats_file_name)
+            # TIC_LOG.info(new_stats_file_name)
             if not isfile(initial_stats_file):
                 continue
             old_stats_contents = read_file(initial_stats_file)
@@ -363,8 +431,8 @@ def handle_blast_matches_genera(curr_fasta):
             old_centroids_seqs_dict = fasta2dict(old_centroids_file_name)
             new_centroids_file_name = MAIN_DIR + '/species_centroids/' + '/'.join(new_taxonomy.split(';')[:-1]) + '/'
             new_centroids_file_name += new_taxonomy.replace(';', '_') + '.fasta'
-            # print(old_centroids_file_name)
-            # print(new_centroids_file_name)
+            # TIC_LOG.info(old_centroids_file_name)
+            # TIC_LOG.info(new_centroids_file_name)
             new_centroids_file = open(new_centroids_file_name, 'w+')
             query_sequence_identifier = query.split('tax=')[0]
             new_centroids_file.write('>' + query_sequence_identifier + 'tax=' + new_taxonomy + ';\n')
@@ -446,15 +514,15 @@ def update_genera_centroids():
     # gia ka8e ena apo ta keys tou dictionary, anoi3e to fasta kai kane tin parapanw diadikasia
     # oti exw skeftei san sanity check gia auta to exw perasei
     for key, value in genera_dict.items():
-        # print(key, value)
+        # TIC_LOG.info(key, value)
         curr_GOTU = value
         old_taxonomy = key.split('tax=')[1]
-        # print(old_taxonomy)
+        # TIC_LOG.info(old_taxonomy)
         sequence_identifier = key.split('tax=')[0]
         old_centroid_dir = ';'.join(old_taxonomy.split(';')[:-2]).replace(';', '/') + '/'
         old_fasta_file_name = MAIN_DIR + '/species_centroids/' + old_centroid_dir
         old_fasta_file_name += old_taxonomy.replace(';', '_')[:-1] + '.fasta'
-        # print(old_fasta_file_name)
+        # TIC_LOG.info(old_fasta_file_name)
         new_taxonomy = ';'.join(old_taxonomy.split(';')[:-2]) + ';GOTU' + str(curr_GOTU)
         new_taxonomy += ';' + old_taxonomy.split(';')[-2] + ';\n'
         new_fasta_file_name = '_'.join(old_taxonomy.split(';')[:-2]) + '_GOTU' + str(curr_GOTU)
@@ -462,9 +530,9 @@ def update_genera_centroids():
         old_seqs_dict = fasta2dict(old_fasta_file_name)
         new_centroid_location = '_'.join(old_taxonomy.split(';')[:-2]) + '_GOTU' + str(curr_GOTU)
         new_centroid_dir = create_directory(new_centroid_location, 'species_centroids')
-        # print(new_centroid_dir)
+        # TIC_LOG.info(new_centroid_dir)
         new_fasta_file = open(MAIN_DIR + '/' + new_centroid_dir + new_fasta_file_name, 'w+')
-        # print(MAIN_DIR + '/' + new_centroid_dir + new_fasta_file_name)
+        # TIC_LOG.info(MAIN_DIR + '/' + new_centroid_dir + new_fasta_file_name)
         new_fasta_file.write('>' + sequence_identifier + 'tax=' + new_taxonomy)
         new_fasta_file.write(old_seqs_dict[key] + '\n')
         new_fasta_file.close()
@@ -486,7 +554,7 @@ def clean_centroids():
 def search_unknown_genera_in_known_genera():
     chdir(MAIN_DIR)
     all_genera_queries_fastas = glob('*.genera_queries.fasta')
-    # print(all_genera_queries_fastas)
+    # TIC_LOG.info(all_genera_queries_fastas)
     for curr_query_genera in all_genera_queries_fastas:
         vsearch_blast(curr_query_genera, genera_similarity)
         handle_blast_matches_genera(curr_query_genera)
@@ -510,7 +578,7 @@ def handle_blast_matches_family(curr_fasta):
     else:
         b6_contents = read_file(b6_file)
         for line in b6_contents:
-            # print(line)
+            # TIC_LOG.info(line)
             query = line.split('\t')[0]
             target = line.split('\t')[1]
             target_taxonomy = target.split('tax=')[1]
@@ -519,12 +587,12 @@ def handle_blast_matches_family(curr_fasta):
             initial_taxonomy = query.split('tax=')[1]
             initial_dir = '/species_stats/' + '/'.join(initial_taxonomy.split(';')[:-2]) + '/'
             initial_stats_file = MAIN_DIR + initial_dir + initial_taxonomy.replace(';', '_')[:-1] + '.stats'
-            # print(initial_stats_file)
+            # TIC_LOG.info(initial_stats_file)
             new_taxonomy = ';'.join(initial_taxonomy.split(';')[:-2]) + ';' + found_family + ';'
             new_taxonomy += found_genus + ';' + initial_taxonomy.split(';')[-2]
             new_dir = '/species_stats/' + '/'.join(new_taxonomy.split(';')[:-1]) + '/'
             new_stats_file_name = MAIN_DIR + new_dir + new_taxonomy.replace(';', '_') + '.stats'
-            # print(new_stats_file_name)
+            # TIC_LOG.info(new_stats_file_name)
             if not isfile(initial_stats_file):
                 continue
             old_stats_contents = read_file(initial_stats_file)
@@ -539,11 +607,11 @@ def handle_blast_matches_family(curr_fasta):
             initial_dir = '/species_centroids/' + '/'.join(initial_taxonomy.split(';')[:-2]) + '/'
             old_centroids_file_name = MAIN_DIR + initial_dir
             old_centroids_file_name += initial_taxonomy.replace(';', '_')[:-1] + '.fasta'
-            # print(old_centroids_file_name)
+            # TIC_LOG.info(old_centroids_file_name)
             old_centroids_seqs_dict = fasta2dict(old_centroids_file_name)
             new_dir = '/species_centroids/' + '/'.join(new_taxonomy.split(';')[:-1]) + '/'
             new_centroids_file_name = MAIN_DIR + new_dir + new_taxonomy.replace(';', '_') + '.fasta'
-            # print(new_centroids_file_name)
+            # TIC_LOG.info(new_centroids_file_name)
             new_centroids_file = open(new_centroids_file_name, 'w+')
             query_sequence_identifier = query.split('tax=')[0]
             new_centroids_file.write('>' + query_sequence_identifier + 'tax=' + new_taxonomy + ';\n')
@@ -566,7 +634,7 @@ def handle_blast_matches_family_with_class(curr_fasta, level):
     else:
         b6_contents = read_file(b6_file)
         for line in b6_contents:
-            # print(line)
+            # TIC_LOG.info(line)
             query = line.split('\t')[0]
             target = line.split('\t')[1]
             target_taxonomy = target.split('tax=')[1]
@@ -574,7 +642,7 @@ def handle_blast_matches_family_with_class(curr_fasta, level):
             initial_dir = '/'.join(initial_taxonomy.split(';')[:-2]) + '/'
             initial_stats_file = MAIN_DIR + '/species_stats/' + initial_dir
             initial_stats_file += initial_taxonomy.replace(';', '_')[:-1] + '.stats'
-            # print(initial_stats_file)
+            # TIC_LOG.info(initial_stats_file)
             if level == 'genus':
                 new_taxonomy = ';'.join(target_taxonomy.split(';')[:-2]) + ';'
                 new_taxonomy += initial_taxonomy.split(';')[-2]
@@ -585,9 +653,9 @@ def handle_blast_matches_family_with_class(curr_fasta, level):
             if not isdir(MAIN_DIR + '/species_stats/' + new_dir):
                 mkdir(MAIN_DIR + '/species_stats/' + new_dir)
             new_stats_file_name = MAIN_DIR + '/species_stats/' + new_dir + new_taxonomy.replace(';', '_') + '.stats'
-            # print(new_stats_file_name)
+            # TIC_LOG.info(new_stats_file_name)
             if not isfile(initial_stats_file):
-                print('ALERT')
+                TIC_LOG.warning('Stats fiel could not be found. Continuing...')
                 continue
             old_stats_contents = read_file(initial_stats_file)
             new_stats_file = open(new_stats_file_name, 'w+')
@@ -604,8 +672,8 @@ def handle_blast_matches_family_with_class(curr_fasta, level):
                 mkdir(MAIN_DIR + '/species_centroids/' + new_dir)
             new_centroids_file_name = MAIN_DIR + '/species_centroids/' + new_dir
             new_centroids_file_name += new_taxonomy.replace(';', '_') + '.fasta'
-            # print(old_centroids_file_name)
-            # print(new_centroids_file_name)
+            # TIC_LOG.info(old_centroids_file_name)
+            # TIC_LOG.info(new_centroids_file_name)
             new_centroids_file = open(new_centroids_file_name, 'w+')
             query_sequence_identifier = query.split('tax=')[0]
             new_centroids_file.write('>' + query_sequence_identifier + 'tax=' + new_taxonomy + ';\n')
@@ -628,7 +696,7 @@ def handle_blast_matches_order(curr_fasta):
     else:
         b6_contents = read_file(b6_file)
         for line in b6_contents:
-            # print(line)
+            # TIC_LOG.info(line)
             query = line.split('\t')[0]
             target = line.split('\t')[1]
             target_taxonomy = target.split('tax=')[1]
@@ -636,14 +704,14 @@ def handle_blast_matches_order(curr_fasta):
             initial_taxonomy = query.split('tax=')[1]
             initial_dir = '/species_stats/' + '/'.join(initial_taxonomy.split(';')[:-2]) + '/'
             initial_stats_file = MAIN_DIR + initial_dir + initial_taxonomy.replace(';', '_')[:-1] + '.stats'
-            # print(initial_stats_file)
+            # TIC_LOG.info(initial_stats_file)
             new_taxonomy = ';'.join(initial_taxonomy.split(';')[:-3]) + ';' + found_family + ';'
             new_taxonomy += ';'.join(initial_taxonomy.split(';')[-3:])
             new_dir = '/species_stats/' + '/'.join(new_taxonomy.split(';')[:-2]) + '/'
             create_directory('/'.join(new_taxonomy.split(';')[:-2]), 'species_stats')
-            # print(new_taxonomy)
+            # TIC_LOG.info(new_taxonomy)
             new_stats_file_name = MAIN_DIR + new_dir + new_taxonomy[:-1].replace(';', '_') + '.stats'
-            # print(new_stats_file_name)
+            # TIC_LOG.info(new_stats_file_name)
             if not isfile(initial_stats_file):
                 continue
             old_stats_contents = read_file(initial_stats_file)
@@ -661,8 +729,8 @@ def handle_blast_matches_order(curr_fasta):
             new_centroids_file_name = MAIN_DIR + '/species_centroids/' + '/'.join(new_taxonomy.split(';')[:-2]) + '/'
             new_centroids_file_name += new_taxonomy[:-1].replace(';', '_') + '.fasta'
             create_directory('/'.join(new_taxonomy.split(';')[:-2]), 'species_centroids')
-            # print(old_centroids_file_name)
-            # print(new_centroids_file_name)
+            # TIC_LOG.info(old_centroids_file_name)
+            # TIC_LOG.info(new_centroids_file_name)
             new_centroids_file = open(new_centroids_file_name, 'w+')
             query_sequence_identifier = query.split('tax=')[0]
             new_centroids_file.write('>' + query_sequence_identifier + 'tax=' + new_taxonomy + '\n')
@@ -685,10 +753,10 @@ def update_family_stats(curr_fasta, level='none'):
         line_tokens = line.split('\t')
         if (line[0] == 'S'):
             family_number += 1
-            # print(line)
+            # TIC_LOG.info(line)
             curr_gotu_species_number = '_GOTU' + line_tokens[8].split('GOTU')[1][:-1].replace(';', '_')
             if level == 'class':
-                # print(curr_name)
+                # TIC_LOG.info(curr_name)
                 new_stats_file_name = curr_name + '_UNKCLASS_UNKORDER_FOTU' + str(family_number)
                 new_stats_file_name += curr_gotu_species_number + '.stats'
             elif level == 'phylum':
@@ -701,7 +769,7 @@ def update_family_stats(curr_fasta, level='none'):
                 new_stats_file_name = curr_name + '_FOTU' + str(family_number) + curr_gotu_species_number + '.stats'
             new_taxonomy_no_species = '_'.join(new_stats_file_name.split('_')[:-1])
             new_dir = create_directory(new_taxonomy_no_species, 'species_stats')
-            # print(MAIN_DIR + '/' + new_dir + new_stats_file_name)
+            # TIC_LOG.info(MAIN_DIR + '/' + new_dir + new_stats_file_name)
             new_stats_file = open(MAIN_DIR + '/' + new_dir + new_stats_file_name, 'w+')
             initial_dir = '/species_stats/' + '/'.join(curr_name.split('_')) + '/'
             initial_dir += curr_gotu_species_number.split('_')[1]
@@ -710,7 +778,7 @@ def update_family_stats(curr_fasta, level='none'):
             for stats_line in initial_stats_contents:
                 stats_line_tokens = stats_line.split('\t')
                 sequence_identifier = stats_line_tokens[1].split('tax=')[0]
-                # print(stats_line)
+                # TIC_LOG.info(stats_line)
                 old_taxonomy = stats_line_tokens[1].split('tax=')[1]
                 if level == 'order':
                     new_taxonomy = ';'.join(old_taxonomy.split(';')[:-3]) + ';UNKORDER;FOTU'
@@ -729,7 +797,7 @@ def update_family_stats(curr_fasta, level='none'):
             family_dict[line_tokens[8]] = family_number
             remove(initial_stats_file)
         elif(line[0] == 'H'):
-            # print(line)
+            # TIC_LOG.info(line)
             target_hit_family_num = str(family_dict[line_tokens[9]])
             query_seq_identifier = line_tokens[8].split('tax=')[0]
             curr_gotu_species_number = '_GOTU' + line_tokens[8].split('GOTU')[1][:-1].replace(';', '_')
@@ -772,15 +840,15 @@ def update_family_stats(curr_fasta, level='none'):
 
 
 def update_family_centroids(level='none'):
-    # print(family_dict)
+    # TIC_LOG.info(family_dict)
     for key, value in family_dict.items():
         curr_FOTU = value
         old_taxonomy = key.split('tax=')[1]
         sequence_identifier = key.split('tax=')[0]
         old_dir = MAIN_DIR + '/species_centroids/' + '/'.join(old_taxonomy.split(';')[:-2]) + '/'
-        # print(old_dir)
+        # TIC_LOG.info(old_dir)
         old_fasta_file_name = old_dir + old_taxonomy.replace(';', '_')[:-1] + '.fasta'
-        # print(old_fasta_file_name)
+        # TIC_LOG.info(old_fasta_file_name)
         old_seqs_dict = fasta2dict(old_fasta_file_name)
         if(level == 'phylum'):
             new_taxonomy = old_taxonomy.split(';')[0] + ';UNKPHYLUM;UNKCLASS;UNKORDER;FOTU' + str(curr_FOTU)
@@ -801,10 +869,10 @@ def update_family_centroids(level='none'):
             new_taxonomy += ';' + ';'.join(old_taxonomy.split(';')[-3:][:-1]) + ';\n'
             new_fasta_file_name = '_'.join(old_taxonomy.split(';')[:-3]) + '_FOTU' + str(curr_FOTU)
             new_fasta_file_name += '_' + '_'.join(old_taxonomy.split(';')[-3:][:-1]) + '.fasta'
-        # print(new_taxonomy)
-        # print(new_fasta_file_name)
+        # TIC_LOG.info(new_taxonomy)
+        # TIC_LOG.info(new_fasta_file_name)
         new_fasta_name_for_dir = '_'.join(new_fasta_file_name.split('_')[:-1])
-        # print(new_fasta_name_for_dir)
+        # TIC_LOG.info(new_fasta_name_for_dir)
         new_dir = create_directory(new_fasta_name_for_dir, 'species_centroids')
         new_fasta_file = open(MAIN_DIR + '/' + new_dir + new_fasta_file_name, 'w+')
         new_fasta_file.write('>' + sequence_identifier + 'tax=' + new_taxonomy)
@@ -849,11 +917,35 @@ def search_unknown_family_in_known_family():
         cluster_not_matched(curr_query_family, family_similarity)
         update_family_stats(curr_query_family)
         curr_dir = curr_query_family.split('.')[0].replace('_', '/') + '/'
-        system('find ' + MAIN_DIR + '/species_stats/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        # system('find ' + MAIN_DIR + '/species_stats/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        system_sub(
+            [
+                'find',
+                MAIN_DIR + '/species_stats/' + curr_dir,
+                '-maxdepth',
+                '1',
+                '-type',
+                'd',
+                '-empty',
+                '-delete'
+            ]
+        )
     update_family_centroids()
     for curr_query_family in all_family_queries_fastas:
         curr_dir = curr_query_family.split('.')[0].replace('_', '/') + '/'
-        system('find ' + MAIN_DIR + '/species_centroids/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        # system('find ' + MAIN_DIR + '/species_centroids/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        system_sub(
+            [
+                'find',
+                MAIN_DIR + '/species_centroids/' + curr_dir,
+                '-maxdepth',
+                '1',
+                '-type',
+                'd',
+                '-empty',
+                '-delete'
+            ]
+        )
     clean_bases()
     clean_centroids()
     chdir(MAIN_DIR)
@@ -891,18 +983,42 @@ def search_unknown_order_in_orders(level_fastas_num, known_genera_num, unknown_g
     chdir(MAIN_DIR)
     family_dict.clear()
     all_family_queries_fastas = glob('*.genera_queries.fasta')
-    # print(all_family_queries_fastas)
+    # TIC_LOG.info(all_family_queries_fastas)
     for curr_query_family in all_family_queries_fastas:
         vsearch_blast(curr_query_family, family_similarity)
         handle_blast_matches_family_with_class(curr_query_family, 'family')
         cluster_not_matched(curr_query_family, family_similarity)
         update_family_stats(curr_query_family, curr_level)
         curr_dir = curr_query_family.split('.')[0].replace('_', '/') + '/'
-        system('find ' + MAIN_DIR + '/species_stats/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        # system('find ' + MAIN_DIR + '/species_stats/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        system_sub(
+            [
+                'find',
+                MAIN_DIR + '/species_stats/' + curr_dir,
+                '-maxdepth',
+                '1',
+                '-type',
+                'd',
+                '-empty',
+                '-delete'
+            ]
+        )
     update_family_centroids(curr_level)
     for curr_query_family in all_family_queries_fastas:
         curr_dir = curr_query_family.split('.')[0].replace('_', '/') + '/'
-        system('find ' + MAIN_DIR + '/species_centroids/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        # system('find ' + MAIN_DIR + '/species_centroids/' + curr_dir + ' -maxdepth 1 -type d -empty -delete')
+        system_sub(
+            [
+                'find',
+                MAIN_DIR + '/species_centroids/' + curr_dir,
+                '-maxdepth',
+                '1',
+                '-type',
+                'd',
+                '-empty',
+                '-delete'
+            ]
+        )
     clean_bases()
     clean_centroids()
     chdir(MAIN_DIR)
@@ -917,19 +1033,19 @@ def main_complex_TIC(tool: str, data_dir: str,
     tool: Should be either usearch or vsearch binary paths
     '''
     if species_sim > float(1) or genus_sim > float(1) or family_sim > float(1):
-        print('Similarity levels > 100')
+        TIC_LOG.error('Similarity levels > 100')
         exit
     if species_sim <= float(0) or genus_sim <= float(0) or family_sim <= float(0):
-        print('Similarity levels <= 0')
+        TIC_LOG.error('Similarity levels <= 0')
         exit()
     if species_sim <= genus_sim:
-        print('Species Similarity <= Genus Similarity, exiting')
+        TIC_LOG.error('Species Similarity <= Genus Similarity, exiting')
         exit()
     if genus_sim <= family_sim:
-        print('Genus Similarity <= Family Similarity, exiting')
+        TIC_LOG.error('Genus Similarity <= Family Similarity, exiting')
         exit()
     if species_sim <= family_sim:
-        print('Species Similarity <= Family Similarity, exiting')
+        TIC_LOG.error('Species Similarity <= Family Similarity, exiting')
         exit()
 
     global species_similarity, genera_similarity, family_similarity
@@ -948,7 +1064,7 @@ def main_complex_TIC(tool: str, data_dir: str,
         USEARCH_BIN_CLUST = TOOL + ' --threads ' + THREADS + ' -cluster_fast '
         USEARCH_BIN_BLAST = TOOL + ' --threads ' + THREADS + ' -usearch_global '
 
-    print('Known Genera Clustering starting. Similarity Threshold:' + str(species_similarity))
+    TIC_LOG.info('Known Genera Clustering starting. Similarity Threshold:' + str(species_similarity))
     try:
         genera_level_fastas = get_curr_level_fastas(5)
     except Exception as exc:
@@ -957,8 +1073,8 @@ def main_complex_TIC(tool: str, data_dir: str,
         create_species_of_known_genera(genera_level_fastas)
     except Exception as exc:
         raise ValueError(f"L957: {str(exc)}")
-    print('Known Genera Clustering done')
-    print('Unknown Genera, Known Family Search starting. Similarity Threshold:' + str(genera_similarity))
+    TIC_LOG.info('Known Genera Clustering done')
+    TIC_LOG.info('Unknown Genera, Known Family Search starting. Similarity Threshold:' + str(genera_similarity))
     try:
         family_level_fastas = get_curr_level_fastas(4)
     except Exception as exc:
@@ -970,7 +1086,7 @@ def main_complex_TIC(tool: str, data_dir: str,
         search_unknown_families_in_known_genera(family_level_fastas)
     except Exception as exc:
         raise ValueError(f"L970: {str(exc)}")
-    print('Unknown Family Search starting. Similarity Threshold:' + str(family_similarity))
+    TIC_LOG.info('Unknown Family Search starting. Similarity Threshold:' + str(family_similarity))
     try:
         gather_known_genera(2)
     except Exception as exc:

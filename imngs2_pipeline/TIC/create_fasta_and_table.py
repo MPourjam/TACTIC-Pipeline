@@ -1,7 +1,21 @@
 from sys import argv
-from os import mkdir, system, getcwd
+from os import mkdir, getcwd
 from os import path as ospath
 from glob import glob
+from processing_helper import gimmelogger
+from processing_helper import system_sub as sys_sub
+
+
+global TIC_LOG
+TIC_LOG = gimmelogger(
+    logger_name="run_imngs2.analysis.TIC",
+    # log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
+    only_file=False
+)
+
+
+def system_sub(*args, **kwargs):
+    return sys_sub(*args, logger_obj=TIC_LOG, **kwargs)
 
 
 def read_file(filename):
@@ -67,11 +81,11 @@ def filter_abundance(abundance_limit,
     ZOTU_fasta_file_path = ospath.abspath(ZOTU_fasta_file_name)
     ZOTU_fasta_file_parent, ZOTU_fasta_file_name = ospath.split(ZOTU_fasta_file_path)
     unf_tot_sizes = get_samples_sizes(OTU_table_file_path)
-    # 
+
     abundance_limit = round(float(abundance_limit), 5)
-    print("Filtered for abundance value of {}".format(abundance_limit))
+    TIC_LOG.info("SOTUs got filtered for abundance value of {}".format(abundance_limit))
     sample_sizes = list()
-    filtered_OTU_table_path = ospath.join(OTU_table_file_parent , 'filtered_' + OTU_table_file_name)
+    filtered_OTU_table_path = ospath.join(OTU_table_file_parent, 'filtered_' + OTU_table_file_name)
     with open(OTU_table_file_path, "r") as otu_table_fio, open(filtered_OTU_table_path, "w+") as filtered_otu_fio:
         otu_header = otu_table_fio.readline().strip()
         datasets_samples = len(otu_header.split('\t')) - 2
@@ -113,7 +127,13 @@ def filter_abundance(abundance_limit,
             # read new line
             line = otu_table_fio.readline()
 
-    system("mv " + filtered_OTU_table_path + " " + OTU_table_file_path)
+    system_sub(
+        [
+            "mv ",
+            filtered_OTU_table_path,
+            OTU_table_file_path
+        ]
+    )
 
     # Removing the filtered SOTUs from the fasta file
     filtered_otu_fasta_path = ospath.join(OTU_fasta_file_parent, 'filtered_' + OTU_fasta_file_name)
@@ -133,7 +153,14 @@ def filter_abundance(abundance_limit,
                 filtered_otu_fasta_fio.write(derep_line)
             derep_line = otu_fasta_fio.readline()
 
-    system("mv " + filtered_otu_fasta_path + " " + OTU_fasta_file_path)
+    # system("mv " + filtered_otu_fasta_path + " " + OTU_fasta_file_path)
+    system_sub(
+        [
+            "mv ",
+            filtered_otu_fasta_path,
+            OTU_fasta_file_path
+        ]
+    )
 
     # Removing related ZOTUs to deleted SOTUs in ZOTU Table
     filtered_zotu_table_path = ospath.join(ZOTU_table_file_parent, "filtered_" + ZOTU_table_file_name)
@@ -149,7 +176,14 @@ def filter_abundance(abundance_limit,
                 filtered_zotu_fio.write(next_line)
             next_line = zotu_table_fio.readline()
 
-    system("mv " + filtered_zotu_table_path + " " + ZOTU_table_file_path)
+    # system("mv " + filtered_zotu_table_path + " " + ZOTU_table_file_path)
+    system_sub(
+        [
+            "mv ",
+            filtered_zotu_table_path,
+            ZOTU_table_file_path
+        ]
+    )
 
     # Removing related ZOTUs to deleted SOTUs in ZOTU Table
     filtered_zotu_fasta_path = ospath.join(ZOTU_fasta_file_parent, "filtered_" + ZOTU_fasta_file_name)
@@ -168,7 +202,14 @@ def filter_abundance(abundance_limit,
                 filtered_zotu_fasta_fio.write(zotu_fasta_seq_line)
             zotu_fasta_seq_line = zotu_fasta_fio.readline()
 
-    system("mv " + filtered_zotu_fasta_path + " " + ZOTU_fasta_file_path)
+    # system("mv " + filtered_zotu_fasta_path + " " + ZOTU_fasta_file_path)
+    system_sub(
+        [
+            "mv ",
+            filtered_zotu_fasta_path,
+            ZOTU_fasta_file_path
+        ]
+    )
 
 
 OUTPUT_FOLDER = argv[1]
@@ -441,12 +482,28 @@ def sina_alignment():
     cmd = SINA_EXECUTABLE + ' --in=' + OUTPUT_FOLDER + "/" + OUTPUT_ASV_FASTA_WITH_TAXONOMY
     cmd += ' --out=' + OUTPUT_FOLDER + '/test_z.fasta --db='
     cmd += SILVA_ARB + ' --turn all --fasta-write-dna >/dev/null 2>/dev/null'
-    system(cmd)
+    # system(cmd)
+    system_sub([
+        SINA_EXECUTABLE,
+        "--in=" + OUTPUT_FOLDER + "/" + OUTPUT_ASV_FASTA_WITH_TAXONOMY,
+        "--out=" + OUTPUT_FOLDER + "/test_z.fasta",
+        "--db=" + SILVA_ARB,
+        "--turn all",
+        "--fasta-write-dna"
+    ])
     # Aligning sotus
     cmd = SINA_EXECUTABLE + ' --in=' + OUTPUT_FOLDER + "/" + OUTPUT_SOTU_FASTA_WITH_TAXONOMY
     cmd += ' --out=' + OUTPUT_FOLDER + '/test_s.fasta --db='
     cmd += SILVA_ARB + ' --turn all --fasta-write-dna >/dev/null 2>/dev/null'
-    system(cmd)
+    # system(cmd)
+    system_sub([
+        SINA_EXECUTABLE,
+        "--in=" + OUTPUT_FOLDER + "/" + OUTPUT_SOTU_FASTA_WITH_TAXONOMY,
+        "--out=" + OUTPUT_FOLDER + "/test_s.fasta",
+        "--db=" + SILVA_ARB,
+        "--turn all",
+        "--fasta-write-dna"
+    ])
 
 
 # from the alignment get every column that has 1 base at least aligned
@@ -454,56 +511,106 @@ def sina_alignment():
 def extract_columns(input_file_name):
     good_points = list()
     filepath = input_file_name
-    with open(filepath) as fp:
-        line = fp.readline()
-        while line:
-            if not line[0] == '>':
-                counter = 0
-                for curr_char in line:
-                    if curr_char in ['A', 'C', 'G', 'T', 'N']:
-                        good_points.append(counter)
-                    counter += 1
+    try:
+        with open(filepath) as fp:
             line = fp.readline()
-    #
-    good_points = list(set(good_points))
-    #
-    out_file = open(OUTPUT_FOLDER + '/for_tree.fasta', 'w+')
-    with open(filepath) as fp:
-        line = fp.readline()
-        while line:
-            if line[0] == '>':
-                header = line.split(';')[0] + '\n'
-            else:
-                curr_seq = ''
-                for number in good_points:
-                    curr_seq += line[number]
-                out_file.write(header)
-                out_file.write(curr_seq + '\n')
+            while line:
+                if not line[0] == '>':
+                    counter = 0
+                    for curr_char in line:
+                        if curr_char in ['A', 'C', 'G', 'T', 'N']:
+                            good_points.append(counter)
+                        counter += 1
+                line = fp.readline()
+        #
+        good_points = list(set(good_points))
+        #
+        out_file = open(OUTPUT_FOLDER + '/for_tree.fasta', 'w+')
+        with open(filepath) as fp:
             line = fp.readline()
-    out_file.close()
-    system('mv ' + OUTPUT_FOLDER + '/for_tree.fasta ' + input_file_name)
+            while line:
+                if line[0] == '>':
+                    header = line.split(';')[0] + '\n'
+                else:
+                    curr_seq = ''
+                    for number in good_points:
+                        curr_seq += line[number]
+                    out_file.write(header)
+                    out_file.write(curr_seq + '\n')
+                line = fp.readline()
+        out_file.close()
+    except Exception as exc:
+        TIC_LOG.error("Error in extracting columns")
+        TIC_LOG.error(exc)
+    else:
+        # system('mv ' + OUTPUT_FOLDER + '/for_tree.fasta ' + input_file_name)
+        system_sub(
+            [
+                "mv ",
+                OUTPUT_FOLDER + "/for_tree.fasta",
+                input_file_name
+            ]
+        )
 
 
 def create_trees():
     extract_columns(OUTPUT_FOLDER + '/test_s.fasta')
     extract_columns(OUTPUT_FOLDER + '/test_z.fasta')
     rapidnj = RAPID_NJ_BIN + " "
-    cmd1 = rapidnj + OUTPUT_FOLDER + "/test_s.fasta -n -o t -x " + OUTPUT_FOLDER + "/SOTUs-Tree-nj.tre"
-    cmd2 = rapidnj + OUTPUT_FOLDER + "/test_z.fasta -n -o t -x " + OUTPUT_FOLDER + "/ZOTUs-Tree-nj.tre"
+    # cmd1 = rapidnj + OUTPUT_FOLDER + "/test_s.fasta -n -o t -x " + OUTPUT_FOLDER + "/SOTUs-Tree-nj.tre"
+    # cmd2 = rapidnj + OUTPUT_FOLDER + "/test_z.fasta -n -o t -x " + OUTPUT_FOLDER + "/ZOTUs-Tree-nj.tre"
     # cmd3 = "/crc/crc/binaries/FastTree -gtr -gamma -quiet -nt < test_s.fasta > sotu_aml.tre"
     # cmd4 = "/crc/crc/binaries/FastTree -gtr -gamma -quiet -nt < test_z.fasta > zotu_aml.tre"
-    system(cmd1)
-    system(cmd2)
-    rem_quot_cmd = r"sed -i s/\'//g {}"
-    system(rem_quot_cmd.format(OUTPUT_FOLDER + "/SOTUs-Tree-nj.tre"))
-    system(rem_quot_cmd.format(OUTPUT_FOLDER + "/ZOTUs-Tree-nj.tre"))
-    # print(cmd3)
-    # print(cmd4)
+    # system(cmd1)
+    system_sub([
+        rapidnj,
+        OUTPUT_FOLDER + "/test_s.fasta",
+        "-n",
+        "-o",
+        "t",
+        "-x",
+        OUTPUT_FOLDER + "/SOTUs-Tree-nj.tre"
+    ])
+    # system(cmd2)
+    system_sub([
+        rapidnj,
+        OUTPUT_FOLDER + "/test_z.fasta",
+        "-n",
+        "-o",
+        "t",
+        "-x",
+        OUTPUT_FOLDER + "/ZOTUs-Tree-nj.tre"
+    ])
+    # rem_quot_cmd = r"sed -i s/\'//g {}"
+    # system(rem_quot_cmd.format(OUTPUT_FOLDER + "/SOTUs-Tree-nj.tre"))
+    system_sub([
+        "sed",
+        "-i",
+        "s/\'//g",
+        OUTPUT_FOLDER + "/SOTUs-Tree-nj.tre"
+    ])
+    # system(rem_quot_cmd.format(OUTPUT_FOLDER + "/ZOTUs-Tree-nj.tre"))
+    system_sub([
+        "sed",
+        "-i",
+        "s/\'//g",
+        OUTPUT_FOLDER + "/ZOTUs-Tree-nj.tre"
+    ])
 
 
-sina_alignment()
-create_trees()
-print("tree created")
+try:
+    sina_alignment()
+except Exception as exc:
+    TIC_LOG.error("Error in aligning sequences")
+    TIC_LOG.error(exc)
+
+try:
+    create_trees()
+except Exception as exc:
+    TIC_LOG.error("Error in creating trees")
+    TIC_LOG.error(exc)
+else:
+    TIC_LOG.info("Tree created")
 
 
 def fasta_name_with_space(filepath):
@@ -522,7 +629,12 @@ def fasta_name_with_space(filepath):
         line = fopen.readline()
     fopen.close()
     fout.close()
-    system("mv {} {}".format(fout_path, filepath))
+    # system("mv {} {}".format(fout_path, filepath))
+    system_sub([
+        "mv",
+        fout_path,
+        filepath
+    ])
 
 
 for fasta_file in [OUTPUT_ASV_FASTA_WITH_TAXONOMY, OUTPUT_SOTU_FASTA_WITH_TAXONOMY]:
@@ -537,7 +649,12 @@ def remove_last_semi(table_file):
             line_w = str(line).strip()
             line_w = line_w[:-1] if line_w.endswith(";") else line_w
             without_semi.write(line_w + "\n")
-    system("mv {} {}".format(table_file + "TO_REMOVE", table_file))
+    # system("mv {} {}".format(table_file + "TO_REMOVE", table_file))
+    system_sub([
+        "mv",
+        table_file + "TO_REMOVE",
+        table_file
+    ])
 
 
 for table_file in [OUTPUT_ASV_TABLE,
