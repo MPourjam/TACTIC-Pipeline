@@ -161,6 +161,49 @@ def loud_subprocess(cmd_args_list: list, shell_bool: bool = False, cap_output: b
     return run_output, cmd_list
 
 
+class LogPrint(logging.Logger):
+    def debug(msg):
+        print(f"\033[95m{msg}\033[0m")
+
+    def info(msg):
+        print(f"\033[94m{msg}\033[0m")
+
+    def warning(msg):
+        print(f"\033[93m{msg}\033[0m")
+
+    def error(msg):
+        print(f"\033[91m{msg}\033[0m")
+
+    def critical(msg):
+        print(f"\033[1m\033[91m{msg}\033[0m")
+
+
+def system_sub(cmd_args_list: list,
+               force_log: bool = False,
+               shell: bool = False,
+               capture_output: bool = False,
+               quiet: bool = False,
+               logger_obj: logging.Logger = LogPrint()):
+    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
+
+    # logging
+    if force_log:
+        msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
+        logger_obj.info(msg)
+    if run_output.returncode == 137:  # Process killed due to memory limit
+        err_msg = f"Command {' '.join(cmd_list)} exceeded memory limit."
+        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
+        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
+        raise MemoryError(err_msg)
+    elif run_output.returncode != 0 and not quiet:
+        raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    elif run_output.returncode != 0 and quiet:
+        logger_obj.error(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    elif run_output.returncode == 0 and run_output.stderr and not quiet:
+        logger_obj.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    return run_output
+
+
 def gzip_to_fastq(*files) -> list:
     '''
     It takes files gunzip or zip them and returns the name with proper fastq fuffix.

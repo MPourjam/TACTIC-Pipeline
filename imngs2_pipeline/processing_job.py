@@ -7,9 +7,9 @@ from .processing_helper import TaskPickle
 from .processing_helper import (
     IMNGS2ArgsParser,
     gimmelogger,
-    loud_subprocess,
     calc_covered_region,
     calc_spikes)
+from .processing_helper import system_sub as sys_sub
 import re
 import random
 import shutil
@@ -40,24 +40,8 @@ S_FLAT_LOCATION = '/base/s_flat.txt'
 
 
 # overwriting system to run it with subprocess.run
-def system_sub(cmd_args_list: list, force_log: bool = False, shell: bool = False, capture_output: bool = False, quiet: bool = False):
-    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
-    # logging
-    if force_log:
-        msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
-        PREPPROC_LOG.info(msg)
-    if run_output.returncode == 137:  # Process killed due to memory limit
-        err_msg = f"Command {' '.join(cmd_list)} exceeded memory limit."
-        err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
-        err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
-        raise MemoryError(err_msg)
-    elif run_output.returncode != 0 and not quiet:
-        raise Exception(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    elif run_output.returncode != 0 and quiet:
-        PREPPROC_LOG.error(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    elif run_output.returncode == 0 and run_output.stderr and not quiet:
-        PREPPROC_LOG.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
-    return run_output
+def system_sub(*args, **kwargs):
+    return sys_sub(*args, logger_obj=PREPPROC_LOG, **kwargs)
 
 
 def seqFileStats(seqFileName):
