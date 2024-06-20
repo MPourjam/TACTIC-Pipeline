@@ -851,6 +851,7 @@ def run_imngs2(
     # Filtering fastq files if they are already in processed directories
     # Sometimes failed processing leaves fastq files in the processing directories
     mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
+    preprocessing_exit_code = 1  # general error
     if not skip_preprocess:
         try:
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
@@ -898,11 +899,15 @@ def run_imngs2(
             skip_analysis = True
             samples_dirs = []
             sys.exit(165)
+        else:
+            PREP_LOG.info("Preprocessing done.")
+            preprocessing_exit_code = 0
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
         samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
+        preprocessing_exit_code = 0
     # Runing analysis
-    exit_code = 1  # general error
+    analysis_exit_code = 1  # general error
     if not skip_analysis and bool(samples_dirs):
         try:
             if not bool(samples_dirs):
@@ -918,15 +923,15 @@ def run_imngs2(
             missed_samples = [sam_dir for sam_dir in samples_dirs if sam_dir not in reduced_samples_dirs]
             if len(missed_samples) == len(samples_dirs):
                 PREP_LOG.error("All samples are failed to be processed. Exiting...")
-                exit_code = 168
-                sys.exit(exit_code)
+                analysis_exit_code = 168
+                sys.exit(analysis_exit_code)
             elif missed_samples:
                 PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis.")
                 PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
-                exit_code = 167
+                analysis_exit_code = 167
             else:
                 PREP_LOG.info("All samples are processed and combined for spike normalization.")
-                exit_code = 0
+                analysis_exit_code = 0
             try:
                 zotu_file_path, sotu_file_path = main_analysis(
                     analysis_dir=analysis_dir,
@@ -938,7 +943,7 @@ def run_imngs2(
                     usearch_11_bin=USEARCH_11_BIN,
                 )
             except Exception as exc:
-                exit_code = 166
+                analysis_exit_code = 166
                 raise exc
         except MemoryError as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
@@ -948,12 +953,15 @@ def run_imngs2(
             sys.exit(164)
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
-            sys.exit(exit_code)
+            sys.exit(analysis_exit_code)
         else:
             PREP_LOG.info(f"Analysis done. Results directory: {str(analysis_dir.relative_to(INPUT_DIR))}")
+            analysis_exit_code = 0
     else:
         PREP_LOG.warning("Skipping Analysis. No samples to analyze.")
+        analysis_exit_code = 0
 
+    exit_code = preprocessing_exit_code + analysis_exit_code
     ##################
     # TODO Only Normalizing
     if not skip_analysis and mapping_file_path and zotu_file_path and sotu_file_path:
