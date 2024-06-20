@@ -281,7 +281,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             capture_output=False, text=True
         )
 
-        assert result.returncode == 0
+        assert result.returncode == 0, f"Command failed with return code {result.returncode}"
         file_set_complete = False
         fastq_dir = os.path.join(run_dir, arg_set.fastq_dir)
         if not arg_set.skip_analysis:
@@ -294,7 +294,6 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                 _, date, time = str(os.path.basename(analysis_folder).split(".")[0]).split("_")
                 date = int(date)
                 time = int(time)
-
                 # latest folder has the highest date and time
                 if date > latest_analysis_folder_date or (date == latest_analysis_folder_date and time > latest_analysis_folder_time):
                     latest_analysis_folder_date = date
@@ -302,7 +301,10 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                     latest_analysis_folder = analysis_folder
             print("latest_analysis_folder =", latest_analysis_folder)
             assert latest_analysis_folder != ""
+            assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the ZOTU table"
+            assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
             file_set_complete = check_expected_files_exist(latest_analysis_folder)
+            assert file_set_complete, "Some files are missing in the output folder"
         elif not arg_set.skip_preprocess and arg_set.skip_analysis:
             file_set_complete_counter = 0
             dirs_checked = 0
@@ -315,9 +317,11 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                         print("preprocessed_folder =", tmstmp_dir)
                         file_set_complete_counter += int(check_expected_preprocessed_files(tmstmp_dir))
             file_set_complete = bool(dirs_checked > 0 and file_set_complete_counter == dirs_checked)
-        assert file_set_complete
-        assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the ZOTU table"
-        assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
+            assert file_set_complete, "Some files are missing in the preprocessed folder"
+        elif arg_set.skip_preprocess and arg_set.skip_analysis:
+            print("No analysis or preprocessing was done")
+            file_set_complete = False
+            assert file_set_complete, "No analysis or preprocessing was done"
 
 
 @pytest.mark.xfail(reason="usearch_bin should be provided as argument")
