@@ -1130,15 +1130,6 @@ class BuildZOTUTableArgs(ArgsParserUtil):
     }
 
 
-class FilterZOTUAbundanceArgs(ArgsParserUtil):
-    default_args = {
-        # "otutab": "filtered2.fasta",
-        # "zotus": "ZOTUs.fasta",
-        # "otutabout": "zotu_table.txt",
-        "abundance_cutoff": 0.0025,
-    }
-
-
 class SelectZOTUsSeqsArgs(ArgsParserUtil):
     default_args = {
         # "fastx_getseqs": "good_ZOTUs.fa",
@@ -1218,7 +1209,6 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
         self.cluster_zotus = ClusterZOTUsArgs(config_dict)
         self.filter_16S = Filter16SArgs(config_dict)
         self.build_zotus_table = BuildZOTUTableArgs(config_dict)
-        self.filter_zotu_abundance = FilterZOTUAbundanceArgs(config_dict)
         self.add_tax = AddTaxArgs(config_dict)
 
     def __eq__(self, other):
@@ -1235,7 +1225,6 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             self.cluster_zotus == other.cluster_zotus,
             self.filter_16S == other.filter_16S,
             self.build_zotus_table == other.build_zotus_table,
-            self.filter_zotu_abundance == other.filter_zotu_abundance,
             self.add_tax == other.add_tax,
         ]
         return all(eq_tests)

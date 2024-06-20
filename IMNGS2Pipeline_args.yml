@@ -32,9 +32,6 @@ Filter16SArgs:
 # prepare_zotus:
 BuildZOTUTableArgs:
   id: 0.99  # This value results more refined ZOTU count than 0.97 (default)
-FilterZOTUAbundanceArgs:
-  abundance_cutoff: 0.0
-# select_zotu_seqs:
 AddTaxArgs:
   turn: all
 ################
