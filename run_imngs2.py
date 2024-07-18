@@ -357,44 +357,47 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
     """
     # find the taxed_zotu.fasta files in the processed samples
     # get the parent of the processed samples
-    taxed_files_list = []
-    for x in mapping_line_tup_list:
+    samp_dir_with_taxed_zotu = {}
+    for mapline_files_tup in mapping_line_tup_list:
         # NOTE What if the name of processed directory does not match <SampleID> + PROC_DIR_SUFFIX
         # NOTE the sample ID in mapping_line_tup_list could be uniqified before if the base name of fastq files are not unique
         # with __<number> suffix that's why we use get_base_name to get the base name of fastq files
-        sample_id = x[0][1]  # MapLineTup.SampleID
-        fastq_files_parent_dir = Path(PurePath(x[1][0])).parent.joinpath(f"{str(sample_id)}{PROC_DIR_SUFFIX}")
-        gathered_files = []
+        curr_mapline = mapline_files_tup[0]
+        curr_file_set = mapline_files_tup[1]
+        sample_id = curr_mapline.SampleID  # MapLineTup.SampleID
+        fastq_files_parent_dir = Path(PurePath(curr_file_set[0])).parent.joinpath(f"{str(sample_id)}{PROC_DIR_SUFFIX}")
+        gathered_samp_dirs = []
         for found_file in fastq_files_parent_dir.rglob(f"**/{TAXED_ZOTU_FILE_NAME}"):
             if check_taxed_zotus_fasta(found_file):
-                gathered_files.append(found_file)
+                gathered_samp_dirs.append(found_file.parent)
             else:
                 PREP_LOG.warning(f"{str(found_file.relative_to(FASTQ_DIR))} file is not formatted correctly."
                                  " Proper fasta header format: '>SEQID;size=XXX;tax=KKK,PPP;CCC;OOO")
 
-        taxed_files_list.extend(gathered_files)
+        samp_dir_with_taxed_zotu[mapline_files_tup] = gathered_samp_dirs
 
     # So far we have all taxed_zotu.fasta files of given samples in mapping file
     # Now we need to filter out the samples that are not in the mapping file
-    samples_dirs = [Path(PurePath(el)).parent for el in taxed_files_list]
+    # samples_dirs = [Path(PurePath(el)).parent for el in taxed_files_list]
     # TODO:NOTE the function to decide if the preprocessed samples should go for analysis or not come here.
     # we filter selected samples_dirs if they should be passed for analysis or not
     # 1- Argument set of selected sample should be the same as given one in the argument
     # 2- It should have "taxed_zotu.fasta"
     # Show warning if the sample is filtered out with a reason
-    filtered_samples_dir = []
-    for ind in range(len(samples_dirs)):
-        curr_dir = samples_dirs[ind]
-        if valid_for_analysis(curr_dir, args_yml_path):
-            filtered_samples_dir.append(curr_dir)
-        else:
-            PREP_LOG.warning(f"{curr_dir.relative_to(FASTQ_DIR)} is not a correctly processed.")
-    # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
-    # we should get sure that only one processed set from each sample is passed for analysis
-    samples_dirs_non_redundant = {str(Path(PurePath(sam_dir))).split(PROC_DIR_SUFFIX)[0]: sam_dir for sam_dir in filtered_samples_dir}
-    samples_dirs = list(samples_dirs_non_redundant.values())
-
-    return samples_dirs
+    filtered_samples_dir = {}
+    for mapline_files_tup, samp_dirs_list in samp_dir_with_taxed_zotu.items():
+        for samp_dir in samp_dirs_list:
+            if valid_for_analysis(samp_dir, args_yml_path):
+                # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
+                filtered_samples_dir[mapline_files_tup] = samp_dir
+                # we should get sure that only one processed version from each sample is passed for analysis
+                break
+            else:
+                PREP_LOG.warning(f"{samp_dir.relative_to(FASTQ_DIR)} is not a correctly processed sample.")
+    # calculating missed_samples in preprocessing step
+    missed_samples = set(mapping_line_tup_list) - set(filtered_samples_dir.keys())
+    missed_samples_ids = [mapline_obj.SampleID for mapline_obj, files_tup in missed_samples]
+    return list(filtered_samples_dir.values()), missed_samples_ids
 
 
 def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
@@ -851,7 +854,7 @@ def run_imngs2(
     # Filtering fastq files if they are already in processed directories
     # Sometimes failed processing leaves fastq files in the processing directories
     mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
-    preprocessing_exit_code = 1  # general error
+
     if not skip_preprocess:
         try:
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
@@ -901,50 +904,54 @@ def run_imngs2(
             sys.exit(165)
         else:
             PREP_LOG.info("Preprocessing done.")
-            preprocessing_exit_code = 0
+
     else:
         PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
-        samples_dirs = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
-        preprocessing_exit_code = 0
+
+    # We do find preprocessed samples for analysis regardless of the preprocessing step. If the samples are not preprocessed, then the function
+    # below must not find them.
+    samples_dirs, missed_samples_ids = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
+    analysis_exit_code = 1
+    if len(missed_samples_ids) == len(list(mapping_line_tup_dict.values())):
+        PREP_LOG.error("All samples are failed to get processed. Exiting...")
+        analysis_exit_code = 168
+        sys.exit(analysis_exit_code)
+    elif not bool(samples_dirs):
+        PREP_LOG.warning("No samples are processed. Exiting...")
+        analysis_exit_code = 168
+        sys.exit(analysis_exit_code)
+    elif missed_samples_ids:
+        PREP_LOG.warning(f"Samples in {"\t".join(samples_dirs)} will be sent for analysis.")
+        PREP_LOG.warning(f"Missed Samples are: {"\t".join(missed_samples_ids)}")
+        analysis_exit_code = 167
+    elif len(samples_dirs) + len(missed_samples_ids) != len(mapping_line_tup_dict.values()):
+        PREP_LOG.warning("Some samples are not processed. They will be skipped for analysis.")
+        analysis_exit_code = 176
+        sys.exit(analysis_exit_code)  # just to get sure that we do not end up in strange situations
+    else:
+        PREP_LOG.info("All samples are processed and combined for spike normalization.")
+        analysis_exit_code = 0
+
     # Runing analysis
-    analysis_exit_code = 1  # general error
-    if not skip_analysis and bool(samples_dirs):
+    if not skip_analysis:
         try:
-            if not bool(samples_dirs):
-                msg = "No samples were completely processed or had same processing "\
-                      "argument set as given argument set. SKIPPING Analysis!"
-                raise ValueError(msg)
             analysis_dir = fastq_file_dir.joinpath(f"Analysis_{proc_helper.generate_timestamp()}")
             analysis_dir.mkdir(parents=True, exist_ok=True)
             # we do the step down because if skip_preprocess is True then the path to preprocess would be given not all smaple_dirs
             if str(combined_spike_stats_path) != str(default_spike_stat_compiled):
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
             reduced_samples_dirs, _ = combine_spike_stats_file(samples_dirs, combined_spike_stat=combined_spike_stats_path)
-            missed_samples = [sam_dir for sam_dir in samples_dirs if sam_dir not in reduced_samples_dirs]
-            if len(missed_samples) == len(samples_dirs):
-                PREP_LOG.error("All samples are failed to be processed. Exiting...")
-                analysis_exit_code = 168
-                sys.exit(analysis_exit_code)
-            elif missed_samples:
-                PREP_LOG.warning(f"Samples in {str(combined_spike_stats_path)} will be sent for analysis.")
-                PREP_LOG.warning(f"Missed Samples are: {missed_samples}")
-                analysis_exit_code = 167
-            else:
-                PREP_LOG.info("All samples are processed and combined for spike normalization.")
-                analysis_exit_code = 0
-            try:
-                zotu_file_path, sotu_file_path = main_analysis(
-                    analysis_dir=analysis_dir,
-                    spike_stat_file=combined_spike_stats_path,
-                    fastqs_dir=str(FASTQ_DIR),
-                    args_file_path=args_yml_file,
-                    dbs_loc=dbs_dir,
-                    threads=POOL_SIZE,
-                    usearch_11_bin=USEARCH_11_BIN,
-                )
-            except Exception as exc:
-                analysis_exit_code = 166
-                raise exc
+
+            zotu_file_path, sotu_file_path = main_analysis(
+                analysis_dir=analysis_dir,
+                spike_stat_file=combined_spike_stats_path,
+                fastqs_dir=str(FASTQ_DIR),
+                args_file_path=args_yml_file,
+                dbs_loc=dbs_dir,
+                threads=POOL_SIZE,
+                usearch_11_bin=USEARCH_11_BIN,
+            )
+
         except MemoryError as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
             sys.exit(160)
@@ -953,15 +960,13 @@ def run_imngs2(
             sys.exit(164)
         except Exception as exc:
             PREP_LOG.error(f"Analysis stopped: {exc}")
-            sys.exit(analysis_exit_code)
+            sys.exit(166)
         else:
             PREP_LOG.info(f"Analysis done. Results directory: {str(analysis_dir.relative_to(INPUT_DIR))}")
-            analysis_exit_code = 0
     else:
-        PREP_LOG.warning("Skipping Analysis. No samples to analyze.")
-        analysis_exit_code = 0
+        PREP_LOG.warning("Analyss step is skipped. Exiting...")
+        analysis_exit_code = 169
 
-    exit_code = preprocessing_exit_code + analysis_exit_code
     ##################
     # TODO Only Normalizing
     if not skip_analysis and mapping_file_path and zotu_file_path and sotu_file_path:
@@ -970,7 +975,7 @@ def run_imngs2(
     # change mode of files
     correct_created_files_modes()
 
-    sys.exit(exit_code)
+    sys.exit(analysis_exit_code)
 
 
 if __name__ == "__main__":
