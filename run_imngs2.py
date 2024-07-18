@@ -921,8 +921,8 @@ def run_imngs2(
         analysis_exit_code = 168
         sys.exit(analysis_exit_code)
     elif missed_samples_ids:
-        PREP_LOG.warning(f"Samples in {"\t".join(samples_dirs)} will be sent for analysis.")
-        PREP_LOG.warning(f"Missed Samples are: {"\t".join(missed_samples_ids)}")
+        PREP_LOG.warning(f"{str(len(samples_dirs))} samples will be sent for analysis.")
+        PREP_LOG.warning("Missed Samples are: {}".format(", ".join(missed_samples_ids)))
         analysis_exit_code = 167
     elif len(samples_dirs) + len(missed_samples_ids) != len(mapping_line_tup_dict.values()):
         PREP_LOG.warning("Some samples are not processed. They will be skipped for analysis.")
