@@ -624,26 +624,25 @@ def cleanup(input_id, full_clean=False, dir_path=None):
                 shutil.rmtree(str(file_path))
     else:
         deleted_files = [
-            'zotu_table.txt',
-            'good_ZOTUs.fa',
-            'test.csv',
-            'filtered1.fastq',
-            'filtered2.fasta',
+            'merged.fastq',  # output of merging paired reads step
+            'filtered1.fastq',  # output of trimming step
+            'filtered2.fasta',  # output of amplicon error rate, length, basepair quality filtering step
+            'derep.fasta',  # output of dereplication of filtered2.fasta
+            'sorted.fasta',  # output of sorting dereplicated sequences based on their sequence size
+            'zotus.fasta',  # output of clustering sorted sequences to ZOTUs
+            'good_ZOTUs.fa',  # output of filtering non 16S zotus
+            'zotu_table.txt',  # output ZOTUs table of aligning dereplicated sequences to non-human ZOTUs (i.e: good_ZOTUs.fa)
+            'classifiedF.txt',  # mapping file of ZOTU sequences to their taxonomies
+            'denoising.tab',  # ?
+            'ZOTUs.fasta',  # output of prepare_zotus function
             f'aligned_{input_id}.csv',
             f'aligned_{input_id}.fasta',
-            'merged.fastq',
-            'sorted.fasta',
-            'zotus.fasta',
             'otus1.fa',
             'z2o.tab',
             'mOTUs-Seqs.fasta',
             'ZOTUs-Table.tab',
-            'derep.fasta',
-            'classifiedF.txt',
             'abundant_zotus_table.txt',
-            'denoising.tab',
             'matched_ZOTUS.txt',
-            'ZOTUs.fasta',
             'ZOTUs-Seqs.fasta',
             'zotu_table_filtered.txt',
             'nochi-ZOTUs.fasta',
