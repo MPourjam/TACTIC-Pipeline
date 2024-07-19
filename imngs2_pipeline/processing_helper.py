@@ -473,7 +473,7 @@ def pair_seq_files(directory):
     skip_reverses = []
     for file_path in direcotry_path.rglob("*"):
         file_path = Path(PurePath(file_path)).absolute()
-        isSeqFile = is_seq_file(file_path)
+        isSeqFile = is_seq_file(file_path, seq_file_format="fastq")
         if isSeqFile and str(file_path) not in skip_reverses:
             if is_forward_file(file_path.name):
                 forw_file = str(file_path)
