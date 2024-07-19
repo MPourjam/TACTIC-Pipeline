@@ -626,8 +626,8 @@ def cleanup(input_id, full_clean=False, dir_path=None):
         deleted_files = [
             'merged.fastq',  # output of merging paired reads step
             'filtered1.fastq',  # output of trimming step
-            'filtered2.fasta',  # output of amplicon error rate, length, basepair quality filtering step
-            'derep.fasta',  # output of dereplication of filtered2.fasta
+            # 'filtered2.fasta',  # output of amplicon error rate, length, basepair quality filtering step
+            # 'derep.fasta',  # output of dereplication of filtered2.fasta
             'sorted.fasta',  # output of sorting dereplicated sequences based on their sequence size
             'zotus.fasta',  # output of clustering sorted sequences to ZOTUs
             'good_ZOTUs.fa',  # output of filtering non 16S zotus
