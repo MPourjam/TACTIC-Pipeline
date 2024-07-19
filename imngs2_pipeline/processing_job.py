@@ -589,7 +589,6 @@ def create_zip(input_id):
         for file in glob.glob("*.html"):
             zipf.write(file)
     shutil.make_archive(f"aligned_{input_id}.fasta", "gztar", ".", f"aligned_{input_id}.fasta")
-    shutil.make_archive("derep.fasta", "gztar", ".", "derep.fasta")
 
 
 def create_udb(input_id):
