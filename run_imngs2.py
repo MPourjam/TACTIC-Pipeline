@@ -8,7 +8,7 @@ import math
 import sys
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
-from imngs2_pipeline.analyze_sample_job import main as main_analysis
+from imngs2_pipeline.analyze_sample_job import main as main_analysis_TIC
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes, slice_list
@@ -46,6 +46,11 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
+global SUPPORTED_ANALYSIS_MODE
+SUPPORTED_ANALYSIS_MODE = [
+    "TIC",
+    "de-novo",
+]
 
 
 def handle_system_signals(signum, frame):
@@ -811,7 +816,8 @@ def run_imngs2(
         mapping_file: str = "",
         spike_stat_file: str = "",
         skip_preprocess: bool = False,
-        skip_analysis: bool = False):
+        skip_analysis: bool = False,
+        analysis_mode: str = "TIC"):
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
@@ -854,6 +860,16 @@ def run_imngs2(
     # Filtering fastq files if they are already in processed directories
     # Sometimes failed processing leaves fastq files in the processing directories
     mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
+
+    # choosing analysis_mode
+    if analysis_mode not in SUPPORTED_ANALYSIS_MODE:
+        PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
+        sys.exit(170)
+    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[0]:
+        main_analysis = main_analysis_TIC
+    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[1]:
+        PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported yet.")
+        sys.exit(170)
 
     if not skip_preprocess:
         try:
@@ -989,6 +1005,11 @@ if __name__ == "__main__":
                         type=str,
                         help=help_text,
                         default=".")  # WORKDIR of container is /base/inputs
+    parser.add_argument("-am", "--analysis-mode",
+                        choices=SUPPORTED_ANALYSIS_MODE,
+                        type=str,
+                        help="Choose a analysis mode. Default is TIC",
+                        default="TIC")
     # >BEGIN: Arguments need to be parsed from input and fastq directory
     parser.add_argument("-y", "--yml-file",
                         type=str,
@@ -1074,5 +1095,6 @@ if __name__ == "__main__":
             spike_stat_file=cli_spike_stat_file,
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
-            usearch_11_bin=given_usearch_bin
+            usearch_11_bin=given_usearch_bin,
+            analysis_mode=args.analysis_mode
         )
