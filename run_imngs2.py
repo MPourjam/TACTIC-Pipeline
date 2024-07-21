@@ -9,6 +9,7 @@ import sys
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.analyze_sample_job import main as main_analysis_TIC
+from imngs2_pipeline.analysis.analysis import main_de_novo as main_analysis_de_novo
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes, slice_list
@@ -868,8 +869,9 @@ def run_imngs2(
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[0]:
         main_analysis = main_analysis_TIC
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[1]:
-        PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported yet.")
-        sys.exit(170)
+        main_analysis = main_analysis_de_novo
+        # PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported yet.")
+        # sys.exit(170)
 
     if not skip_preprocess:
         try:
