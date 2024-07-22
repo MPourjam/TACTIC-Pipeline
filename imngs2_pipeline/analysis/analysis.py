@@ -10,6 +10,7 @@ from processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
+from pprint import pprint as print
 
 
 BIN_DIR = "/base/binaries/"
@@ -120,11 +121,12 @@ def trim_sides(five_end_trim, three_end_trim):
     onelinefasta('analysis.fasta')
 
 
-def dereplication():
+def dereplication(with_taxonomy=True):
     # cmd_part_0 = USEARCH_11_BIN + " -fastx_uniques analysis.fasta -relabel Zotu"
     # cmd_part_0 += " -fastaout derep.fasta -tabbedout relabel.tab --threads " + str(POOL_SIZE)
     # cmd_part_0 += " > /dev/null 2>/dev/null"
     # system_sub(cmd_part_0)
+    sample_name_regex = re.compile(r"(.*)\.([0-9]+);size=([0-9]+);")
 
     cmd_to_call_list = [
         USEARCH_11_BIN,
@@ -138,6 +140,8 @@ def dereplication():
         "relabel.tab",
         "--threads",
         str(POOL_SIZE),
+        '--sizein',
+        '--sizeout'
     ]
     # dereplicate reads and anotate them by multiplicity
     system_sub(cmd_to_call_list, force_log=True)
@@ -148,29 +152,31 @@ def dereplication():
     line = contents.readline()
     while line:
         tokens = line.split('\t')
-        assigned_zotu = tokens[1]
+        assigned_zotu = str(tokens[1]).strip()
         if assigned_zotu not in zotus_dict.keys():
-            zotus_dict[assigned_zotu] = [tokens[0]]
+            zotus_dict[assigned_zotu] = [sample_name_regex.search(str(tokens[0]).strip()).group(0)]
         else:
-            zotus_dict[assigned_zotu] += [tokens[0]]
+            zotus_dict[assigned_zotu] += [sample_name_regex.search(str(tokens[0]).strip()).group(0)]
         # creating taxonomy without last semicolon and without 'unclutured' or 'unknown'
         # removing last empty array element gets created by last ;
         # . tokens[-1][:-1] of relabel.tab which is the tax for that cluster
-        tax_arr = str(tokens[-1][:-1].split('tax=')[1]).split(';')[:-1]  # [:-1] to exclude \n at the end
-        to_exclude = ['uncultured', 'unknown', 'incertae']
-        # NOTE New TIC will also check for removing this unknown levels
-        for tax_i in range(len(tax_arr) - 1, -1, -1):
-            tax_lev_val = tax_arr[tax_i]
-            ex_bool = [True for te in to_exclude if bool(re.search(te, str(tax_lev_val).strip().lower()))]
-            if any(ex_bool):
-                tax_arr = tax_arr[:tax_i]
-        corrected_tax = ";".join(tax_arr)
-        zotus_tax_dict[assigned_zotu] = corrected_tax
+        if with_taxonomy:
+            tax_arr = str(tokens[-1][:-1].split('tax=')[1]).split(';')[:-1]  # [:-1] to exclude \n at the end
+            to_exclude = ['uncultured', 'unknown', 'incertae']
+            # NOTE New TIC will also check for removing this unknown levels
+            for tax_i in range(len(tax_arr) - 1, -1, -1):
+                tax_lev_val = tax_arr[tax_i]
+                ex_bool = [True for te in to_exclude if bool(re.search(te, str(tax_lev_val).strip().lower()))]
+                if any(ex_bool):
+                    tax_arr = tax_arr[:tax_i]
+            corrected_tax = ";".join(tax_arr)
+            zotus_tax_dict[assigned_zotu] = corrected_tax
         line = contents.readline()
-    # zotus_dict is line --> {"Zotu1" : ["sample_name1", "sample_name2", ...], ... }
+    # zotus_dict is line --> {"Zotu1" : ["sample_name1;size=XX;", "sample_name2", ...], ... }
+
     contents.close()
     samples_list = list()
-    sample_name_regex = re.compile(r"(.*)\.([0-9]+);size=([0-9]+);")
+
     for vals in zotus_dict.values():
         for val in vals:
             curr_sample = sample_name_regex.search(val).group(1)
@@ -197,32 +203,39 @@ def dereplication():
         curr_line += '\t' + str(item)
     out_line = '#Zotu' + curr_line + '\t' + '' + '\n'
     out_file.write(out_line)  # This is the header
+
     for key, value in zotu_hit_dict.items():
         curr_line = ''
         for sample_key in samples_list:
             # print(value[str(sample_key)])
             curr_line += '\t' + str(value[str(sample_key)])
-        out_line = key + curr_line + '\t' + zotus_tax_dict[key] + '\n'
+        if with_taxonomy:
+            out_line = key + curr_line + '\t' + zotus_tax_dict[key] + '\n'
+        else:
+            out_line = key + curr_line + '\n'
         out_file.write(out_line)
     out_file.close()
+    # print(list(zotu_hit_dict.keys()))
     # Writing taxonomy to derep.fasta
-    with open("derep.fasta", "r") as derep_fio, open("derep_with_tax.fasta", "w+") as derep_tax_fio:
-        derep_line = derep_fio.readline()
-        while derep_line:
-            derep_line = derep_line.strip()
-            if derep_line.startswith(">"):
-                curr_zotu = str(derep_line[1:]).strip()
-                new_line = ">" + curr_zotu + ';tax=' + zotus_tax_dict[curr_zotu] + '\n'
-            else:
-                new_line = derep_line + "\n"
-            derep_tax_fio.write(new_line)
+    if with_taxonomy:
+        with open("derep.fasta", "r") as derep_fio, open("derep_with_tax.fasta", "w+") as derep_tax_fio:
             derep_line = derep_fio.readline()
+            while derep_line:
+                derep_line = derep_line.strip()
+                if derep_line.startswith(">"):
+                    curr_zotu = str(derep_line[1:]).strip().split(";")[0]
+                    new_line = ">" + curr_zotu + ';tax=' + zotus_tax_dict[curr_zotu] + '\n'
+                else:
+                    new_line = derep_line + "\n"
+                derep_tax_fio.write(new_line)
+                derep_line = derep_fio.readline()
+
     cmd_to_call_list = [
         "rm",
         "relabel.tab",
         "analysis.fasta",
     ]
-    system_sub(cmd_to_call_list)
+    # system_sub(cmd_to_call_list)  # TODO uncomment this line
 
 
 def sort_seqs():
@@ -254,6 +267,8 @@ def clusterZOTUs():
         "4",
         "-zotus",
         "zotus.fasta",
+        "--sizein",
+        "--sizeout",
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("zotus.fasta")
@@ -262,7 +277,7 @@ def clusterZOTUs():
         "sorted.fasta",
         "derep.fasta",
     ]
-    system_sub(cmd_to_call_list)
+    # system_sub(cmd_to_call_list)
 
 
 # Filter non 16S sequences
@@ -299,7 +314,7 @@ def filter16S():
 
 
 def prepare_zotus():
-    contents = read_file('good-ZOTUs.fasta')
+    contents = read_file('zotus.fasta')
     out_file = open('good-ZOTUs-sized.fasta', 'w+')
     for line in contents:
         if line[0] == '>':
@@ -350,17 +365,22 @@ def assign_zotus_to_otus():
     zotus_map = read_file('z2o.tab')
     out_file = open('ZOTUs-OTUs-map.tab', 'w+')
     out_file_2 = open('matched_ZOTUS.txt', 'w+')
+    match_regex = re.compile(r";top=(Zotu[0-9]+);")
+    zotu_regex = re.compile(r"(Zotu[0-9]+);")
     valid_zotus_dict = dict()
     for line in zotus_map:
         line_tokens = line.split('\t')
-        if 'otu' in line_tokens[1]:
-            zotu_number = line_tokens[0].split(';')[0]
-            valid_zotus_dict[zotu_number] = line_tokens[1]
-        elif 'match' == line_tokens[1]:
-            zotu_number = line_tokens[0].split(';')[0]
-            matched_zotu = line_tokens[2].split(';')[1].split('=')[1]
-            matched_otu_of_match = valid_zotus_dict[matched_zotu]
-            valid_zotus_dict[zotu_number] = matched_otu_of_match
+        zotu_number = zotu_regex.search(str(line_tokens[0]).strip()).group(1)
+        match_type = str(line_tokens[1]).strip()
+        if 'otu' in match_type:
+            valid_zotus_dict[zotu_number] = str(line_tokens[1]).strip()
+        elif 'match' == match_type:
+            matched_zotu = match_regex.search(str(line_tokens[2]).strip()).group(1)
+            if matched_zotu in valid_zotus_dict.keys():
+                # if the zotu matches to a valid OTU
+                matched_otu_of_match = valid_zotus_dict[matched_zotu]
+                valid_zotus_dict[zotu_number] = matched_otu_of_match
+    print(valid_zotus_dict)
     for key, value in valid_zotus_dict.items():
         line = key + '\t' + value + '\n'
         out_file.write(line)
@@ -368,7 +388,7 @@ def assign_zotus_to_otus():
     for key in valid_zotus_dict.keys():
         out_file_2.write(key + '\n')
     out_file_2.close()
-    system_sub(["rm", "z2o.tab"])
+    # system_sub(["rm", "z2o.tab"])  # TODO uncomment this line
 
 
 def keep_good_ZOTUs():
@@ -378,7 +398,7 @@ def keep_good_ZOTUs():
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-fastx_getseqs",
-        "good-ZOTUs.fasta",
+        "zotus.fasta",  # we changed "good-ZOTUs.fasta" to "zotus.fasta" as we already have filtered sequences for human origin reads
         "-labels",
         "matched_ZOTUS.txt",
         "-fastaout",
@@ -1119,7 +1139,7 @@ def main(
             parsed_spike_stat_path=parsed_spike_stat_file_path)
     except Exception as exc:
         raise ValueError(f"spike_stat_file: {str(exc)}")
-    
+
     sample_seq_files_path = []
     for full_id, entries in map_lines_dict.items():
         sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(TAXED_ZOTU_FILE_NAME), entries[0]))
@@ -1224,13 +1244,13 @@ def main(
 
 
 def main_de_novo(
-    analysis_dir: str,
-    spike_stat_file: str,
-    fastqs_dir: str,
-    args_file_path: str = "",
-    dbs_loc: str = DB_LOC,
-    threads=POOL_SIZE,
-    usearch_11_bin: str = USEARCH_11_BIN):
+        analysis_dir: str,
+        spike_stat_file: str,
+        fastqs_dir: str,
+        args_file_path: str = "",
+        dbs_loc: str = DB_LOC,
+        threads=POOL_SIZE,
+        usearch_11_bin: str = USEARCH_11_BIN):
 
     """
     sample_seq_files_path: a list of file path to
@@ -1269,10 +1289,11 @@ def main_de_novo(
             parsed_spike_stat_path=parsed_spike_stat_file_path)
     except Exception as exc:
         raise ValueError(f"spike_stat_file: {str(exc)}")
-    
+
     sample_seq_files_path = []
     for full_id, entries in map_lines_dict.items():
-        sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(DEREP_READS_FILE_NAME), entries[0]))
+        # sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(DEREP_READS_FILE_NAME), entries[0]))
+        sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(TAXED_ZOTU_FILE_NAME), entries[0]))
 
     for derep_path, sam_id in sample_seq_files_path:
         if not derep_path.is_file():
@@ -1288,7 +1309,7 @@ def main_de_novo(
     # trimming the sequences
     trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
     ANA_LOG.info('# Dereplication: Started')
-    dereplication()
+    dereplication(with_taxonomy=True)
     # Sorting the sequences
     ANA_LOG.info('# Sorting: Started')
     sort_seqs()
@@ -1297,7 +1318,7 @@ def main_de_novo(
     clusterZOTUs()
     # filtering non-human ZOTUs
     ANA_LOG.info('# Filtering non-human ZOTUS: Started')
-    filter16S()
+    # filter16S()  # It's been already done in preprocessing
     prepare_zotus()
     # Clustering at OTU level
     ANA_LOG.info('# Clustering at OTU level: Started')
@@ -1305,6 +1326,7 @@ def main_de_novo(
     remove_size_from_OTUS()
     assign_zotus_to_otus()
     keep_good_ZOTUs()
+    exit("STOPPPPPPPPPPPPPPPP")
     ANA_LOG.info('# Creating final ZOTU table: Started')
     build_ZOTU_table()
     filter_zotu_abundance()  # TODO check if we need to filter at ZOTU level
