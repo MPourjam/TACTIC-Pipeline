@@ -541,7 +541,7 @@ def addTax_new(zotu_fasta_path):
     # cmd_part_3 = ' > /dev/null 2>/dev/null'
     # system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     cmd_to_call_list = [
-        classifier_dir + "sina",
+        SINA_BIN,
         "--in",
         str(zotu_fasta_path),
         "--search",

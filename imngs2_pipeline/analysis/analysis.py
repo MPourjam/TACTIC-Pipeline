@@ -19,18 +19,20 @@ USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
 USEARCH_8_bin = BIN_DIR + "usearch8.1"
 DB_LOC = "/base/databases/"
 SINA_ARB = DB_LOC + "SILVA_138.1_SSURef_NR99_12_06_20_opt.arb"
+SINA_BIN = BIN_DIR + "sina/sina"
 GOLD_REFDB_USEARCH = DB_LOC + "SILVA-bac-16s-90.udb"
 # USERS_DIR = '/srv/crc/users/'
 ref16RNAdb_1 = DB_LOC + "silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = DB_LOC + "silva-arc-16s-id95.fasta"
 SORT_ME_RNA_BIN = BIN_DIR + "sortmerna"
 USEARCH_TAIL = '> /dev/null 2>&1'
-global SPIKE_STAT_HEADER, TAXED_ZOTU_FILE_NAME, DEREP_READS_FILE_NAME
+global SPIKE_STAT_HEADER, TAXED_ZOTU_FILE_NAME, DEREP_READS_FILE_NAME, DEREP_NEW_LABEL
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
 DEREP_READS_FILE_NAME = "derep.fasta"
 max_pool = int(cpu_count() * 0.7)
+DEREP_NEW_LABEL = "Uniq"
 global POOL_SIZE
 POOL_SIZE = max_pool if max_pool > 0 else 1
 
@@ -81,7 +83,7 @@ def append_reads(seq_fasta, sample_id, analysis_dir):
         '-fastx_relabel',
         seq_fasta_path,
         '-prefix',
-        f"{dataset_name}.",
+        f"sample={dataset_name};",
         '-fastaout',
         'new',
         '-keep_annots',
@@ -126,14 +128,14 @@ def dereplication(with_taxonomy=True):
     # cmd_part_0 += " -fastaout derep.fasta -tabbedout relabel.tab --threads " + str(POOL_SIZE)
     # cmd_part_0 += " > /dev/null 2>/dev/null"
     # system_sub(cmd_part_0)
-    sample_name_regex = re.compile(r"(.*)\.([0-9]+);size=([0-9]+);")
+    sample_name_regex = re.compile(r"sample=(.*);([0-9]+);size=([0-9]+);")
 
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-fastx_uniques",
         "analysis.fasta",
         "-relabel",
-        "Zotu",
+        DEREP_NEW_LABEL,  # dereplication relaling
         "-fastaout",
         "derep.fasta",
         "-tabbedout",
@@ -152,11 +154,11 @@ def dereplication(with_taxonomy=True):
     line = contents.readline()
     while line:
         tokens = line.split('\t')
-        assigned_zotu = str(tokens[1]).strip()
-        if assigned_zotu not in zotus_dict.keys():
-            zotus_dict[assigned_zotu] = [sample_name_regex.search(str(tokens[0]).strip()).group(0)]
+        assigned_uniq = str(tokens[1]).strip()
+        if assigned_uniq not in zotus_dict.keys():
+            zotus_dict[assigned_uniq] = [sample_name_regex.search(str(tokens[0]).strip()).group(0)]
         else:
-            zotus_dict[assigned_zotu] += [sample_name_regex.search(str(tokens[0]).strip()).group(0)]
+            zotus_dict[assigned_uniq] += [sample_name_regex.search(str(tokens[0]).strip()).group(0)]
         # creating taxonomy without last semicolon and without 'unclutured' or 'unknown'
         # removing last empty array element gets created by last ;
         # . tokens[-1][:-1] of relabel.tab which is the tax for that cluster
@@ -170,7 +172,7 @@ def dereplication(with_taxonomy=True):
                 if any(ex_bool):
                     tax_arr = tax_arr[:tax_i]
             corrected_tax = ";".join(tax_arr)
-            zotus_tax_dict[assigned_zotu] = corrected_tax
+            zotus_tax_dict[assigned_uniq] = corrected_tax
         line = contents.readline()
     # zotus_dict is line --> {"Zotu1" : ["sample_name1;size=XX;", "sample_name2", ...], ... }
 
@@ -201,7 +203,8 @@ def dereplication(with_taxonomy=True):
     curr_line = ''
     for item in samples_list:
         curr_line += '\t' + str(item)
-    out_line = '#Zotu' + curr_line + '\t' + '' + '\n'
+    taxonomy_col = '' if not with_taxonomy else '\t' + 'taxonomy'
+    out_line = '#Zotu' + curr_line + taxonomy_col + '\n'
     out_file.write(out_line)  # This is the header
 
     for key, value in zotu_hit_dict.items():
@@ -267,14 +270,14 @@ def clusterZOTUs():
         "4",
         "-zotus",
         "zotus.fasta",
-        "--sizein",
-        "--sizeout",
+        # "--sizein",
+        # "--sizeout",
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("zotus.fasta")
     cmd_to_call_list = [
         "rm",
-        "sorted.fasta",
+        # "sorted.fasta",
         "derep.fasta",
     ]
     # system_sub(cmd_to_call_list)
@@ -335,7 +338,7 @@ def clusterOTUs():
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-cluster_otus",
-        "good-ZOTUs-sized.fasta",
+        "good-ZOTUs-sized.fasta",  # Although Edgar suggests that unoise3 and cluster_otus should have same input file, but we use
         "-fulldp",
         "-otus",
         "otus1.fa",
@@ -358,7 +361,7 @@ def remove_size_from_OTUS():
         else:
             out_file.write(line + '\n')
     out_file.close()
-    system_sub(["rm", "otus1.fa"])
+    # system_sub(["rm", "otus1.fa"]) # TODO uncomment this line
 
 
 def assign_zotus_to_otus():
@@ -380,7 +383,7 @@ def assign_zotus_to_otus():
                 # if the zotu matches to a valid OTU
                 matched_otu_of_match = valid_zotus_dict[matched_zotu]
                 valid_zotus_dict[zotu_number] = matched_otu_of_match
-    print(valid_zotus_dict)
+
     for key, value in valid_zotus_dict.items():
         line = key + '\t' + value + '\n'
         out_file.write(line)
@@ -402,10 +405,10 @@ def keep_good_ZOTUs():
         "-labels",
         "matched_ZOTUS.txt",
         "-fastaout",
-        "nochi_ZOTUs.fasta",
+        "ZOTUs-Seqs.fasta",  # This file contains a list of non-chimeric ZOTUs sequences. Equivalent to nochi_ZOTUs.fasta
     ]
     system_sub(cmd_to_call_list, force_log=True)
-    onelinefasta("nochi_ZOTUs.fasta")
+    onelinefasta("ZOTUs-Seqs.fasta")
 
 
 def build_ZOTU_table():
@@ -418,11 +421,13 @@ def build_ZOTU_table():
         "analysis.fasta",
         "-top_hit_only",
         "-zotus",  # if the database sequences are already denoised which is the case here
-        "nochi_ZOTUs.fasta",  # TODO this should be all zotus including the centroid of the cluster. Check if nochi_ZOTUs.fasta also include the centroid
+        "ZOTUs-Seqs.fasta",  # This file contains ZOTUs sequences (both centroids of OTUs and matched ZOTUs to that OTU and non-chimeric)
         "-otutabout",
         "zotu_table.txt",
         "-id",
-        "0.97"
+        "0.97",
+        "-threads",
+        f"{str(POOL_SIZE)}",
     ]
     system_sub(cmd_to_call_list, force_log=True)
 
@@ -555,14 +560,13 @@ def addTax_new(zotu_fasta_path):
     zotu_fasta_path = os.path.abspath(zotu_fasta_path)
     dirname, filename = os.path.split(zotu_fasta_path)
     os.chdir(dirname)
-    classifier_dir = '/crc/crc/binaries/sina/'
     # cmd_part_0 = 'sina --in ' + str(zotu_fasta_path) + ' --search --meta-fmt csv '
     # cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     # cmd_part_2 = '--db ' + SINA_ARB + ' --out test_{}'.format(filename)
     # cmd_part_3 = ' > /dev/null 2>/dev/null'
     # system_sub(classifier_dir + cmd_part_0 + cmd_part_1 + cmd_part_2 + cmd_part_3)
     cmd_to_call_list = [
-        classifier_dir + "sina",
+        SINA_BIN,
         "--in",
         str(zotu_fasta_path),
         "--search",
@@ -602,26 +606,32 @@ def addTax_new(zotu_fasta_path):
 
 
 def create_final_ZOTU_table():
-    out_file = open('ZOTUs-table.final.tab', 'w+')
-    header = '\t'.join(read_file('zotu_table.txt')[0].split('\t')[1:])
-    out_file.write('#ZOTUId\t' + header + '\ttaxonomy\n')
-    taxa_file = read_file('classifiedF.txt')
-    taxa_dict = {}
-    for line in taxa_file:
-        ZOTU, taxonomy = line.split('\t')
-        taxa_dict[ZOTU] = taxonomy
-    table_file = read_file('zotu_table_filtered.txt')
-    for line in table_file:
-        ZOTU = line.split('\t')[0]
-        ZOTU_taxonomy = taxa_dict[ZOTU]
-        write_line = line + '\t' + ZOTU_taxonomy + '\n'
-        out_file.write(write_line)
+    tax_regex = re.compile(r";tax=(.*)$")
+    zotu_regex = re.compile(r"(Zotu[0-9]+);")
+    zotu_tax_dict = dict()
+    with open('taxed_ZOTUs-Seqs.fasta') as zotu_seq_fio:
+        zotu_seq_line = zotu_seq_fio.readline().strip()
+        while zotu_seq_line:
+            if zotu_seq_line[0] == '>':
+                zotu_name = zotu_regex.search(zotu_seq_line).group(1)
+                zotu_tax = tax_regex.search(zotu_seq_line).group(1)
+                zotu_tax_dict[zotu_name] = zotu_tax
+            zotu_seq_line = zotu_seq_fio.readline().strip()
+    out_file = open('ZOTUs-Table.tab', 'w+')
+    zotu_table_lines_list = read_file('zotu_table.txt')
+    header = '\t'.join(zotu_table_lines_list[0].split('\t')[1:])
+    # Writing the header
+    out_file.write('#Zotu\t' + header + '\tTaxonomy\n')
+    for zotu_table_line in zotu_table_lines_list[1:]:
+        curr_zotu = zotu_table_line.split('\t')[0]
+        curr_line = zotu_table_line + '\t' + zotu_tax_dict[curr_zotu] + '\n'
+        out_file.write(curr_line)
     out_file.close()
 
 
 def add_taxonomy_to_fasta():
     out_file = open('taxed_ZOTUs.fasta', 'w+')
-    table_file = read_file('ZOTUs-table.final.tab')[1:]
+    table_file = read_file('ZOTUs-table.tab')[1:]
     OTUS = list()
     taxonomies = list()
     for line in table_file:
@@ -740,11 +750,11 @@ def create_krona():
 
 
 def create_OTUs_from_ZOTUS_table():
-    clean_zotus = read_file('ZOTUs-table.final.tab')
+    clean_zotus = read_file('ZOTUs-Table.tab')
     map_file = read_file('ZOTUs-OTUs-map.tab')
     otus_contents = read_file('mOTUs-Seqs.fasta')
-    out_file = open('taxed_OTUs.fasta', 'w+')
-    out_file_2 = open('OTUs-table.final.tab', 'w+')
+    out_file = open('taxed_OTUs.fasta', 'w+')  # TODO I might need to change this name to OTUs-Seqs.fasta
+    out_file_2 = open('OTUs-Table.tab', 'w+')
     header = '\t'.join(clean_zotus[0].split('\t')[1:-1])
     out_file_2.write('#OTUId\t' + header + '\ttaxonomy\n')
     zotu_size_dict = dict()
@@ -1155,7 +1165,6 @@ def main(
         append_reads(sample, sam_id, ANALYSIS_DIR)
     chdir(ANALYSIS_DIR)
     trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
-
     ANA_LOG.info('# Dereplication: Started')
     dereplication()
     #################
@@ -1293,7 +1302,7 @@ def main_de_novo(
     sample_seq_files_path = []
     for full_id, entries in map_lines_dict.items():
         # sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(DEREP_READS_FILE_NAME), entries[0]))
-        sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(TAXED_ZOTU_FILE_NAME), entries[0]))
+        sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(DEREP_READS_FILE_NAME), entries[0]))
 
     for derep_path, sam_id in sample_seq_files_path:
         if not derep_path.is_file():
@@ -1309,16 +1318,14 @@ def main_de_novo(
     # trimming the sequences
     trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
     ANA_LOG.info('# Dereplication: Started')
-    dereplication(with_taxonomy=True)
+    dereplication(with_taxonomy=False)
     # Sorting the sequences
     ANA_LOG.info('# Sorting: Started')
     sort_seqs()
     # Clustering the sequences
     ANA_LOG.info('# Clustering at ZOTU level: Started')
     clusterZOTUs()
-    # filtering non-human ZOTUs
-    ANA_LOG.info('# Filtering non-human ZOTUS: Started')
-    # filter16S()  # It's been already done in preprocessing
+    # Removing the size from the ZOTUs
     prepare_zotus()
     # Clustering at OTU level
     ANA_LOG.info('# Clustering at OTU level: Started')
@@ -1326,15 +1333,14 @@ def main_de_novo(
     remove_size_from_OTUS()
     assign_zotus_to_otus()
     keep_good_ZOTUs()
-    exit("STOPPPPPPPPPPPPPPPP")
     ANA_LOG.info('# Creating final ZOTU table: Started')
     build_ZOTU_table()
-    filter_zotu_abundance()  # TODO check if we need to filter at ZOTU level
-    select_zotu_seqs()
+    # filter_zotu_abundance()  # TODO check if we need to filter at ZOTU level
     ANA_LOG.info('# Adding taxonomy to ZOTU sequences: Started')
     addTax_new("ZOTUs-Seqs.fasta")
     create_final_ZOTU_table()
-    add_taxonomy_to_fasta()
+    # add_taxonomy_to_fasta()
+    exit("STOPPPPPPPPPPPPPPPP")
     create_OTUs_from_ZOTUS_table()
     # Creating Krone graph
     ANA_LOG.info('# Creating Krona: Started')
