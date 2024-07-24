@@ -18,6 +18,7 @@ USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
 USEARCH_8_bin = BIN_DIR + "usearch8.1"
 DB_LOC = "/base/databases/"
 SINA_ARB = DB_LOC + "SILVA_138.1_SSURef_NR99_12_06_20_opt.arb"
+SINA_BIN = BIN_DIR + "sina/sina"
 GOLD_REFDB_USEARCH = DB_LOC + "SILVA-bac-16s-90.udb"
 # USERS_DIR = '/srv/crc/users/'
 ref16RNAdb_1 = DB_LOC + "silva-bac-16s-id90.fasta"
@@ -534,7 +535,6 @@ def addTax_new(zotu_fasta_path):
     zotu_fasta_path = os.path.abspath(zotu_fasta_path)
     dirname, filename = os.path.split(zotu_fasta_path)
     os.chdir(dirname)
-    classifier_dir = '/crc/crc/binaries/sina/'
     # cmd_part_0 = 'sina --in ' + str(zotu_fasta_path) + ' --search --meta-fmt csv '
     # cmd_part_1 = f'--threads {POOL_SIZE} --lca-fields tax_slv '
     # cmd_part_2 = '--db ' + SINA_ARB + ' --out test_{}'.format(filename)
