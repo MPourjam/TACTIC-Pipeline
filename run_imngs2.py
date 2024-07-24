@@ -8,8 +8,8 @@ import math
 import sys
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
-from imngs2_pipeline.analyze_sample_job import main as main_analysis_TIC
-from imngs2_pipeline.analysis.analysis import main_de_novo as main_analysis_de_novo
+from imngs2_pipeline.analysis.TIC_analysis import main as main_analysis_TIC
+from imngs2_pipeline.analysis.denovo_analysis import main_de_novo as main_analysis_de_novo
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes, slice_list
@@ -867,11 +867,11 @@ def run_imngs2(
         PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
         sys.exit(170)
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[0]:
+        PREP_LOG.info("Analysis mode: Taxonomy Informed Clustering (TIC)")
         main_analysis = main_analysis_TIC
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[1]:
+        PREP_LOG.info("Analysis mode: de-novo clustering")
         main_analysis = main_analysis_de_novo
-        # PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported yet.")
-        # sys.exit(170)
 
     if not skip_preprocess:
         try:

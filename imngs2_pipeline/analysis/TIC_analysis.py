@@ -3,12 +3,12 @@ import re
 import shutil
 from os import chdir
 from multiprocessing import cpu_count
-from .TIC.complex_TIC import main_complex_TIC
-from .TIC.split_based_on_taxonomy import split_based_on_taxonomy
-from .TIC.create_fasta_and_table import main as create_fasta_and_table_main
-from .processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
-from .processing_helper import system_sub as sys_sub
-from .spike_normalizer import normalize_otu_table
+from TIC.complex_TIC import main_complex_TIC
+from TIC.split_based_on_taxonomy import split_based_on_taxonomy
+from TIC.create_fasta_and_table import main as create_fasta_and_table_main
+from processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
+from processing_helper import system_sub as sys_sub
+from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
 
 
