@@ -184,12 +184,12 @@ def system_sub(cmd_args_list: list,
                capture_output: bool = False,
                quiet: bool = False,
                logger_obj: logging.Logger = LogPrint("print_logger")):
-    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
-
     # logging
     if force_log:
-        msg = f"COMMAND: {' '.join(cmd_list)}\n\n"
+        msg = f"COMMAND: {' '.join(cmd_args_list)}\n\n"
         logger_obj.info(msg)
+
+    run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
     if run_output.returncode == 137:  # Process killed due to memory limit
         err_msg = f"Command {' '.join(cmd_list)} exceeded memory limit."
         err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
