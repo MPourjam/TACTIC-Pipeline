@@ -13,7 +13,7 @@ global TIC_LOG
 TIC_LOG = gimmelogger(
     logger_name="run_imngs2.analysis.TIC",
     # log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
-    only_file=True
+    only_file=False
 )
 
 
@@ -619,8 +619,7 @@ def main(*args, **kwargs):
     try:
         create_trees()
     except Exception as exc:
-        TIC_LOG.error("Error in creating trees")
-        TIC_LOG.error(exc)
+        TIC_LOG.warning(f"Tree creation skipped: {exc}")
     else:
         TIC_LOG.info("Tree created")
 
