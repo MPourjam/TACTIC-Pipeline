@@ -13,8 +13,6 @@ from processing_helper import system_sub as sys_sub
 global TIC_LOG
 TIC_LOG = gimmelogger(
     logger_name="run_imngs2.analysis.TIC",
-    # log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
-    only_file=True
 )
 
 

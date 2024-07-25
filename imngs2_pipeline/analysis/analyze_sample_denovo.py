@@ -421,7 +421,6 @@ def create_OTUs_from_ZOTUS_table():
     ###
     testfasta_contents = read_file('test.fasta')
     testfasta_zotus_dict = {l[1:]: testfasta_contents[i + 1] for i, l in enumerate(testfasta_contents) if (l[0] == ">")}
-    otus_contents_zotus = [o[1:] for o in otus_contents if (o[0] == ">")]
     with open('test_otu.fasta', "w+") as test_otu:
         for ll in otus_contents:
             if ll[0] == ">":

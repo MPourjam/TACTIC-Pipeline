@@ -496,12 +496,11 @@ def is_relative_to(path, *other):
         return False
 
 
-def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = True):
+def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = True, propagate: bool = True):
     # finding caller file name and setting logger file path
     caller_frame = inspect.currentframe().f_back
     logger_name = Path(PurePath(caller_frame.f_code.co_filename)).stem if not logger_name else str(logger_name)
     if not log_file:
-        only_file = False
         log_file_path = Path(PurePath(inspect.getframeinfo(caller_frame).filename)).parent.joinpath(f"{logger_name}_log.txt")
     else:
         log_file_path = Path(PurePath(log_file)).absolute()
@@ -512,9 +511,10 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
     logger = logging.getLogger(logger_name)
     # set the logging level
     logger.setLevel(logging.DEBUG)
-    # create a console and file handler
+    has_stream_handler = [handler for handler in logger.handlers if isinstance(handler, logging.StreamHandler)]
+    has_file_handler = [handler for handler in logger.handlers if isinstance(handler, logging.FileHandler) and handler.baseFilename == str(log_file_path)]
     if not only_file:
-        ch = logging.StreamHandler()
+        ch = logging.StreamHandler() if not has_stream_handler else has_stream_handler[0]  # TODO what if there are several Streamhandler
         ch.setLevel(logging.DEBUG)
         # create a formatter
         # set the formatter to the console handler
@@ -525,16 +525,17 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
     if log_file:
         if not log_file_path.parent.is_dir():
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
-        fh = logging.FileHandler(log_file_path, mode='w')
+        fh = logging.FileHandler(log_file_path, mode='w') if not has_file_handler else has_file_handler[0]
         fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
-
+    # Propagate option
+    logger.propagate = propagate
     return logger
 
 
 global argparse_logger
-argparse_logger = gimmelogger("ArgumentParser")
+argparse_logger = gimmelogger("run_imngs2.ArgumentParser")
 
 
 def flatten_dict(

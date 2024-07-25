@@ -5,14 +5,12 @@ import math
 import statistics
 import pandas as pd
 from enum import Enum
-import inspect
-import logging
-# from imngs2_pipeline.processing_helper import gimmelogger
+from imngs2_pipeline.processing_helper import gimmelogger
 from sys import version_info
 if version_info[0] < 3:
-    from pathlib2 import Path, PurePath  # pip2 install pathlib2
+    from pathlib2 import Path  # pip2 install pathlib2
 else:
-    from pathlib import Path, PurePath
+    from pathlib import Path
 
 
 class SpikeNormValidity(str, Enum):
@@ -22,46 +20,9 @@ class SpikeNormValidity(str, Enum):
     PS = "PossiblySpiked"
 
 
-def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = True):
-    # finding caller file name and setting logger file path
-    caller_frame = inspect.currentframe().f_back
-    logger_name = Path(PurePath(caller_frame.f_code.co_filename)).stem if not logger_name else str(logger_name)
-    if not log_file:
-        log_file_path = Path(PurePath(inspect.getframeinfo(caller_frame).filename)).parent.joinpath(f"{logger_name}_log.txt")
-    else:
-        log_file_path = Path(PurePath(log_file)).absolute()
-
-    # Setting logger formatter with line number of source of log
-    formatter = logging.Formatter('%(asctime)s - %(name)s:%(filename)s:%(lineno)d - %(levelname)s - %(message)s')
-
-    logger = logging.getLogger(logger_name)
-    # set the logging level
-    logger.setLevel(logging.DEBUG)
-    # create a console and file handler
-    if not only_file:
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-        # create a formatter
-        # set the formatter to the console handler
-        ch.setFormatter(formatter)
-        # add the console handler to the logger
-        logger.addHandler(ch)
-    # Logger
-    if not log_file_path.parent.is_dir():
-        log_file_path.parent.mkdir(parents=True, exist_ok=True)
-    fh = logging.FileHandler(log_file_path, mode='w')
-    fh.setLevel(logging.INFO)
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-
-    return logger
-
-
 global NORM_LOG
 NORM_LOG = gimmelogger(
-    logger_name="run_imngs2.analysis.normalization",
-    log_file=Path.cwd().joinpath("Analysis_log.txt"),
-    only_file=True
+    logger_name="run_imngs2.normalization"
 )
 
 

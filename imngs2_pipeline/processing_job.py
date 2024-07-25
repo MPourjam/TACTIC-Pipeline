@@ -790,7 +790,7 @@ def main_processing(
     PREPPROC_LOG = gimmelogger(
         logger_name=f"run_imngs2.preprocessing_{str(input_id)}",
         log_file=logger_file_path,
-        only_file=True
+        only_file=True,
     )
     paired = "Yes" if reverse_file else "No"
     forward_file = path.join(input_dir, forward_file) if forward_file else ""

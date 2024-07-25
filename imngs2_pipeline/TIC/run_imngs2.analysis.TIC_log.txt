@@ -1,8 +1,0 @@
-2024-06-13 17:37:08,940 - run_imngs2.analysis.TIC:split_based_on_taxonomy.py:121 - INFO - Splitting the input file based on taxonomy
-2024-06-13 17:37:09,022 - run_imngs2.analysis.TIC:complex_TIC.py:1067 - INFO - Known Genera Clustering starting. Similarity Threshold:0.97
-2024-06-13 17:37:12,606 - run_imngs2.analysis.TIC:complex_TIC.py:1076 - INFO - Known Genera Clustering done
-2024-06-13 17:37:12,607 - run_imngs2.analysis.TIC:complex_TIC.py:1077 - INFO - Unknown Genera, Known Family Search starting. Similarity Threshold:0.95
-2024-06-13 17:37:13,411 - run_imngs2.analysis.TIC:complex_TIC.py:1089 - INFO - Unknown Family Search starting. Similarity Threshold:0.9
-2024-06-13 17:37:17,849 - run_imngs2.analysis.TIC:create_fasta_and_table.py:370 - INFO - Creating fasta and table files
-2024-06-13 17:37:18,041 - run_imngs2.analysis.TIC:create_fasta_and_table.py:89 - INFO - SOTUs got filtered for abundance value of 0.0
-2024-06-13 17:37:54,375 - run_imngs2.analysis.TIC:create_fasta_and_table.py:625 - INFO - Tree created

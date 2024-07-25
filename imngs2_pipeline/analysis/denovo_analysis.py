@@ -1238,10 +1238,13 @@ def main_de_novo(
     DB_LOC = Path(PurePath(dbs_loc))
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
-    ANA_LOG = gimmelogger(
+    gimmelogger(
         logger_name="run_imngs2.analysis",
         log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
-        only_file=True
+        only_file=True,
+    )
+    ANA_LOG = gimmelogger(
+        logger_name="run_imngs2.analysis.denovo_analysis",
     )
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
     ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"

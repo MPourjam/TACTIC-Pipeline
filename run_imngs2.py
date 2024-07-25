@@ -134,8 +134,7 @@ def is_argset_different(existing_arg_file: Path, processed_arg_file: Path = None
     if proce_arg_file:
         given_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=existing_arg_file)
         proce_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=proce_arg_file)
-
-        is_different = not given_argset_obj.preproc_args.__eq__(proce_argset_obj.preproc_args)
+        is_different = given_argset_obj.preproc_args != proce_argset_obj.preproc_args
 
     return is_different
 
@@ -247,13 +246,12 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path, g
 
 def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
     dir_path = Path(PurePath(dir_path)).absolute() if isinstance(dir_path, str) or isinstance(dir_path, Path) else ""
-    given_arg_file = Path(PurePath(given_arg_file)).absolute() if isinstance(given_arg_file, str) and isinstance(given_arg_file, Path) else ""
+    given_arg_file = Path(PurePath(given_arg_file)).absolute() if isinstance(given_arg_file, str) or isinstance(given_arg_file, Path) else ""
     if not dir_path and not given_arg_file:
         return False
     is_complete = is_processed_dir_healthy(dir_path)
     old_arg_file = dir_path.joinpath(DEFAULT_ARG_FILE_NAME)
     same_argset = not is_argset_different(given_arg_file, old_arg_file)
-
     return bool(is_complete and same_argset)
 
 
@@ -391,6 +389,7 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
     # 2- It should have "taxed_zotu.fasta"
     # Show warning if the sample is filtered out with a reason
     filtered_samples_dir = {}
+
     for mapline_files_tup, samp_dirs_list in samp_dir_with_taxed_zotu.items():
         for samp_dir in samp_dirs_list:
             if valid_for_analysis(samp_dir, args_yml_path):
