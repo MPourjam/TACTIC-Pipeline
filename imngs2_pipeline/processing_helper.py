@@ -1127,7 +1127,7 @@ class Filter16SArgs(ArgsParserUtil):
         # "ref90": "silva-bac-16s-id90.fasta",
         # "ref95": "silva-arc-16s-id95.fasta",
         # "reads": "zotus.fasta",
-        # "other": "other.non16rRNA",
+        "other": "other.non16rRNA",
         "num_alignments": 1,
         "workdir": ".",
         "e": 0.1,
