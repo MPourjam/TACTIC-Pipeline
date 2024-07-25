@@ -1300,7 +1300,6 @@ def main_de_novo(
     # Creating trees
     ANA_LOG.info('# Creating trees: Started')
     sina_algn_shortened_file = shorten_sina_algn("test_ZOTUs-Seqs.fasta")
-    create_trees(sina_algn_shortened_file)  # TODO check if we need to use create_trees
     ANA_LOG.info('# Creating Krona: Started')
     create_krona(krona_importtext)
     ANA_LOG.info('# Filtering OTUs abundance: Started')
@@ -1312,6 +1311,10 @@ def main_de_novo(
         ZOTUs_seq_name,
         "ZOTUs-OTUs-map.tab")
     ANA_LOG.info('# Cleaning up: Started')
+    try:
+        create_trees(sina_algn_shortened_file)  # TODO check if we need to use create_trees
+    except Exception as exc:
+        ANA_LOG.warning(f"Tree creation skipped: {exc}")
     cleanup(str(ANALYSIS_DIR))
     # Normalizing Tables
     try:
