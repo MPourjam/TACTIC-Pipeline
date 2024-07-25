@@ -18,6 +18,7 @@ import mimetypes as mtypes
 from os import path as ospath
 from os import remove
 from sys import version_info
+from copy import deepcopy
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # pip2 install pathlib2
 else:
@@ -500,6 +501,7 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
     caller_frame = inspect.currentframe().f_back
     logger_name = Path(PurePath(caller_frame.f_code.co_filename)).stem if not logger_name else str(logger_name)
     if not log_file:
+        only_file = False
         log_file_path = Path(PurePath(inspect.getframeinfo(caller_frame).filename)).parent.joinpath(f"{logger_name}_log.txt")
     else:
         log_file_path = Path(PurePath(log_file)).absolute()
@@ -520,12 +522,13 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
         # add the console handler to the logger
         logger.addHandler(ch)
     # Logger
-    if not log_file_path.parent.is_dir():
-        log_file_path.parent.mkdir(parents=True, exist_ok=True)
-    fh = logging.FileHandler(log_file_path, mode='w')
-    fh.setLevel(logging.INFO)
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
+    if log_file:
+        if not log_file_path.parent.is_dir():
+            log_file_path.parent.mkdir(parents=True, exist_ok=True)
+        fh = logging.FileHandler(log_file_path, mode='w')
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
 
     return logger
 
@@ -965,14 +968,19 @@ class ArgsParserUtil(ArgsParserDunderUtil):
         """
         if not isinstance(args_d, dict):
             raise ArgsetException(f"args_d must be a non-empty dictionary. {str(type(args_d))} is given.")
+        parsed_args = deepcopy(self.default_args)
         for key, val in self.default_args.items():
             setattr(self, key, val)
+            parsed_args[key] = val
             # addTaxUpdating the argument value if it exists in args_d
             not_valid_value = "It's not yet a valid number"
             arg_val_to_put = not_valid_value
             # All args_d is supposed to be flattend with "__" as parent_key seperator
             for ky, vl in args_d.items():
                 arg_parser_class_name = ky.split(ArgsParserUtil.dict_flatt_sep)[0:1]
+                arg_parser_class_name = arg_parser_class_name[0] if arg_parser_class_name else str(None)
+                arg_parser_key = ky.split(ArgsParserUtil.dict_flatt_sep)[1:2]
+                arg_parser_key = str(None) if len(arg_parser_key) == 0 else str(arg_parser_key[0])
                 """
                 NOTE
                 If the argument parser part of key matches the class name of current object
@@ -980,11 +988,13 @@ class ArgsParserUtil(ArgsParserDunderUtil):
                 e.g: MergePairsArgs<dict_flatt_sep>fastq_maxdiffs will be only set as an
                 attribute to a class parser with the name 'MergePairsArgs'
                 """
-                if key in ky and str(self.__class__.__name__) in arg_parser_class_name:
+                if key == arg_parser_key and str(self.__class__.__name__) == arg_parser_class_name:
                     arg_val_to_put = vl
-
             if str(arg_val_to_put) != not_valid_value and isinstance(arg_val_to_put, type(val)):
                 setattr(self, key, arg_val_to_put)
+                parsed_args[key] = arg_val_to_put
+
+        setattr(self, "parsed_args", parsed_args)
 
     def update_attrs(self, args_dict: dict = {}):
         """
@@ -1022,14 +1032,13 @@ class ArgsParserUtil(ArgsParserDunderUtil):
     def __eq__(self, other):
         if not isinstance(self, other.__class__):
             return False
-        if not (hasattr(self, "default_args") or not hasattr(other, "default_args")):
+        if not (hasattr(self, "parsed_args") or not hasattr(other, "parsed_args")):
             return False
-        eq_tests = [False for fi in self.default_args.keys()]
-        for ind in range(len(self.default_args.keys())):
-            ke = list(self.default_args.keys())[ind]
-            el = self.default_args.get(ke, "A") == other.default_args.get(ke, "B")
-            eq_tests[ind] = el
-        return all(eq_tests)
+        eq_tests = {fi: False for fi in self.parsed_args.keys()}
+        for ind_key in self.parsed_args.keys():
+            el = self.parsed_args.get(ind_key) == other.parsed_args.get(ind_key, "This is not valid at all")
+            eq_tests[ind_key] = el
+        return all(list(eq_tests.values()))
 
 
 class SpikeRemovalArgs(ArgsParserUtil):
@@ -1067,8 +1076,8 @@ class TrimOneSideArgs(ArgsParserUtil):
 
 class FilterBothSidesArgs(ArgsParserUtil):
     default_args = {
-        "fastq_filter": "filtered1.fasta",
-        "fastaout": "filtered2.fasta",
+        # "fastq_filter": "filtered1.fasta",
+        # "fastaout": "filtered2.fasta",
         "fastq_maxee_rate": 0.002,
     }
 
@@ -1107,14 +1116,18 @@ class ClusterZOTUsArgs(ArgsParserUtil):
         "minsize": 2,
     }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # print(self.default_args)
+
 
 class Filter16SArgs(ArgsParserUtil):
     default_args = {
         # "fastx": good-ZOTUs[.fasta],
-        "ref90": "silva-bac-16s-id90.fasta",
-        "ref95": "silva-arc-16s-id95.fasta",
+        # "ref90": "silva-bac-16s-id90.fasta",
+        # "ref95": "silva-arc-16s-id95.fasta",
         # "reads": "zotus.fasta",
-        "other": "other.non16rRNA",
+        # "other": "other.non16rRNA",
         "num_alignments": 1,
         "workdir": ".",
         "e": 0.1,
