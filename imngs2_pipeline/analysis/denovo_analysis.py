@@ -1269,8 +1269,7 @@ def main_de_novo(
             raise ValueError(f"{str(derep_path)} must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
-    ANA_LOG.info('### Analysis Started ###')
-    ANA_LOG.info('# Gathering Sequences: Started')
+    ANA_LOG.info("# Analysis Started: Gathering Sequences")
     # TODO as derep.fasta is archived in the zip file, it should be extracted first
     for seq_file, sam_id in sample_seq_files_path:
         append_reads(seq_file, sam_id, ANALYSIS_DIR)
