@@ -364,7 +364,7 @@ def remove_size_from_OTUS():
 
 def assign_zotus_to_otus():
     zotus_map = read_file('z2o.tab')
-    out_file = open('ZOTUs-OTUs-map.tab', 'w+')
+    out_file = open('Map-ZOTU-OTU.tab', 'w+')
     out_file_2 = open('matched_ZOTUS.txt', 'w+')
     match_regex = re.compile(r";top=(Zotu[0-9]+);")
     zotu_regex = re.compile(r"(Zotu[0-9]+);")
@@ -760,7 +760,7 @@ def create_krona(krona_tool):
 
 def create_OTUs_from_ZOTUS_table():
     clean_zotus = read_file('ZOTUs-Table.tab')
-    map_file = read_file('ZOTUs-OTUs-map.tab')
+    map_file = read_file('Map-ZOTU-OTU.tab')
     otus_contents = read_file('mOTUs-Seqs.fasta')
     otu_seqs_fio = open('OTUs-Seqs.fasta', 'w+')
     otu_table_fio = open('OTUs-Table.tab', 'w+')
@@ -1072,12 +1072,13 @@ def cleanup(directory: str):
         "ZOTUs-Table.tab",
         "OTUs-Seqs.fasta",
         "OTUs-Table.tab",
-        "ZOTUs-OTUs-map.tab",
+        "Map-ZOTU-OTU.tab",
         "ZOTUs-Tree-nj.tre",
         "ZOTUs-Tree-FastTree.tre",
         "OTUs-Tree-nj.tre",
         "OTUs-Tree-FastTree.tre",
         "krona.html",
+        "Analysis_log.txt"
     ]
     files = list(directory.glob("*"))
     for file in files:
@@ -1311,7 +1312,7 @@ def main_de_novo(
         OTU_seq_name,
         ZOTUs_table_name,
         ZOTUs_seq_name,
-        "ZOTUs-OTUs-map.tab")
+        "Map-ZOTU-OTU.tab")
     ANA_LOG.info('# Cleaning up: Started')
     try:
         create_trees(sina_algn_shortened_file)  # TODO check if we need to use create_trees
