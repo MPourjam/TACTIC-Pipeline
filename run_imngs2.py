@@ -47,11 +47,12 @@ SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
-global SUPPORTED_ANALYSIS_MODE
+global SUPPORTED_ANALYSIS_MODE, USEARCH_11_BIN
 SUPPORTED_ANALYSIS_MODE = [
     "TIC",
     "de-novo",
 ]
+USEARCH_11_BIN = Path(PurePath("/base/binaries/usearch11.0.667_i86linux64"))
 
 
 def handle_system_signals(signum, frame):
@@ -810,7 +811,7 @@ def check_taxed_zotus_fasta(file_path: str) -> bool:
 
 def run_imngs2(
         fastq_file_dir: str,
-        usearch_11_bin: str,
+        usearch_11_bin: str = str(USEARCH_11_BIN),
         args_yml_file: str = str(ARGS_YAML_FILE),
         dbs_dir: str = str(DBS_DIR),
         mapping_file: str = "",
@@ -1028,8 +1029,8 @@ if __name__ == "__main__":
     # <END
     parser.add_argument("-ut", "--usearch-bin",
                         type=str,
-                        help="Path to binary of usearch version 11. Default is 11.0.667_i86linux32.",
-                        required=True)
+                        help="Path to binary of usearch version 11. Default is usearch11.0.667_i86linux32.",
+                        default=str(USEARCH_11_BIN))
     parser.add_argument("-db", "--db-directory",
                         type=str,
                         help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
@@ -1054,7 +1055,7 @@ if __name__ == "__main__":
     # If they are the same it returns unchanged. If fastq_dir is subpath of input it returns the longest one
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()
     # TODO Later we need to force the user to provide the path to usearch binary. For now we only continue with the default one.
-    given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute())
+    given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if str(args.usearch_bin) != str(USEARCH_11_BIN) else str(USEARCH_11_BIN)
     # warning the cli users for the given usearch file
     try:
         POOL_SIZE = int(args.threads)
