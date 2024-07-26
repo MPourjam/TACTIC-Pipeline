@@ -450,7 +450,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     mapping_lines = []  # List[(MapLineTup, file_pair)] -> from mapping file, full line for each relevant sample
 
     with open(mapping_file_path, 'r') as mapping_file_h:
-        header: str = next(mapping_file_h)
+        header: str = str(next(mapping_file_h)).replace("\r", "")
 
         if not header.startswith('#'):
             PREP_LOG.error('No header in mapping file')
@@ -488,7 +488,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
         index_of_parent_path_col = index_of_parent_path_col if index_of_parent_path_col else len(columns)
         # looping over lines
         for line in mapping_file_h:
-            line = line.strip().rstrip()
+            line = line.strip().rstrip().replace("\r", "")
             if line.startswith('#'):
                 continue
             # placing default values
@@ -800,7 +800,7 @@ def check_taxed_zotus_fasta(file_path: str) -> bool:
     size_rgx = re.compile(r"size=([0-9]+);")
     tax_rgx = re.compile(r"tax=([^;]+){0,7};")
     with open(file_path) as fs_fio:
-        line = fs_fio.readline().strip()
+        line = fs_fio.readline().strip().replace("\r", "")
         size_mo = size_rgx.search(line)
         tax_mo = tax_rgx.search(line)
         if not all([line, line.startswith(">"), size_mo, tax_mo]):
