@@ -13,6 +13,7 @@ import shutil
 import csv
 
 
+global data, IMAGE_NAME
 IMAGE_NAME = "tic-pipeline-test"
 data = "test/data/truncated"
 usearch_11_32_url = "https://drive5.com/downloads/usearch11.0.667_i86linux32.gz"
@@ -43,6 +44,7 @@ class ArgumentSet:
     skip_analysis = False
     place_template_file = False
     threads = 0
+    analysis_mode = ""
 
     def __init__(self, input_dir, fastq_dir, **kwargs):
         self.input_dir = input_dir
@@ -75,6 +77,8 @@ class ArgumentSet:
             args += ["--place-template-file"]
         if self.threads:
             args += ["--threads", str(self.threads)]
+        if self.analysis_mode:
+            args += ["--analysis-mode", self.analysis_mode]
         return args
 
     def __repr__(self) -> str:
@@ -140,7 +144,8 @@ def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
         re.compile(r"silva_start_end\.txt"),
         re.compile(r"ZOTUs-table\.final\.tab"),  # also in zip file
         re.compile(r"reads_report\.txt"),
-        re.compile(r"derep\.fasta\.tar\.gz"),
+        # re.compile(r"derep\.fasta\.tar\.gz"),  # we do not compress the derep.fasta file anymore
+        re.compile(r"derep\.fasta"),
         re.compile(r"R1-per_base_quality\.png"),  # also in zip file
         re.compile(r"R2-per_base_quality\.png"),  # also in zip file
         re.compile(r"aligned_.*\.fasta\.tar\.gz"),
@@ -175,7 +180,7 @@ def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
     return return_bool
 
 
-def check_expected_files_exist(analysis_folder: str) -> bool:
+def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC") -> bool:
     """
     The analysis folder should contain the following files:
     ```
@@ -184,9 +189,9 @@ def check_expected_files_exist(analysis_folder: str) -> bool:
     ├── Map-GOTU-FOTU.tab
     ├── Map-SOTU-GOTU.tab
     ├── Map-ZOTU-SOTU.tab
-    ├── SOTUs-Seqs.fasta
-    ├── SOTUs-Table.tab
-    ├── SOTUs-Tree-nj.tre
+    ├── S?OTUs-Seqs.fasta
+    ├── S?OTUs-Table.tab
+    ├── S?OTUs-Tree-nj.tre
     ├── spike_mapping_file.csv
     ├── ZOTUs-Seqs.fasta
     ├── ZOTUs-Table.tab
@@ -195,18 +200,24 @@ def check_expected_files_exist(analysis_folder: str) -> bool:
     """
     return_bool = True
     files_to_be_there = [
-        re.compile(r"Analysis_log\.txt"),
-        re.compile(r"Map-GOTU-FOTU\.tab"),
-        re.compile(r"Map-SOTU-GOTU\.tab"),
-        re.compile(r"Map-ZOTU-SOTU\.tab"),
-        re.compile(r"SOTUs-Seqs\.fasta"),
-        re.compile(r"SOTUs-Table\.tab"),
-        re.compile(r"SOTUs-Tree-nj\.tre"),
         re.compile(r"spike_mapping_file\.csv"),
+        re.compile(r"Analysis_log\.txt"),
+        re.compile(r"S?OTUs-Seqs\.fasta"),
+        re.compile(r"S?OTUs-Table\.tab"),
+        re.compile(r"S?OTUs-Tree-nj\.tre"),
         re.compile(r"ZOTUs-Seqs\.fasta"),
         re.compile(r"ZOTUs-Table\.tab"),
         re.compile(r"ZOTUs-Tree-nj\.tre"),
+        re.compile(r"Map-ZOTU-S?OTU\.tab")
     ]
+    if analysis_mode == "TIC":
+        files_to_be_there.append(
+            [
+                re.compile(r"Map-GOTU-FOTU\.tab"),
+                re.compile(r"Map-SOTU-GOTU\.tab"),
+            ]
+        )
+
     existing_files_list = []
     # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
     if analysis_folder.endswith(".zip") and os.path.isfile(os.path.join(analysis_folder)):
@@ -302,8 +313,12 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             print("latest_analysis_folder =", latest_analysis_folder)
             assert latest_analysis_folder != ""
             assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the ZOTU table"
-            assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
-            file_set_complete = check_expected_files_exist(latest_analysis_folder)
+            if arg_set.analysis_mode == "TIC":
+                assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
+                file_set_complete = check_expected_files_exist(latest_analysis_folder)
+            elif arg_set.analysis_mode == "de-novo":
+                assert check_otutable_format(os.path.join(latest_analysis_folder, "OTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the OTU table"
+                file_set_complete = check_expected_files_exist(latest_analysis_folder, "de-novo")
             assert file_set_complete, "Some files are missing in the output folder"
         elif not arg_set.skip_preprocess and arg_set.skip_analysis:
             file_set_complete_counter = 0
@@ -526,6 +541,33 @@ def test_thread_arg(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         args_set.threads = 1
+
+        return args_set
+
+    run_container(setup_file_structure)
+
+
+def test_full_denovo_analysis(build_image):
+    def setup_file_structure(run_dir: str):
+        # copy the contents of data to the temporary directory
+        subprocess.run(["cp", "-r", data, run_dir])
+        # move the contents of the data folder to the run_dir
+        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
+            subprocess.run(["mv", file, run_dir])
+        # rm the folder
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        # setting args
+        args_set = ArgumentSet("", "")
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.analysis_mode = "de-novo"
 
         return args_set
 
