@@ -1117,9 +1117,14 @@ class ClusterZOTUsArgs(ArgsParserUtil):
         "minsize": 2,
     }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # print(self.default_args)
+
+class DeNovoClusterZOTUsArgs(ArgsParserUtil):
+    default_args = {
+        # "unoise3": sorted.fasta,
+        # "zotus": zotus.fasta,
+        # "tabbedout": denoising.tab,
+        "minsize": 2,
+    }
 
 
 class Filter16SArgs(ArgsParserUtil):
@@ -1269,6 +1274,7 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
         self.trimsides = TrimSidesArgs(config_dict)
         self.complex_tic = ComplexTICArgs(config_dict)
         self.create_table = CreateTableTICArgs(config_dict)
+        self.denovo_cluster_zotus = DeNovoClusterZOTUsArgs(config_dict)
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):

@@ -265,7 +265,7 @@ def clusterZOTUs():
         "-unoise3",
         "sorted.fasta",
         "-minsize",
-        "4",
+        str(ARGS_CLS.denovo_cluster_zotus.minsize),
         "-zotus",
         "zotus.fasta",
         # "--sizein",

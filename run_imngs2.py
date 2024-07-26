@@ -644,7 +644,7 @@ def run_preprocessing(
         usearch_11_bin: str,
         sample_id: str,
         sample_weight: float = float("NAN"),  # spike normalizer handles this
-        spike_amount: float = 0.0):
+        spike_amount: float = 0.0) -> Path:
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -822,6 +822,13 @@ def run_imngs2(
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
+    # Updating logger file path
+    global PREP_LOG
+    PREP_LOG = proc_helper.gimmelogger(
+        "run_imngs2",
+        log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
+        only_file=False
+    )
     ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
     if ret_code != 0:
         PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")
@@ -1054,7 +1061,11 @@ if __name__ == "__main__":
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()
     # If they are the same it returns unchanged. If fastq_dir is subpath of input it returns the longest one
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()
-    # TODO Later we need to force the user to provide the path to usearch binary. For now we only continue with the default one.
+    PREP_LOG = proc_helper.gimmelogger(
+        "run_imngs2",
+        log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
+        only_file=False
+    )
     given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if str(args.usearch_bin) != str(USEARCH_11_BIN) else str(USEARCH_11_BIN)
     # warning the cli users for the given usearch file
     try:
@@ -1074,8 +1085,7 @@ if __name__ == "__main__":
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
-        PREP_LOG.warning(f"{str(cli_args_file.relative_to(INPUT_DIR))} is not a valid file path. "
-                         f"Falling back to default argument set written to {str(cli_args_file.relative_to(INPUT_DIR))}")
+        PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(FASTQ_DIR))})")
 
     if args.place_template_files:
         shutil.copy(

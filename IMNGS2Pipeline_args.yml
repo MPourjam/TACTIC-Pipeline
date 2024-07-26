@@ -37,6 +37,8 @@ AddTaxArgs:
 ################
 ### Analysis ###
 ################
+DeNovoClusterZOTUsArgs:
+  minsize: 8
 TrimSidesArgs:
   stripleft: 5
   stripright: 5
