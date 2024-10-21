@@ -828,12 +828,13 @@ def run_imngs2(
     global USEARCH_11_BIN, FASTQ_DIR
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     # Updating logger file path
-    global PREP_LOG
-    PREP_LOG = proc_helper.gimmelogger(
-        "run_imngs2",
-        log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
-        only_file=False
-    )
+    # Not overwriting the PREP_LOG
+    # global PREP_LOG
+    # PREP_LOG = proc_helper.gimmelogger(
+    #     "run_imngs2",
+    #     log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
+    #     only_file=False
+    # )
     ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
     if ret_code != 0:
         PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")
@@ -892,6 +893,12 @@ def run_imngs2(
             samples_dirs = []
             res_dict = {}
             task_batches = slice_list(list(mapping_line_tup_dict.items()), POOL_SIZE)
+            # master preprocessing logger
+            PREC_PROC_LOG = proc_helper.gimmelogger(
+                # this logger makes sure that the logs are thread safe
+                "run_imngs2.preprocessing",
+                only_file=False
+            )
             # create a queue for the tasks
 
             for task_b in task_batches:
@@ -925,18 +932,18 @@ def run_imngs2(
                     if res:
                         res_dict[sample_id] = res
                     else:
-                        PREP_LOG.warning(f"Failed to finalize preprocessing for {sample_id}")
+                        PREC_PROC_LOG.warning(f"Failed to finalize preprocessing for {sample_id}")
             samples_dirs = list(res_dict.values())
         except Exception as exc:
-            PREP_LOG.error(f"Preprocessing Failed: {exc}")
+            PREC_PROC_LOG.error(f"Preprocessing Failed: {exc}")
             skip_analysis = True
             samples_dirs = []
             sys.exit(165)
         else:
-            PREP_LOG.info("Preprocessing done.")
+            PREC_PROC_LOG.info("Preprocessing done.")
 
     else:
-        PREP_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
+        PREC_PROC_LOG.warning(f"Skipping Preprocessing. Processing samples in directory {fastq_file_dir}")
 
     # We do find preprocessed samples for analysis regardless of the preprocessing step. If the samples are not preprocessed, then the function
     # below must not find them.

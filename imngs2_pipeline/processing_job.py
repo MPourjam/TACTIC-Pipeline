@@ -788,7 +788,7 @@ def main_processing(
     USEARCH_11_BIN = usearch_11_bin + " -strand both"
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
     PREPPROC_LOG = gimmelogger(
-        logger_name=f"run_imngs2.preprocessing_{str(input_id)}",
+        logger_name=f"run_imngs2.preprocessing.{str(input_id)}",
         log_file=logger_file_path,
         only_file=True,
     )
