@@ -680,7 +680,12 @@ def run_preprocessing(
             new_path = sample_dir.joinpath(sfi.name)
             new_paths[ind] = new_path
             # Copying files
-            symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
+            try:
+                symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
+            except Exception as exc:
+                PREP_LOG.warning(f"Failed to create symlink for {sfi}. {exc}")
+                PREP_LOG.info(f"Copying {sfi} to {new_path}")
+                shutil.copy(str(sfi), str(new_path))
 
         # We do spike removal if necessary and add a line to spike_stats file for spike normalization
         # We only carry valid files in fastq_files_tuple
