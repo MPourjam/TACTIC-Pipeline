@@ -277,7 +277,7 @@ def trim_one_side(forward_file):
 
 def filter_merged_one_side(forward_file):
     curr_mean, curr_sd = seqFileStats(forward_file)
-    minLength = curr_mean - int(0.1 * curr_mean) - 5  # remove the primer triming size plus 10% of the mean size
+    minLength = int(curr_mean - int(0.1 * curr_mean) - 5)  # remove the primer trimming size plus 10% of the mean size
     # cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_truncqual " + str(ARGS_CLS.filter_single_reads.fastq_truncqual)
     # cmd_1 = " -fastq_maxee_rate " + str(ARGS_CLS.filter_single_reads.fastq_maxee_rate) + " -fastq_trunclen " + str(minLength)
     # cmd_2 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
