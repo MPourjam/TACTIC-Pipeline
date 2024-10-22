@@ -897,7 +897,7 @@ def run_imngs2(
             PREC_PROC_LOG = proc_helper.gimmelogger(
                 # this logger makes sure that the logs are thread safe
                 "run_imngs2.preprocessing",
-                only_file=False
+                only_file=True
             )
             # create a queue for the tasks
 
