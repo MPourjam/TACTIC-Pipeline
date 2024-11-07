@@ -324,31 +324,22 @@ def calc_spikes(*fastq_files, spike_amount: float = 0.0):
 
 def find_files_and_dirs_owned_by_root(directory):
     root_files_and_dirs = []
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            filepath = ospath.join(root, file)
-            try:
-                # Get file owner information
-                file_stat = os.stat(filepath)
-                file_owner = file_stat.st_uid
-                # Check if the owner is root (uid 0)
-                if file_owner == 0:
-                    root_files_and_dirs.append(filepath)
-            except Exception as e:
-                root_files_and_dirs.append(filepath)
-                argparse_logger.error(f"Error while checking for permissions on {filepath}: {e}")
-        for dir_name in dirs:
-            dir_path = ospath.join(root, dir_name)
-            try:
-                # Get directory owner information
-                dir_stat = os.stat(dir_path)
-                dir_owner = dir_stat.st_uid
-                # Check if the owner is root (uid 0)
-                if dir_owner == 0:
-                    root_files_and_dirs.append(dir_path)
-            except Exception as e:
-                root_files_and_dirs.append(dir_path)
-                argparse_logger.error(f"Error while checking for permissions on {dir_path}: {e}")
+    directory = Path(directory).absolute()
+
+    for path in directory.rglob('*'):
+        try:
+            # Get file or directory owner information
+            if path.is_symlink():
+                raise TypeError("Symlinks are skipped.")
+            file_stat = path.stat()
+            # Check if the owner is root (uid 0)
+            if file_stat.st_uid == 0:
+                root_files_and_dirs.append(str(path))
+        except TypeError as texc:
+            argparse_logger.debug(f"Error while checking for permissions on {path}: {texc}")
+        except Exception:
+            pass
+
     return root_files_and_dirs
 
 
