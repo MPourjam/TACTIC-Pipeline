@@ -252,7 +252,7 @@ def sort_seqs():
             "-fastaout",
             "sorted.fasta"
         ],
-        capture_output=False,
+        capture_output=True,
         force_log=True
     )
 
@@ -782,16 +782,20 @@ def main_processing(
         input_id: str,
         args_file_path: str = "",
         spike_amount: float = 0.0,
-        usearch_11_bin: str = USEARCH_11_BIN):
+        usearch_11_bin: str = USEARCH_11_BIN,
+        logger_obj: logging.Logger = None):
     global PREPPROC_LOG, USEARCH_11_BIN
     # usearch_11_bin must be a global variable and pointing to a file
     USEARCH_11_BIN = usearch_11_bin + " -strand both"
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
-    PREPPROC_LOG = gimmelogger(
-        logger_name=f"run_imngs2.preprocessing.{str(input_id)}",
-        log_file=logger_file_path,
-        only_file=True,
-    )
+    if logger_obj and isinstance(logger_obj, logging.Logger):
+        PREPPROC_LOG = logger_obj
+    else:
+        PREPPROC_LOG = gimmelogger(
+            logger_name=f"run_imngs2.preprocessing.{str(input_id)}",
+            log_file=logger_file_path,
+            only_file=True,
+        )
     paired = "Yes" if reverse_file else "No"
     forward_file = path.join(input_dir, forward_file) if forward_file else ""
     reverse_file = path.join(input_dir, reverse_file) if reverse_file else ""
