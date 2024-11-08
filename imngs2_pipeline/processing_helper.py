@@ -20,7 +20,7 @@ from os import remove
 from sys import version_info
 from copy import deepcopy
 if version_info[0] < 3:
-    from pathlib2 import Path, PurePath  # pip2 install pathlib2
+    from pathlib2 import Path, PurePath  # type: ignore # pip2 install pathlib2
 else:
     from pathlib import Path, PurePath
 try:
@@ -182,16 +182,17 @@ class LogPrint(logging.Logger):
 def system_sub(cmd_args_list: list,
                force_log: bool = False,
                shell: bool = False,
-               capture_output: bool = False,
+               capture_output: bool = True,
                quiet: bool = False,
                logger_obj: logging.Logger = LogPrint("print_logger")):
     # logging
     if force_log:
         msg = f"COMMAND: {' '.join(cmd_args_list)}\n\n"
-        logger_obj.info(msg)
+        logger_obj.debug(msg)
 
     run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
     if run_output.returncode == 137:  # Process killed due to memory limit
+        # raise exception is captured by thread calling function in run_imngs2.py
         err_msg = f"Command {' '.join(cmd_list)} exceeded memory limit."
         err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
         err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
@@ -201,7 +202,9 @@ def system_sub(cmd_args_list: list,
     elif run_output.returncode != 0 and quiet:
         logger_obj.error(f"Error in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
     elif run_output.returncode == 0 and run_output.stderr and not quiet:
-        logger_obj.warning(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+        logger_obj.debug(f"Warning in running command {' '.join(cmd_list)}:\n{run_output.stderr}")
+    elif run_output.returncode == 0 and not quiet:
+        logger_obj.debug(f"Logs in running command {' '.join(cmd_list)}:\n{run_output.stdout}")
     return run_output
 
 
@@ -521,7 +524,7 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
     logger.setLevel(logging.DEBUG)
     if not only_file:
         ch = get_stream_handler(logger)
-        ch.setLevel(logging.DEBUG)
+        ch.setLevel(logging.INFO)
         # create a formatter
         # set the formatter to the console handler
         ch.setFormatter(formatter)
@@ -532,7 +535,7 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
         if not log_file_path.parent.is_dir():
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
         fh = get_file_handler(logger, log_file_path)
-        fh.setLevel(logging.INFO)
+        fh.setLevel(logging.DEBUG)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
     # Propagate option
@@ -657,7 +660,7 @@ class Usearch(FileUtil):
         version = version if version else self.desired_version
         return version in self.which_usearch_version()
 
-    def check_or_get_bin(self) -> (int, str):
+    def check_or_get_bin(self) -> tuple:
         """
         It checks the given file path and if it's a gzip file then it looks for a linux binary file
         made for i86 architecture and returns the path of the binary file.

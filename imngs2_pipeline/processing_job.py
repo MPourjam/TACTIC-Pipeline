@@ -28,7 +28,7 @@ USEARCH8_1 = USEARCH_8_BIN + " -threads 1"
 SINA_BIN = BIN_DIR + 'sina/sina'
 DBS_DIR = "/base/databases/"
 GOLD_REFDB_USEARCH = DBS_DIR + 'SILVA-bac-16s-90.udb'
-SINA_ARB = DBS_DIR + 'SILVA_138.1_SSURef_NR99_12_06_20_opt.arb'
+SINA_ARB = DBS_DIR + 'SILVA_LATEST.arb'
 ref16RNAdb_1 = DBS_DIR + "silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = DBS_DIR + "silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
@@ -252,7 +252,7 @@ def sort_seqs():
             "-fastaout",
             "sorted.fasta"
         ],
-        capture_output=False,
+        capture_output=True,
         force_log=True
     )
 
@@ -782,16 +782,20 @@ def main_processing(
         input_id: str,
         args_file_path: str = "",
         spike_amount: float = 0.0,
-        usearch_11_bin: str = USEARCH_11_BIN):
+        usearch_11_bin: str = USEARCH_11_BIN,
+        logger_obj: logging.Logger = None):
     global PREPPROC_LOG, USEARCH_11_BIN
     # usearch_11_bin must be a global variable and pointing to a file
     USEARCH_11_BIN = usearch_11_bin + " -strand both"
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
-    PREPPROC_LOG = gimmelogger(
-        logger_name=f"run_imngs2.preprocessing.{str(input_id)}",
-        log_file=logger_file_path,
-        only_file=True,
-    )
+    if logger_obj and isinstance(logger_obj, logging.Logger):
+        PREPPROC_LOG = logger_obj
+    else:
+        PREPPROC_LOG = gimmelogger(
+            logger_name=f"run_imngs2.preprocessing.{str(input_id)}",
+            log_file=logger_file_path,
+            only_file=True,
+        )
     paired = "Yes" if reverse_file else "No"
     forward_file = path.join(input_dir, forward_file) if forward_file else ""
     reverse_file = path.join(input_dir, reverse_file) if reverse_file else ""
@@ -838,51 +842,51 @@ def main_processing(
         else:
             pko = TaskPickle(pk_file)
         chdir(input_dir)
-        PREPPROC_LOG.info("# Spike Removal: Started")
+        PREPPROC_LOG.info("# Spike Removal")
         # spike_amount should not be negative
         if not (math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0):
             spike_amount = 0.0
             PREPPROC_LOG.warning("Negative value for spike_amount replaced with default value (0.0)")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
-        PREPPROC_LOG.info('# FastQC: Started')
+        PREPPROC_LOG.info('# FastQC')
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is CRUCIAL to be here
         if reverse_file:
-            PREPPROC_LOG.info('# Merging Pairs: Started')
+            PREPPROC_LOG.info('# Merging Pairs')
             merge_pairs(forward_file, reverse_file)
-            PREPPROC_LOG.info('# Trim Sides: Started')
+            PREPPROC_LOG.info('# Trim Sides')
             trim_sides()
-            PREPPROC_LOG.info('# Filter Merged Reads: Started')
+            PREPPROC_LOG.info('# Filter Merged Reads')
             filter_merged_reads()
         else:
-            PREPPROC_LOG.info('# Trim One Side: Started')
+            PREPPROC_LOG.info('# Trim One Side')
             trim_one_side(forward_file)
-            PREPPROC_LOG.info('# Filter Amplicons: Started')
+            PREPPROC_LOG.info('# Filter Amplicons')
             filter_merged_one_side(forward_file)
-        PREPPROC_LOG.info('# Dereplication: Started')
+        PREPPROC_LOG.info('# Dereplication')
         dereped_read_n = dereplicate_seqs()
         read_report = write_reads_report(input_id,
                                          Dereplicated_reads=dereped_read_n)
         PREPPROC_LOG.debug(read_report)
-        PREPPROC_LOG.info('# Sort Sequences: Started')
+        PREPPROC_LOG.info('# Sort Sequences')
         sort_seqs()
-        PREPPROC_LOG.info('# Cluster ZOTUs: Started')
+        PREPPROC_LOG.info('# Cluster ZOTUs')
         clusterZOTUs()
-        PREPPROC_LOG.info('# Filter non 16S sequences: Started')
+        PREPPROC_LOG.info('# Filter non 16S sequences')
         filter16S()
         # prepare_zotus()  # Adds size=1 to end of zotus header
-        PREPPROC_LOG.info('# Build ZOTU Table: Started')
+        PREPPROC_LOG.info('# Build ZOTU Table')
         build_ZOTU_table()
-        PREPPROC_LOG.info('# Filter ZOTUs by Abundance: Started')
+        PREPPROC_LOG.info('# Filter ZOTUs by Abundance')
         filter_zotu_abundance()  # ignore this step because the required abundance is 0
-        PREPPROC_LOG.info('# Select ZOTU Sequences: Started')
+        PREPPROC_LOG.info('# Select ZOTU Sequences')
         select_zotu_seqs()
-        PREPPROC_LOG.info('# Add Taxonomy: Started')
+        PREPPROC_LOG.info('# Add Taxonomy')
         addTax(input_id)
         create_final_ZOTU_table()
         add_taxonomy_to_fasta()
-        PREPPROC_LOG.info("# Add Krona Graph: Started")
+        PREPPROC_LOG.info("# Add Krona Graph")
         addKrona(krona_importtext)
         # system('Rscript {} >/dev/null 2>/dev/null'.format(R_processing_stat))
         system_sub(
@@ -895,7 +899,7 @@ def main_processing(
             quiet=True
         )
         # udb for both similarity queries
-        PREPPROC_LOG.info('# Create UDB: Started')
+        PREPPROC_LOG.info('# Create UDB')
         create_udb(input_id)
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
@@ -905,9 +909,9 @@ def main_processing(
             # writing header
             s_e_file.write("SilvaAlignmentStartPos\tSilvaAlignementEndPos\tCoveredRegion\n")
             s_e_file.write(str(start_mode) + '\t' + str(end_mode) + '\t' + str(calced_regions) + '\n')
-        PREPPROC_LOG.info('# Zip Up: Started')
+        PREPPROC_LOG.info('# Zip Up')
         create_zip(input_id)
-        PREPPROC_LOG.info('# Clean Up: Started')
+        PREPPROC_LOG.info('# Clean Up')
         cleanup(input_id)
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message

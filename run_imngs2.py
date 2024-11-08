@@ -6,6 +6,7 @@ import atexit
 import shutil
 import math
 import sys
+import logging
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.analysis.TIC_analysis import main as main_analysis_TIC
@@ -14,7 +15,8 @@ from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes, slice_list
 from multiprocessing import cpu_count, Queue, Process
-from typing import List, Tuple
+from typing import List, Tuple, Dict
+
 if sys.version_info[0] < 3:
     from pathlib2 import Path, PurePath, PureWindowsPath, PurePosixPath  # pip2 install pathlib2
 else:
@@ -177,40 +179,55 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     return all(logic_test)
 
 
-def update_spike_amount(given_spike_amount, spike_stat_file: Path):  # it returns nothing
+def has_spike_value_changed(given_spike_amount, spike_stat_file: Path) -> bool:  # it returns nothing
     """
     Reads the spike_stat file of each processed sample and if the given spike amount is different it updates the spike amount.
     NOTE: spike removal always gets run on samples so that we only need to update the spike amount in the spike_stat file.
     """
     spike_stat_file = Path(PurePath(spike_stat_file)).absolute() if isinstance(spike_stat_file, str) or isinstance(spike_stat_file, Path) else ""
-    if not spike_stat_file:
-        return False
-    new_spike_stat_file = spike_stat_file.parent.joinpath(f"{proc_helper.generate_timestamp()}_{SPIKE_STAT_FILE_NAME}")
-    if not spike_stat_file.is_file():
-        return False
+    if not spike_stat_file or not spike_stat_file.is_file():
+        return True
     given_spike_amount = str(given_spike_amount)
-    with open(spike_stat_file, 'r') as orig_file, open(new_spike_stat_file, 'w') as new_file:
+    with open(spike_stat_file, 'r') as orig_file:
         lines = orig_file.readlines()
         for line in lines:
             if line.startswith("#SampleID"):
-                new_file.write(line)
                 continue
             spike_info = line.strip().split("\t")
             if len(spike_info) >= 5:
-                first_part = spike_info[:3]
                 existing_spike_amount = spike_info[3]
-                second_part = spike_info[4:]
-                if str(existing_spike_amount).lower() != str(given_spike_amount).lower():
-                    PREP_LOG.info(f"Updating spike amount from {existing_spike_amount} to {given_spike_amount}")
-                    new_line = "\t".join(first_part + [given_spike_amount] + second_part)
-                    new_file.write(new_line + "\n")
-                else:
-                    new_file.write(line)
-    # replace the old spike_stat file with the new one
-    shutil.move(new_spike_stat_file, spike_stat_file)
+                if str(existing_spike_amount).lower() == str(given_spike_amount).lower():
+                    return False
+    return True
 
 
-def should_trigger_processing(sample_base_path: Path, given_argset_file: Path, given_spike_amount: str) -> Tuple[str, bool]:
+def get_process_files_path(fastq_files_path: Tuple[Path, Path], sample_id: str) -> Dict[Path, Path]:
+    """
+    When a pair or a one fastq file path is given, it returns new full path for fastq files inside sample_base_dir.
+    In any failure case it return tuple of empty strings.
+    """
+    sample_id = str(sample_id)
+    if not hasattr(fastq_files_path, "__iter__") or len(fastq_files_path) > 2:
+        msg = "'fastq_files_path' must be an iterable of max length 2"
+        # PREP_LOG.error(msg)
+        raise ValueError(msg)
+    # generate new path of files inside sample_base_dir
+    fastq_files_path = [Path(PurePath(str(sfi))).absolute() for sfi in fastq_files_path]
+    common_parent = list({sfi.parent for sfi in fastq_files_path})
+    common_parent = common_parent[0].joinpath(f"{sample_id}{PROC_DIR_SUFFIX}") if len(common_parent) == 1 else ""
+    # check if common_parent is in the FASTQ_DIR at any level
+    if common_parent and not common_parent.is_relative_to(FASTQ_DIR):
+        raise ValueError("The given fastq files are not in the FASTQ_DIR")
+    fastq_files_path_d = {sfi: common_parent.joinpath(proc_helper.generate_timestamp()).joinpath(sfi.name) for sfi in fastq_files_path if sfi.is_file()}
+    return fastq_files_path_d
+
+
+def should_trigger_processing(
+        sample_base_path: Path,
+        given_argset_file: Path,
+        given_spike_amount: str,
+        logger_obj: logging.Logger = PREP_LOG) -> Tuple[str, bool]:
+
     this_out = [None, True]
     given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
     sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
@@ -232,15 +249,16 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path, g
         if not argfile.is_file():
             continue
         is_already_processed = is_processed_dir_healthy(argfile.parent) and not is_argset_different(argfile, given_argset_file)
-        if is_already_processed:
-            # if the sample is processed and the spike amount is different we only update the spike amount
-            update_spike_amount(given_spike_amount, argfile.parent.joinpath(SPIKE_STAT_FILE_NAME))
+        spike_value_changed = has_spike_value_changed(given_spike_amount, argfile.parent.joinpath(SPIKE_STAT_FILE_NAME))
+        if is_already_processed and not spike_value_changed:
             this_out[0] = str(argfile.parent.absolute())
             this_out[1] = False
 
     if not this_out[1]:
-        PREP_LOG.info(f"Sample '{this_out[0]}' is already processed with given argument set. "
-                      f"Skipping processing and using results in {this_out[0]}")
+        logger_obj.warning(
+            f"Sample '{sample_base_path}' is already processed with given argument set and spike amount. "
+            f"Skipping processing and using results in {this_out[0]}"
+        )
 
     return tuple(this_out)
 
@@ -579,7 +597,8 @@ def remove_spikes(
         files_paths: list,
         sample_id: str,
         sample_weight: float,  # in gram
-        spike_amount: float):
+        spike_amount: float,
+        logger_obj: logging.Logger = None):
     """
     It remove spikes from a sample and adds the number of spikes to a mapping file given.
      the column name should be "SpikeReads". The format of spike_stat_mapping_path must be
@@ -593,6 +612,7 @@ def remove_spikes(
         - spike_amount: float = amount of spike in nanogram
 
     """
+    logger_obj = logger_obj if logger_obj else PREP_LOG
     header_rgx = re.compile(SPIKE_STAT_HEADER)
     files_paths_abs = [Path(PurePath(fi_pa)) for fi_pa in files_paths if Path(PurePath(fi_pa)).is_file()]
     spike_stat_mapping_path = files_paths_abs[0].parent.joinpath(SPIKE_STAT_FILE_NAME)
@@ -603,7 +623,7 @@ def remove_spikes(
     out_tup = (0, spike_stat_mapping_path, tuple(fastq_files_abs_path))
     if len(files_paths) != len(fastq_files_abs_path):
         msg = "Some given files for spike removal do not exist!"
-        PREP_LOG.error(msg)
+        logger_obj.error(msg)
         raise ValueError(msg)
     # Writing header
     header_existing = SPIKE_STAT_HEADER + "\n"
@@ -613,7 +633,7 @@ def remove_spikes(
     header_line_mo = header_rgx.match(header_existing)
     if not header_line_mo:
         msg = f"Existing spike_stat_file: {spike_stat_mapping_path} does not have correct format of : {SPIKE_STAT_HEADER}"
-        PREP_LOG.error(msg)
+        logger_obj.error(msg)
         raise ValueError(msg)
 
     # putting parent path into the spike_mapping_file
@@ -633,8 +653,6 @@ def remove_spikes(
         ]
         stats_h.write("\t".join(new_row) + "\n")
 
-    PREP_LOG.info(f"Spike removal done for {sample_id}. Spike Reads: {spike_reads_c}\tnon-spike reads: {real_reads_c}")
-
     return out_tup
 
 
@@ -644,7 +662,8 @@ def run_preprocessing(
         usearch_11_bin: str,
         sample_id: str,
         sample_weight: float = float("NAN"),  # spike normalizer handles this
-        spike_amount: float = 0.0) -> Path:
+        spike_amount: float = 0.0,
+        force_preprocess: bool = False) -> Path:
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -655,6 +674,11 @@ def run_preprocessing(
     sample_dir = None
     if not any(seq_files_t):
         return sample_dir
+    PREPPROC_LOG = proc_helper.gimmelogger(
+        logger_name=f"run_imngs2.preprocessing.{str(sample_id)}",
+        only_file=True,
+    )
+
     try:
         if not hasattr(seq_files_t, "__iter__") or len(seq_files_t) > 2:
             msg = "seq_files_t must be an iterable of max length 2"
@@ -669,12 +693,28 @@ def run_preprocessing(
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         file_full_path = seq_files_t[0]
         base_path_dir = file_full_path.parent.joinpath(sample_id)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
-        sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount))
+        sample_dir, shall_preprocess = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount), logger_obj=PREPPROC_LOG)
         sample_dir = Path(PurePath(sample_dir)) if sample_dir else ""
-        if not shall_continue:
+        if not shall_preprocess and not force_preprocess:
             return sample_dir
-
+        # Hereon we are sure that we should process the sample
         sample_dir.mkdir(parents=True, exist_ok=True)
+        # cleaning the directory
+        if force_preprocess and not shall_preprocess:
+            PREPPROC_LOG.info(f"Cleaning the directory: {sample_dir} before FORCED preprocessing.")
+            for entry in sample_dir.iterdir():
+                if entry.is_file():
+                    entry.unlink()
+                elif entry.is_dir():
+                    shutil.rmtree(str(entry))
+
+        log_file_path = sample_dir.joinpath(f"{str(sample_id)}_logs.txt")
+        PREPPROC_LOG = proc_helper.gimmelogger(
+            logger_name=f"run_imngs2.preprocessing.{str(sample_id)}",
+            log_file=log_file_path,
+            only_file=True,
+        )
+
         # Updating fastq files path
         for ind, sfi in enumerate(seq_files_t):
             new_path = sample_dir.joinpath(sfi.name)
@@ -683,9 +723,9 @@ def run_preprocessing(
             try:
                 symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
             except Exception as exc:
-                PREP_LOG.warning(f"Failed to create symlink for {sfi}. {exc}")
-                PREP_LOG.info(f"Copying {sfi} to {new_path}")
-                shutil.copy(str(sfi), str(new_path))
+                PREPPROC_LOG.warning(f"Failed to create symlink for {sfi}. {exc}")
+                PREPPROC_LOG.info(f"Copying {sfi} to {new_path}")
+                shutil.copy2(str(sfi), str(new_path))
 
         # We do spike removal if necessary and add a line to spike_stats file for spike normalization
         # We only carry valid files in fastq_files_tuple
@@ -703,6 +743,8 @@ def run_preprocessing(
             shutil.copy(args_yml_path, sample_arg_file)
         except shutil.SameFileError:
             pass
+        except Exception as exc:
+            raise exc
         # Running preprocessing
         sample_dir = preprocessing(
             input_dir=sample_dir,
@@ -711,28 +753,29 @@ def run_preprocessing(
             input_id=sample_id,
             args_file_path=sample_arg_file,
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
-            usearch_11_bin=usearch_11_bin
+            usearch_11_bin=usearch_11_bin,
+            logger_obj=PREPPROC_LOG
         )
     except MemoryError as mem_exc:
         err_msg = f"{mem_exc}"
         err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
         err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
-        PREP_LOG.error(f"{err_msg}")
+        PREPPROC_LOG.error(f"{err_msg}")
         # If parent of sample_dir is empty then remove it
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
         sample_dir = None
         sys.exit(160)
     except proc_helper.ArgsetException as argset_exc:
-        PREP_LOG.error(f"Failed to run preprocessing for {sample_id}. {argset_exc}")
+        PREPPROC_LOG.error(f"Failed to run preprocessing for {sample_id}. {argset_exc}")
         # If parent of sample_dir is empty then remove it
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
         sample_dir = None
     except Exception as exc:
         msg = f"{exc}"
-        PREP_LOG.error(msg)
-        PREP_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
+        PREPPROC_LOG.error(msg)
+        PREPPROC_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
         # If parent of sample_dir is empty then remove it
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
@@ -750,11 +793,11 @@ def parallel_preprocessing(args: tuple, process_queue: Queue, res_dict_key: str)
         process_queue.put((res_dict_key, sample_dir))
     except proc_helper.ArgsetException as argset_exc:
         process_queue.put((res_dict_key, None))
-        PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {argset_exc}")
+        PREP_LOG.error(f"run_preprocessing argument error for {str(args[0])}. {argset_exc}")
         sys.exit(164)
     except Exception as exc:
         process_queue.put((res_dict_key, None))
-        PREP_LOG.error(f"Failed to run preprocessing for {args[2]}. {exc}")
+        PREP_LOG.error(f"Failed to run preprocessing for {str(args[0])}. {exc}")
 
     return
 
@@ -823,18 +866,13 @@ def run_imngs2(
         spike_stat_file: str = "",
         skip_preprocess: bool = False,
         skip_analysis: bool = False,
+        force_preprocess: bool = False,
         analysis_mode: str = "TIC"):
     # NOTE if this function is imported then the default global variables will be used
+    PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     global USEARCH_11_BIN, FASTQ_DIR
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
-    # Updating logger file path
-    # Not overwriting the PREP_LOG
-    # global PREP_LOG
-    # PREP_LOG = proc_helper.gimmelogger(
-    #     "run_imngs2",
-    #     log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
-    #     only_file=False
-    # )
+
     ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
     if ret_code != 0:
         PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")
@@ -880,13 +918,13 @@ def run_imngs2(
         PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
         sys.exit(170)
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[0]:
-        PREP_LOG.info("Analysis mode: Taxonomy Informed Clustering (TIC)")
+    #     PREP_LOG.info("Analysis mode: Taxonomy Informed Clustering (TIC)")
         main_analysis = main_analysis_TIC
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[1]:
-        PREP_LOG.info("Analysis mode: de-novo clustering")
+    #     PREP_LOG.info("Analysis mode: de-novo clustering")
         main_analysis = main_analysis_de_novo
 
-    if not skip_preprocess:
+    if not skip_preprocess or force_preprocess:
         try:
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             # running preprocessing
@@ -915,6 +953,7 @@ def run_imngs2(
                                 arg_tup[0].SampleID,  # sample_id
                                 float(arg_tup[0].total_weight_in_g),  # sample_weight
                                 float(arg_tup[0].spike_amount),   # spike_amount
+                                force_preprocess,
                             ),
                             preproc_queue,
                             arg_tup[0].SampleID,  # res_dict_key must be unique to bound process to sample_id
@@ -1060,6 +1099,9 @@ if __name__ == "__main__":
     parser.add_argument("-sa", "--skip-analysis",
                         action="store_true",
                         help="Should skip analysis step")
+    parser.add_argument("-fp", "--force-preprocess",
+                        action="store_true",
+                        help="Force preprocessing samples. It invalidates --skip-preprocess argument.")
     parser.add_argument("-tf", "--place-template-files",
                         action="store_true",
                         help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
@@ -1093,14 +1135,14 @@ if __name__ == "__main__":
     # Exposing default argument files.
     cli_spike_stat_file = INPUT_DIR.joinpath(args.spike_stat) if args.spike_stat else ""
     if not cli_args_file.is_file():
-        shutil.copy(
+        shutil.copy2(
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
         PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(FASTQ_DIR))})")
 
     if args.place_template_files:
-        shutil.copy(
+        shutil.copy2(
             str(MAP_FILE),
             str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.csv"))
         )
@@ -1120,5 +1162,6 @@ if __name__ == "__main__":
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
             usearch_11_bin=given_usearch_bin,
+            force_preprocess=args.force_preprocess,
             analysis_mode=args.analysis_mode
         )
