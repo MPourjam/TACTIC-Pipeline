@@ -662,7 +662,8 @@ def run_preprocessing(
         usearch_11_bin: str,
         sample_id: str,
         sample_weight: float = float("NAN"),  # spike normalizer handles this
-        spike_amount: float = 0.0) -> Path:
+        spike_amount: float = 0.0,
+        force_preprocess: bool = False) -> Path:
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -692,12 +693,21 @@ def run_preprocessing(
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         file_full_path = seq_files_t[0]
         base_path_dir = file_full_path.parent.joinpath(sample_id)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
-        sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount), logger_obj=PREPPROC_LOG)
+        sample_dir, shall_preprocess = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount), logger_obj=PREPPROC_LOG)
         sample_dir = Path(PurePath(sample_dir)) if sample_dir else ""
-        if not shall_continue:
+        if not shall_preprocess and not force_preprocess:
             return sample_dir
         # Hereon we are sure that we should process the sample
         sample_dir.mkdir(parents=True, exist_ok=True)
+        # cleaning the directory
+        if force_preprocess and not shall_preprocess:
+            PREPPROC_LOG.info(f"Cleaning the directory: {sample_dir} before FORCED preprocessing.")
+            for entry in sample_dir.iterdir():
+                if entry.is_file():
+                    entry.unlink()
+                elif entry.is_dir():
+                    shutil.rmtree(str(entry))
+
         log_file_path = sample_dir.joinpath(f"{str(sample_id)}_logs.txt")
         PREPPROC_LOG = proc_helper.gimmelogger(
             logger_name=f"run_imngs2.preprocessing.{str(sample_id)}",
@@ -715,7 +725,7 @@ def run_preprocessing(
             except Exception as exc:
                 PREPPROC_LOG.warning(f"Failed to create symlink for {sfi}. {exc}")
                 PREPPROC_LOG.info(f"Copying {sfi} to {new_path}")
-                shutil.copy(str(sfi), str(new_path))
+                shutil.copy2(str(sfi), str(new_path))
 
         # We do spike removal if necessary and add a line to spike_stats file for spike normalization
         # We only carry valid files in fastq_files_tuple
@@ -856,6 +866,7 @@ def run_imngs2(
         spike_stat_file: str = "",
         skip_preprocess: bool = False,
         skip_analysis: bool = False,
+        force_preprocess: bool = False,
         analysis_mode: str = "TIC"):
     # NOTE if this function is imported then the default global variables will be used
     PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
@@ -907,13 +918,13 @@ def run_imngs2(
         PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
         sys.exit(170)
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[0]:
-        PREP_LOG.info("Analysis mode: Taxonomy Informed Clustering (TIC)")
+    #     PREP_LOG.info("Analysis mode: Taxonomy Informed Clustering (TIC)")
         main_analysis = main_analysis_TIC
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[1]:
-        PREP_LOG.info("Analysis mode: de-novo clustering")
+    #     PREP_LOG.info("Analysis mode: de-novo clustering")
         main_analysis = main_analysis_de_novo
 
-    if not skip_preprocess:
+    if not skip_preprocess or force_preprocess:
         try:
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
             # running preprocessing
@@ -942,6 +953,7 @@ def run_imngs2(
                                 arg_tup[0].SampleID,  # sample_id
                                 float(arg_tup[0].total_weight_in_g),  # sample_weight
                                 float(arg_tup[0].spike_amount),   # spike_amount
+                                force_preprocess,
                             ),
                             preproc_queue,
                             arg_tup[0].SampleID,  # res_dict_key must be unique to bound process to sample_id
@@ -1087,6 +1099,9 @@ if __name__ == "__main__":
     parser.add_argument("-sa", "--skip-analysis",
                         action="store_true",
                         help="Should skip analysis step")
+    parser.add_argument("-fp", "--force-preprocess",
+                        action="store_true",
+                        help="Force preprocessing samples. It invalidates --skip-preprocess argument.")
     parser.add_argument("-tf", "--place-template-files",
                         action="store_true",
                         help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
@@ -1120,14 +1135,14 @@ if __name__ == "__main__":
     # Exposing default argument files.
     cli_spike_stat_file = INPUT_DIR.joinpath(args.spike_stat) if args.spike_stat else ""
     if not cli_args_file.is_file():
-        shutil.copy(
+        shutil.copy2(
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
         PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(FASTQ_DIR))})")
 
     if args.place_template_files:
-        shutil.copy(
+        shutil.copy2(
             str(MAP_FILE),
             str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.csv"))
         )
@@ -1147,5 +1162,6 @@ if __name__ == "__main__":
             skip_preprocess=args.skip_preprocess,
             skip_analysis=args.skip_analysis,
             usearch_11_bin=given_usearch_bin,
+            force_preprocess=args.force_preprocess,
             analysis_mode=args.analysis_mode
         )
