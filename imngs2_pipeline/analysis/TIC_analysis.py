@@ -1089,11 +1089,6 @@ def main(
     spike_stat_file = Path(PurePath(spike_stat_file))
     assert spike_stat_file.is_file(), "spike_stat_file must be a path to a file"
 
-    # updating POOL_SIZE
-    try:
-        POOL_SIZE = int(threads)
-    except ValueError:
-        ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
     DB_LOC = Path(PurePath(dbs_loc))
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
@@ -1105,6 +1100,11 @@ def main(
     ANA_LOG = gimmelogger(
         logger_name="run_imngs2.analysis.TIC_analysis",
     )
+    # updating POOL_SIZE
+    try:
+        POOL_SIZE = int(threads)
+    except ValueError:
+        ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
 
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
     ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"
@@ -1127,18 +1127,18 @@ def main(
             raise ValueError(f"{str(taxed_path)} must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
-    ANA_LOG.info('### Analysis Started ###')
-    ANA_LOG.info('# Gathering Sequences: Started')
+    ANA_LOG.info('# Analysis')
+    ANA_LOG.info('# Gathering Sequences')
     for sample, sam_id in sample_seq_files_path:
         append_reads(sample, sam_id, ANALYSIS_DIR)
     chdir(ANALYSIS_DIR)
     trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
-    ANA_LOG.info('# Dereplication: Started')
+    ANA_LOG.info('# Dereplication')
     dereplication()
     #################
     ## TIC is here ##
     #################
-    ANA_LOG.info("# TIC: Started")
+    ANA_LOG.info("# Taxonomy Informed Clustering (TIC)")
     TIC_Result_DIR = Path(ANALYSIS_DIR).joinpath("TICResult")
     TIC_Output_DIR = Path(ANALYSIS_DIR).joinpath("TICOut")
     dereplicated_fasta_path = Path(ANALYSIS_DIR).joinpath("derep_with_tax.fasta")
@@ -1193,7 +1193,7 @@ def main(
         shutil.copy(file, ANALYSIS_DIR)
         file.unlink()
     shutil.rmtree(TIC_Output_DIR)
-    ANA_LOG.info('# Final Cleanup: Started')
+    ANA_LOG.info('# Final Cleanup')
     cleanup(ANALYSIS_DIR)
     # Normalizing Tables
     try:

@@ -842,51 +842,51 @@ def main_processing(
         else:
             pko = TaskPickle(pk_file)
         chdir(input_dir)
-        PREPPROC_LOG.info("# Spike Removal: Started")
+        PREPPROC_LOG.info("# Spike Removal")
         # spike_amount should not be negative
         if not (math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0):
             spike_amount = 0.0
             PREPPROC_LOG.warning("Negative value for spike_amount replaced with default value (0.0)")
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
-        PREPPROC_LOG.info('# FastQC: Started')
+        PREPPROC_LOG.info('# FastQC')
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is CRUCIAL to be here
         if reverse_file:
-            PREPPROC_LOG.info('# Merging Pairs: Started')
+            PREPPROC_LOG.info('# Merging Pairs')
             merge_pairs(forward_file, reverse_file)
-            PREPPROC_LOG.info('# Trim Sides: Started')
+            PREPPROC_LOG.info('# Trim Sides')
             trim_sides()
-            PREPPROC_LOG.info('# Filter Merged Reads: Started')
+            PREPPROC_LOG.info('# Filter Merged Reads')
             filter_merged_reads()
         else:
-            PREPPROC_LOG.info('# Trim One Side: Started')
+            PREPPROC_LOG.info('# Trim One Side')
             trim_one_side(forward_file)
-            PREPPROC_LOG.info('# Filter Amplicons: Started')
+            PREPPROC_LOG.info('# Filter Amplicons')
             filter_merged_one_side(forward_file)
-        PREPPROC_LOG.info('# Dereplication: Started')
+        PREPPROC_LOG.info('# Dereplication')
         dereped_read_n = dereplicate_seqs()
         read_report = write_reads_report(input_id,
                                          Dereplicated_reads=dereped_read_n)
         PREPPROC_LOG.debug(read_report)
-        PREPPROC_LOG.info('# Sort Sequences: Started')
+        PREPPROC_LOG.info('# Sort Sequences')
         sort_seqs()
-        PREPPROC_LOG.info('# Cluster ZOTUs: Started')
+        PREPPROC_LOG.info('# Cluster ZOTUs')
         clusterZOTUs()
-        PREPPROC_LOG.info('# Filter non 16S sequences: Started')
+        PREPPROC_LOG.info('# Filter non 16S sequences')
         filter16S()
         # prepare_zotus()  # Adds size=1 to end of zotus header
-        PREPPROC_LOG.info('# Build ZOTU Table: Started')
+        PREPPROC_LOG.info('# Build ZOTU Table')
         build_ZOTU_table()
-        PREPPROC_LOG.info('# Filter ZOTUs by Abundance: Started')
+        PREPPROC_LOG.info('# Filter ZOTUs by Abundance')
         filter_zotu_abundance()  # ignore this step because the required abundance is 0
-        PREPPROC_LOG.info('# Select ZOTU Sequences: Started')
+        PREPPROC_LOG.info('# Select ZOTU Sequences')
         select_zotu_seqs()
-        PREPPROC_LOG.info('# Add Taxonomy: Started')
+        PREPPROC_LOG.info('# Add Taxonomy')
         addTax(input_id)
         create_final_ZOTU_table()
         add_taxonomy_to_fasta()
-        PREPPROC_LOG.info("# Add Krona Graph: Started")
+        PREPPROC_LOG.info("# Add Krona Graph")
         addKrona(krona_importtext)
         # system('Rscript {} >/dev/null 2>/dev/null'.format(R_processing_stat))
         system_sub(
@@ -899,7 +899,7 @@ def main_processing(
             quiet=True
         )
         # udb for both similarity queries
-        PREPPROC_LOG.info('# Create UDB: Started')
+        PREPPROC_LOG.info('# Create UDB')
         create_udb(input_id)
         # update_s_flat(input_id, origin)
         start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
@@ -909,9 +909,9 @@ def main_processing(
             # writing header
             s_e_file.write("SilvaAlignmentStartPos\tSilvaAlignementEndPos\tCoveredRegion\n")
             s_e_file.write(str(start_mode) + '\t' + str(end_mode) + '\t' + str(calced_regions) + '\n')
-        PREPPROC_LOG.info('# Zip Up: Started')
+        PREPPROC_LOG.info('# Zip Up')
         create_zip(input_id)
-        PREPPROC_LOG.info('# Clean Up: Started')
+        PREPPROC_LOG.info('# Clean Up')
         cleanup(input_id)
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message

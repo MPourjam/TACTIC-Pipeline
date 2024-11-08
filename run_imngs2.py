@@ -196,10 +196,7 @@ def has_spike_value_changed(given_spike_amount, spike_stat_file: Path) -> bool: 
             spike_info = line.strip().split("\t")
             if len(spike_info) >= 5:
                 existing_spike_amount = spike_info[3]
-                if str(existing_spike_amount).lower() != str(given_spike_amount).lower():
-                    PREP_LOG.info(f"Spike amount has changed from {existing_spike_amount} to {given_spike_amount}")
-                else:
-                    PREP_LOG.info(f"Spike amount has not changed {given_spike_amount}")
+                if str(existing_spike_amount).lower() == str(given_spike_amount).lower():
                     return False
     return True
 
@@ -225,7 +222,12 @@ def get_process_files_path(fastq_files_path: Tuple[Path, Path], sample_id: str) 
     return fastq_files_path_d
 
 
-def should_trigger_processing(sample_base_path: Path, given_argset_file: Path, given_spike_amount: str) -> Tuple[str, bool]:
+def should_trigger_processing(
+        sample_base_path: Path,
+        given_argset_file: Path,
+        given_spike_amount: str,
+        logger_obj: logging.Logger = PREP_LOG) -> Tuple[str, bool]:
+
     this_out = [None, True]
     given_argset_file = Path(PurePath(given_argset_file)).absolute() if isinstance(given_argset_file, str) or isinstance(given_argset_file, Path) else ""
     sample_base_path = Path(PurePath(sample_base_path)).absolute() if isinstance(sample_base_path, str) or isinstance(sample_base_path, Path) else ""
@@ -247,13 +249,16 @@ def should_trigger_processing(sample_base_path: Path, given_argset_file: Path, g
         if not argfile.is_file():
             continue
         is_already_processed = is_processed_dir_healthy(argfile.parent) and not is_argset_different(argfile, given_argset_file)
-        if is_already_processed and not has_spike_value_changed(given_spike_amount, argfile.parent.joinpath(SPIKE_STAT_FILE_NAME)):
+        spike_value_changed = has_spike_value_changed(given_spike_amount, argfile.parent.joinpath(SPIKE_STAT_FILE_NAME))
+        if is_already_processed and not spike_value_changed:
             this_out[0] = str(argfile.parent.absolute())
             this_out[1] = False
 
     if not this_out[1]:
-        PREP_LOG.info(f"Sample '{sample_base_path}' is already processed with given argument set. "
-                      f"Skipping processing and using results in {this_out[0]}")
+        logger_obj.warning(
+            f"Sample '{sample_base_path}' is already processed with given argument set and spike amount. "
+            f"Skipping processing and using results in {this_out[0]}"
+        )
 
     return tuple(this_out)
 
@@ -687,7 +692,7 @@ def run_preprocessing(
         new_paths = ["", ""]  # [ForwardNewPath, ReverseNewPath]
         file_full_path = seq_files_t[0]
         base_path_dir = file_full_path.parent.joinpath(sample_id)  # + PROC_DIR_SUFFIX).joinpath(proc_helper.generate_timestamp())
-        sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount))
+        sample_dir, shall_continue = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount), logger_obj=PREPPROC_LOG)
         sample_dir = Path(PurePath(sample_dir)) if sample_dir else ""
         if not shall_continue:
             return sample_dir
@@ -853,16 +858,10 @@ def run_imngs2(
         skip_analysis: bool = False,
         analysis_mode: str = "TIC"):
     # NOTE if this function is imported then the default global variables will be used
+    PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     global USEARCH_11_BIN, FASTQ_DIR
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
-    # Updating logger file path
-    # Not overwriting the PREP_LOG
-    # global PREP_LOG
-    # PREP_LOG = proc_helper.gimmelogger(
-    #     "run_imngs2",
-    #     log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
-    #     only_file=False
-    # )
+
     ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
     if ret_code != 0:
         PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")

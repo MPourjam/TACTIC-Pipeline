@@ -1231,11 +1231,6 @@ def main_de_novo(
     spike_stat_file = Path(PurePath(spike_stat_file))
     assert spike_stat_file.is_file(), "spike_stat_file must be a path to a file"
 
-    # updating POOL_SIZE
-    try:
-        POOL_SIZE = int(threads)
-    except ValueError:
-        ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
     DB_LOC = Path(PurePath(dbs_loc))
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
@@ -1247,6 +1242,12 @@ def main_de_novo(
     ANA_LOG = gimmelogger(
         logger_name="run_imngs2.analysis.denovo_analysis",
     )
+    # updating POOL_SIZE
+    try:
+        POOL_SIZE = int(threads)
+    except ValueError:
+        ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
+
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
     ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"
     ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
@@ -1270,42 +1271,42 @@ def main_de_novo(
             raise ValueError(f"{str(derep_path)} must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
-    ANA_LOG.info("# Analysis Started: Gathering Sequences")
+    ANA_LOG.info("# Gathering Sequences")
     # TODO as derep.fasta is archived in the zip file, it should be extracted first
     for seq_file, sam_id in sample_seq_files_path:
         append_reads(seq_file, sam_id, ANALYSIS_DIR)
     chdir(ANALYSIS_DIR)
     # trimming the sequences
     trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
-    ANA_LOG.info('# Dereplication: Started')
+    ANA_LOG.info('# Dereplication')
     dereplication(with_taxonomy=False)
     # Sorting the sequences
-    ANA_LOG.info('# Sorting: Started')
+    ANA_LOG.info('# Sorting')
     sort_seqs()
     # Clustering the sequences
-    ANA_LOG.info('# Clustering at ZOTU level: Started')
+    ANA_LOG.info('# Clustering at ZOTU level')
     clusterZOTUs()
     # Removing the size from the ZOTUs
     prepare_zotus()
     # Clustering at OTU level
-    ANA_LOG.info('# Clustering at OTU level: Started')
+    ANA_LOG.info('# Clustering at OTU level')
     clusterOTUs()
-    ANA_LOG.info('# Creating ZOTU tables: Started')
+    ANA_LOG.info('# Creating ZOTU tables')
     remove_size_from_OTUS()
     assign_zotus_to_otus()
     ZOTUs_seq_name = keep_good_ZOTUs()
     build_ZOTU_table()
-    ANA_LOG.info('# Adding taxonomy to ZOTU sequences: Started')
+    ANA_LOG.info('# Adding taxonomy to ZOTU sequences')
     addTax_new(ZOTUs_seq_name)  # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
     ZOTUs_table_name = create_final_ZOTU_table()
-    ANA_LOG.info('# Creating OTU table: Started')
+    ANA_LOG.info('# Creating OTU table')
     OTUs_table_name, OTU_seq_name = create_OTUs_from_ZOTUS_table()
     # Creating trees
-    ANA_LOG.info('# Creating trees: Started')
+    ANA_LOG.info('# Creating trees')
     sina_algn_shortened_file = shorten_sina_algn("test_ZOTUs-Seqs.fasta")
-    ANA_LOG.info('# Creating Krona: Started')
+    ANA_LOG.info('# Creating Krona')
     create_krona(krona_importtext)
-    ANA_LOG.info('# Filtering OTUs abundance: Started')
+    ANA_LOG.info('# Filtering OTUs abundance')
     filter_abundance(
         ARGS_CLS.create_table.abund_limit,
         OTUs_table_name,
@@ -1313,7 +1314,7 @@ def main_de_novo(
         ZOTUs_table_name,
         ZOTUs_seq_name,
         "Map-ZOTU-OTU.tab")
-    ANA_LOG.info('# Cleaning up: Started')
+    ANA_LOG.info('# Cleaning up')
     try:
         create_trees(sina_algn_shortened_file)  # TODO check if we need to use create_trees
     except Exception as exc:
