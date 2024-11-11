@@ -9,6 +9,7 @@ from processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
+from .analysis_helper import onelinefasta
 
 
 BIN_DIR = "/base/binaries/"
@@ -45,32 +46,6 @@ def read_file(filename):
         content = f.readlines()
     content = [x.strip() for x in content]
     return content
-
-
-def onelinefasta(fastafilepath):
-    proper_filepath = os.path.abspath(fastafilepath)
-    dirpath, filename = os.path.split(proper_filepath)
-    os.chdir(dirpath)
-    f = open(proper_filepath, 'r')
-    newfile_temp_name = "oneline_{}.fasta".format(str(".".join(filename.split(".")[:-1])))
-    assert (not os.path.isfile(newfile_temp_name)), "Destination file {} already exists".format(newfile_temp_name)
-    with open(newfile_temp_name, "w+") as onelinefa:
-        line = f.readline()
-        first = True
-        while line:
-            if line[0] == '>':
-                if first:
-                    onelinefa.write(line)
-                    first = False
-                else:
-                    onelinefa.write('\n' + line)
-            elif line == '\n':
-                pass
-            else:
-                onelinefa.write(line[:-1])
-            line = f.readline()
-        onelinefa.write("\n")
-    shutil.move(newfile_temp_name, filename)  # handling space in name of file
 
 
 def append_reads(seq_fasta, sample_id, analysis_dir):
@@ -337,7 +312,7 @@ def clusterOTUs():
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-cluster_otus",
-        "good-ZOTUs-sized.fasta",  # Although Edgar suggests that unoise3 and cluster_otus should have same input file, but we use
+        "good-ZOTUs-sized.fasta",  # NOTE Although Edgar suggests that unoise3 and cluster_otus should have same input file, but we use
         "-fulldp",
         "-otus",
         "otus1.fa",
@@ -376,12 +351,17 @@ def assign_zotus_to_otus():
         match_type = str(line_tokens[1]).strip()
         if 'otu' in match_type:
             valid_zotus_dict[zotu_number] = str(line_tokens[1]).strip()
-        elif 'match' == match_type:
+    # We have found all otu centroids and saved them in valid_zotus_dict
+    for line in zotus_map:
+        if 'match' == match_type:
             matched_zotu = match_regex.search(str(line_tokens[2]).strip()).group(1)
             if matched_zotu in valid_zotus_dict.keys():
                 # if the zotu matches to a valid OTU
                 matched_otu_of_match = valid_zotus_dict[matched_zotu]
                 valid_zotus_dict[zotu_number] = matched_otu_of_match
+            else:
+                # We should not end up here
+                raise ValueError(f"Zotu {matched_zotu} is not found in list of OTUs centroids")
 
     for key, value in valid_zotus_dict.items():
         line = key + '\t' + value + '\n'
@@ -429,6 +409,9 @@ def build_ZOTU_table():
         "-threads",
         f"{str(POOL_SIZE)}",
     ]
+    # NOTE zotu_table.txt could miss some ZOTUs as the ZOTU's unique sequence in analysis.fasta could already match to
+    # another ZOTU before reaching its corresponding original ZOTU sequence at smimilarities higher than 0.97. It
+    # happens when the ZOTU is created
     system_sub(cmd_to_call_list, force_log=True)
 
 
@@ -525,6 +508,8 @@ def addTax_new(zotu_fasta_path):
         str(POOL_SIZE),
         "--lca-fields",
         "tax_slv",
+        "--turn",
+        "all",
         "--db",
         SINA_ARB,
         "--out",
@@ -796,8 +781,9 @@ def create_OTUs_from_ZOTUS_table():
         if line[0] == '>':
             zotu_name = zotu_regex.search(line).group(1)
             # The if below is useful for cases in which some filteration has happened on the ZOTUs after clusterZOTUs() step
-            if zotu_name in zotu_map_otus.keys():
+            if zotu_name in zotu_map_otus.keys() and zotu_name in zotu_taxo_dict.keys():
                 # It drops all zotus belonging to an OTU and only takes the centriod
+                # For explanation about second part of boolean expression, see NOTE in build_ZOTU_table()
                 otu_seqs_fio.write('>' + zotu_map_otus[zotu_name] + ';tax=' + zotu_taxo_dict[zotu_name] + '\n')
                 out_line_2 = zotu_map_otus[zotu_name] + '\t'
                 out_line_2 += "\t".join([str(count) for count in otu_summed_size_dict[zotu_map_otus[zotu_name]]])
@@ -807,7 +793,7 @@ def create_OTUs_from_ZOTUS_table():
             else:
                 seq_flag = 0
         else:
-            if seq_flag and re.search(r"^[ACGTU]", line):
+            if seq_flag and re.search(r"^[ACGTUN]", line):
                 otu_seqs_fio.write(line + '\n')
     otu_seqs_fio.close()
     otu_table_fio.close()
@@ -1327,7 +1313,7 @@ def main_de_novo(
         create_trees(sina_algn_shortened_file)  # TODO check if we need to use create_trees
     except Exception as exc:
         ANA_LOG.warning(f"Tree creation skipped: {exc}")
-    cleanup(str(ANALYSIS_DIR))
+    # cleanup(str(ANALYSIS_DIR))
     # Normalizing Tables
     try:
         zotu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name))), str(parsed_spike_stat_file_path))

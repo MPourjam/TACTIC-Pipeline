@@ -10,6 +10,7 @@ from processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
+from .analysis_helper import onelinefasta
 
 
 BIN_DIR = "/base/binaries/"
@@ -43,32 +44,6 @@ def read_file(filename):
         content = f.readlines()
     content = [x.strip() for x in content]
     return content
-
-
-def onelinefasta(fastafilepath):
-    proper_filepath = os.path.abspath(fastafilepath)
-    dirpath, filename = os.path.split(proper_filepath)
-    os.chdir(dirpath)
-    f = open(proper_filepath, 'r')
-    newfile_temp_name = "oneline_{}.fasta".format(str(".".join(filename.split(".")[:-1])))
-    assert (not os.path.isfile(newfile_temp_name)), "Destination file {} already exists".format(newfile_temp_name)
-    with open(newfile_temp_name, "w+") as onelinefa:
-        line = f.readline()
-        first = True
-        while line:
-            if line[0] == '>':
-                if first:
-                    onelinefa.write(line)
-                    first = False
-                else:
-                    onelinefa.write('\n' + line)
-            elif line == '\n':
-                pass
-            else:
-                onelinefa.write(line[:-1])
-            line = f.readline()
-        onelinefa.write("\n")
-    shutil.move(newfile_temp_name, filename)  # handling space in name of file
 
 
 def append_reads(taxed_ZOTUs_file_path, sample_id, analysis_dir):
@@ -551,6 +526,8 @@ def addTax_new(zotu_fasta_path):
         str(POOL_SIZE),
         "--lca-fields",
         "tax_slv",
+        "--turn",
+        "all",
         "--db",
         SINA_ARB,
         "--out",

@@ -211,7 +211,7 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
         re.compile(r"Map-ZOTU-S?OTU\.tab")
     ]
     if analysis_mode == "TIC":
-        files_to_be_there.append(
+        files_to_be_there.extend(
             [
                 re.compile(r"Map-GOTU-FOTU\.tab"),
                 re.compile(r"Map-SOTU-GOTU\.tab"),
@@ -315,7 +315,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the ZOTU table"
             if arg_set.analysis_mode == "TIC":
                 assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
-                file_set_complete = check_expected_files_exist(latest_analysis_folder)
+                file_set_complete = check_expected_files_exist(latest_analysis_folder, "TIC")
             elif arg_set.analysis_mode == "de-novo":
                 assert check_otutable_format(os.path.join(latest_analysis_folder, "OTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the OTU table"
                 file_set_complete = check_expected_files_exist(latest_analysis_folder, "de-novo")
