@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import tarfile
 from os import chdir
 import os.path as ospath
 from multiprocessing import cpu_count
@@ -1267,7 +1268,14 @@ def main_de_novo(
         sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(DEREP_READS_FILE_NAME), entries[0]))
 
     for derep_path, sam_id in sample_seq_files_path:
-        if not derep_path.is_file():
+        # if tar.gz version of derep_path is found, extract it
+        tar_gz_derep_path = Path(PurePath(derep_path).with_suffix(derep_path.suffix + ".tar.gz"))
+        # extract tar_gz_derep_path to derep_path
+        if not derep_path.is_file() and tar_gz_derep_path.is_file():
+            with tarfile.open(tar_gz_derep_path, "r:gz") as tar:
+                tar.extractall(path=derep_path.parent)
+            tar_gz_derep_path.unlink()
+        elif not derep_path.is_file():
             raise ValueError(f"{str(derep_path)} must contain path to each samples sequence file!")
 
     chdir(ANALYSIS_DIR)
