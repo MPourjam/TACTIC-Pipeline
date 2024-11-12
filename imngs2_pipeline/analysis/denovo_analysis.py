@@ -1237,6 +1237,15 @@ def main_de_novo(
 
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
     ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"
+    cleanup(str(ANALYSIS_DIR))
+    # copy the args_file_path to the analysis directory
+    this_args_file = Path(PurePath(args_file_path)).absolute()
+    new_args_file = Path(PurePath(ANALYSIS_DIR + this_args_file.name))
+    try:
+        shutil.copy2(this_args_file, new_args_file)
+    except Exception as exc:
+        ANA_LOG.warning(f"Copying args file to {ANALYSIS_DIR} failed: {exc}")
+
     ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
     # Parsing spike_stat_file
     try:
