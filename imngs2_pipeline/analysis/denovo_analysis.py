@@ -1313,7 +1313,7 @@ def main_de_novo(
         create_trees(sina_algn_shortened_file)  # TODO check if we need to use create_trees
     except Exception as exc:
         ANA_LOG.warning(f"Tree creation skipped: {exc}")
-    # cleanup(str(ANALYSIS_DIR))
+    cleanup(str(ANALYSIS_DIR))
     # Normalizing Tables
     try:
         zotu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name))), str(parsed_spike_stat_file_path))
