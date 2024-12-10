@@ -42,10 +42,12 @@ PREP_LOG = proc_helper.gimmelogger(
     only_file=False)
 MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "spike_amount", "parent_path")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2], MAPPING_FILE_COLS[3]])
-global SPIKE_STAT_FILE_NAME, SPIKE_STAT_HEADER, PATH_SEP, DEFAULT_MAP_LINE, SPIKE_STAT_FILE_COLS, TAXED_ZOTU_FILE_NAME
+global PATH_SEP, DEFAULT_MAP_LINE, TAXED_ZOTU_FILE_NAME
 DEFAULT_MAP_LINE = MapLineTup("", float("NAN"), "0.0", "")
 PATH_SEP = "_-_"
+global DEREP_READS_FILE_NAME, SPIKE_STAT_FILE_NAME, SPIKE_STAT_FILE_COLS, SPIKE_STAT_HEADER
 SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
+DEREP_READS_FILE_NAME = "derep.fasta"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
@@ -166,7 +168,8 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     should_be_there = [
         DEFAULT_ARG_FILE_NAME,
         TAXED_ZOTU_FILE_NAME,
-        SPIKE_STAT_FILE_NAME
+        SPIKE_STAT_FILE_NAME,
+        DEREP_READS_FILE_NAME
     ]
     logic_test = [False for fi in should_be_there]
 
@@ -924,6 +927,12 @@ def run_imngs2(
     #     PREP_LOG.info("Analysis mode: de-novo clustering")
         main_analysis = main_analysis_de_novo
 
+    # master preprocessing logger
+    PREC_PROC_LOG = proc_helper.gimmelogger(
+        # this logger makes sure that the logs are thread safe
+        "run_imngs2.preprocessing",
+        only_file=True
+    )
     if not skip_preprocess or force_preprocess:
         try:
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
@@ -931,12 +940,7 @@ def run_imngs2(
             samples_dirs = []
             res_dict = {}
             task_batches = slice_list(list(mapping_line_tup_dict.items()), POOL_SIZE)
-            # master preprocessing logger
-            PREC_PROC_LOG = proc_helper.gimmelogger(
-                # this logger makes sure that the logs are thread safe
-                "run_imngs2.preprocessing",
-                only_file=True
-            )
+
             # create a queue for the tasks
 
             for task_b in task_batches:
