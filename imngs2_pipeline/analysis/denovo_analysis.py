@@ -84,7 +84,7 @@ def trim_sides(five_end_trim, three_end_trim):
         '-stripleft',
         str(three_end_trim),
         '-fastaout',
-        'filtered1.fasta'
+        'trimmed.fasta'
     ]
     system_sub(cmd_to_call_list, force_log=True)
     # cmd_2 = 'mv filtered1.fasta analysis.fasta'
@@ -93,8 +93,8 @@ def trim_sides(five_end_trim, three_end_trim):
         "filtered1.fasta",
         "analysis.fasta",
     ]
-    system_sub(cmd_to_call_list)
-    onelinefasta('analysis.fasta')
+    # system_sub(cmd_to_call_list)
+    onelinefasta('trimmed.fasta')
 
 
 def dereplication(with_taxonomy=True):
@@ -107,7 +107,7 @@ def dereplication(with_taxonomy=True):
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-fastx_uniques",
-        "analysis.fasta",
+        "trimmed.fasta",
         "-relabel",
         DEREP_NEW_LABEL,  # dereplication relaling
         "-fastaout",
@@ -210,7 +210,7 @@ def dereplication(with_taxonomy=True):
     cmd_to_call_list = [
         "rm",
         "relabel.tab",
-        "analysis.fasta",
+        "trimmed.fasta",
     ]
     # system_sub(cmd_to_call_list)  # TODO uncomment this line
 
@@ -260,34 +260,45 @@ def clusterZOTUs():
 # Filter non 16S sequences
 def filter16S():
     # cmd_0 = SORT_ME_RNA_BIN + " --ref " + ref16RNAdb_1 + " --ref " + ref16RNAdb_2 + " --reads "
-    # cmd_1 = " zotus.fasta --fastx --aligned good-ZOTUs --other non16SrRNA --workdir . -e 0.1 --num_alignments 1"  # --aligned
-    # cmd_2 = " > /dev/null 2>&1"
-    # run a RNA filtering step
-    # (The program currently do not distinquish between 16S and 18S)
+    # cmd_1 = " zotus.fasta --fastx good-ZOTUs --other " + str(ARGS_CLS.filter_16S.other) + " --workdir ."
+    # cmd_2 = " -e " + str(ARGS_CLS.filter_16S.e) + " --num_alignments " + str(ARGS_CLS.filter_16S.num_alignments)
+    # cmd_2 += " >/dev/null 2>&1"
+    # # run a RNA filtering step
+    # # (The program currently do not distinquish between 16S and 18S)
     # system_sub(cmd_0 + cmd_1 + cmd_2)
-    cmd_to_call_list = [
-        SORT_ME_RNA_BIN,
-        "--ref",
-        ref16RNAdb_1,
-        "--ref",
-        ref16RNAdb_2,
-        "--reads",
-        "zotus.fasta",
-        "--fastx",
-        "--aligned",
-        "good-ZOTUs",
-        "--other",
-        "non16SrRNA",
-        "--workdir",
-        ".",
-        "-e",
-        "0.1",
-        "--num_alignments",
-        "1",
-    ]
-    system_sub(cmd_to_call_list, force_log=True)
-    system_sub(["mv", "out/aligned.fasta", "good-ZOTUs.fasta"])
+    # system_sub('mv out/aligned.fasta good_ZOTUs.fa')
+    # system('rm -r idx out kvdb')
+    system_sub(
+        [
+            SORT_ME_RNA_BIN,
+            "--ref",
+            ref16RNAdb_1,
+            "--ref",
+            ref16RNAdb_2,
+            "--reads",
+            "zotus.fasta",
+            "--fastx",
+            "good-ZOTUs",
+            "--other",
+            str(ARGS_PREC.filter_16S.other),
+            "--workdir",
+            ".",
+            "-e",
+            str(ARGS_PREC.filter_16S.e),
+            "--num_alignments",
+            str(ARGS_PREC.filter_16S.num_alignments)
+        ],
+        force_log=True
+    )
+    system_sub(
+        [
+            "mv",
+            "out/aligned.fasta",
+            "good_ZOTUs.fasta"
+        ]
+    )
     system_sub(["rm", "-r", "idx", "kvdb"])
+    return "good_ZOTUs.fasta"
 
 
 def prepare_zotus():
@@ -391,21 +402,24 @@ def keep_good_ZOTUs():
     return "ZOTUs-Seqs.fasta"
 
 
-def build_ZOTU_table():
+def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
     # cmd_0 = USEARCH_11_BIN + ' -otutab analysis.fasta -top_hit_only -zotus nochi_ZOTUs.fasta '
     # cmd_1 = ' -otutabout zotu_table.txt -id 0.97'
     # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    raw_seq_file_path = Path(raw_seq_file).absolute()
+    zotu_seq_file_path = Path(zotu_seq_file).absolute()
+    otu_tab = Path("zotu_table.txt").absolute()
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-otutab",
-        "analysis.fasta",
+        str(raw_seq_file_path),
         "-top_hit_only",
         "-zotus",  # if the database sequences are already denoised which is the case here
-        "ZOTUs-Seqs.fasta",  # This file contains ZOTUs sequences (both centroids of OTUs and matched ZOTUs to that OTU and non-chimeric)
+        str(zotu_seq_file_path),  # This file contains ZOTUs sequences (both centroids of OTUs and matched ZOTUs to that OTU and non-chimeric)
         "-otutabout",
-        "zotu_table.txt",
+        str(otu_tab),
         "-id",
-        "0.97",
+        str(ARGS_PREC.build_zotus_table.id),
         "-threads",
         f"{str(POOL_SIZE)}",
     ]
@@ -413,6 +427,7 @@ def build_ZOTU_table():
     # another ZOTU before reaching its corresponding original ZOTU sequence at smimilarities higher than 0.97. It
     # happens when the ZOTU is created
     system_sub(cmd_to_call_list, force_log=True)
+    return str(otu_tab)
 
 
 def get_samples_sizes(input_file):
@@ -1211,7 +1226,7 @@ def main_de_novo(
      each samples' sequence file which is going to be combined with other samples passed to analysis.
     analysis_dir: The destination directory to save results
     """
-    global USEARCH_11_BIN, POOL_SIZE, ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC
+    global USEARCH_11_BIN, POOL_SIZE, ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC, ARGS_PREC
     # updating USEARCH_11_BIN
     USEARCH_11_BIN = usearch_11_bin
 
@@ -1247,6 +1262,7 @@ def main_de_novo(
         ANA_LOG.warning(f"Copying args file to {ANALYSIS_DIR} failed: {exc}")
 
     ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
+    ARGS_PREC = IMNGS2ArgsParser(config_yaml=args_file_path).preproc_args
     # Parsing spike_stat_file
     try:
         parsed_spike_stat_file_path = Path(PurePath(ANALYSIS_DIR + 'spike_mapping_file.csv'))
@@ -1289,7 +1305,12 @@ def main_de_novo(
     # Clustering the sequences
     ANA_LOG.info('# Clustering at ZOTU level')
     clusterZOTUs()
-    # Removing the size from the ZOTUs
+    ANA_LOG.info('# Filtering out human sequences')
+    bacterial_ZOTUs = filter16S()
+    ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
+    addTax_new(bacterial_ZOTUs)  # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
+    otu_tab_file = build_ZOTU_table('analysis.fasta', bacterial_ZOTUs)
+    exit()
     prepare_zotus()
     # Clustering at OTU level
     ANA_LOG.info('# Clustering at OTU level')
