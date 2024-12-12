@@ -172,12 +172,6 @@ def filter_merged_reads():
         ],
         force_log=True
     )
-    system_sub(
-        [
-            "rm",
-            "filtered1.fastq"
-        ]
-    )
 
 
 def run_FastQC(forward_file, reverse_file):
@@ -624,9 +618,9 @@ def cleanup(input_id, full_clean=False, dir_path=None):
     else:
         deleted_files = [
             'merged.fastq',  # output of merging paired reads step
-            'filtered1.fastq',  # output of trimming step
+            # 'filtered1.fastq',  # output of trimming step # It is used by de_novo pipeline
             # 'filtered2.fasta',  # output of amplicon error rate, length, basepair quality filtering step
-            # 'derep.fasta',  # output of dereplication of filtered2.fasta # It is used by de_novo pipeline
+            'derep.fasta',  # output of dereplication of filtered2.fasta
             'sorted.fasta',  # output of sorting dereplicated sequences based on their sequence size
             'zotus.fasta',  # output of clustering sorted sequences to ZOTUs
             'good_ZOTUs.fa',  # output of filtering non 16S zotus

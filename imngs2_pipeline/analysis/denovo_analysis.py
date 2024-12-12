@@ -26,11 +26,13 @@ ref16RNAdb_2 = DB_LOC + "silva-arc-16s-id95.fasta"
 SORT_ME_RNA_BIN = BIN_DIR + "sortmerna"
 USEARCH_TAIL = '> /dev/null 2>&1'
 krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
-global SPIKE_STAT_HEADER, TAXED_ZOTU_FILE_NAME, DEREP_READS_FILE_NAME, DEREP_NEW_LABEL
+global SPIKE_STAT_HEADER, TAXED_ZOTU_FILE_NAME, DEREP_NEW_LABEL
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
-DEREP_READS_FILE_NAME = "derep.fasta"
+global FILTERED_READS_FILE, TRIMMED_READS_FILE
+TRIMMED_READS_FILE = "filtered1.fastq"
+FILTERED_READS_FILE = "filtered2.fasta"
 max_pool = int(cpu_count() * 0.7)
 DEREP_NEW_LABEL = "Uniq"
 global POOL_SIZE
@@ -48,27 +50,70 @@ def read_file(filename):
     return content
 
 
-def append_reads(seq_fasta, sample_id, analysis_dir):
-    chdir(analysis_dir)
+def append_reads(seq_fasta, sample_id, append_to):
     seq_fasta_path = os.path.abspath(seq_fasta)
     dataset_name = f"{sample_id}"
+    new_file = 'new_' + str(os.path.basename(seq_fasta_path).split('.')[0])
+    new_file_fasta = new_file + '.fasta'
+    new_file_fastq = new_file + '.fastq'
     cmd_to_call_list = [
         USEARCH_11_BIN,
         '-fastx_relabel',
         seq_fasta_path,
         '-prefix',
         f"sample={dataset_name};",
-        '-fastaout',
-        'new',
         '-keep_annots',
+        '-fastaout',
+        new_file_fasta,
+        '-fastqout',
+        new_file_fastq
     ]
+    if seq_fasta_path.endswith(".fasta"):
+        cmd_to_call_list.pop(-1)
+        cmd_to_call_list.pop(-1)
     # cmd = USEARCH_11_BIN + ' -fastx_relabel ' + taxed_ZOTUs_file_path + ' -prefix ' + dataset_name
     # cmd += '. -fastaout new -keep_annots'
     system_sub(cmd_to_call_list, force_log=True)
-    with open('new', 'r') as new_file:
-        with open('analysis.fasta', 'a') as analysis_file:
+    with open(new_file_fasta, 'r') as new_file:
+        with open(append_to + ".fasta", 'a') as analysis_file:
             analysis_file.write(new_file.read())
-    onelinefasta('analysis.fasta')
+
+    os.remove(new_file_fasta)
+    onelinefasta(append_to + ".fasta")
+    if ospath.exists(new_file_fastq):
+        with open(new_file_fastq, 'r') as new_file:
+            with open(append_to + ".fastq", 'a') as analysis_file:
+                analysis_file.write(new_file.read())
+        os.remove(new_file_fastq)
+
+
+def gather_samples_files(map_lines: list, file_to_gather: str):
+    sample_seq_files_path = []
+    for entries in map_lines:
+        sample_processed_path = Path(PurePath(entries[4])).joinpath(file_to_gather)
+        sample_seq_files_path.append((sample_processed_path, entries[0]))
+
+    for this_file, sam_id in sample_seq_files_path:
+        # if tar.gz version of this_file is found, extract it
+        tar_gz_this_file = Path(PurePath(this_file).with_suffix(this_file.suffix + ".tar.gz"))
+        # extract tar_gz_this_file to this_file
+        if not this_file.is_file() and tar_gz_this_file.is_file():
+            with tarfile.open(tar_gz_this_file, "r:gz") as tar:
+                tar.extractall(path=this_file.parent)
+            tar_gz_this_file.unlink()
+        elif not this_file.is_file():
+            raise ValueError(f"{str(this_file)} must contain path to each samples sequence file!")
+
+    for seq_file, sam_id in sample_seq_files_path:
+        append_reads(str(seq_file), sam_id, file_to_gather.split('.')[0])
+
+    output_tuple = ["", ""]
+    if ospath.exists(file_to_gather + ".fasta"):
+        output_tuple[0] = file_to_gather + ".fasta"
+    if ospath.exists(file_to_gather + ".fastq"):
+        output_tuple[1] = file_to_gather + ".fastq"
+
+    return tuple(output_tuple)
 
 
 def trim_sides(five_end_trim, three_end_trim):
@@ -97,21 +142,40 @@ def trim_sides(five_end_trim, three_end_trim):
     onelinefasta('trimmed.fasta')
 
 
-def dereplication(with_taxonomy=True):
+def filter_trimmed_seqs(trimmed_seqs_file: str, maxee_rate: float) -> str:
+    # cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
+    # cmd_1 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
+    # system_sub(cmd_0 + cmd_1)
+    quality_filtered_fasta = "filtered2.fasta"
+    system_sub(
+        [
+            *list(USEARCH_11_BIN.split(" ")),
+            "-fastq_filter",
+            trimmed_seqs_file,
+            "-fastq_maxee_rate",
+            maxee_rate,
+            "-fastaout",
+            quality_filtered_fasta
+        ],
+        force_log=True
+    )
+    return quality_filtered_fasta
+
+
+def dereplication(filtered_reads_file, with_taxonomy=True) -> str:
     # cmd_part_0 = USEARCH_11_BIN + " -fastx_uniques analysis.fasta -relabel Zotu"
     # cmd_part_0 += " -fastaout derep.fasta -tabbedout relabel.tab --threads " + str(POOL_SIZE)
     # cmd_part_0 += " > /dev/null 2>/dev/null"
     # system_sub(cmd_part_0)
-    sample_name_regex = re.compile(r"sample=(.*);([0-9]+);size=([0-9]+);")
-
+    dereped_reads_file = "derep.fasta"
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-fastx_uniques",
-        "trimmed.fasta",
+        filtered_reads_file,
         "-relabel",
         DEREP_NEW_LABEL,  # dereplication relaling
         "-fastaout",
-        "derep.fasta",
+        dereped_reads_file,
         "-tabbedout",
         "relabel.tab",
         "--threads",
@@ -121,7 +185,10 @@ def dereplication(with_taxonomy=True):
     ]
     # dereplicate reads and anotate them by multiplicity
     system_sub(cmd_to_call_list, force_log=True)
-    onelinefasta("derep.fasta")
+    onelinefasta(dereped_reads_file)
+    return dereped_reads_file
+    """
+    # sample_name_regex = re.compile(r"sample=(.*);([0-9]+)(;size=([0-9]+);)?")
     contents = open('relabel.tab', 'r')
     zotus_dict = dict()
     zotus_tax_dict = dict()
@@ -213,25 +280,28 @@ def dereplication(with_taxonomy=True):
         "trimmed.fasta",
     ]
     # system_sub(cmd_to_call_list)  # TODO uncomment this line
+    """
 
 
-def sort_seqs():
+def sort_seqs(to_sort_fasta: str) -> str:
     # cmd_0 = USEARCH_11_BIN + ' -sortbysize derep.fasta -fastaout sorted.fasta'
     # cmd_1 = ' ' + USEARCH_TAIL
     # system_sub(cmd_0 + cmd_1)
+    sorted_fasta_file = "sorted.fasta"
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-sortbysize",
-        "derep.fasta",
+        to_sort_fasta,
         "-fastaout",
-        "sorted.fasta",
+        sorted_fasta_file,
     ]
     system_sub(cmd_to_call_list, force_log=True)
-    onelinefasta("sorted.fasta")
+    onelinefasta(sorted_fasta_file)
+    return sorted_fasta_file
 
 
 # cluster sequences to OTUs
-def clusterZOTUs():
+def clusterZOTUs(minsize: int):
     # cmd_part_0 = USEARCH_11_BIN + ' -unoise3 sorted.fasta -minsize 4 -zotus zotus.fasta'
     # cmd_part_1 = ' ' + USEARCH_TAIL
     # # clusering of seq in OTUs (clustered)
@@ -241,7 +311,7 @@ def clusterZOTUs():
         "-unoise3",
         "sorted.fasta",
         "-minsize",
-        str(ARGS_CLS.denovo_cluster_zotus.minsize),
+        minsize,
         "-zotus",
         "zotus.fasta",
         # "--sizein",
@@ -268,6 +338,7 @@ def filter16S():
     # system_sub(cmd_0 + cmd_1 + cmd_2)
     # system_sub('mv out/aligned.fasta good_ZOTUs.fa')
     # system('rm -r idx out kvdb')
+    zotus_fasta = "ZOTUs-Seqs.fasta"
     system_sub(
         [
             SORT_ME_RNA_BIN,
@@ -294,11 +365,11 @@ def filter16S():
         [
             "mv",
             "out/aligned.fasta",
-            "good_ZOTUs.fasta"
+            zotus_fasta
         ]
     )
     system_sub(["rm", "-r", "idx", "kvdb"])
-    return "good_ZOTUs.fasta"
+    return zotus_fasta
 
 
 def prepare_zotus():
@@ -408,7 +479,7 @@ def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
     # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
     raw_seq_file_path = Path(raw_seq_file).absolute()
     zotu_seq_file_path = Path(zotu_seq_file).absolute()
-    otu_tab = Path("zotu_table.txt").absolute()
+    otu_tab = Path("ZOTUs-Table.tab").absolute()
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-otutab",
@@ -1273,49 +1344,31 @@ def main_de_novo(
     except Exception as exc:
         raise ValueError(f"spike_stat_file: {str(exc)}")
 
-    sample_seq_files_path = []
-    for full_id, entries in map_lines_dict.items():
-        # sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(DEREP_READS_FILE_NAME), entries[0]))
-        sample_seq_files_path.append((Path(PurePath(entries[4])).joinpath(DEREP_READS_FILE_NAME), entries[0]))
-
-    for derep_path, sam_id in sample_seq_files_path:
-        # if tar.gz version of derep_path is found, extract it
-        tar_gz_derep_path = Path(PurePath(derep_path).with_suffix(derep_path.suffix + ".tar.gz"))
-        # extract tar_gz_derep_path to derep_path
-        if not derep_path.is_file() and tar_gz_derep_path.is_file():
-            with tarfile.open(tar_gz_derep_path, "r:gz") as tar:
-                tar.extractall(path=derep_path.parent)
-            tar_gz_derep_path.unlink()
-        elif not derep_path.is_file():
-            raise ValueError(f"{str(derep_path)} must contain path to each samples sequence file!")
-
-    chdir(ANALYSIS_DIR)
     ANA_LOG.info("# Gathering Sequences")
-    # TODO as derep.fasta is archived in the zip file, it should be extracted first
-    for seq_file, sam_id in sample_seq_files_path:
-        append_reads(seq_file, sam_id, ANALYSIS_DIR)
     chdir(ANALYSIS_DIR)
+    gather_samples_files(list(map_lines_dict.values()), TRIMMED_READS_FILE)
+    gather_samples_files(list(map_lines_dict.values()), FILTERED_READS_FILE)
     # trimming the sequences
-    trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
+    # trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
     ANA_LOG.info('# Dereplication')
-    dereplication(with_taxonomy=False)
+    derep_file = dereplication(FILTERED_READS_FILE, with_taxonomy=False)
     # Sorting the sequences
     ANA_LOG.info('# Sorting')
-    sort_seqs()
+    sorted_file = sort_seqs(derep_file)
     # Clustering the sequences
     ANA_LOG.info('# Clustering at ZOTU level')
-    clusterZOTUs()
+    clusterZOTUs(str(ARGS_CLS.denovo_cluster_zotus.minsize))
     ANA_LOG.info('# Filtering out human sequences')
     bacterial_ZOTUs = filter16S()
     ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
     addTax_new(bacterial_ZOTUs)  # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
-    otu_tab_file = build_ZOTU_table('analysis.fasta', bacterial_ZOTUs)
+    ANA_LOG.info('# Creating ZOTU tables')
+    otu_tab_file = build_ZOTU_table(TRIMMED_READS_FILE, bacterial_ZOTUs)
     exit()
-    prepare_zotus()
+    # prepare_zotus()
     # Clustering at OTU level
     ANA_LOG.info('# Clustering at OTU level')
     clusterOTUs()
-    ANA_LOG.info('# Creating ZOTU tables')
     remove_size_from_OTUS()
     assign_zotus_to_otus()
     ZOTUs_seq_name = keep_good_ZOTUs()

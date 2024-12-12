@@ -45,9 +45,11 @@ MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1
 global PATH_SEP, DEFAULT_MAP_LINE, TAXED_ZOTU_FILE_NAME
 DEFAULT_MAP_LINE = MapLineTup("", float("NAN"), "0.0", "")
 PATH_SEP = "_-_"
-global DEREP_READS_FILE_NAME, SPIKE_STAT_FILE_NAME, SPIKE_STAT_FILE_COLS, SPIKE_STAT_HEADER
+global SPIKE_STAT_FILE_NAME, SPIKE_STAT_FILE_COLS, SPIKE_STAT_HEADER
 SPIKE_STAT_FILE_NAME = "spike_stat_mapping_file.csv"
-DEREP_READS_FILE_NAME = "derep.fasta"
+global TRIMMED_READS_FILE, FILTERED_READS_FILE
+TRIMMED_READS_FILE = "filtered1.fastq"
+FILTERED_READS_FILE = "filtered2.fasta"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
@@ -169,7 +171,8 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
         DEFAULT_ARG_FILE_NAME,
         TAXED_ZOTU_FILE_NAME,
         SPIKE_STAT_FILE_NAME,
-        DEREP_READS_FILE_NAME
+        TRIMMED_READS_FILE,
+        FILTERED_READS_FILE
     ]
     logic_test = [False for fi in should_be_there]
 
