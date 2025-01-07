@@ -875,8 +875,12 @@ def run_imngs2(
         force_preprocess: bool = False,
         analysis_mode: str = "TIC"):
     # NOTE if this function is imported then the default global variables will be used
-    PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     global USEARCH_11_BIN, FASTQ_DIR
+    PREP_LOG = proc_helper.gimmelogger(
+        "run_imngs2",
+        log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
+        only_file=False)
+    PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
 
     ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()

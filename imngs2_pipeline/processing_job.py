@@ -649,7 +649,7 @@ def cleanup(input_id, full_clean=False, dir_path=None):
         ]
         for entry in listdir(dir_path):
             entry_path = path.join(dir_path, entry)
-            if (entry in deleted_files or entry.endswith(".fastq")) and path.isfile(entry_path):
+            if entry in deleted_files and path.isfile(entry_path):
                 remove(str(entry_path))
             elif entry in deleted_dirs and path.isdir(entry_path):
                 shutil.rmtree(str(entry_path))
