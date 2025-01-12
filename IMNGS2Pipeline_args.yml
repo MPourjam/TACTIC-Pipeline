@@ -31,7 +31,7 @@ Filter16SArgs:
   num_alignments: 1
 # prepare_zotus:
 BuildZOTUTableArgs:
-  id: 0.99  # This value results more refined ZOTU count than 0.97 (default)
+  id: 0.97  # This value results more refined ZOTU count than 0.97 (default)
 AddTaxArgs:
   turn: all
 ################

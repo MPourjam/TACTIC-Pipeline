@@ -502,6 +502,34 @@ def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
     return str(otu_tab)
 
 
+def build_OTU_table(raw_seq_file: str, otu_seq_file: str) -> None:
+    # cmd_0 = USEARCH_11_BIN + ' -otutab analysis.fasta -top_hit_only -zotus nochi_ZOTUs.fasta '
+    # cmd_1 = ' -otutabout zotu_table.txt -id 0.97'
+    # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
+    raw_seq_file_path = Path(raw_seq_file).absolute()
+    otu_seq_file_path = Path(otu_seq_file).absolute()
+    otu_tab = Path("OTUs-Table.tab").absolute()
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        "-otutab",
+        str(raw_seq_file_path),
+        "-top_hit_only",
+        "-otus",  # if the database sequences are already denoised which is the case here
+        str(otu_seq_file_path),  # This file contains ZOTUs sequences (both centroids of OTUs and matched ZOTUs to that OTU and non-chimeric)
+        "-otutabout",
+        str(otu_tab),
+        "-id",
+        str(ARGS_PREC.build_zotus_table.id),
+        "-threads",
+        f"{str(POOL_SIZE)}",
+    ]
+    # NOTE zotu_table.txt could miss some ZOTUs as the ZOTU's unique sequence in analysis.fasta could already match to
+    # another ZOTU before reaching its corresponding original ZOTU sequence at smimilarities higher than 0.97. It
+    # happens when the ZOTU is created
+    system_sub(cmd_to_call_list, force_log=True)
+    return str(otu_tab)
+
+
 def get_samples_sizes(input_file):
     contents = read_file(input_file)[1:]
     tot_sizes_list = list()
@@ -1368,7 +1396,12 @@ def main_de_novo(
     otu_tab_file = build_ZOTU_table(TRIMMED_READS_FILE, bacterial_ZOTUs)
     ANA_LOG.info('# Clustering at OTU level')
     clusterOTUs()
+    ANA_LOG.info('# Filtering out human sequences')
     bacterial_OTUs = filter16S("otus1.fa", "OTUs-Seqs.fasta")
+    ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
+    addTax_new(bacterial_OTUs)
+    ANA_LOG.info('# Creating OTU tables')
+    build_OTU_table(TRIMMED_READS_FILE, bacterial_OTUs)
     exit()
     remove_size_from_OTUS()
     # prepare_zotus()
