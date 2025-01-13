@@ -530,18 +530,18 @@ def build_OTU_table(raw_seq_file: str, otu_seq_file: str) -> None:
     return str(otu_tab)
 
 
-def get_samples_sizes(input_file):
+def get_samples_sizes(input_file, with_taxonomy=True):
     contents = read_file(input_file)[1:]
     tot_sizes_list = list()
-    num_tokens = len(contents[0].split('\t')) - 2
+    num_tokens = len(contents[0].split('\t')) - int(2 if with_taxonomy else 1)
     # Adding 0.001 to each sum to avoid division by zero
     for i in range(0, num_tokens):
-        tot_sizes_list.append(0.001)
+        tot_sizes_list.append(0.0000001)
     for line in contents:
-        line_tokens = line.split('\t')[1:-1]
-        for i in range(len(line_tokens)):
-            tot_sizes_list[i] += float(line_tokens[i])
-    tot_sizes_list = [round(sz, 5) for sz in tot_sizes_list]
+        line_tokens = line.split('\t')
+        for i in range(len(tot_sizes_list)):
+            tot_sizes_list[i] += float(line_tokens[i + 1])
+    tot_sizes_list = [round(sz, 6) for sz in tot_sizes_list]
     return tot_sizes_list
 
 
@@ -1028,6 +1028,93 @@ def create_trees(zotu_algn_file):
     create_tree("shortened_algn_test_OTUs-Seqs.fasta", ["rapidnj"], "OTUs")
 
 
+def filter_otus_by_abundance(
+    abundance_limit: float,
+    OTU_table_file_name: str,
+    OTU_fasta_file_name: str,
+    sep: str = '\t',
+    with_taxonomy: bool = True,
+    sample_wise_corr_flag: bool = True,
+    replace_originals: bool = True) -> None:
+    # Abundance float fixation
+    abundance_limit = round(float(abundance_limit), 5)
+    # Managing paths of input files
+    # OTU TABLE
+    OTU_table_file_path = os.path.abspath(OTU_table_file_name)
+    OTU_table_file_parent, OTU_table_file_name = os.path.split(OTU_table_file_path)
+    # OTU FASTA
+    OTU_fasta_file_path = os.path.abspath(OTU_fasta_file_name)
+    OTU_fasta_file_parent, OTU_fasta_file_name = os.path.split(OTU_fasta_file_path)
+    filtered_OTU_table_path = os.path.join(OTU_table_file_parent, 'filtered_by_abundance_' + OTU_table_file_name)
+
+    unf_tot_sizes = get_samples_sizes(OTU_table_file_path, with_taxonomy=with_taxonomy)
+    # Filtering OTU Table
+    removed_sotus = list()
+    with open(OTU_table_file_path, "r") as otu_table_fio, open(filtered_OTU_table_path, "w+") as filtered_otu_fio:
+        otu_header = otu_table_fio.readline().strip()
+        datasets_samples = len(otu_header.split(sep)) - int(2 if with_taxonomy else 1)
+        sample_sizes = list()
+        for i in range(0, datasets_samples):
+            sample_sizes.append(0)
+        filtered_otu_fio.write(otu_header + '\n')
+        line = otu_table_fio.readline()
+        while line:
+            line = line.strip()
+            line_list = line.split(sep)
+            curr_sizes = list()
+            sotu_name = str(line_list[0]).strip()
+            rem_sotu = True
+            curr_abundances = list()
+            for j in range(len(sample_sizes)):
+                abundance = round(float(line_list[j + 1]) / unf_tot_sizes[j], 5)
+                curr_sizes.append(line_list[j + 1]) 
+                curr_abundances.append(abundance)
+            # if sample_wise_corr_flag:
+            curr_sizes = [round(float(csz), 5) for csz in curr_sizes]
+            corrected_curr_sizes = [round(float(csz), 5) for csz in curr_sizes]
+            for ii in range(len(curr_abundances)):
+                if curr_abundances[ii] <= abundance_limit:
+                    corrected_curr_sizes[ii] = str(round(0.0, 1))
+                else:
+                    rem_sotu = False
+            curr_sizes = corrected_curr_sizes if sample_wise_corr_flag else curr_sizes
+            if not rem_sotu:
+                new_corrected_line = [sotu_name] + curr_sizes
+                new_corrected_line += line_list[-1:] if with_taxonomy else []
+                new_corrected_line = [str(el).strip() for el in new_corrected_line]
+                new_line = sep.join(new_corrected_line)
+                filtered_otu_fio.write(new_line + '\n')
+            else:
+                removed_sotus.append(sotu_name)
+            # read new line
+            line = otu_table_fio.readline()
+
+
+    # Removing the filtered SOTUs from the fasta file
+    filtered_otu_fasta_path = os.path.join(OTU_fasta_file_parent, 'filtered_by_abundance_' + OTU_fasta_file_name)
+    seq_header_reg = re.compile(r"^>([^;\s]+)[;\s]+", re.IGNORECASE)
+    with open(OTU_fasta_file_path, 'r') as otu_fasta_fio, open(filtered_otu_fasta_path, "w+") as filtered_otu_fasta_fio:
+        derep_line = otu_fasta_fio.readline()
+        write_seq = False
+        while derep_line:
+            if derep_line.startswith(">"):
+                curr_sotu = seq_header_reg.search(derep_line).group(1)
+                if curr_sotu and curr_sotu not in removed_sotus:
+                    new_line = derep_line
+                    filtered_otu_fasta_fio.write(new_line)
+                    write_seq = True
+                else:
+                    write_seq = False
+            else:
+                if write_seq:
+                    filtered_otu_fasta_fio.write(derep_line)
+            derep_line = otu_fasta_fio.readline()
+
+    if replace_originals:
+        shutil.move(filtered_OTU_table_path, OTU_table_file_path)
+        shutil.move(filtered_otu_fasta_path, OTU_fasta_file_path)
+
+
 def filter_abundance(abundance_limit,
                      OTU_table_file_name,
                      OTU_fasta_file_name,
@@ -1393,7 +1480,7 @@ def main_de_novo(
     ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
     addTax_new(bacterial_ZOTUs)  # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
     ANA_LOG.info('# Creating ZOTU tables')
-    otu_tab_file = build_ZOTU_table(TRIMMED_READS_FILE, bacterial_ZOTUs)
+    zotu_tab_file = build_ZOTU_table(TRIMMED_READS_FILE, bacterial_ZOTUs)
     ANA_LOG.info('# Clustering at OTU level')
     clusterOTUs()
     ANA_LOG.info('# Filtering out human sequences')
@@ -1401,19 +1488,37 @@ def main_de_novo(
     ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
     addTax_new(bacterial_OTUs)
     ANA_LOG.info('# Creating OTU tables')
-    build_OTU_table(TRIMMED_READS_FILE, bacterial_OTUs)
+    otu_tab_file = build_OTU_table(TRIMMED_READS_FILE, bacterial_OTUs)
+    ANA_LOG.info('# Filtering ZOTUs by abundance')
+    filter_otus_by_abundance(
+        ARGS_CLS.create_table.abund_limit,
+        zotu_tab_file,
+        "ZOTUs-Seqs.fasta",
+        with_taxonomy=False,
+        sample_wise_corr_flag=ARGS_CLS.create_table.sample_wise_correction
+    )
+    ANA_LOG.info('# Filtering OTUs by abundance')
+    filter_otus_by_abundance(
+        ARGS_CLS.create_table.abund_limit,
+        otu_tab_file,
+        "OTUs-Seqs.fasta",
+        with_taxonomy=False,
+        sample_wise_corr_flag=ARGS_CLS.create_table.sample_wise_correction
+    )
     exit()
+    ANA_LOG.info('# Adding taxonomy to Z/-OTU table')
+    ANA_LOG.info('# Creating trees')
+    ANA_LOG.info('# Creating Krona')
     remove_size_from_OTUS()
     # prepare_zotus()
     # Clustering at OTU level
-    assign_zotus_to_otus()
-    ZOTUs_seq_name = keep_good_ZOTUs()
-    build_ZOTU_table()
-    ANA_LOG.info('# Adding taxonomy to ZOTU sequences')
-    addTax_new(ZOTUs_seq_name)  # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
-    ZOTUs_table_name = create_final_ZOTU_table()
-    ANA_LOG.info('# Creating OTU table')
-    OTUs_table_name, OTU_seq_name = create_OTUs_from_ZOTUS_table()
+    # assign_zotus_to_otus()
+    # ZOTUs_seq_name = keep_good_ZOTUs()
+    # build_ZOTU_table()
+    # ANA_LOG.info('# Adding taxonomy to ZOTU sequences')
+    # ZOTUs_table_name = create_final_ZOTU_table()
+    # ANA_LOG.info('# Creating OTU table')
+    # OTUs_table_name, OTU_seq_name = create_OTUs_from_ZOTUS_table()
     # Creating trees
     ANA_LOG.info('# Creating trees')
     sina_algn_shortened_file = shorten_sina_algn("test_ZOTUs-Seqs.fasta")
