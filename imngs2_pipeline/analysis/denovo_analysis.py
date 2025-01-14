@@ -37,6 +37,10 @@ max_pool = int(cpu_count() * 0.7)
 DEREP_NEW_LABEL = "Uniq"
 global POOL_SIZE
 POOL_SIZE = max_pool if max_pool > 0 else 1
+global ANA_LOG
+ANA_LOG = gimmelogger(
+    only_file=False,
+)
 
 
 def system_sub(*args, **kwargs):
@@ -655,6 +659,56 @@ def addTax_new(zotu_fasta_path):
     shutil.move(new_taxed_path, filename)
 
 
+def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: bool = True):
+    """
+    It finds the taxonomy of each sequence in the taxed_seq_file and adds it to the table_file
+
+    :param table_file: str
+        The path to the table file
+    :param taxed_seq_file: str
+        The path to the taxed sequence file
+    :return: none
+    """
+    # Path handling
+    table_file = os.path.abspath(table_file)
+    taxed_seq_file = os.path.abspath(taxed_seq_file)
+    tax_regex = re.compile(r"tax=(?P<tax>([^;]+;)*([^;]+)?;?)$", re.IGNORECASE)
+    seq_id_regex = re.compile(r"^>(?P<seq_header>[^;\s]+).*$", re.IGNORECASE)
+    seq_headers = {}
+    # seq_taxonomies = []
+    with open(taxed_seq_file) as taxed_seq_fio:
+        seq_line = taxed_seq_fio.readline().strip()
+        while seq_line:
+            if seq_line[0] == '>':
+                _tax = ''
+                seq_id = seq_id_regex.search(seq_line).group('seq_header')
+                curr_tax = tax_regex.search(seq_line)
+                _tax += curr_tax.group('tax') if curr_tax.group('tax') else ';;;;;'
+                seq_headers[seq_id] = _tax
+            seq_line = taxed_seq_fio.readline().strip()
+
+    taxed_table_file = 'taxed_' + os.path.basename(table_file)
+    with open(table_file) as table_fio, open(taxed_table_file, 'w+') as out_fio:
+        table_header = table_fio.readline().strip()
+        if table_header.endswith('Taxonomy'):
+            out_fio.write(table_header + "\n")
+        else:
+            out_fio.write(table_header + "\t" + "Taxonomy\n")
+        table_line = table_fio.readline().strip()
+        while table_line:
+            if table_line[0] == '#':
+                out_fio.write(table_line + "\n")
+            else:
+                seq_name = str(table_line.split('\t')[0]).strip()
+                _tax = seq_headers.get(seq_name, ';;;;;')
+                new_line = table_line + '\t' + _tax + '\n'
+                out_fio.write(new_line)
+            table_line = table_fio.readline().strip()
+
+    if replace_originals:
+        shutil.move(taxed_table_file, table_file)
+
+
 def create_final_ZOTU_table():
     tax_regex = re.compile(r";tax=(.*)$")
     zotu_regex = re.compile(r"(Zotu[0-9]+);")
@@ -737,8 +791,8 @@ def shorten_sina_algn(sina_algn_file):
             if zotus_sina_algn_line.startswith('>'):
                 sina_algn_common_part.write(zotus_sina_algn_line + '\n')
                 # getting sequence start and end positions
-                zotus_sina_algn_line = zotus_sina_algn.readline().strip()
-                common_aln_seq = zotus_sina_algn_line[lowest_start:highest_end]
+            else:
+                common_aln_seq = zotus_sina_algn_line[lowest_start:highest_end + 1]
                 sina_algn_common_part.write(common_aln_seq + '\n')
             zotus_sina_algn_line = zotus_sina_algn.readline().strip()
 
@@ -749,28 +803,29 @@ def write_otus_sina_algn_file():
     pass
 
 
-def create_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_name_root: str = None):
+def plant_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_name_root: str = None):
     algn_file_path = os.path.abspath(algn_file)
     algn_dirname, algn_filename = os.path.split(algn_file_path)
     os.chdir(algn_dirname)
     out_file_name_root = str(algn_filename.split(".")[0])
     output_file_name = output_file_name_root if output_file_name_root else out_file_name_root
+    output_file_name = os.path.join(algn_dirname, output_file_name)
+
     # create both trees
     if "FastTree" in method:
         # cmd_part_0 = 'FastTree -quiet -nosupport -gtr -nt filtered_aligned.fasta'
         # cmd_part_1 = ' > ' + sample + '_FastTree.tre'
         # system_sub(cmd_part_0 + cmd_part_1)
         cmd_to_call_list = [
-            "FastTree",
+            BIN_DIR + "FastTree",
             "-quiet",
             "-nosupport",
             "-gtr",
             "-nt",
-            algn_filename,
+            algn_file_path,
             ">",
             f"{output_file_name}-Tree-FastTree.tre",
         ]
-        system_sub(cmd_to_call_list)
 
     if "rapidnj" in method:
         # cmd_2_part_0 = BIN_DIR + 'rapidnj filtered_aligned.fasta --input-format fa --cores 6 --alignment-type d '
@@ -778,7 +833,7 @@ def create_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_n
         # system_sub(cmd_2_part_0 + cmd_2_part_1)
         cmd_to_call_list = [
             BIN_DIR + "rapidnj",
-            algn_filename,
+            algn_file_path,
             "--input-format",
             "fa",
             "--cores",
@@ -791,7 +846,7 @@ def create_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_n
             "-x",
             f"{output_file_name}-Tree-nj.tre",
         ]
-        system_sub(cmd_to_call_list)
+    system_sub(cmd_to_call_list)
 
 
 def cleanup_old():
@@ -816,47 +871,46 @@ def rename_final_files():
     system_sub("mv sotus_table.tab OTUs-table.final.tab".split(" "))
 
 
-def create_krona(krona_tool):
-    OTUfinal_line = read_file('ZOTUs-Table.tab')[1:]
-    krona_text = open('krona.txt', 'w+')
+def create_krona(krona_tool: str, taxed_otu_table: str, output_html_name: str):
+    taxed_otu_table_path = os.path.abspath(taxed_otu_table)
+    taxed_otu_dirname, taxed_otu_filename = os.path.split(taxed_otu_table_path)
+    OTUfinal_line = read_file(taxed_otu_table_path)[1:]
+    krona_txt_file = taxed_otu_dirname + "/krona_" + os.path.basename(taxed_otu_filename)
+    if output_html_name:
+        output_html_name = os.path.join(taxed_otu_dirname, output_html_name)
+    else:
+        output_html_name = os.path.join(taxed_otu_dirname, "krona.html")
+    krona_text_fio = open(krona_txt_file, 'w+')
     krona_dct = {}
     for OTU_taxonomy in OTUfinal_line:
         OTUFinal_list = OTU_taxonomy.split('\t')[1:]
-        taxo = '\t'.join(OTUFinal_list[-1].split(";")[:-1])
+        taxo = '\t'.join(str(OTUFinal_list[-1]).strip().split(";"))
         size = OTUFinal_list[:-1]
-        if not krona_dct.get(taxo, False):
-            krona_dct[taxo] = sum([int(s) for s in size])
-        else:
-            krona_dct[taxo] = krona_dct[taxo] + sum([int(s) for s in size])
+        curr_sum = krona_dct.get(taxo, 0) + sum([float(s) for s in size])
+        krona_dct[taxo] = curr_sum
     for tax, size in krona_dct.items():
-        krona_text.write(str(size) + '\t' + tax + '\n')
-    krona_text.close()
+        krona_text_fio.write(str(size) + '\t' + tax + '\n')
+    krona_text_fio.close()
     system_sub(
         [
             krona_tool,
-            "./krona.txt"
+            krona_txt_file,
+            "-o",
+            output_html_name
         ],
         capture_output=True,
         quiet=True
     )
-    # system("rm krona.txt")
     system_sub(
         [
             "rm",
-            "krona.txt"
+            krona_txt_file
         ],
         capture_output=True,
         quiet=True
     )
-    system_sub(
-        [
-            "mv",
-            "text.krona.html",
-            "krona.html"
-        ],
-        capture_output=True,
-        quiet=True
-    )
+
+    return output_html_name
 
 
 def create_OTUs_from_ZOTUS_table():
@@ -1003,8 +1057,8 @@ def create_trees(zotu_algn_file):
     # extracint otu entries in zotu_algn_file
     otu_zotu_map_lines = read_file('z2o.tab')
     otu_zotu_map_dict = dict()
-    zotu_regex = re.compile(r"^>?(Zotu[0-9]+);?")
-    otu_regex = re.compile(r"\s(otu[0-9]+)\s")
+    zotu_regex = re.compile(r"^>?(Zotu[0-9]+);?", re.IGNORECASE)
+    otu_regex = re.compile(r"\s(otu[0-9]+)\s", re.IGNORECASE)
     for line in otu_zotu_map_lines:
         zotu, otu_mo = zotu_regex.search(line).group(1), otu_regex.search(line)
         if otu_mo:
@@ -1024,27 +1078,24 @@ def create_trees(zotu_algn_file):
             zotu_algn_line = zotu_algn_fio.readline().strip()
 
     # creating trees
-    create_tree(zotu_algn_filename, ["rapidnj"], "ZOTUs")
-    create_tree("shortened_algn_test_OTUs-Seqs.fasta", ["rapidnj"], "OTUs")
+    plant_tree(zotu_algn_filename, ["rapidnj"], "ZOTUs")
+    plant_tree("shortened_algn_test_OTUs-Seqs.fasta", ["rapidnj"], "OTUs")
 
 
 def filter_otus_by_abundance(
-    abundance_limit: float,
-    OTU_table_file_name: str,
-    OTU_fasta_file_name: str,
-    sep: str = '\t',
-    with_taxonomy: bool = True,
-    sample_wise_corr_flag: bool = True,
-    replace_originals: bool = True) -> None:
+        abundance_limit: float,
+        OTU_table_file_name: str,
+        OTU_fasta_file_name: str = "",
+        sep: str = '\t',
+        with_taxonomy: bool = True,
+        sample_wise_corr_flag: bool = True,
+        replace_originals: bool = True) -> None:
     # Abundance float fixation
     abundance_limit = round(float(abundance_limit), 5)
     # Managing paths of input files
     # OTU TABLE
     OTU_table_file_path = os.path.abspath(OTU_table_file_name)
     OTU_table_file_parent, OTU_table_file_name = os.path.split(OTU_table_file_path)
-    # OTU FASTA
-    OTU_fasta_file_path = os.path.abspath(OTU_fasta_file_name)
-    OTU_fasta_file_parent, OTU_fasta_file_name = os.path.split(OTU_fasta_file_path)
     filtered_OTU_table_path = os.path.join(OTU_table_file_parent, 'filtered_by_abundance_' + OTU_table_file_name)
 
     unf_tot_sizes = get_samples_sizes(OTU_table_file_path, with_taxonomy=with_taxonomy)
@@ -1067,7 +1118,7 @@ def filter_otus_by_abundance(
             curr_abundances = list()
             for j in range(len(sample_sizes)):
                 abundance = round(float(line_list[j + 1]) / unf_tot_sizes[j], 5)
-                curr_sizes.append(line_list[j + 1]) 
+                curr_sizes.append(line_list[j + 1])
                 curr_abundances.append(abundance)
             # if sample_wise_corr_flag:
             curr_sizes = [round(float(csz), 5) for csz in curr_sizes]
@@ -1088,31 +1139,34 @@ def filter_otus_by_abundance(
                 removed_sotus.append(sotu_name)
             # read new line
             line = otu_table_fio.readline()
-
-
-    # Removing the filtered SOTUs from the fasta file
-    filtered_otu_fasta_path = os.path.join(OTU_fasta_file_parent, 'filtered_by_abundance_' + OTU_fasta_file_name)
-    seq_header_reg = re.compile(r"^>([^;\s]+)[;\s]+", re.IGNORECASE)
-    with open(OTU_fasta_file_path, 'r') as otu_fasta_fio, open(filtered_otu_fasta_path, "w+") as filtered_otu_fasta_fio:
-        derep_line = otu_fasta_fio.readline()
-        write_seq = False
-        while derep_line:
-            if derep_line.startswith(">"):
-                curr_sotu = seq_header_reg.search(derep_line).group(1)
-                if curr_sotu and curr_sotu not in removed_sotus:
-                    new_line = derep_line
-                    filtered_otu_fasta_fio.write(new_line)
-                    write_seq = True
-                else:
-                    write_seq = False
-            else:
-                if write_seq:
-                    filtered_otu_fasta_fio.write(derep_line)
-            derep_line = otu_fasta_fio.readline()
-
     if replace_originals:
         shutil.move(filtered_OTU_table_path, OTU_table_file_path)
-        shutil.move(filtered_otu_fasta_path, OTU_fasta_file_path)
+
+    # OTU FASTA
+    OTU_fasta_file_path = os.path.abspath(OTU_fasta_file_name)
+    if OTU_fasta_file_path and os.path.isfile(OTU_fasta_file_path):
+        OTU_fasta_file_parent, OTU_fasta_file_name = os.path.split(OTU_fasta_file_path)
+        filtered_otu_fasta_path = os.path.join(OTU_fasta_file_parent, 'filtered_by_abundance_' + OTU_fasta_file_name)
+        seq_header_reg = re.compile(r"^>([^;\s]+)[;\s]+", re.IGNORECASE)
+        with open(OTU_fasta_file_path, 'r') as otu_fasta_fio, open(filtered_otu_fasta_path, "w+") as filtered_otu_fasta_fio:
+            derep_line = otu_fasta_fio.readline()
+            write_seq = False
+            while derep_line:
+                if derep_line.startswith(">"):
+                    curr_sotu = seq_header_reg.search(derep_line).group(1)
+                    if curr_sotu and curr_sotu not in removed_sotus:
+                        new_line = derep_line
+                        filtered_otu_fasta_fio.write(new_line)
+                        write_seq = True
+                    else:
+                        write_seq = False
+                else:
+                    if write_seq:
+                        filtered_otu_fasta_fio.write(derep_line)
+                derep_line = otu_fasta_fio.readline()
+
+        if replace_originals:
+            shutil.move(filtered_otu_fasta_path, OTU_fasta_file_path)
 
 
 def filter_abundance(abundance_limit,
@@ -1256,18 +1310,26 @@ def filter_abundance(abundance_limit,
 def cleanup(directory: str):
     directory = Path(PurePath(directory)).absolute()
     to_keep = [
+        "IMNGS2Pipeline_args.yml",
         "spike_mapping_file.csv",
         "ZOTUs-Seqs.fasta",
         "ZOTUs-Table.tab",
-        "OTUs-Seqs.fasta",
-        "OTUs-Table.tab",
-        "Map-ZOTU-OTU.tab",
         "ZOTUs-Tree-nj.tre",
         "ZOTUs-Tree-FastTree.tre",
+        "ZOTUs-Krona.html",
+        "SampleMinCount_Normalized-ZOTUs-Table.tab",
+        "Spike_Normalized-ZOTUs-Table.tab",
+        #
+        "OTUs-Seqs.fasta",
+        "OTUs-Table.tab",
         "OTUs-Tree-nj.tre",
         "OTUs-Tree-FastTree.tre",
-        "krona.html",
+        "OTUs-Krona.html",
+        "SampleMinCount_Normalized-OTUs-Table.tab",
+        "Spike_Normalized-OTUs-Table.tab",
+        #
         "Analysis_log.txt"
+        # "Map-ZOTU-OTU.tab",
     ]
     files = list(directory.glob("*"))
     for file in files:
@@ -1472,86 +1534,109 @@ def main_de_novo(
     # Sorting the sequences
     ANA_LOG.info('# Sorting')
     sorted_file = sort_seqs(derep_file)
-    # Clustering the sequences
+    # ##########################################################################################
+    # #################################### ZOTU Pipline ########################################
+    # ##########################################################################################
     ANA_LOG.info('# Clustering at ZOTU level')
     clusterZOTUs(str(ARGS_CLS.denovo_cluster_zotus.minsize))
     ANA_LOG.info('# Filtering out human sequences')
-    bacterial_ZOTUs = filter16S("zotus.fasta", "ZOTUs-Seqs.fasta")
-    ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
-    addTax_new(bacterial_ZOTUs)  # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
+    bacterial_ZOTUs_fasta = filter16S("zotus.fasta", "ZOTUs-Seqs.fasta")
     ANA_LOG.info('# Creating ZOTU tables')
-    zotu_tab_file = build_ZOTU_table(TRIMMED_READS_FILE, bacterial_ZOTUs)
-    ANA_LOG.info('# Clustering at OTU level')
-    clusterOTUs()
-    ANA_LOG.info('# Filtering out human sequences')
-    bacterial_OTUs = filter16S("otus1.fa", "OTUs-Seqs.fasta")
-    ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
-    addTax_new(bacterial_OTUs)
-    ANA_LOG.info('# Creating OTU tables')
-    otu_tab_file = build_OTU_table(TRIMMED_READS_FILE, bacterial_OTUs)
+    zotu_tab_file = build_ZOTU_table(TRIMMED_READS_FILE, bacterial_ZOTUs_fasta)
     ANA_LOG.info('# Filtering ZOTUs by abundance')
     filter_otus_by_abundance(
         ARGS_CLS.create_table.abund_limit,
         zotu_tab_file,
-        "ZOTUs-Seqs.fasta",
+        bacterial_ZOTUs_fasta,
         with_taxonomy=False,
+        replace_originals=True,
         sample_wise_corr_flag=ARGS_CLS.create_table.sample_wise_correction
     )
+    ANA_LOG.info('# Adding Taxonomy to ZOTU sequences')
+    # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
+    addTax_new(bacterial_ZOTUs_fasta)
+    ANA_LOG.info('# Adding taxonomy to ZOTU table')
+    addTax_to_table(zotu_tab_file, bacterial_ZOTUs_fasta)
+    ANA_LOG.info('# Creating ZOTUs trees')
+    sina_algn_shortened_file = shorten_sina_algn("test_ZOTUs-Seqs.fasta")
+    try:
+        plant_tree(
+            algn_file=sina_algn_shortened_file,
+            method="rapidnj",
+            output_file_name_root="ZOTUs"
+        )
+    except Exception as exc:
+        ANA_LOG.warning(f"Tree creation skipped: {exc}")
+    ANA_LOG.info('# Adding ZOTUs Krona HTML')
+    create_krona(
+        krona_importtext,
+        zotu_tab_file,
+        output_html_name="ZOTUs-Krona.html"
+    )
+    # ANA_LOG.info('# Starting OTU pipeline')
+    ANA_LOG.info('# Normalizing ZOTU Table')
+    zotu_norm_methods = "No"
+    try:
+        zotu_norm_methods = normalize_otu_table(zotu_tab_file, str(parsed_spike_stat_file_path))
+    except Exception as exc:
+        ANA_LOG.warning(f"No Normalization applied on {zotu_tab_file}: {exc}")
+    else:
+        ANA_LOG.info(f"{zotu_norm_methods} normalization method(s) applied on {zotu_tab_file}")
+    # ##########################################################################################
+    # #################################### OTU Pipline #########################################
+    # ##########################################################################################
+    ANA_LOG.info('# Clustering at OTU level')
+    clusterOTUs()
+    ANA_LOG.info('# Filtering out human sequences')
+    bacterial_OTUs_fasta = filter16S("otus1.fa", "OTUs-Seqs.fasta")
+    ANA_LOG.info('# Creating OTU tables')
+    otu_tab_file = build_OTU_table(TRIMMED_READS_FILE, bacterial_OTUs_fasta)
     ANA_LOG.info('# Filtering OTUs by abundance')
     filter_otus_by_abundance(
         ARGS_CLS.create_table.abund_limit,
         otu_tab_file,
-        "OTUs-Seqs.fasta",
+        bacterial_OTUs_fasta,
         with_taxonomy=False,
+        replace_originals=True,
         sample_wise_corr_flag=ARGS_CLS.create_table.sample_wise_correction
     )
-    exit()
-    ANA_LOG.info('# Adding taxonomy to Z/-OTU table')
-    ANA_LOG.info('# Creating trees')
-    ANA_LOG.info('# Creating Krona')
-    remove_size_from_OTUS()
-    # prepare_zotus()
-    # Clustering at OTU level
-    # assign_zotus_to_otus()
-    # ZOTUs_seq_name = keep_good_ZOTUs()
-    # build_ZOTU_table()
-    # ANA_LOG.info('# Adding taxonomy to ZOTU sequences')
-    # ZOTUs_table_name = create_final_ZOTU_table()
-    # ANA_LOG.info('# Creating OTU table')
-    # OTUs_table_name, OTU_seq_name = create_OTUs_from_ZOTUS_table()
-    # Creating trees
-    ANA_LOG.info('# Creating trees')
-    sina_algn_shortened_file = shorten_sina_algn("test_ZOTUs-Seqs.fasta")
-    ANA_LOG.info('# Creating Krona')
-    create_krona(krona_importtext)
-    ANA_LOG.info('# Filtering OTUs abundance')
-    filter_abundance(
-        ARGS_CLS.create_table.abund_limit,
-        OTUs_table_name,
-        OTU_seq_name,
-        ZOTUs_table_name,
-        ZOTUs_seq_name,
-        "Map-ZOTU-OTU.tab")
-    ANA_LOG.info('# Cleaning up')
+    ANA_LOG.info('# Adding Taxonomy to OTU sequences')
+    addTax_new(bacterial_OTUs_fasta)
+    ANA_LOG.info('# Adding taxonomy to OTU table')
+    addTax_to_table(otu_tab_file, bacterial_OTUs_fasta)
+    ANA_LOG.info('# Creating OTUs trees')
+    sina_algn_shortened_file = shorten_sina_algn("test_OTUs-Seqs.fasta")
+    create_krona(
+        krona_importtext,
+        otu_tab_file,
+        output_html_name="OTUs-Krona.html"
+    )
     try:
-        create_trees(sina_algn_shortened_file)  # TODO check if we need to use create_trees
+        plant_tree(
+            sina_algn_shortened_file,
+            method="rapidnj",
+            output_file_name_root="OTUs"
+        )
     except Exception as exc:
         ANA_LOG.warning(f"Tree creation skipped: {exc}")
-    cleanup(str(ANALYSIS_DIR))
+    ANA_LOG.info('# Adding OTUs Krona HTML')
+    create_krona(
+        krona_importtext,
+        otu_tab_file,
+        output_html_name="OTUs-Krona.html"
+    )
     # Normalizing Tables
+    ANA_LOG.info('# Normalizing Tables')
+    otu_norm_methods = "No"
     try:
-        zotu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + ZOTUs_table_name))), str(parsed_spike_stat_file_path))
+        otu_norm_methods = normalize_otu_table(otu_tab_file, str(parsed_spike_stat_file_path))
     except Exception as exc:
-        ANA_LOG.warning(f"No Normalization applied on {ZOTUs_table_name}: {exc}")
+        ANA_LOG.info(f"No normalization applied on {otu_tab_file}: {exc}")
     else:
-        ANA_LOG.info(f"{zotu_norm_methods} normalization method(s) applied on {ZOTUs_table_name}")
-    try:
-        otu_norm_methods = normalize_otu_table(str(Path(PurePath(ANALYSIS_DIR + OTUs_table_name))), str(parsed_spike_stat_file_path))
-    except Exception as exc:
-        ANA_LOG.info(f"No Normalization applied on {OTUs_table_name}: {exc}")
-    else:
-        ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {OTUs_table_name}")
+        ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {otu_tab_file}")
 
     ANA_LOG.info('ANALYSIS DONE')
     # to keep the same return value as the main function
-    return ANALYSIS_DIR + ZOTUs_table_name, ANALYSIS_DIR + OTUs_table_name
+    ANA_LOG.info('# Cleaning up')
+    cleanup(str(ANALYSIS_DIR))
+    return zotu_tab_file, otu_tab_file
