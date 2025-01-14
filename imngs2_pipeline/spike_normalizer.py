@@ -104,14 +104,14 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
     if all_samples_not_spiked:
         # delete "Spike" from norm_methods set if all samples are not spiked
         NORM_LOG.info(
-            "Normalization method 'Spike' is not applicable."
+            "'Spike' normalization method is not applicable."
             " No spiked sample was found.")
         norm_methods.discard("Spike")
 
     elif len(observed_amounts) == 0 or len(observed_counts) == 0 or any(spike_norm_invalid_samples):
         # delete "Spike" from norm_methods set if amount and count are not inferralbe from the rest of entries
         NORM_LOG.info(
-            "Normalization method 'Spike' is not applicable."
+            "'Spike' normalization method is not applicable."
             " Some of entires in spike stats file are not valid"
             " for spike normalization. Possible mixture of spiked and non-spiked samples!")
         norm_methods.discard("Spike")
@@ -150,7 +150,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
                 elif norm_method.isnumeric():
                     factor = float(norm_method) / otu_table[file_id].sum()
                 else:
-                    NORM_LOG.warning(f"Normalization method {norm_method} is not implemented")
+                    NORM_LOG.warning(f"{norm_method} normalization method is not implemented")
 
                 normalized_column = otu_table_copy[file_id] * factor
                 otu_table_copy[file_id] = normalized_column.round(5)
@@ -159,7 +159,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
             # continue the outer for loop
             continue
         else:
-            normalized_otu_path = otu_table_path.parent.joinpath(f"{norm_method}Normalized-{str(otu_table_path.name)}")
+            normalized_otu_path = otu_table_path.parent.joinpath(f"{norm_method}_Normalized-{str(otu_table_path.name)}")
             otu_table_copy.to_csv(normalized_otu_path, sep="\t")
             # add norm_method to return set
             norm_methods_to_return.add(norm_method)
