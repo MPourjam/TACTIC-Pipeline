@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import tarfile
+from ete3 import Tree
 from os import chdir
 import os.path as ospath
 from multiprocessing import cpu_count
@@ -14,8 +15,7 @@ import logging
 
 
 BIN_DIR = "/base/binaries/"
-# Here we don't add -strand both to usearch as we have already added in preprocessing pipeline
-USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
+USEARCH_11_BIN = BIN_DIR + "usearch11.0.667_i86linux64"
 USEARCH_8_bin = BIN_DIR + "usearch8.1"
 DB_LOC = "/base/databases/"
 SINA_ARB = DB_LOC + "SILVA_LATEST.arb"
@@ -186,7 +186,9 @@ def dereplication(reads_file, with_taxonomy=True) -> str:
         "--threads",
         str(POOL_SIZE),
         '--sizein',
-        '--sizeout'
+        '--sizeout',
+        '-strand',
+        'both'
     ]
     # dereplicate reads and anotate them by multiplicity
     system_sub(cmd_to_call_list, force_log=True)
@@ -194,61 +196,59 @@ def dereplication(reads_file, with_taxonomy=True) -> str:
     return dereped_reads_file
 
 
-def sort_seqs(to_sort_fasta: str) -> str:
-    # cmd_0 = USEARCH_11_BIN + ' -sortbysize derep.fasta -fastaout sorted.fasta'
-    # cmd_1 = ' ' + USEARCH_TAIL
-    # system_sub(cmd_0 + cmd_1)
-    sorted_fasta_file = "sorted.fasta"
-    cmd_to_call_list = [
-        USEARCH_11_BIN,
-        "-sortbysize",
-        to_sort_fasta,
-        "-fastaout",
-        sorted_fasta_file,
-    ]
-    system_sub(cmd_to_call_list, force_log=True)
+def sort_seqs(to_sort_fasta: str, by: str = 'size') -> str:
+
+    to_sort_path = os.path.abspath(to_sort_fasta)
+    dir_path, file_name = os.path.split(to_sort_path)
+    sorted_fasta_file = os.path.join(dir_path, "sorted_" + str(by) + ".fasta")
+    if by == 'size':
+        cmd_to_call_list = [
+            USEARCH_11_BIN,
+            "-sortbysize",
+            str(to_sort_path),
+            "-fastaout",
+            str(sorted_fasta_file),
+        ]
+        system_sub(cmd_to_call_list, force_log=True)
+    elif by == 'length':
+        cmd_to_call_list = [
+            USEARCH_11_BIN,
+            "-sortbylength",
+            str(to_sort_path),
+            "-fastaout",
+            str(sorted_fasta_file),
+        ]
+        system_sub(cmd_to_call_list, force_log=True)
+        # print(" ".join(cmd_to_call_list))
+    else:
+        raise ValueError("Sorting should be by either 'size' or 'length'")
     onelinefasta(sorted_fasta_file)
     return sorted_fasta_file
 
 
 # cluster sequences to OTUs
-def clusterZOTUs(minsize: int):
-    # cmd_part_0 = USEARCH_11_BIN + ' -unoise3 sorted.fasta -minsize 4 -zotus zotus.fasta'
-    # cmd_part_1 = ' ' + USEARCH_TAIL
-    # # clusering of seq in OTUs (clustered)
-    # system_sub(cmd_part_0 + cmd_part_1)
+def clusterZOTUs(sorted_uniques_file: str, minsize: int):
+
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-unoise3",
-        "sorted.fasta",
+        sorted_uniques_file,
         "-minsize",
         str(minsize),
         "-zotus",
         "zotus.fasta",
-        "--sizein",
-        "--sizeout",
+        "-sizein",
+        "-sizeout",
+        "-strand",
+        "both",
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("zotus.fasta")
-    cmd_to_call_list = [
-        "rm",
-        # "sorted.fasta",
-        "derep.fasta",
-    ]
-    # system_sub(cmd_to_call_list)
 
 
 # Filter non 16S sequences
 def filter16S(input_fasta_name: str, output_fasta_name: str):
-    # cmd_0 = SORT_ME_RNA_BIN + " --ref " + ref16RNAdb_1 + " --ref " + ref16RNAdb_2 + " --reads "
-    # cmd_1 = " zotus.fasta --fastx good-ZOTUs --other " + str(ARGS_CLS.filter_16S.other) + " --workdir ."
-    # cmd_2 = " -e " + str(ARGS_CLS.filter_16S.e) + " --num_alignments " + str(ARGS_CLS.filter_16S.num_alignments)
-    # cmd_2 += " >/dev/null 2>&1"
-    # # run a RNA filtering step
-    # # (The program currently do not distinquish between 16S and 18S)
-    # system_sub(cmd_0 + cmd_1 + cmd_2)
-    # system_sub('mv out/aligned.fasta good_ZOTUs.fa')
-    # system('rm -r idx out kvdb')
+
     system_sub(
         [
             SORT_ME_RNA_BIN,
@@ -305,6 +305,8 @@ def clusterOTUs(
         "z2o.tab",
         "-relabel",
         "OTU",
+        "-strand",
+        "both"
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("otus1.fa")
@@ -330,11 +332,12 @@ def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
         str(ARGS_PREC.build_zotus_table.id),
         "-threads",
         f"{str(POOL_SIZE)}",
+        "-strand",
+        "both"
     ]
-    # NOTE zotu_table.txt could miss some ZOTUs as the ZOTU's unique sequence in analysis.fasta could already match to
-    # another ZOTU before reaching its corresponding original ZOTU sequence at smimilarities higher than 0.97. It
-    # happens when the ZOTU is created
+
     system_sub(cmd_to_call_list, force_log=True)
+
     return str(otu_tab)
 
 
@@ -358,6 +361,8 @@ def build_OTU_table(raw_seq_file: str, otu_seq_file: str) -> None:
         str(ARGS_PREC.build_zotus_table.id),
         "-threads",
         f"{str(POOL_SIZE)}",
+        "-strand",
+        "both"
     ]
     # NOTE zotu_table.txt could miss some ZOTUs as the ZOTU's unique sequence in analysis.fasta could already match to
     # another ZOTU before reaching its corresponding original ZOTU sequence at smimilarities higher than 0.97. It
@@ -392,7 +397,9 @@ def select_zotu_seqs():
         "-labels",
         "ZOTU_map.tab",
         "-fastaout",
-        "ZOTUs-Seqs.fasta"
+        "ZOTUs-Seqs.fasta",
+        "-strand",
+        "both"
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("ZOTUs-Seqs.fasta")
@@ -449,7 +456,7 @@ def addTax_new(zotu_fasta_path):
             line_tokens = line.split(',')
             silva_taxo = line_tokens[6]
             seq_name = line_tokens[0]
-            out_file.write('>' + seq_name + ';' + "tax=" + silva_taxo + '\n' + zotu_seq_dict[seq_name] + '\n')
+            out_file.write('>' + seq_name + ' ' + "tax=" + silva_taxo + '\n' + zotu_seq_dict[seq_name] + '\n')
     shutil.move(new_taxed_path, filename)
 
 
@@ -822,6 +829,217 @@ def parse_spike_stat_file(spike_stat_file: str, fastq_dir: str, parsed_spike_sta
     return samples, parsed_spike_stat_file
 
 
+def extract_and_rename_subtree(
+        tree_file,
+        subset,
+        rename_map,
+        output_file):
+    # Load the tree from a file
+    tree = Tree(tree_file)
+
+    # Extract the sub-tree
+    subtree = tree.copy()
+    # print the tree
+    subset = [f"'{sub}'" for sub in subset]
+    rename_map = {f"'{k}'": f"'{v}'" for k, v in rename_map.items()}
+    subtree.prune(subset, preserve_branch_length=True)
+
+    # Rename the leaves
+    for leaf in subtree:
+        if leaf.name in rename_map:
+            leaf.name = rename_map[leaf.name]
+
+    # Save the sub-tree to a new file
+    subtree.write(outfile=output_file)
+
+
+def parse_uc_file(
+        uc_file: str,
+        with_tax: bool = False) -> dict:
+    """
+    It parsed uc files from -uclust_smallmem. It returns a dictionary with
+    the centroid as the key and the members as the values. The centroid is
+    always the first element in the list of members
+
+    :param uc_file: str
+        The path to the uc file
+    :return: dict
+    """
+    uc_file = Path(PurePath(uc_file)).absolute()
+    tax_reg = re.compile(r"tax=(?P<tax>([^;]+;)*([^;]+)?;?)$", re.IGNORECASE)
+
+    uc_dict = {}
+    with open(uc_file, 'r') as uc_h:
+        line = uc_h.readline().strip()
+        while line:
+            if line.startswith("H"):
+                line_tokens = line.split("\t")
+                query = line_tokens[8]
+                target_centroid = line_tokens[9]
+                # omitting the taxonomic information
+                if not with_tax:
+                    query = tax_reg.sub("", query).strip()
+                    target_centroid = tax_reg.sub("", target_centroid).strip()
+                cluster_members = uc_dict.get(target_centroid, [])
+                cluster_members.append(query)
+                uc_dict[target_centroid] = cluster_members
+            elif line.startswith("S"):
+                line_tokens = line.split("\t")
+                centroid = line_tokens[8]
+                # omitting the taxonomic information
+                if not with_tax:
+                    centroid = tax_reg.sub("", centroid).strip()
+                cluster_members = uc_dict.get(centroid, [])
+                cluster_members.insert(0, centroid)
+                uc_dict[centroid] = cluster_members
+            line = uc_h.readline().strip()
+
+    return uc_dict
+
+
+def collapse_zotu_table(
+        zotu_cluster_map: str,
+        zotu_tab_file: str,
+        otu_tab_file: str) -> dict:
+    """
+    It creates an OTU table from the uc file
+
+    :param zotu_cluster_map: dict
+        The uc dictionary output of parse_uc_file
+    :param zotu_tab_file: str
+        The path to the zotu table file
+    :return: dict
+    """
+    zotu_re = re.compile(r"(?P<zotu_id>Zotu\d+)[\s;]?", re.IGNORECASE)
+    zotu_tab_path = Path(PurePath(zotu_tab_file)).absolute()
+    otu_tab_path = Path(PurePath(otu_tab_file)).absolute()
+    otu_zotu_map_path = otu_tab_path.parent.joinpath("Map-ZOTUs-OTUs-TAC.tab")
+    # renaming the keys
+    zotu_cluster_map = {"OTU" + str(i + 1): v for i, v in enumerate(zotu_cluster_map.values())}
+
+    otus_row_dict: dict = {}
+    with open(zotu_tab_path, 'r') as zotus_tab_fio:
+        zotus_table_header = zotus_tab_fio.readline().strip()
+        taxonomy_mo = re.search(r"\ttaxonomy$", zotus_table_header, re.IGNORECASE)
+        with_taxonomy = True if taxonomy_mo else False
+        zotus_tab_line = zotus_tab_fio.readline().strip()
+        while zotus_tab_line:
+            zotu_mo = zotu_re.search(zotus_tab_line)
+            curr_zotu = zotu_mo.group("zotu_id")
+            line_list = zotus_tab_line.split("\t")
+            till = -1 if with_taxonomy else len(line_list)
+            curr_counts = [float(count) for count in zotus_tab_line.split("\t")[1:till]]
+
+            for otu_id, cluster in zotu_cluster_map.items():
+                this_cluster_counts = [0.0] * len(curr_counts)
+                this_otu_row_els = otus_row_dict.get(
+                    otu_id,
+                    [
+                        otu_id,
+                        *this_cluster_counts,
+                        "",
+                    ]
+                )
+
+                c_centroid = cluster[0]  # Centroid of the cluster is the first element
+                cent_zotu = zotu_re.search(c_centroid).group("zotu_id")
+                c_mems = cluster[1:]
+                if curr_zotu == cent_zotu:
+                    this_otu_row_els[1:-1] = [sum(x) for x in zip(curr_counts, this_otu_row_els[1:-1])]
+                    this_otu_row_els[-1] = line_list[-1] if with_taxonomy else ""
+                else:
+                    for mem in c_mems:
+                        mem_zotu = zotu_re.search(mem).group("zotu_id")
+                        if curr_zotu == mem_zotu:
+                            this_otu_row_els[1:-1] = [sum(x) for x in zip(curr_counts, this_otu_row_els[1:-1])]
+                            break
+                otus_row_dict[otu_id] = this_otu_row_els
+            zotus_tab_line = zotus_tab_fio.readline().strip()
+
+    sorted_rows = dict(sorted(otus_row_dict.items(), key=lambda x: int(x[0][3:])))
+    otus_row_dict = sorted_rows
+    with open(otu_tab_file, 'w+') as otu_tab_fio:
+        otu_tab_fio.write(zotus_table_header + "\n")
+        for otu_id, otu_row in otus_row_dict.items():
+            otu_tab_fio.write("\t".join([str(el) for el in otu_row]) + "\n")
+
+    sorted_map = dict(sorted(zotu_cluster_map.items(), key=lambda x: int(x[0][3:])))
+    zotu_cluster_map = sorted_map
+    with open(otu_zotu_map_path, 'w+') as otu_zotu_map_fio:
+        for otu_id, zotus in zotu_cluster_map.items():
+            for zotu_id in zotus:
+                otu_zotu_map_fio.write(zotu_id + "\t" + otu_id + "\n")
+
+    return zotu_cluster_map
+
+
+def collapse_fasta_file(
+        otu_zotu_map: dict,
+        input_fasta_file: str,
+        output_fasta_file: str) -> None:
+    """
+    It creates an OTU fasta file from the uc file
+
+    :param zotu_otu_map: dict
+        The zotu to otu map
+    :param input_fasta_file: str
+        The path to the zotu fasta file
+    :param output_fasta_file: str
+        The path to the otu fasta file
+    :return: None
+    """
+    input_fasta_file_path = Path(PurePath(input_fasta_file)).absolute()
+    output_fasta_file_path = Path(PurePath(output_fasta_file)).absolute()
+    zotu_re = re.compile(r"(?P<zotu_id>Zotu\d+)[\s;]?", re.IGNORECASE)
+    with open(input_fasta_file_path, 'r') as cent_fio, open(output_fasta_file_path, 'w+') as temp_fio:
+        cent_line = cent_fio.readline().strip()
+        while cent_line:
+            if cent_line.startswith(">"):
+                zotu_id = zotu_re.search(cent_line).group("zotu_id")
+                for otu, zotus in otu_zotu_map.items():
+                    if zotu_id in zotus:
+                        otu_id = otu
+                        cent_line = cent_line.replace(zotu_id, otu_id)
+                        temp_fio.write(cent_line + "\n")
+                        break
+            else:
+                temp_fio.write(cent_line + "\n")
+            cent_line = cent_fio.readline().strip()
+
+
+def uclust(
+        input_fasta: str,
+        cluster_id: float = 0.987) -> (str, str):
+    """
+    It runs uclust_smallmem on the input fasta file and
+     returns the uc file path and the centroids fasta file path
+
+    :param input_fasta: str
+        The path to the input fasta file
+    :return: str
+    """
+    input_fasta_path = Path(PurePath(input_fasta)).absolute()
+    sorted_seq_file = sort_seqs(str(input_fasta_path), by="length")
+    centroids_file = input_fasta_path.parent.joinpath("cluster_centroids.fasta")
+    uc_file = input_fasta_path.parent.joinpath("otu_clusters.uc")
+    cmd_to_call = [
+        USEARCH_11_BIN,
+        "-cluster_smallmem",
+        str(sorted_seq_file),
+        "-centroids",
+        str(centroids_file),
+        "-uc",
+        str(uc_file),
+        "-id",
+        str(cluster_id),
+        "-strand",
+        "both",
+    ]
+    system_sub(cmd_to_call, force_log=True)
+    onelinefasta(centroids_file)
+    return str(uc_file), str(centroids_file)
+
+
 def zotu_pipeline(
         sorted_uniques_file: str,
         zotu_minsize: int,
@@ -834,9 +1052,12 @@ def zotu_pipeline(
     """
     ZOTU_P_LOGGER = zotu_p_logger
     ZOTU_P_LOGGER.info('# Clustering at ZOTU level')
-    clusterZOTUs(zotu_minsize)
+    clusterZOTUs(sorted_uniques_file, zotu_minsize)
     ZOTU_P_LOGGER.info('# Filtering out human sequences')
-    bacterial_ZOTUs_fasta = filter16S("zotus.fasta", "ZOTUs-Seqs.fasta")
+    bacterial_ZOTUs_fasta = filter16S(
+        input_fasta_name="zotus.fasta",
+        output_fasta_name="ZOTUs-Seqs.fasta"
+    )
     ZOTU_P_LOGGER.info('# Creating ZOTU tables')
     zotu_tab_file = build_ZOTU_table(raw_seq_file, bacterial_ZOTUs_fasta)
     ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance')
@@ -882,13 +1103,17 @@ def otu_pipeline(
     """
     This function will run the OTU pipeline
     """
-    ANA_LOG.info('# Clustering at OTU level')
+    OTU_LOGGER = otu_p_logger
+    OTU_LOGGER.info('# Clustering at OTU level')
     clusterOTUs(sorted_uniques_file)
-    ANA_LOG.info('# Filtering out human sequences')
-    bacterial_OTUs_fasta = filter16S("otus1.fa", "OTUs-Seqs.fasta")
-    ANA_LOG.info('# Creating OTU tables')
+    OTU_LOGGER.info('# Filtering out human sequences')
+    bacterial_OTUs_fasta = filter16S(
+        input_fasta_name="otus1.fa",
+        output_fasta_name="OTUs-Seqs.fasta"
+    )
+    OTU_LOGGER.info('# Creating OTU tables')
     otu_tab_file = build_OTU_table(raw_seq_file, bacterial_OTUs_fasta)
-    ANA_LOG.info('# Filtering OTUs by abundance')
+    OTU_LOGGER.info('# Filtering OTUs by abundance')
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=otu_tab_file,
@@ -897,11 +1122,11 @@ def otu_pipeline(
         replace_originals=True,
         sample_wise_corr_flag=sample_wise_correction
     )
-    ANA_LOG.info('# Adding Taxonomy to OTU sequences')
+    OTU_LOGGER.info('# Adding Taxonomy to OTU sequences')
     addTax_new(bacterial_OTUs_fasta)
-    ANA_LOG.info('# Adding taxonomy to OTU table')
+    OTU_LOGGER.info('# Adding taxonomy to OTU table')
     addTax_to_table(otu_tab_file, bacterial_OTUs_fasta)
-    ANA_LOG.info('# Creating OTUs trees')
+    OTU_LOGGER.info('# Creating OTUs trees')
     sina_algn_shortened_file = shorten_sina_algn("test_OTUs-Seqs.fasta")
     create_krona(
         krona_importtext,
@@ -915,8 +1140,8 @@ def otu_pipeline(
             output_file_name_root="OTUs"
         )
     except Exception as exc:
-        ANA_LOG.warning(f"Tree creation skipped: {exc}")
-    ANA_LOG.info('# Adding OTUs Krona HTML')
+        OTU_LOGGER.warning(f"Tree creation skipped: {exc}")
+    OTU_LOGGER.info('# Adding OTUs Krona HTML')
     create_krona(
         krona_importtext,
         otu_tab_file,
@@ -925,7 +1150,12 @@ def otu_pipeline(
     return otu_tab_file, bacterial_OTUs_fasta
 
 
-def tac_pipeline():
+def tac_pipeline(
+        zotus_seq_fasta: str,
+        zotus_table_file: str,
+        zotus_tree_file: str = None,
+        cluster_id: float = 0.987,
+        tac_logger: logging.Logger = ANA_LOG) -> None:
     """
     TAC (Taxonomy Agnostic Clustering) pipeline, takes a set of ZOTUs and cluster
      them at 98.7% similarity to create OTUs.
@@ -934,12 +1164,56 @@ def tac_pipeline():
         The path to the sequences of ZOTUs
     :param zotus_table_file: str
         The path to the ZOTUs table file
-    :param add_taxonomy: bool
-        If True, it will add taxonomy to the sequences
 
     :return: None
     """
-    pass
+    # Clustering ZOTUs at 98.7% similarity
+    TAC_LOGGER = tac_logger
+    zotus_seq_path = Path(PurePath(zotus_seq_fasta)).absolute()
+    zotus_table_path = Path(PurePath(zotus_table_file)).absolute()
+    otu_table_path = zotus_table_path.parent.joinpath("OTUs-Table-TAC.tab")
+    TAC_LOGGER.info(f"# Clustering ZOTUs at 98.7% similarity")
+    uc_file, centroids_file = uclust(str(zotus_seq_path), cluster_id)
+    uc_dict = parse_uc_file(uc_file)
+    # print([zotus for key, zotus in uc_dict.items() if len(zotus) > 1])
+    # exit()
+    # Creating OTU table
+    TAC_LOGGER.info('# Creating OTU table')
+    otu_zotu_map = collapse_zotu_table(
+        uc_dict,
+        str(zotus_table_path),
+        str(otu_table_path)
+    )
+    # renaming zotus in centroids file to otus
+    otus_seq_fasta = zotus_seq_path.parent.joinpath("OTUs-Seqs-TAC.fasta")
+    TAC_LOGGER.info('# Collapsing ZOTUs sequences to OTUs')
+    collapse_fasta_file(
+        otu_zotu_map,
+        str(centroids_file),
+        str(otus_seq_fasta)
+    )
+    # Updating Tree
+    if zotus_tree_file:
+        otus_tree_file = Path(PurePath(zotus_tree_file)).absolute()
+        otus_tree_file = zotus_seq_path.parent.joinpath("OTUs-Tree-nj-TAC.tre")
+        TAC_LOGGER.info('# Updating ZOTUs tree to OTUs tree')
+        extract_and_rename_subtree(
+            tree_file=zotus_tree_file,
+            # centroids are the first in zotus list
+            subset=[zotus[0] for otu, zotus in otu_zotu_map.items()],
+            rename_map={zotus[0]: otu for otu, zotus in otu_zotu_map.items()},
+            output_file=str(otus_tree_file)
+        )
+
+    # adding krona
+    TAC_LOGGER.info('# Adding OTUs Krona HTML')
+    create_krona(
+        krona_importtext,
+        str(otu_table_path),
+        output_html_name="OTUs-Krona.html"
+    )
+
+    return str(otu_table_path), str(otus_seq_fasta)
 
 
 def tic_pipeline():
@@ -968,7 +1242,7 @@ def main_de_novo(
         threads=POOL_SIZE,
         usearch_11_bin: str = USEARCH_11_BIN,
         run_otu_pipeline: bool = False,
-        run_tac_pipeline: bool = False,
+        run_tac_pipeline: bool = True,
         run_tic_pipelnie: bool = False) -> list:
     """
     sample_seq_files_path: a list of file path to
@@ -1037,7 +1311,7 @@ def main_de_novo(
     # ##########################################################################################
     # #################################### ZOTU Pipline ########################################
     # ##########################################################################################
-    to_return = [None, None]
+    to_return = [None, None, None, None]
     try:
         ANA_LOG.info('# Starting ZOTU pipeline')
         zotu_tab_file, bacterial_ZOTUs_fasta = zotu_pipeline(
@@ -1086,7 +1360,7 @@ def main_de_novo(
         except Exception as exc:
             ANA_LOG.info(f"OTU pipline failes: {exc}")
         else:
-            to_return[0] = otu_tab_file
+            to_return[1] = otu_tab_file
             cleanup(
                 str(ANALYSIS_DIR),
                 [
@@ -1097,13 +1371,20 @@ def main_de_novo(
             )
 
     if run_tac_pipeline:
-        tac_pipeline()
+        tac_pipeline(
+            zotus_seq_fasta=bacterial_ZOTUs_fasta,
+            zotus_table_file=zotu_tab_file,
+            zotus_tree_file="ZOTUs-Tree-nj.tre",
+            cluster_id=0.987,
+            tac_logger=ANA_LOG
+        )
 
     if run_tic_pipelnie:
         tic_pipeline()
 
     ANA_LOG.info('ANALYSIS DONE')
     # to keep the same return value as the main function
+    exit()
     ANA_LOG.info('# Cleaning up')
     cleanup(str(ANALYSIS_DIR))
     return tuple(to_return)
