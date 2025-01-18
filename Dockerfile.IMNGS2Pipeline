@@ -40,7 +40,7 @@ COPY mapping_file_TEMPLATE.csv /base/mapping_file_TEMPLATE.csv
 ## PIP DEPENDENCIES ##
 ######################
 RUN pip install --upgrade pip
-RUN pip install --upgrade PyYAML==6.0 pytest==7.4.4
+RUN pip install --upgrade PyYAML==6.0 pytest==7.4.4 ete3==3.1.3
 
 
 ######################
