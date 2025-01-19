@@ -41,7 +41,7 @@ PREP_LOG = proc_helper.gimmelogger(
     only_file=False)
 MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "spike_amount", "parent_path")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2], MAPPING_FILE_COLS[3]])
-global PATH_SEP, DEFAULT_MAP_LINE, TAXED_ZOTU_FILE_NAME
+global PATH_SEP, DEFAULT_MAP_LINE, TAXED_ZOTU_FILE_NAME, DEREP_FILE_NAME
 DEFAULT_MAP_LINE = MapLineTup("", float("NAN"), "0.0", "")
 PATH_SEP = "_-_"
 global SPIKE_STAT_FILE_NAME, SPIKE_STAT_FILE_COLS, SPIKE_STAT_HEADER
@@ -52,13 +52,22 @@ FILTERED_READS_FILE = "filtered2.fasta"
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
-global SUPPORTED_ANALYSIS_MODE, USEARCH_11_BIN
+DEREP_FILE_NAME = "sorted.fasta"
+global SUPPORTED_ANALYSIS_MODE, USEARCH_11_BIN, HEALTHY_PROC_FILES
 SUPPORTED_ANALYSIS_MODE = [
     "de-novo",
     "TAC",
     "TIC",
 ]
 USEARCH_11_BIN = Path(PurePath("/base/binaries/usearch11.0.667_i86linux64"))
+HEALTHY_PROC_FILES = [
+    DEFAULT_ARG_FILE_NAME,
+    SPIKE_STAT_FILE_NAME,
+    # TRIMMED_READS_FILE,
+    FILTERED_READS_FILE,
+    DEREP_FILE_NAME,
+    # TAXED_ZOTU_FILE_NAME
+]
 
 
 def handle_system_signals(signum, frame):
@@ -167,13 +176,7 @@ def is_processed_dir_healthy(processed_dir_date_version_path: Path) -> bool:
     if not my_dir.is_dir() or not any(is_valid_path):
         return False
     my_dir = Path(PurePath(my_dir)).absolute()
-    should_be_there = [
-        DEFAULT_ARG_FILE_NAME,
-        TAXED_ZOTU_FILE_NAME,
-        SPIKE_STAT_FILE_NAME,
-        TRIMMED_READS_FILE,
-        FILTERED_READS_FILE
-    ]
+    should_be_there = HEALTHY_PROC_FILES
     logic_test = [False for fi in should_be_there]
 
     for ind in range(len(should_be_there)):
@@ -396,12 +399,17 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
         sample_id = curr_mapline.SampleID  # MapLineTup.SampleID
         fastq_files_parent_dir = Path(PurePath(curr_file_set[0])).parent.joinpath(f"{str(sample_id)}{PROC_DIR_SUFFIX}")
         gathered_samp_dirs = []
-        for found_file in fastq_files_parent_dir.rglob(f"**/{TAXED_ZOTU_FILE_NAME}"):
+        for found_file in fastq_files_parent_dir.rglob(f"**/{DEREP_FILE_NAME}"):
+            gathered_samp_dirs.append(found_file.parent)
+            # We have changed the analysis to always do ZOTUs pipeline
+            # so that we don't need to check the presence of taxed_zotu.fasta file
+            """
             if check_taxed_zotus_fasta(found_file):
                 gathered_samp_dirs.append(found_file.parent)
             else:
                 PREP_LOG.warning(f"{str(found_file.relative_to(FASTQ_DIR))} file is not formatted correctly."
                                  " Proper fasta header format: '>SEQID;size=XXX;tax=KKK,PPP;CCC;OOO")
+            """
 
         samp_dir_with_taxed_zotu[mapline_files_tup] = gathered_samp_dirs
 
@@ -669,7 +677,8 @@ def run_preprocessing(
         sample_id: str,
         sample_weight: float = float("NAN"),  # spike normalizer handles this
         spike_amount: float = 0.0,
-        force_preprocess: bool = False) -> Path:
+        force_preprocess: bool = False,
+        individual_zotus: bool = False) -> Path:
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -760,7 +769,8 @@ def run_preprocessing(
             args_file_path=sample_arg_file,
             spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
             usearch_11_bin=usearch_11_bin,
-            logger_obj=PREPPROC_LOG
+            logger_obj=PREPPROC_LOG,
+            minimum_preprocessing=False if individual_zotus else True,
         )
     except MemoryError as mem_exc:
         err_msg = f"{mem_exc}"
@@ -873,7 +883,8 @@ def run_imngs2(
         skip_preprocess: bool = False,
         skip_analysis: bool = False,
         force_preprocess: bool = False,
-        analysis_mode: str = "TIC"):
+        analysis_mode: str = "TIC",
+        indvidual_zotus: bool = False):
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR
     PREP_LOG = proc_helper.gimmelogger(
@@ -946,7 +957,9 @@ def run_imngs2(
             samples_dirs = []
             res_dict = {}
             task_batches = slice_list(list(mapping_line_tup_dict.items()), POOL_SIZE)
-
+            # updating HEALTHY_PROC_FILES
+            if indvidual_zotus:
+                HEALTHY_PROC_FILES.append(TAXED_ZOTU_FILE_NAME)
             # create a queue for the tasks
 
             for task_b in task_batches:
@@ -964,6 +977,7 @@ def run_imngs2(
                                 float(arg_tup[0].total_weight_in_g),  # sample_weight
                                 float(arg_tup[0].spike_amount),   # spike_amount
                                 force_preprocess,
+                                indvidual_zotus,
                             ),
                             preproc_queue,
                             arg_tup[0].SampleID,  # res_dict_key must be unique to bound process to sample_id
@@ -999,7 +1013,7 @@ def run_imngs2(
     samples_dirs, missed_samples_ids = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
     analysis_exit_code = 1
     if len(missed_samples_ids) == len(list(mapping_line_tup_dict.values())):
-        PREP_LOG.error("All samples are failed to get processed. Exiting...")
+        PREP_LOG.error("All samples failed to get processed. Exiting...")
         analysis_exit_code = 168
         sys.exit(analysis_exit_code)
     elif not bool(samples_dirs):
@@ -1119,6 +1133,10 @@ if __name__ == "__main__":
                         action="store_true",
                         help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
                         " to <--input-directory>, print help text and exits.")
+    parser.add_argument("-iz", "--individual-zotus",
+                        action="store_true",
+                        help="If set, the preprocessing step will not produce individual ZOTUs table for each sample."
+                        " It speeds up the pipeline.")
     parser.add_argument("-t", "--threads",
                         type=int,
                         help="Number of threads to use for parallel processing",
@@ -1176,5 +1194,6 @@ if __name__ == "__main__":
             skip_analysis=args.skip_analysis,
             usearch_11_bin=given_usearch_bin,
             force_preprocess=args.force_preprocess,
-            analysis_mode=args.analysis_mode
+            analysis_mode=args.analysis_mode,
+            indvidual_zotus=args.individual_zotus
         )

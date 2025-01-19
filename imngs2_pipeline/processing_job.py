@@ -618,10 +618,10 @@ def cleanup(input_id, full_clean=False, dir_path=None):
     else:
         deleted_files = [
             'merged.fastq',  # output of merging paired reads step
-            # 'filtered1.fastq',  # output of trimming step # It is used by de_novo pipeline
-            # 'filtered2.fasta',  # output of amplicon error rate, length, basepair quality filtering step
+            'filtered1.fastq',
+            # 'filtered2.fasta',  # This file is used to create ZOTUs table in analysis step
             'derep.fasta',  # output of dereplication of filtered2.fasta
-            'sorted.fasta',  # output of sorting dereplicated sequences based on their sequence size
+            # 'sorted.fasta',  # output of sorting dereplicated sequences based on their sequence size
             'zotus.fasta',  # output of clustering sorted sequences to ZOTUs
             'good_ZOTUs.fa',  # output of filtering non 16S zotus
             'zotu_table.txt',  # output ZOTUs table of aligning dereplicated sequences to non-human ZOTUs (i.e: good_ZOTUs.fa)
@@ -777,7 +777,8 @@ def main_processing(
         args_file_path: str = "",
         spike_amount: float = 0.0,
         usearch_11_bin: str = USEARCH_11_BIN,
-        logger_obj: logging.Logger = None):
+        logger_obj: logging.Logger = None,
+        minimum_preprocessing: bool = False):
     global PREPPROC_LOG, USEARCH_11_BIN
     # usearch_11_bin must be a global variable and pointing to a file
     USEARCH_11_BIN = usearch_11_bin + " -strand both"
@@ -866,6 +867,9 @@ def main_processing(
         PREPPROC_LOG.info('# Sort Sequences')
         sort_seqs()
         PREPPROC_LOG.info('# Cluster ZOTUs')
+        if minimum_preprocessing:
+            PREPPROC_LOG.info("Minimum preprocessing is enabled, skipping clustering step")
+            return input_dir
         clusterZOTUs()
         PREPPROC_LOG.info('# Filter non 16S sequences')
         filter16S()
@@ -907,6 +911,15 @@ def main_processing(
         create_zip(input_id)
         PREPPROC_LOG.info('# Clean Up')
         cleanup(input_id)
+        chdir(input_dir)
+        udb_file = path.join(input_dir, '{}.udb'.format(str(input_id)))
+        status_code = "Done"
+        status_msg = ""
+        if not path.isfile(udb_file):
+            status_code = "Error"
+            status_msg = "Process Failed! no UDB!"
+        update_task_pko(status_code, status_msg)
+        pko.close()
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
         PREPPROC_LOG.error(err_msg)
@@ -914,17 +927,5 @@ def main_processing(
         cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
         pko.close()
         raise e
-
-    chdir(input_dir)
-    udb_file = path.join(input_dir, '{}.udb'.format(str(input_id)))
-    status_code = "Done"
-    status_msg = ""
-    if not path.isfile(udb_file):
-        status_code = "Error"
-        status_msg = "Process Failed! no UDB!"
-    update_task_pko(status_code, status_msg)
-    pko.close()
-    # if not path.isfile(udb_file):
-    #    raise FileNotFoundError("No UDB created for {}".format(input_dir))
 
     return input_dir

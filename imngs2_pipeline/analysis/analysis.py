@@ -31,9 +31,10 @@ global SPIKE_STAT_HEADER, TAXED_ZOTU_FILE_NAME, DEREP_NEW_LABEL
 SPIKE_STAT_FILE_COLS = ("#SampleID", "SpikeReads", "spikes_total_weight_in_g", "spike_amount", "parent_path")
 SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
-global FILTERED_READS_FILE, TRIMMED_READS_FILE
+global FILTERED_READS_FILE, TRIMMED_READS_FILE, DEREP_FILE_NAME
 TRIMMED_READS_FILE = "filtered1.fastq"
 FILTERED_READS_FILE = "filtered2.fasta"
+DEREP_FILE_NAME = "sorted.fasta"
 max_pool = int(cpu_count() * 0.7)
 DEREP_NEW_LABEL = "Uniq"
 global POOL_SIZE
@@ -1300,13 +1301,14 @@ def main(
 
     ANA_LOG.info("# Gathering Sequences")
     chdir(ANALYSIS_DIR)
-    gather_samples_files(list(map_lines_dict.values()), TRIMMED_READS_FILE)
+    # gather_samples_files(list(map_lines_dict.values()), TRIMMED_READS_FILE)
     gather_samples_files(list(map_lines_dict.values()), FILTERED_READS_FILE)
+    gather_samples_files(list(map_lines_dict.values()), DEREP_FILE_NAME)
     # trimming the sequences
-    # TODO for now we discard trimming in the analysis
+    # NOTE for now we discard trimming in the analysis
     # trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
     ANA_LOG.info('# Dereplication')
-    derep_file = dereplication(FILTERED_READS_FILE, with_taxonomy=False)
+    derep_file = dereplication(DEREP_FILE_NAME, with_taxonomy=False)
     # Sorting the sequences
     ANA_LOG.info('# Sorting')
     sorted_file = sort_seqs(derep_file)
@@ -1361,7 +1363,9 @@ def main(
             otu_norm_methods = normalize_otu_table(otu_tab_file, str(parsed_spike_stat_file_path))
             ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {otu_tab_file}")
         except Exception as exc:
-            ANA_LOG.info(f"OTU pipline failes: {exc}")
+            msg = f"OTU pipline failes: {exc}"
+            ANA_LOG.error(msg)
+            raise msg
         else:
             # preserving important files for next steps
             # and cleaning up the rest
@@ -1389,7 +1393,9 @@ def main(
             otu_norm_methods = normalize_otu_table(tac_otu_table, str(parsed_spike_stat_file_path))
             ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {tac_otu_table}")
         except Exception as exc:
-            ANA_LOG.info(f"TAC pipeline failed: {exc}")
+            msg = f"TAC pipeline failed: {exc}"
+            ANA_LOG.error(msg)
+            raise msg
         else:
             # preserving important files for next steps
             # and cleaning up the rest
@@ -1403,6 +1409,8 @@ def main(
             to_return[2] = tac_otu_table
 
     if run_tic_pipeline:
+        pass
+        # TODO: Impelement TIC Pipeline
         try:
             tic_otu_table, tic_otu_seq_file = tic_pipeline()
             # Normalizing Tables
@@ -1411,7 +1419,9 @@ def main(
             otu_norm_methods = normalize_otu_table(tic_otu_table, str(parsed_spike_stat_file_path))
             ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {tic_otu_table}")
         except Exception as exc:
-            ANA_LOG.info(f"TIC pipeline failed: {exc}")
+            msg = f"TIC pipeline failed: {exc}"
+            ANA_LOG.error(msg)
+            raise msg
         else:
             # preserving important files for next steps
             # and cleaning up the rest
