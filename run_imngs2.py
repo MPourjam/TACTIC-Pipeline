@@ -9,8 +9,7 @@ import sys
 import logging
 from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
-from imngs2_pipeline.analysis.TIC_analysis import main as main_analysis_TIC
-from imngs2_pipeline.analysis.denovo_analysis import main_de_novo as main_analysis_de_novo
+from imngs2_pipeline.analysis.analysis import main as main_analysis
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
 from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes, slice_list
@@ -55,8 +54,9 @@ SPIKE_STAT_HEADER = "\t".join(list(SPIKE_STAT_FILE_COLS))
 TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
 global SUPPORTED_ANALYSIS_MODE, USEARCH_11_BIN
 SUPPORTED_ANALYSIS_MODE = [
-    "TIC",
     "de-novo",
+    "TAC",
+    "TIC",
 ]
 USEARCH_11_BIN = Path(PurePath("/base/binaries/usearch11.0.667_i86linux64"))
 
@@ -911,8 +911,6 @@ def run_imngs2(
     combined_spike_stats_path = default_spike_stat_compiled if not given_spike_stat_file.is_file() else given_spike_stat_file
     reduced_samples_dirs = []
     mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else ""  # it will return a path to current directory if mapping_file = ""
-    # Analysis default vars
-    zotu_file_path, sotu_file_path = ("", "")
     # Preparing mapping file entries
     # Gathering sequence files
     PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
@@ -924,15 +922,16 @@ def run_imngs2(
     mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
 
     # choosing analysis_mode
+    pipeline_to_run = [False, False, False]
     if analysis_mode not in SUPPORTED_ANALYSIS_MODE:
         PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
         sys.exit(170)
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[0]:
-    #     PREP_LOG.info("Analysis mode: Taxonomy Informed Clustering (TIC)")
-        main_analysis = main_analysis_TIC
+        pipeline_to_run[0] = True
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[1]:
-    #     PREP_LOG.info("Analysis mode: de-novo clustering")
-        main_analysis = main_analysis_de_novo
+        pipeline_to_run[1] = True
+    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[2]:
+        pipeline_to_run[2] = True
 
     # master preprocessing logger
     PREC_PROC_LOG = proc_helper.gimmelogger(
@@ -1029,7 +1028,7 @@ def run_imngs2(
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
             reduced_samples_dirs, _ = combine_spike_stats_file(samples_dirs, combined_spike_stat=combined_spike_stats_path)
 
-            zotu_file_path, sotu_file_path = main_analysis(
+            output_tuple: Tuple[str] = main_analysis(
                 analysis_dir=analysis_dir,
                 spike_stat_file=combined_spike_stats_path,
                 fastqs_dir=str(FASTQ_DIR),
@@ -1037,6 +1036,9 @@ def run_imngs2(
                 dbs_loc=dbs_dir,
                 threads=POOL_SIZE,
                 usearch_11_bin=USEARCH_11_BIN,
+                run_otu_pipeline=pipeline_to_run[0],
+                run_tac_pipeline=pipeline_to_run[1],
+                run_tic_pipeline=pipeline_to_run[2],
             )
 
         except MemoryError as exc:
@@ -1056,7 +1058,7 @@ def run_imngs2(
 
     ##################
     # TODO Only Normalizing
-    if not skip_analysis and mapping_file_path and zotu_file_path and sotu_file_path:
+    if not skip_analysis and mapping_file_path:
         pass
 
     # change mode of files

@@ -726,30 +726,23 @@ def filter_otus_by_abundance(
 def cleanup(directory: str, to_keep: list = []) -> bool:
     directory = Path(PurePath(directory)).absolute()
     must_keep = [
-        "IMNGS2Pipeline_args.yml",
-        "spike_mapping_file.csv",
-        "ZOTUs-Seqs.fasta",
-        "ZOTUs-Table.tab",
-        "ZOTUs-Tree-nj.tre",
-        "ZOTUs-Tree-FastTree.tre",
-        "ZOTUs-Krona.html",
-        "SampleMinCount_Normalized-ZOTUs-Table.tab",
-        "Spike_Normalized-ZOTUs-Table.tab",
-        #
-        "OTUs-Seqs.fasta",
-        "OTUs-Table.tab",
-        "OTUs-Tree-nj.tre",
-        "OTUs-Tree-FastTree.tre",
-        "OTUs-Krona.html",
-        "SampleMinCount_Normalized-OTUs-Table.tab",
-        "Spike_Normalized-OTUs-Table.tab",
-        #
-        "Analysis_log.txt"
+        re.compile(r"IMNGS2Pipeline_args\.yml"),
+        re.compile(r"spike_mapping_file\.csv"),
+        # Pipelne outputs
+        re.compile(r"[ZS]?OTUs-Seqs(-TAC|-TIC)?\.fasta"),
+        re.compile(r"[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
+        re.compile(r"[ZS]?OTUs-Tree-nj(-TAC|-TIC)?\.tre"),
+        re.compile(r"[ZS]?OTUs-Tree-FastTree(-TAC|-TIC)?\.tre"),
+        re.compile(r"[ZS]?OTUs-Krona(-TAC|-TIC)?\.html"),
+        re.compile(r"Map-.*\.tab"),
+        re.compile(r"SampleMinCount_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
+        re.compile(r"Spike_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
+        re.compile(r"Analysis_log\.txt")
     ]
-    white_list = to_keep + must_keep
+    white_list = [re.compile(f"{tk}") for tk in to_keep] + must_keep
     files = list(directory.glob("*"))
     for file in files:
-        if file.name not in white_list and file.is_file():
+        if file.is_file() and not any([pat.match(file.name) for pat in white_list]):
             file.unlink()
     return True
 
@@ -1091,7 +1084,10 @@ def zotu_pipeline(
         output_html_name="ZOTUs-Krona.html"
     )
     # ZOTU_P_LOGGER.info('# Starting OTU pipeline')
-    return zotu_tab_file, bacterial_ZOTUs_fasta
+    return (
+        str(Path(PurePath(zotu_tab_file)).absolute()),
+        str(Path(PurePath(bacterial_ZOTUs_fasta)).absolute())
+    )
 
 
 def otu_pipeline(
@@ -1147,7 +1143,10 @@ def otu_pipeline(
         otu_tab_file,
         output_html_name="OTUs-Krona.html"
     )
-    return otu_tab_file, bacterial_OTUs_fasta
+    return (
+        str(Path(PurePath(otu_tab_file)).absolute()),
+        str(Path(PurePath(bacterial_OTUs_fasta)).absolute())
+    )
 
 
 def tac_pipeline(
@@ -1213,7 +1212,10 @@ def tac_pipeline(
         output_html_name="OTUs-Krona.html"
     )
 
-    return str(otu_table_path), str(otus_seq_fasta)
+    return (
+        str(otu_table_path),
+        str(otus_seq_fasta)
+    )
 
 
 def tic_pipeline():
@@ -1233,7 +1235,7 @@ def tic_pipeline():
     pass
 
 
-def main_de_novo(
+def main(
         analysis_dir: str,
         spike_stat_file: str,
         fastqs_dir: str,
@@ -1242,8 +1244,8 @@ def main_de_novo(
         threads=POOL_SIZE,
         usearch_11_bin: str = USEARCH_11_BIN,
         run_otu_pipeline: bool = False,
-        run_tac_pipeline: bool = True,
-        run_tic_pipelnie: bool = False) -> list:
+        run_tac_pipeline: bool = False,
+        run_tic_pipeline: bool = False) -> list:
     """
     sample_seq_files_path: a list of file path to
      each samples' sequence file which is going to be combined with other samples passed to analysis.
@@ -1311,13 +1313,13 @@ def main_de_novo(
     # ##########################################################################################
     # #################################### ZOTU Pipline ########################################
     # ##########################################################################################
-    to_return = [None, None, None, None]
+    to_return = ["", "", "", ""]
     try:
         ANA_LOG.info('# Starting ZOTU pipeline')
         zotu_tab_file, bacterial_ZOTUs_fasta = zotu_pipeline(
             sorted_file,
             ARGS_CLS.denovo_cluster_zotus.minsize,
-            TRIMMED_READS_FILE,
+            FILTERED_READS_FILE,
             ARGS_CLS.create_table.abund_limit,
             ARGS_CLS.create_table.sample_wise_correction,
             ANA_LOG
@@ -1330,12 +1332,13 @@ def main_de_novo(
     except Exception as exc:
         ANA_LOG.warning(f"ZOTU pipeline failed: {exc}")
     else:
+        # preserving important files for next steps
+        # and cleaning up the rest
         cleanup(
             str(ANALYSIS_DIR),
             [
-                sorted_file,
-                TRIMMED_READS_FILE,
-                FILTERED_READS_FILE
+                Path(PurePath(sorted_file)).name,
+                Path(PurePath(FILTERED_READS_FILE)).name,
             ]
         )
         to_return[0] = zotu_tab_file
@@ -1347,7 +1350,7 @@ def main_de_novo(
         try:
             otu_tab_file, bacterial_OTUs_fasta = otu_pipeline(
                 sorted_file,
-                TRIMMED_READS_FILE,
+                FILTERED_READS_FILE,
                 ARGS_CLS.create_table.abund_limit,
                 ARGS_CLS.create_table.sample_wise_correction,
                 ANA_LOG
@@ -1360,31 +1363,69 @@ def main_de_novo(
         except Exception as exc:
             ANA_LOG.info(f"OTU pipline failes: {exc}")
         else:
-            to_return[1] = otu_tab_file
+            # preserving important files for next steps
+            # and cleaning up the rest
             cleanup(
                 str(ANALYSIS_DIR),
                 [
                     sorted_file,
-                    TRIMMED_READS_FILE,
-                    FILTERED_READS_FILE
+                    FILTERED_READS_FILE,
                 ]
             )
+            to_return[1] = otu_tab_file
 
     if run_tac_pipeline:
-        tac_pipeline(
-            zotus_seq_fasta=bacterial_ZOTUs_fasta,
-            zotus_table_file=zotu_tab_file,
-            zotus_tree_file="ZOTUs-Tree-nj.tre",
-            cluster_id=0.987,
-            tac_logger=ANA_LOG
-        )
+        try:
+            tac_otu_table, tac_otu_seq_file = tac_pipeline(
+                zotus_seq_fasta=bacterial_ZOTUs_fasta,
+                zotus_table_file=zotu_tab_file,
+                zotus_tree_file="ZOTUs-Tree-nj.tre",
+                cluster_id=0.987,
+                tac_logger=ANA_LOG
+            )
+            # Normalizing Tables
+            otu_norm_methods = "No"
+            ANA_LOG.info('# Normalizing Tables')
+            otu_norm_methods = normalize_otu_table(tac_otu_table, str(parsed_spike_stat_file_path))
+            ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {tac_otu_table}")
+        except Exception as exc:
+            ANA_LOG.info(f"TAC pipeline failed: {exc}")
+        else:
+            # preserving important files for next steps
+            # and cleaning up the rest
+            cleanup(
+                str(ANALYSIS_DIR),
+                [
+                    sorted_file,
+                    FILTERED_READS_FILE,
+                ]
+            )
+            to_return[2] = tac_otu_table
 
-    if run_tic_pipelnie:
-        tic_pipeline()
+    if run_tic_pipeline:
+        try:
+            tic_otu_table, tic_otu_seq_file = tic_pipeline()
+            # Normalizing Tables
+            otu_norm_methods = "No"
+            ANA_LOG.info('# Normalizing Tables')
+            otu_norm_methods = normalize_otu_table(tic_otu_table, str(parsed_spike_stat_file_path))
+            ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {tic_otu_table}")
+        except Exception as exc:
+            ANA_LOG.info(f"TIC pipeline failed: {exc}")
+        else:
+            # preserving important files for next steps
+            # and cleaning up the rest
+            cleanup(
+                str(ANALYSIS_DIR),
+                [
+                    sorted_file,
+                    FILTERED_READS_FILE,
+                ]
+            )
+            to_return[3] = tic_otu_table
 
     ANA_LOG.info('ANALYSIS DONE')
     # to keep the same return value as the main function
-    exit()
     ANA_LOG.info('# Cleaning up')
     cleanup(str(ANALYSIS_DIR))
     return tuple(to_return)
