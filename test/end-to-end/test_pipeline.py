@@ -574,6 +574,33 @@ def test_full_denovo_analysis(build_image):
     run_container(setup_file_structure)
 
 
+def test_full_TAC_analysis(build_image):
+    def setup_file_structure(run_dir: str):
+        # copy the contents of data to the temporary directory
+        subprocess.run(["cp", "-r", data, run_dir])
+        # move the contents of the data folder to the run_dir
+        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
+            subprocess.run(["mv", file, run_dir])
+        # rm the folder
+        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        # setting args
+        args_set = ArgumentSet("", "")
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.analysis_mode = "TAC"
+
+        return args_set
+
+    run_container(setup_file_structure)
+
+
 def test_full_TIC_analysis(build_image):
     def setup_file_structure(run_dir: str):
         # copy the contents of data to the temporary directory
