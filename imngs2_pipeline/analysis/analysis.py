@@ -12,6 +12,7 @@ from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
 from .analysis_helper import onelinefasta
 import logging
+from ticlust import TICAnalysis
 
 
 BIN_DIR = "/base/binaries/"
@@ -849,7 +850,7 @@ def extract_and_rename_subtree(
 
 def parse_uc_file(
         uc_file: str,
-        with_tax: bool = False) -> dict:
+        cut_tax: bool = True) -> dict:
     """
     It parsed uc files from -uclust_smallmem. It returns a dictionary with
     the centroid as the key and the members as the values. The centroid is
@@ -859,36 +860,55 @@ def parse_uc_file(
         The path to the uc file
     :return: dict
     """
-    uc_file = Path(PurePath(uc_file)).absolute()
-    tax_reg = re.compile(r"tax=(?P<tax>([^;]+;)*([^;]+)?;?)$", re.IGNORECASE)
+    uc_file = Path(uc_file).absolute()
+    tax_reg = re.compile(r"\s(?P<tax_tag>tax=)?(?P<tax>([^;]+;)*([^;]+)?;?)", re.IGNORECASE)
 
     uc_dict = {}
-    with open(uc_file, 'r') as uc_h:
+    with open(uc_file, 'r', encoding='utf-8') as uc_h:
         line = uc_h.readline().strip()
         while line:
             if line.startswith("H"):
                 line_tokens = line.split("\t")
                 query = line_tokens[8]
                 target_centroid = line_tokens[9]
+                sim_ = round(float(line_tokens[3]), 5)
                 # omitting the taxonomic information
-                if not with_tax:
+                if cut_tax:
                     query = tax_reg.sub("", query).strip()
                     target_centroid = tax_reg.sub("", target_centroid).strip()
-                cluster_members = uc_dict.get(target_centroid, [])
-                cluster_members.append(query)
-                uc_dict[target_centroid] = cluster_members
+                # prepending '>' to the centroid and query.
+                # As uclust removes the '>' from the query
+                # target_centroid = '>' + target_centroid
+                query = '>' + query
+                matched_clusters = uc_dict.get(query, [])
+                matched_clusters.append((target_centroid, sim_))
+                uc_dict[query] = matched_clusters
             elif line.startswith("S"):
+                # case for singletons
                 line_tokens = line.split("\t")
                 centroid = line_tokens[8]
+                sim_ = round(float(100), 5)
                 # omitting the taxonomic information
-                if not with_tax:
+                if cut_tax:
                     centroid = tax_reg.sub("", centroid).strip()
-                cluster_members = uc_dict.get(centroid, [])
-                cluster_members.insert(0, centroid)
-                uc_dict[centroid] = cluster_members
+                # prepending '>' to the centroid
+                # centroid = '>' + centroid
+                query = centroid
+                matched_clusters = uc_dict.get(query, [])
+                matched_clusters.append((centroid, sim_))
+                uc_dict[query] = matched_clusters
             line = uc_h.readline().strip()
+    # some sequences might match more than one more centers
+    # we will keep the one with the highest similarity
+    cent_members_dict = {}
+    for member, cent_matches in uc_dict.items():
+        cent_matches = sorted(cent_matches, key=lambda x: x[1], reverse=True)
+        cent_id = cent_matches[0][0]
+        mems_list = cent_members_dict.get(cent_id, [])
+        mems_list.append(member)
+        cent_members_dict[cent_id] = mems_list
 
-    return uc_dict
+    return cent_members_dict
 
 
 def collapse_zotu_table(
@@ -1032,6 +1052,29 @@ def uclust(
     system_sub(cmd_to_call, force_log=True)
     onelinefasta(centroids_file)
     return str(uc_file), str(centroids_file)
+
+
+def move_content_to_parent_directory(directory: str):
+    """
+    Moves all contents of 'directory' to its parent directory and removes 'directory'.
+    :param directory: Path to the directory whose contents should be moved.
+    """
+    dir_path = Path(directory).resolve()
+
+    if not dir_path.is_dir():
+        raise ValueError(f"Directory '{dir_path}' does not exist or is not a directory.")
+
+    parent_dir = dir_path.parent
+
+    for item in dir_path.iterdir():
+        target_path = parent_dir / item.name
+
+        if target_path.exists():
+            raise FileExistsError(f"Target '{target_path}' already exists. Move aborted to prevent overwriting.")
+
+        shutil.move(str(item), str(target_path))
+
+    dir_path.rmdir()  # Remove the empty directory
 
 
 def zotu_pipeline(
@@ -1219,21 +1262,76 @@ def tac_pipeline(
     )
 
 
-def tic_pipeline():
+def tic_pipeline(
+        zotus_seq_fasta: str,
+        zotus_table_file: str,
+        zotus_tree_file: str = None,
+        species_id: float = 0.987,
+        genus_id: float = 0.97,
+        family_id: float = 0.95,
+        tic_logger: logging.Logger = ANA_LOG) -> None:
     """
     TIC (Taxonomy Informed Clustering) pipeline, takes a set of ZOTUs and cluster
-     them at 97% similarity based on their taxonomy.
-
-    :param zotus_seq_fasta: str
-        The path to the sequences of ZOTUs
-    :param zotus_table_file: str
-        The path to the ZOTUs table file
-    :param add_taxonomy: bool
-        If True, it will add taxonomy to the sequences
-
-    :return: None
+     them at 98.7% similarity to create SOTUs, at 97% to create GUTUs and at 95%
+     to create FOTUs.
     """
-    pass
+    zotus_seq_path = Path(zotus_seq_fasta).absolute()
+    tic_analysis = TICAnalysis(
+        zotus_seq_path,
+        zotus_table_file
+    )
+    tic_logger.info(
+        '# Clustering ZOTUs at %s, %s, %s similarity thresholds for '
+        'species, genus and family levels respectively',
+        species_id,
+        genus_id,
+        family_id
+    )
+
+    tic_analysis.run(
+        threads=POOL_SIZE,
+        cluster_thresholds_d={
+            "species": species_id,
+            "genus": genus_id,
+            "family": family_id
+        }
+    )
+    sotu_zotu_map = {}
+    with open(tic_analysis.sotu_zotu_file_path, 'r') as sotu_zotu_fio:
+        sotu_zotu_fio.readline().strip()
+        line = sotu_zotu_fio.readline().strip()
+        while line:
+            sotu, zotu = line.split("\t")
+            # map file is sorted and the first zotu is the centroid
+            curr_zotu_list = sotu_zotu_map.get(sotu, [])
+            curr_zotu_list.append(zotu)
+            sotu_zotu_map[sotu] = curr_zotu_list
+            line = sotu_zotu_fio.readline().strip()
+
+    if zotus_tree_file:
+        sotus_tree_file = Path(PurePath(zotus_tree_file)).absolute()
+        sotus_tree_file = zotus_seq_path.parent.joinpath("SOTUs-Tree-nj-TIC.tre")
+        tic_logger.info('# Updating ZOTUs tree to SOTUs tree')
+        extract_and_rename_subtree(
+            tree_file=zotus_tree_file,
+            # centroids are the first in zotus list
+            subset=[zotus[0] for otu, zotus in sotu_zotu_map.items()],
+            rename_map={zotus[0]: otu for otu, zotus in sotu_zotu_map.items()},
+            output_file=str(sotus_tree_file)
+        )
+    tic_logger.info('# Adding Krona HTML')
+    create_krona(
+        krona_importtext,
+        str(tic_analysis.sotu_table_path),
+        output_html_name="SOTUs-Krona.html"
+    )
+    # moving files in tic_analysis.tic_wd to parent directory
+    move_content_to_parent_directory(tic_analysis.tic_wd)
+
+    return (
+        str(tic_analysis.tic_wd.parent / tic_analysis.sotu_table_path.name),
+        str(tic_analysis.tic_wd.parent / tic_analysis.sotu_seq_fasta.name)
+    )
 
 
 def main(
@@ -1409,10 +1507,16 @@ def main(
             to_return[2] = tac_otu_table
 
     if run_tic_pipeline:
-        pass
-        # TODO: Impelement TIC Pipeline
         try:
-            tic_otu_table, tic_otu_seq_file = tic_pipeline()
+            tic_otu_table, sotu_fasta_path = tic_pipeline(
+                zotus_seq_fasta=bacterial_ZOTUs_fasta,
+                zotus_table_file=zotu_tab_file,
+                zotus_tree_file="ZOTUs-Tree-nj.tre",
+                species_id=0.987,
+                genus_id=0.97,
+                family_id=0.95,
+                tic_logger=ANA_LOG
+            )
             # Normalizing Tables
             otu_norm_methods = "No"
             ANA_LOG.info('# Normalizing Tables')

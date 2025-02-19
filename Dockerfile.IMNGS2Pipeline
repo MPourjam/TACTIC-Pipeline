@@ -34,13 +34,14 @@ COPY imngs2_pipeline /base/imngs2_pipeline/
 COPY run_imngs2.py /base/run_imngs2.py
 COPY IMNGS2Pipeline_args.yml /base/IMNGS2Pipeline_args.yml
 COPY mapping_file_TEMPLATE.csv /base/mapping_file_TEMPLATE.csv
+COPY requirements.txt /base/requirements.txt
 
 
 ######################
 ## PIP DEPENDENCIES ##
 ######################
 RUN pip install --upgrade pip
-RUN pip install --upgrade PyYAML==6.0 pytest==7.4.4 ete3==3.1.3
+RUN pip install --upgrade -r /base/requirements.txt
 
 
 ######################
@@ -52,8 +53,6 @@ install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org");
 install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org");\
 install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org");\
 '
-
-RUN rm -rf /crc/src/
 
 # Cleaning apt-cache
 RUN apt clean autoclean
