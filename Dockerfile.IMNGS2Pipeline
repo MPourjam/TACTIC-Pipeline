@@ -1,8 +1,16 @@
-FROM mpourjam/python3.7_buster_r4.3.1
+FROM python:3.11.0-slim-bullseye
 
 # Setting some environment variables
 # Install locales package
+# Install dependencies
+RUN apt update -y && apt upgrade -y
+RUN apt update --fix-missing
+RUN apt install -y libharfbuzz-dev libfribidi-dev cmake
+RUN apt install -y vim rsync wget
+RUN apt install -y fastqc
+RUN apt install -y graphlan gfortran
 RUN apt-get update && apt-get install -y locales
+RUN apt update -y && apt upgrade -y
 RUN apt-get update --fix-missing
 # Generate the locale
 
@@ -47,12 +55,12 @@ RUN pip install --upgrade -r /base/requirements.txt
 ######################
 ## R and R PACKAGES ##
 ######################
-RUN Rscript -e '\
-library("devtools"); install_version("vegan", version="2.6-2", repos="https://cran.r-project.org");\
-install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org");\
-install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org");\
-install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org");\
-'
+#RUN Rscript -e '\
+#library("devtools"); install_version("vegan", version="2.6-2", repos="https://cran.r-project.org");\
+#install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org");\
+#install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org");\
+#install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org");\
+#'
 
 # Cleaning apt-cache
 RUN apt clean autoclean
