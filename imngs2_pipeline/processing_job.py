@@ -35,7 +35,6 @@ USEARCH_TAIL = '> /dev/null 2>&1'
 bowtie2 = BIN_DIR + "bowtie2/bowtie2"
 krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
 SPIKESIDX = "/base/spikesidx/spike"
-R_processing_stat = "/base/imngs2_pipeline/processing_stats.R"
 S_FLAT_LOCATION = '/base/s_flat.txt'
 
 
@@ -886,16 +885,6 @@ def main_processing(
         add_taxonomy_to_fasta()
         PREPPROC_LOG.info("# Add Krona Graph")
         addKrona(krona_importtext)
-        # system('Rscript {} >/dev/null 2>/dev/null'.format(R_processing_stat))
-        system_sub(
-            [
-                "Rscript",
-                R_processing_stat
-            ],
-            force_log=False,
-            capture_output=True,
-            quiet=True
-        )
         # udb for both similarity queries
         PREPPROC_LOG.info('# Create UDB')
         create_udb(input_id)
