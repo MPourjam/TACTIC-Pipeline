@@ -739,7 +739,8 @@ def cleanup(directory: str, to_keep: list = []) -> bool:
         re.compile(r"Map-.*\.tab"),
         re.compile(r"SampleMinCount_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
         re.compile(r"Spike_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
-        re.compile(r"Analysis_log\.txt")
+        re.compile(r"Analysis_log\.txt"),
+        re.compile(r"Seqs(-TIC|-TAC)?\.fasta")
     ]
     white_list = [re.compile(f"{tk}") for tk in to_keep] + must_keep
     files = list(directory.glob("*"))
@@ -1326,11 +1327,14 @@ def tic_pipeline(
         output_html_name="SOTUs-Krona.html"
     )
     # moving files in tic_analysis.tic_wd to parent directory
+    shutil.move(tic_analysis.non_bact_fasta_path, tic_analysis.tic_wd / "Invalid-Tax-Seqs-TIC.fasta")
+    shutil.move(tic_analysis.sotu_fasta_path, tic_analysis.tic_wd / "SOTUs-Seqs-TIC.fasta")
+    shutil.move(tic_analysis.sotu_table_path, tic_analysis.tic_wd / "SOTUs-Table-TIC.tab")
     move_content_to_parent_directory(tic_analysis.tic_wd)
 
     return (
-        str(tic_analysis.tic_wd.parent / tic_analysis.sotu_table_path.name),
-        str(tic_analysis.tic_wd.parent / tic_analysis.sotu_seq_fasta.name)
+        str(tic_analysis.tic_wd.parent / "SOTUs-Table-TIC.tab"),
+        str(tic_analysis.tic_wd.parent / "SOTUs-Seqs-TIC.fasta")
     )
 
 
@@ -1431,6 +1435,7 @@ def main(
         ANA_LOG.info(f"{zotu_norm_methods} normalization method(s) applied on {zotu_tab_file}")
     except Exception as exc:
         ANA_LOG.warning(f"ZOTU pipeline failed: {exc}")
+        raise exc
     else:
         # preserving important files for next steps
         # and cleaning up the rest
@@ -1463,7 +1468,7 @@ def main(
         except Exception as exc:
             msg = f"OTU pipline failes: {exc}"
             ANA_LOG.error(msg)
-            raise msg
+            raise exc
         else:
             # preserving important files for next steps
             # and cleaning up the rest
@@ -1493,7 +1498,7 @@ def main(
         except Exception as exc:
             msg = f"TAC pipeline failed: {exc}"
             ANA_LOG.error(msg)
-            raise msg
+            raise exc
         else:
             # preserving important files for next steps
             # and cleaning up the rest
@@ -1525,7 +1530,7 @@ def main(
         except Exception as exc:
             msg = f"TIC pipeline failed: {exc}"
             ANA_LOG.error(msg)
-            raise msg
+            raise exc
         else:
             # preserving important files for next steps
             # and cleaning up the rest
