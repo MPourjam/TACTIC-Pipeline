@@ -1,13 +1,13 @@
 version: '2'
 
 services:
-  imngs2pipeline:
-    container_name: IMNGS2Pipeline
+  tactic_pipeline:
+    container_name: tactic_pipeline_cont
     build:
       context: .
       dockerfile: Dockerfile.IMNGS2Pipeline
-    image: imngs2_pipeline
-    hostname: IMNGS2Pipeline
+    image: tactic_pipeline
+    hostname: tactic
     command: "tail -F /base/requirements.txt"
     # volumes:
     #   - /media/adminuser/CFM/inputs:/base/inputs
