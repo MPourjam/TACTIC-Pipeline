@@ -38,7 +38,9 @@ POOL_SIZE = max_pool if max_pool > 0 else 1
 PREP_LOG = proc_helper.gimmelogger(
     "run_imngs2",
     log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
-    only_file=False)
+    only_file=False,
+    propagate=False
+)
 MAPPING_FILE_COLS = ("SampleID", "total_weight_in_g", "spike_amount", "parent_path")
 MapLineTup = namedtuple("MapLineTup", [MAPPING_FILE_COLS[0], MAPPING_FILE_COLS[1], MAPPING_FILE_COLS[2], MAPPING_FILE_COLS[3]])
 global PATH_SEP, DEFAULT_MAP_LINE, TAXED_ZOTU_FILE_NAME, DEREP_FILE_NAME
@@ -692,6 +694,7 @@ def run_preprocessing(
     PREPPROC_LOG = proc_helper.gimmelogger(
         logger_name=f"run_imngs2.preprocessing.{str(sample_id)}",
         only_file=True,
+        propagate=False
     )
 
     try:
@@ -890,7 +893,9 @@ def run_imngs2(
     PREP_LOG = proc_helper.gimmelogger(
         "run_imngs2",
         log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
-        only_file=False)
+        only_file=False,
+        propagate=False
+    )
     PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
 
@@ -1149,7 +1154,8 @@ if __name__ == "__main__":
     PREP_LOG = proc_helper.gimmelogger(
         "run_imngs2",
         log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
-        only_file=False
+        only_file=False,
+        propagate=False
     )
     given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if str(args.usearch_bin) != str(USEARCH_11_BIN) else str(USEARCH_11_BIN)
     # warning the cli users for the given usearch file
