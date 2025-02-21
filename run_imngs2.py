@@ -66,7 +66,7 @@ HEALTHY_PROC_FILES = [
     DEFAULT_ARG_FILE_NAME,
     SPIKE_STAT_FILE_NAME,
     # TRIMMED_READS_FILE,
-    FILTERED_READS_FILE,
+    # FILTERED_READS_FILE,
     DEREP_FILE_NAME,
     # TAXED_ZOTU_FILE_NAME
 ]
@@ -251,7 +251,7 @@ def should_trigger_processing(
         processed_dir_path = Path(PurePath(str(sample_base_path) + PROC_DIR_SUFFIX))
 
     this_out[0] = str(processed_dir_path.joinpath(proc_helper.generate_timestamp()))
-    arg_files = processed_dir_path.rglob(DEFAULT_ARG_FILE_NAME)
+    arg_files = processed_dir_path.glob(f"*/{DEFAULT_ARG_FILE_NAME}")
     # TODO:NOTE decide if we need to process the sample or not
     # 1- argument check
     # 2- checking if some processed version already exists
@@ -715,16 +715,10 @@ def run_preprocessing(
         sample_dir = Path(PurePath(sample_dir)) if sample_dir else ""
         if not shall_preprocess and not force_preprocess:
             return sample_dir
+        if force_preprocess and not shall_preprocess:  # renew the sample_dir not to overwrite the existing one
+            sample_dir = Path(sample_dir).parent.joinpath(proc_helper.generate_timestamp())
         # Hereon we are sure that we should process the sample
         sample_dir.mkdir(parents=True, exist_ok=True)
-        # cleaning the directory
-        if force_preprocess and not shall_preprocess:
-            PREPPROC_LOG.info(f"Cleaning the directory: {sample_dir} before FORCED preprocessing.")
-            for entry in sample_dir.iterdir():
-                if entry.is_file():
-                    entry.unlink()
-                elif entry.is_dir():
-                    shutil.rmtree(str(entry))
 
         log_file_path = sample_dir.joinpath(f"{str(sample_id)}_logs.txt")
         PREPPROC_LOG = proc_helper.gimmelogger(
@@ -1003,7 +997,7 @@ def run_imngs2(
                         res_dict[sample_id] = res
                     else:
                         PREC_PROC_LOG.warning(f"Failed to finalize preprocessing for {sample_id}")
-                        failed_preprocesses.append(sample_id)
+                        failed_preprocesses_sample_id.append(sample_id)
 
             samples_dirs = list(res_dict.values())
         except Exception as exc:

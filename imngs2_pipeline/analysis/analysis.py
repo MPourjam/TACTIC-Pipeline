@@ -1121,7 +1121,7 @@ def zotu_pipeline(
             output_fasta_name="ZOTUs-Seqs.fasta"
         )
 
-    ZOTU_P_LOGGER.info('# Creating ZOTU tables')
+    ZOTU_P_LOGGER.info('# Creating ZOTU table')
     zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file)
     ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance')
     filter_otus_by_abundance(
@@ -1184,7 +1184,7 @@ def otu_pipeline(
             input_fasta_name="otus1.fa",
             output_fasta_name="OTUs-Seqs.fasta"
         )
-    OTU_LOGGER.info('# Creating OTU tables')
+    OTU_LOGGER.info('# Creating OTU table')
     otu_tab_file = build_OTU_table(raw_seq_file, non_human_zotus_file)
     OTU_LOGGER.info('# Filtering OTUs by abundance')
     filter_otus_by_abundance(
@@ -1452,7 +1452,7 @@ def main(
     ANA_LOG.info("# Gathering Sequences")
     chdir(ANALYSIS_DIR)
     # gather_samples_files(list(map_lines_dict.values()), TRIMMED_READS_FILE)
-    gather_samples_files(list(map_lines_dict.values()), FILTERED_READS_FILE)
+    # gather_samples_files(list(map_lines_dict.values()), FILTERED_READS_FILE)
     gather_samples_files(list(map_lines_dict.values()), DEREP_FILE_NAME)
     # trimming the sequences
     # NOTE for now we discard trimming in the analysis
@@ -1468,10 +1468,12 @@ def main(
     to_return = ["", "", "", ""]
     try:
         ANA_LOG.info('# Starting ZOTU pipeline')
-        zotu_tab_file, bacterial_ZOTUs_fasta = zotu_pipeline(
+        zotu_tab_file, non_human_zotus_seq_file = zotu_pipeline(
             sorted_file,
             ARGS_CLS.denovo_cluster_zotus.minsize,
-            FILTERED_READS_FILE,
+            # using dereplicated reads with size tag saves time in creation of zotu table
+            # NOTE tested against using filtered reads and the results are the same
+            DEREP_FILE_NAME,
             ARGS_CLS.create_table.abund_limit,
             ARGS_CLS.create_table.sample_wise_correction,
             ANA_LOG
@@ -1491,7 +1493,7 @@ def main(
             str(ANALYSIS_DIR),
             [
                 Path(PurePath(sorted_file)).name,
-                Path(PurePath(FILTERED_READS_FILE)).name,
+                Path(PurePath(DEREP_FILE_NAME)).name,
             ]
         )
         to_return[0] = zotu_tab_file
@@ -1501,9 +1503,10 @@ def main(
     # ##########################################################################################
     if run_otu_pipeline:
         try:
-            otu_tab_file, bacterial_OTUs_fasta = otu_pipeline(
+            ANA_LOG.info('# Starting OTU pipeline')
+            otu_tab_file, non_human_otu_seq_file = otu_pipeline(
                 sorted_file,
-                FILTERED_READS_FILE,
+                DEREP_FILE_NAME,  # contains sequences with sample ids and corresponding sizes
                 ARGS_CLS.create_table.abund_limit,
                 ARGS_CLS.create_table.sample_wise_correction,
                 ANA_LOG,
@@ -1511,7 +1514,7 @@ def main(
             )
             # Normalizing Tables
             otu_norm_methods = "No"
-            ANA_LOG.info('# Normalizing Tables')
+            ANA_LOG.info('# Normalizing OTU Table')
             otu_norm_methods = normalize_otu_table(otu_tab_file, str(parsed_spike_stat_file_path))
             ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {otu_tab_file}")
         except Exception as exc:
@@ -1524,16 +1527,18 @@ def main(
             cleanup(
                 str(ANALYSIS_DIR),
                 [
-                    sorted_file,
-                    FILTERED_READS_FILE,
+                    non_human_zotus_seq_file,
+                    DEREP_FILE_NAME,
+                    zotu_tab_file
                 ]
             )
             to_return[1] = otu_tab_file
 
     if run_tac_pipeline:
         try:
+            ANA_LOG.info('# Starting TAC pipeline')
             tac_otu_table, tac_otu_seq_file = tac_pipeline(
-                zotus_seq_fasta=bacterial_ZOTUs_fasta,
+                zotus_seq_fasta=non_human_zotus_seq_file,
                 zotus_table_file=zotu_tab_file,
                 zotus_tree_file="ZOTUs-Tree-nj.tre",
                 cluster_id=0.987,
@@ -1541,7 +1546,7 @@ def main(
             )
             # Normalizing Tables
             otu_norm_methods = "No"
-            ANA_LOG.info('# Normalizing Tables')
+            ANA_LOG.info('# Normalizing TAC OTU Table')
             otu_norm_methods = normalize_otu_table(tac_otu_table, str(parsed_spike_stat_file_path))
             ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {tac_otu_table}")
         except Exception as exc:
@@ -1554,16 +1559,17 @@ def main(
             cleanup(
                 str(ANALYSIS_DIR),
                 [
-                    sorted_file,
-                    FILTERED_READS_FILE,
+                    non_human_zotus_seq_file,
+                    DEREP_FILE_NAME,
                 ]
             )
             to_return[2] = tac_otu_table
 
     if run_tic_pipeline:
         try:
+            ANA_LOG.info('# Starting TIC pipeline')
             tic_otu_table, sotu_fasta_path = tic_pipeline(
-                zotus_seq_fasta=bacterial_ZOTUs_fasta,
+                zotus_seq_fasta=non_human_zotus_seq_file,
                 zotus_table_file=zotu_tab_file,
                 zotus_tree_file="ZOTUs-Tree-nj.tre",
                 species_id=0.987,
@@ -1573,7 +1579,7 @@ def main(
             )
             # Normalizing Tables
             otu_norm_methods = "No"
-            ANA_LOG.info('# Normalizing Tables')
+            ANA_LOG.info('# Normalizing SOTU Table')
             otu_norm_methods = normalize_otu_table(tic_otu_table, str(parsed_spike_stat_file_path))
             ANA_LOG.info(f"{otu_norm_methods} normalization method(s) applied on {tic_otu_table}")
         except Exception as exc:
@@ -1586,8 +1592,8 @@ def main(
             cleanup(
                 str(ANALYSIS_DIR),
                 [
-                    sorted_file,
-                    FILTERED_READS_FILE,
+                    non_human_zotus_seq_file,
+                    DEREP_FILE_NAME,
                 ]
             )
             to_return[3] = tic_otu_table

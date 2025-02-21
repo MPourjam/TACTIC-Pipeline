@@ -517,7 +517,7 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
         log_file_path = Path(PurePath(log_file)).absolute()
 
     # Setting logger formatter with line number of source of log
-    formatter = logging.Formatter('%(asctime)s - %(name)s:%(filename)s:%(lineno)d - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s:%(filename)s:%(lineno)d - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
     logger = logging.getLogger(logger_name)
     # set the logging level

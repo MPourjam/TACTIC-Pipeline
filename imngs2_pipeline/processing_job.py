@@ -618,41 +618,45 @@ def cleanup(input_id, full_clean=False, dir_path=None):
                 shutil.rmtree(str(file_path))
     else:
         deleted_files = [
-            'merged.fastq',  # output of merging paired reads step
-            'filtered1.fastq',
-            # 'filtered2.fasta',  # This file is used to create ZOTUs table in analysis step
-            'derep.fasta',  # output of dereplication of filtered2.fasta
-            # 'sorted.fasta',  # output of sorting dereplicated sequences based on their sequence size
-            'zotus.fasta',  # output of clustering sorted sequences to ZOTUs
-            'good_ZOTUs.fa',  # output of filtering non 16S zotus
-            'zotu_table.txt',  # output ZOTUs table of aligning dereplicated sequences to non-human ZOTUs (i.e: good_ZOTUs.fa)
-            'classifiedF.txt',  # mapping file of ZOTU sequences to their taxonomies
-            'denoising.tab',  # ?
-            'ZOTUs.fasta',  # output of prepare_zotus function
-            f'aligned_{input_id}.csv',
-            f'aligned_{input_id}.fasta',
-            'otus1.fa',
-            'z2o.tab',
-            'mOTUs-Seqs.fasta',
-            'ZOTUs-Table.tab',
-            'abundant_zotus_table.txt',
-            'matched_ZOTUS.txt',
-            'ZOTUs-Seqs.fasta',
-            'zotu_table_filtered.txt',
-            'nochi-ZOTUs.fasta',
+            r'merged\.fastq',  # output of merging paired reads step
+            r'filtered1\.fastq',
+            r'filtered2\.fasta',
+            r'derep\.fasta',  # output of dereplication of filtered2.fasta
+            # r'sorted\.fasta',  # output of sorting dereplicated sequences based on their sequence size
+            r'zotus\.fasta',  # output of clustering sorted sequences to ZOTUs
+            r'good_ZOTUs\.fa',  # output of filtering non 16S zotus
+            r'zotu_table\.txt',  # output ZOTUs table of aligning dereplicated sequences to non-human ZOTUs (i.e: good_ZOTUs.fa)
+            r'classifiedF\.txt',  # mapping file of ZOTU sequences to their taxonomies
+            r'denoising\.tab',  # ?
+            r'ZOTUs\.fasta',  # output of prepare_zotus function
+            fr'aligned_{input_id}\.csv',
+            fr'aligned_{input_id}\.fasta',
+            r'otus1\.fa',
+            r'z2o\.tab',
+            r'mOTUs-Seqs\.fasta',
+            r'ZOTUs-Table\.tab',
+            r'abundant_zotus_table\.txt',
+            r'matched_ZOTUS\.txt',
+            r'ZOTUs-Seqs\.fasta',
+            r'zotu_table_filtered\.txt',
+            r'nochi-ZOTUs\.fasta',
+            # TODO we can collapse above patterns into fewer patterns
+            r'krona\.html',
+            r'\.fastq(\.gz)?',
         ]
         deleted_dirs = [
-            'kvdb',
-            'out',
-            'idx',
-            'fastqc_output',
-            'spike_result'
+            r'kvdb',
+            r'out',
+            r'idx',
+            r'fastqc_output',
+            r'spike_result'
         ]
         for entry in listdir(dir_path):
             entry_path = path.join(dir_path, entry)
-            if entry in deleted_files and path.isfile(entry_path):
+            matches = [re.search(pattern, entry) for pattern in deleted_files + deleted_dirs]
+            if any(matches) and path.isfile(entry_path):
                 remove(str(entry_path))
-            elif entry in deleted_dirs and path.isdir(entry_path):
+            elif any(matches) and path.isdir(entry_path):
                 shutil.rmtree(str(entry_path))
 
 
@@ -863,14 +867,17 @@ def main_processing(
             filter_merged_one_side(forward_file)
         PREPPROC_LOG.info('# Dereplication')
         dereped_read_n = dereplicate_seqs()
-        read_report = write_reads_report(input_id,
-                                         Dereplicated_reads=dereped_read_n)
+        read_report = write_reads_report(
+            input_id,
+            Dereplicated_reads=dereped_read_n
+        )
         PREPPROC_LOG.debug(read_report)
         PREPPROC_LOG.info('# Sort Sequences')
         sort_seqs()
         PREPPROC_LOG.info('# Cluster ZOTUs')
         if minimum_preprocessing:
             PREPPROC_LOG.info("Minimum preprocessing is enabled, skipping clustering step")
+            cleanup(input_id, full_clean=False, dir_path=path.abspath(input_dir))
             return input_dir
         clusterZOTUs()
         PREPPROC_LOG.info('# Filter non 16S sequences')
