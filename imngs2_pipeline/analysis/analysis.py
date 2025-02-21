@@ -67,6 +67,8 @@ def append_reads(seq_fasta, sample_id, append_to):
         USEARCH_11_BIN,
         '-fastx_relabel',
         seq_fasta_path,
+        '-threads',
+        str(POOL_SIZE),
         '-prefix',
         f"sample={dataset_name};",
         '-keep_annots',
@@ -136,7 +138,9 @@ def trim_sides(five_end_trim, three_end_trim):
         '-stripleft',
         str(three_end_trim),
         '-fastaout',
-        'trimmed.fasta'
+        'trimmed.fasta',
+        '-threads',
+        str(POOL_SIZE)
     ]
     system_sub(cmd_to_call_list, force_log=True)
     # cmd_2 = 'mv filtered1.fasta analysis.fasta'
@@ -162,7 +166,9 @@ def filter_trimmed_seqs(trimmed_seqs_file: str, maxee_rate: float) -> str:
             "-fastq_maxee_rate",
             maxee_rate,
             "-fastaout",
-            quality_filtered_fasta
+            quality_filtered_fasta,
+            '-threads',
+            str(POOL_SIZE)
         ],
         force_log=True
     )
@@ -210,6 +216,8 @@ def sort_seqs(to_sort_fasta: str, by: str = 'size') -> str:
             str(to_sort_path),
             "-fastaout",
             str(sorted_fasta_file),
+            '-threads',
+            str(POOL_SIZE)
         ]
         system_sub(cmd_to_call_list, force_log=True)
     elif by == 'length':
@@ -219,6 +227,8 @@ def sort_seqs(to_sort_fasta: str, by: str = 'size') -> str:
             str(to_sort_path),
             "-fastaout",
             str(sorted_fasta_file),
+            '-threads',
+            str(POOL_SIZE)
         ]
         system_sub(cmd_to_call_list, force_log=True)
         # print(" ".join(cmd_to_call_list))
@@ -243,6 +253,8 @@ def clusterZOTUs(sorted_uniques_file: str, minsize: int):
         "-sizeout",
         "-strand",
         "both",
+        "-threads",
+        str(POOL_SIZE)
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("zotus.fasta")
@@ -254,6 +266,8 @@ def filter16S(input_fasta_name: str, output_fasta_name: str):
     system_sub(
         [
             SORT_ME_RNA_BIN,
+            "--threads",
+            str(POOL_SIZE),
             "--ref",
             ref16RNAdb_1,
             "--ref",
@@ -308,7 +322,9 @@ def clusterOTUs(
         "-relabel",
         "OTU",
         "-strand",
-        "both"
+        "both",
+        "-threads",
+        str(POOL_SIZE)
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("otus1.fa")
@@ -401,7 +417,9 @@ def select_zotu_seqs():
         "-fastaout",
         "ZOTUs-Seqs.fasta",
         "-strand",
-        "both"
+        "both",
+        '-threads',
+        str(POOL_SIZE)
     ]
     system_sub(cmd_to_call_list, force_log=True)
     onelinefasta("ZOTUs-Seqs.fasta")
@@ -877,10 +895,6 @@ def parse_uc_file(
                 if cut_tax:
                     query = tax_reg.sub("", query).strip()
                     target_centroid = tax_reg.sub("", target_centroid).strip()
-                # prepending '>' to the centroid and query.
-                # As uclust removes the '>' from the query
-                # target_centroid = '>' + target_centroid
-                query = '>' + query
                 matched_clusters = uc_dict.get(query, [])
                 matched_clusters.append((target_centroid, sim_))
                 uc_dict[query] = matched_clusters
@@ -892,8 +906,6 @@ def parse_uc_file(
                 # omitting the taxonomic information
                 if cut_tax:
                     centroid = tax_reg.sub("", centroid).strip()
-                # prepending '>' to the centroid
-                # centroid = '>' + centroid
                 query = centroid
                 matched_clusters = uc_dict.get(query, [])
                 matched_clusters.append((centroid, sim_))
@@ -1049,6 +1061,8 @@ def uclust(
         str(cluster_id),
         "-strand",
         "both",
+        '-threads',
+        str(POOL_SIZE)
     ]
     system_sub(cmd_to_call, force_log=True)
     onelinefasta(centroids_file)
@@ -1084,34 +1098,45 @@ def zotu_pipeline(
         raw_seq_file: str,
         abund_limit: float,
         sample_wise_correction: bool,
-        zotu_p_logger: logging.Logger = ANA_LOG) -> None:
+        zotu_p_logger: logging.Logger = ANA_LOG,
+        filter_non_human: bool = True) -> None:
     """
-    This function will run the ZOTU pipeline
+    This function will run the ZOTU pipeline.
     """
     ZOTU_P_LOGGER = zotu_p_logger
     ZOTU_P_LOGGER.info('# Clustering at ZOTU level')
     clusterZOTUs(sorted_uniques_file, zotu_minsize)
     ZOTU_P_LOGGER.info('# Filtering out human sequences')
-    bacterial_ZOTUs_fasta = filter16S(
-        input_fasta_name="zotus.fasta",
-        output_fasta_name="ZOTUs-Seqs.fasta"
-    )
+    # we have already checked the sequences to be non-human reads.
+    # let's not do filter16S step for now
+    if not filter_non_human:
+        shutil.copyfile(
+            "zotus.fasta",  # output of clusterZOTUs
+            "ZOTUs-Seqs.fasta"
+        )
+        non_human_zotus_file = "ZOTUs-Seqs.fasta"
+    else:
+        non_human_zotus_file = filter16S(
+            input_fasta_name="zotus.fasta",
+            output_fasta_name="ZOTUs-Seqs.fasta"
+        )
+
     ZOTU_P_LOGGER.info('# Creating ZOTU tables')
-    zotu_tab_file = build_ZOTU_table(raw_seq_file, bacterial_ZOTUs_fasta)
+    zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file)
     ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance')
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=zotu_tab_file,
-        OTU_fasta_file_name=bacterial_ZOTUs_fasta,
+        OTU_fasta_file_name=non_human_zotus_file,
         with_taxonomy=False,
         replace_originals=True,
         sample_wise_corr_flag=sample_wise_correction
     )
     ZOTU_P_LOGGER.info('# Adding Taxonomy to ZOTU sequences')
     # taxed_ZOTUs-Seqs.fasta gets created here and then replaces ZOTUs-Seqs.fasta
-    addTax_new(bacterial_ZOTUs_fasta)
+    addTax_new(non_human_zotus_file)
     ZOTU_P_LOGGER.info('# Adding taxonomy to ZOTU table')
-    addTax_to_table(zotu_tab_file, bacterial_ZOTUs_fasta)
+    addTax_to_table(zotu_tab_file, non_human_zotus_file)
     ZOTU_P_LOGGER.info('# Creating ZOTUs trees')
     sina_algn_shortened_file = shorten_sina_algn("test_ZOTUs-Seqs.fasta")
     try:
@@ -1131,7 +1156,7 @@ def zotu_pipeline(
     # ZOTU_P_LOGGER.info('# Starting OTU pipeline')
     return (
         str(Path(PurePath(zotu_tab_file)).absolute()),
-        str(Path(PurePath(bacterial_ZOTUs_fasta)).absolute())
+        str(Path(PurePath(non_human_zotus_file)).absolute())
     )
 
 
@@ -1140,7 +1165,8 @@ def otu_pipeline(
         raw_seq_file: str,
         abund_limit: float,
         sample_wise_correction: bool,
-        otu_p_logger: logging.Logger = ANA_LOG) -> None:
+        otu_p_logger: logging.Logger = ANA_LOG,
+        filter_non_human: bool = True) -> None:
     """
     This function will run the OTU pipeline
     """
@@ -1148,25 +1174,31 @@ def otu_pipeline(
     OTU_LOGGER.info('# Clustering at OTU level')
     clusterOTUs(sorted_uniques_file)
     OTU_LOGGER.info('# Filtering out human sequences')
-    bacterial_OTUs_fasta = filter16S(
-        input_fasta_name="otus1.fa",
-        output_fasta_name="OTUs-Seqs.fasta"
-    )
+    # we have already checked the sequences to be non-human reads in preprocessing step.
+    # let's not do filter16S step
+    if not filter_non_human:
+        shutil.copyfile("otus1.fa", "OTUs-Seqs.fasta")
+        non_human_zotus_file = "OTUs-Seqs.fasta"
+    else:
+        non_human_zotus_file = filter16S(
+            input_fasta_name="otus1.fa",
+            output_fasta_name="OTUs-Seqs.fasta"
+        )
     OTU_LOGGER.info('# Creating OTU tables')
-    otu_tab_file = build_OTU_table(raw_seq_file, bacterial_OTUs_fasta)
+    otu_tab_file = build_OTU_table(raw_seq_file, non_human_zotus_file)
     OTU_LOGGER.info('# Filtering OTUs by abundance')
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=otu_tab_file,
-        OTU_fasta_file_name=bacterial_OTUs_fasta,
+        OTU_fasta_file_name=non_human_zotus_file,
         with_taxonomy=False,
         replace_originals=True,
         sample_wise_corr_flag=sample_wise_correction
     )
     OTU_LOGGER.info('# Adding Taxonomy to OTU sequences')
-    addTax_new(bacterial_OTUs_fasta)
+    addTax_new(non_human_zotus_file)
     OTU_LOGGER.info('# Adding taxonomy to OTU table')
-    addTax_to_table(otu_tab_file, bacterial_OTUs_fasta)
+    addTax_to_table(otu_tab_file, non_human_zotus_file)
     OTU_LOGGER.info('# Creating OTUs trees')
     sina_algn_shortened_file = shorten_sina_algn("test_OTUs-Seqs.fasta")
     create_krona(
@@ -1190,7 +1222,7 @@ def otu_pipeline(
     )
     return (
         str(Path(PurePath(otu_tab_file)).absolute()),
-        str(Path(PurePath(bacterial_OTUs_fasta)).absolute())
+        str(Path(PurePath(non_human_zotus_file)).absolute())
     )
 
 
@@ -1205,7 +1237,7 @@ def tac_pipeline(
      them at 98.7% similarity to create OTUs.
 
     :param zotus_seq_fasta: str
-        The path to the sequences of ZOTUs
+        The path to the sequences of non-human ZOTUs
     :param zotus_table_file: str
         The path to the ZOTUs table file
 
@@ -1216,7 +1248,7 @@ def tac_pipeline(
     zotus_seq_path = Path(PurePath(zotus_seq_fasta)).absolute()
     zotus_table_path = Path(PurePath(zotus_table_file)).absolute()
     otu_table_path = zotus_table_path.parent.joinpath("OTUs-Table-TAC.tab")
-    TAC_LOGGER.info(f"# Clustering ZOTUs at 98.7% similarity")
+    TAC_LOGGER.info(f"# Clustering ZOTUs at {str(cluster_id)} similarity")
     uc_file, centroids_file = uclust(str(zotus_seq_path), cluster_id)
     uc_dict = parse_uc_file(uc_file)
     # print([zotus for key, zotus in uc_dict.items() if len(zotus) > 1])
@@ -1275,6 +1307,21 @@ def tic_pipeline(
     TIC (Taxonomy Informed Clustering) pipeline, takes a set of ZOTUs and cluster
      them at 98.7% similarity to create SOTUs, at 97% to create GUTUs and at 95%
      to create FOTUs.
+    :param zotus_seq_fasta: str
+        The path to the sequences of non-human ZOTUs
+    :param zotus_table_file: str
+        The path to the ZOTUs table file
+    :param zotus_tree_file: str
+        The path to the ZOTUs tree file
+    :param species_id: float
+        The similarity threshold to cluster at species level
+    :param genus_id: float
+        The similarity threshold to cluster at genus level
+    :param family_id: float
+        The similarity threshold to cluster at family level
+    :param tic_logger: logging.Logger
+        The logger to use
+    :return None
     """
     zotus_seq_path = Path(zotus_seq_fasta).absolute()
     tic_analysis = TICAnalysis(
@@ -1375,6 +1422,7 @@ def main(
     # updating POOL_SIZE
     try:
         POOL_SIZE = int(threads)
+        ANA_LOG.info(f"Using {POOL_SIZE} threads")
     except ValueError:
         ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
 
@@ -1458,7 +1506,8 @@ def main(
                 FILTERED_READS_FILE,
                 ARGS_CLS.create_table.abund_limit,
                 ARGS_CLS.create_table.sample_wise_correction,
-                ANA_LOG
+                ANA_LOG,
+                False  # zotus are already non-human
             )
             # Normalizing Tables
             otu_norm_methods = "No"

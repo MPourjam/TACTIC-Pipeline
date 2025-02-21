@@ -22,7 +22,7 @@ import math
 BIN_DIR = "/base/binaries/"
 USEARCH_8_BIN = BIN_DIR + "usearch8.1"
 USEARCH_11_BIN = BIN_DIR + "usearch_11_64"
-USEARCH_11_BIN = USEARCH_11_BIN + " -strand both"
+USEARCH_11_BIN = USEARCH_11_BIN + " -strand both -threads 1"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
 USEARCH8_1 = USEARCH_8_BIN + " -threads 1"
 SINA_BIN = BIN_DIR + 'sina/sina'
@@ -330,6 +330,8 @@ def filter16S():
     system_sub(
         [
             SORT_ME_RNA_BIN,
+            "--threads",
+            "1",
             "--ref",
             ref16RNAdb_1,
             "--ref",
@@ -780,7 +782,7 @@ def main_processing(
         minimum_preprocessing: bool = False):
     global PREPPROC_LOG, USEARCH_11_BIN
     # usearch_11_bin must be a global variable and pointing to a file
-    USEARCH_11_BIN = usearch_11_bin + " -strand both"
+    USEARCH_11_BIN = usearch_11_bin + " -strand both -threads 1"
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")
     if logger_obj and isinstance(logger_obj, logging.Logger):
         PREPPROC_LOG = logger_obj
@@ -841,6 +843,7 @@ def main_processing(
         if not (math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0):
             spike_amount = 0.0
             PREPPROC_LOG.warning("Negative value for spike_amount replaced with default value (0.0)")
+        # default threads value for bowtie2 used in calc_spikes is 1
         real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
         PREPPROC_LOG.info('# FastQC')

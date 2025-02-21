@@ -268,7 +268,7 @@ def should_trigger_processing(
     if not this_out[1]:
         logger_obj.warning(
             f"Sample '{sample_base_path}' is already processed with given argument set and spike amount. "
-            f"Skipping processing and using results in {this_out[0]}"
+            f"Previous results in {this_out[0]}"
         )
 
     return tuple(this_out)
@@ -835,7 +835,7 @@ def combine_spike_stats_file(samples_dirs: list, combined_spike_stat: str) -> Tu
             raise FileNotFoundError(f"{sam_dir_path} does not have spike_stat_file: {SPIKE_STAT_FILE_NAME}")
         # cleaned sample dirs
         samples_dirs_path.append(sam_dir_path)
-        PREP_LOG.info(f"Found spike_stat_file in {sam_dir}. Listed for Combining...")
+        PREP_LOG.info(f"Found spike_stat_file in {sam_dir}. Listed for combining...")
 
     sample_stat_files_paths = [sdir.joinpath(SPIKE_STAT_FILE_NAME) for sdir in samples_dirs_path]
 
@@ -887,9 +887,10 @@ def run_imngs2(
         skip_analysis: bool = False,
         force_preprocess: bool = False,
         analysis_mode: str = "TIC",
-        indvidual_zotus: bool = False):
+        indvidual_zotus: bool = False,
+        threads: int = POOL_SIZE):
     # NOTE if this function is imported then the default global variables will be used
-    global USEARCH_11_BIN, FASTQ_DIR
+    global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE
     PREP_LOG = proc_helper.gimmelogger(
         "run_imngs2",
         log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
@@ -898,6 +899,7 @@ def run_imngs2(
     )
     PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
+    POOL_SIZE = threads
 
     ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
     if ret_code != 0:
@@ -966,7 +968,7 @@ def run_imngs2(
             if indvidual_zotus:
                 HEALTHY_PROC_FILES.append(TAXED_ZOTU_FILE_NAME)
             # create a queue for the tasks
-
+            failed_preprocesses_sample_id = []
             for task_b in task_batches:
                 preproc_queue = Queue()
                 this_batch = []
@@ -977,7 +979,7 @@ def run_imngs2(
                             (
                                 arg_tup[1],  # tuple of fastq files
                                 str(args_yml_file),  # path to args file
-                                USEARCH_11_BIN,
+                                str(USEARCH_11_BIN),
                                 arg_tup[0].SampleID,  # sample_id
                                 float(arg_tup[0].total_weight_in_g),  # sample_weight
                                 float(arg_tup[0].spike_amount),   # spike_amount
@@ -1001,6 +1003,8 @@ def run_imngs2(
                         res_dict[sample_id] = res
                     else:
                         PREC_PROC_LOG.warning(f"Failed to finalize preprocessing for {sample_id}")
+                        failed_preprocesses.append(sample_id)
+
             samples_dirs = list(res_dict.values())
         except Exception as exc:
             PREC_PROC_LOG.error(f"Preprocessing Failed: {exc}")
@@ -1016,6 +1020,7 @@ def run_imngs2(
     # We do find preprocessed samples for analysis regardless of the preprocessing step. If the samples are not preprocessed, then the function
     # below must not find them.
     samples_dirs, missed_samples_ids = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
+    union_failed_preprocess = set(missed_samples_ids) | set(failed_preprocesses_sample_id)
     analysis_exit_code = 1
     if len(missed_samples_ids) == len(list(mapping_line_tup_dict.values())):
         PREP_LOG.error("All samples failed to get processed. Exiting...")
@@ -1025,9 +1030,13 @@ def run_imngs2(
         PREP_LOG.warning("No samples are processed. Exiting...")
         analysis_exit_code = 168
         sys.exit(analysis_exit_code)
-    elif missed_samples_ids:
+    elif union_failed_preprocess:
         PREP_LOG.warning(f"{str(len(samples_dirs))} samples will be sent for analysis.")
-        PREP_LOG.warning("Missed Samples are: {}".format(", ".join(missed_samples_ids)))
+        missed_samples_file = fastq_file_dir.joinpath("Missed_samples.txt")
+        with open(missed_samples_file, "w") as msf:
+            for msid in union_failed_preprocess:
+                msf.write(f"{msid}\n")
+        PREP_LOG.warning(f"Missed Samples IDs written to {str(missed_samples_file.relative_to(INPUT_DIR))}.")
         analysis_exit_code = 167
     elif len(samples_dirs) + len(missed_samples_ids) != len(mapping_line_tup_dict.values()):
         PREP_LOG.warning("Some samples are not processed. They will be skipped for analysis.")
@@ -1054,7 +1063,7 @@ def run_imngs2(
                 args_file_path=args_yml_file,
                 dbs_loc=dbs_dir,
                 threads=POOL_SIZE,
-                usearch_11_bin=USEARCH_11_BIN,
+                usearch_11_bin=str(USEARCH_11_BIN),
                 run_otu_pipeline=pipeline_to_run[0],
                 run_tac_pipeline=pipeline_to_run[1],
                 run_tic_pipeline=pipeline_to_run[2],
@@ -1201,5 +1210,6 @@ if __name__ == "__main__":
             usearch_11_bin=given_usearch_bin,
             force_preprocess=args.force_preprocess,
             analysis_mode=args.analysis_mode,
-            indvidual_zotus=args.individual_zotus
+            indvidual_zotus=args.individual_zotus,
+            threads=POOL_SIZE
         )
