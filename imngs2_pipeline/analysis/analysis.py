@@ -5,7 +5,7 @@ import tarfile
 from ete3 import Tree
 from os import chdir
 import os.path as ospath
-from multiprocessing import cpu_count
+from multiprocessing import cpu_count, Pool
 from processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
@@ -57,6 +57,47 @@ def read_file(filename):
     return content
 
 
+def relabel_fasta(fasta_file: str, new_label: str):
+    work_dir = Path("./relabeling").resolve()
+    # make work_dir even if it exists
+    work_dir.mkdir(parents=True, exist_ok=True)
+    seq_fasta_path = Path(fasta_file).resolve()
+    # if tar.gz version of this_file is found, extract it
+    tar_gz_this_file = seq_fasta_path.with_suffix(seq_fasta_path.suffix + ".tar.gz")
+    # extract tar_gz_this_file to this_file
+    if not seq_fasta_path.is_file() and tar_gz_this_file.is_file():
+        with tarfile.open(tar_gz_this_file, "r:gz") as tar:
+            tar.extractall(path=seq_fasta_path.parent)
+        tar_gz_this_file.unlink()
+    elif not seq_fasta_path.is_file():
+        raise ValueError(f"{str(seq_fasta_path)} must contain path to each samples sequence file!")
+
+    dataset_name = f"{new_label}"
+    new_file_fasta = work_dir.joinpath(f"{dataset_name}_relabeled.fasta")
+    new_file_fastq = work_dir.joinpath(f"{dataset_name}_relabeled.fastq")
+    cmd_to_call_list = [
+        USEARCH_11_BIN,
+        '-fastx_relabel',
+        str(seq_fasta_path),
+        '-threads',
+        # We ignore POOL_SIZE here as the operation is IO bound and not memory bound
+        '1',
+        '-prefix',
+        f"sample={dataset_name};",
+        '-keep_annots',
+        '-fastaout',
+        str(new_file_fasta),
+        '-fastqout',
+        str(new_file_fastq)
+    ]
+    if str(seq_fasta_path).endswith(".fasta"):
+        cmd_to_call_list.pop(-1)
+        cmd_to_call_list.pop(-1)
+    system_sub(cmd_to_call_list, force_log=True)
+    onelinefasta(str(new_file_fasta))
+    return str(new_file_fasta), str(new_file_fastq)
+
+
 def append_reads(seq_fasta, sample_id, append_to):
     seq_fasta_path = os.path.abspath(seq_fasta)
     dataset_name = f"{sample_id}"
@@ -101,27 +142,35 @@ def gather_samples_files(map_lines: list, file_to_gather: str):
     for entries in map_lines:
         sample_processed_path = Path(PurePath(entries[4])).joinpath(file_to_gather)
         sample_seq_files_path.append((sample_processed_path, entries[0]))
-
-    for this_file, sam_id in sample_seq_files_path:
-        # if tar.gz version of this_file is found, extract it
-        tar_gz_this_file = Path(PurePath(this_file).with_suffix(this_file.suffix + ".tar.gz"))
-        # extract tar_gz_this_file to this_file
-        if not this_file.is_file() and tar_gz_this_file.is_file():
-            with tarfile.open(tar_gz_this_file, "r:gz") as tar:
-                tar.extractall(path=this_file.parent)
-            tar_gz_this_file.unlink()
-        elif not this_file.is_file():
-            raise ValueError(f"{str(this_file)} must contain path to each samples sequence file!")
-
-    for seq_file, sam_id in sample_seq_files_path:
-        append_reads(str(seq_file), sam_id, file_to_gather.split('.')[0])
-
-    output_tuple = ["", ""]
-    if ospath.exists(file_to_gather + ".fasta"):
-        output_tuple[0] = file_to_gather + ".fasta"
-    if ospath.exists(file_to_gather + ".fastq"):
-        output_tuple[1] = file_to_gather + ".fastq"
-
+    with Pool(int(cpu_count() * 0.7)) as relabel_pool:
+        result = relabel_pool.starmap_async(
+            relabel_fasta,
+            [
+                (str(seq_file), sam_id)
+                for seq_file, sam_id in sample_seq_files_path
+            ]
+        )
+        relabel_pool.close()
+        relabel_pool.join()
+        relabeled_files = result.get()
+    # gathering to a single file
+    rlbld_fasta = Path(file_to_gather).resolve().with_suffix(".fasta")
+    rlbld_fastq = Path(file_to_gather).resolve().with_suffix(".fastq")
+    output_tuple = [rlbld_fasta, rlbld_fastq]
+    with open(rlbld_fasta, 'wb') as rlbld_fasta_fio, open(rlbld_fastq, 'wb') as rlbld_fastq_fio:
+        for relabeled_fasta, relabeled_fastq in relabeled_files:
+            with open(relabeled_fasta, 'rb') as rel_fasta_fio:
+                shutil.copyfileobj(rel_fasta_fio, rlbld_fasta_fio)
+            if ospath.exists(relabeled_fastq):
+                with open(relabeled_fastq, 'rb') as rel_fastq_fio:
+                    shutil.copyfileobj(rel_fastq_fio, rlbld_fastq_fio)
+    # delete parent directory of relabeled files
+    first_parent = Path(relabeled_files[0][0]).parent
+    shutil.rmtree(first_parent)
+    output_tuple = [
+        file_path if ospath.exists(file_path) and os.path.getsize(file_path) > 0 else ""
+        for file_path in output_tuple
+    ]
     return tuple(output_tuple)
 
 
@@ -1417,7 +1466,7 @@ def main(
         only_file=True,
     )
     ANA_LOG = gimmelogger(
-        logger_name="run_imngs2.analysis.denovo_analysis",
+        logger_name="run_imngs2.analysis.main",
     )
     # updating POOL_SIZE
     try:
