@@ -724,6 +724,7 @@ def filter_otus_by_abundance(
     unf_tot_sizes = get_samples_sizes(OTU_table_file_path, with_taxonomy=with_taxonomy)
     # Filtering OTU Table
     removed_sotus = list()
+    remained_sotus = list()
     with open(OTU_table_file_path, "r") as otu_table_fio, open(filtered_OTU_table_path, "w+") as filtered_otu_fio:
         otu_header = otu_table_fio.readline().strip()
         datasets_samples = len(otu_header.split(sep)) - int(2 if with_taxonomy else 1)
@@ -753,6 +754,11 @@ def filter_otus_by_abundance(
                     rem_sotu = False
             curr_sizes = corrected_curr_sizes if sample_wise_corr_flag else curr_sizes
             if not rem_sotu:
+                # sometimes the Table creation causes some Z/OTUs to get lost
+                # from the table file while they are present in the fasta file.
+                # We create a white list of Z/OTUs that are present in the table
+                # file and we filter the fasta file based on this white list
+                remained_sotus.append(sotu_name)
                 new_corrected_line = [sotu_name] + curr_sizes
                 new_corrected_line += line_list[-1:] if with_taxonomy else []
                 new_corrected_line = [str(el).strip() for el in new_corrected_line]
@@ -777,7 +783,7 @@ def filter_otus_by_abundance(
             while derep_line:
                 if derep_line.startswith(">"):
                     curr_sotu = seq_header_reg.search(derep_line).group(1)
-                    if curr_sotu and curr_sotu not in removed_sotus:
+                    if curr_sotu and curr_sotu in remained_sotus:
                         new_line = derep_line
                         filtered_otu_fasta_fio.write(new_line)
                         write_seq = True
