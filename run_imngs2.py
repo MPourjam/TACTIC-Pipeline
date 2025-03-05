@@ -60,6 +60,7 @@ SUPPORTED_ANALYSIS_MODE = [
     "de-novo",
     "TAC",
     "TIC",
+    "ZOTU"
 ]
 USEARCH_11_BIN = Path(PurePath("/base/binaries/usearch11.0.667_i86linux64"))
 HEALTHY_PROC_FILES = [
@@ -266,7 +267,7 @@ def should_trigger_processing(
             this_out[1] = False
 
     if not this_out[1]:
-        logger_obj.warning(
+        logger_obj.info(
             f"Sample '{sample_base_path}' is already processed with given argument set and spike amount. "
             f"Previous results in {this_out[0]}"
         )
@@ -274,10 +275,10 @@ def should_trigger_processing(
     return tuple(this_out)
 
 
-def valid_for_analysis(dir_path: Path, given_arg_file: Path) -> bool:
-    dir_path = Path(PurePath(dir_path)).absolute() if isinstance(dir_path, str) or isinstance(dir_path, Path) else ""
-    given_arg_file = Path(PurePath(given_arg_file)).absolute() if isinstance(given_arg_file, str) or isinstance(given_arg_file, Path) else ""
-    if not dir_path and not given_arg_file:
+def valid_for_analysis(dir_path: str, given_arg_file: str) -> bool:
+    dir_path = Path(dir_path).resolve()
+    given_arg_file = Path(given_arg_file).resolve()
+    if not dir_path.is_dir() and not given_arg_file.is_file():
         return False
     is_complete = is_processed_dir_healthy(dir_path)
     old_arg_file = dir_path.joinpath(DEFAULT_ARG_FILE_NAME)
@@ -391,7 +392,7 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
     """
     # find the taxed_zotu.fasta files in the processed samples
     # get the parent of the processed samples
-    samp_dir_with_taxed_zotu = {}
+    samp_dir_with_target_file = {}
     for mapline_files_tup in mapping_line_tup_list:
         # NOTE What if the name of processed directory does not match <SampleID> + PROC_DIR_SUFFIX
         # NOTE the sample ID in mapping_line_tup_list could be uniqified before if the base name of fastq files are not unique
@@ -413,7 +414,7 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
                                  " Proper fasta header format: '>SEQID;size=XXX;tax=KKK,PPP;CCC;OOO")
             """
 
-        samp_dir_with_taxed_zotu[mapline_files_tup] = gathered_samp_dirs
+        samp_dir_with_target_file[mapline_files_tup] = gathered_samp_dirs
 
     # So far we have all taxed_zotu.fasta files of given samples in mapping file
     # Now we need to filter out the samples that are not in the mapping file
@@ -425,9 +426,9 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
     # Show warning if the sample is filtered out with a reason
     filtered_samples_dir = {}
 
-    for mapline_files_tup, samp_dirs_list in samp_dir_with_taxed_zotu.items():
+    for mapline_files_tup, samp_dirs_list in samp_dir_with_target_file.items():
         for samp_dir in samp_dirs_list:
-            if valid_for_analysis(samp_dir, args_yml_path):
+            if valid_for_analysis(str(samp_dir), str(args_yml_path)):
                 # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
                 filtered_samples_dir[mapline_files_tup] = samp_dir
                 # we should get sure that only one processed version from each sample is passed for analysis
@@ -564,11 +565,15 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 parent_path = str(fields[index_of_parent_path_col])
                 parent_path = parent_path.strip().rstrip("\\").rstrip("/")
                 hypo_fields[3] = parent_path
+            except IndexError:
+                pass
             except Exception:
-                PREP_LOG.info(f"Could not parse parent path from mapping file. Line: {line}\n"
-                              f" Check the mapping file format. Columns should be"
-                              f" separated by TAB. Continuing with default value of 0.\n"
-                              f" If you are using a mapping_file without 'parent_path' column then ignroe this warning.")
+                PREP_LOG.info(
+                    f"Could not parse parent path from mapping file. Line: {line}\n"
+                    f" Check the mapping file format. Columns should be"
+                    f" separated by TAB. Continuing with default value of 0.\n"
+                    f" If you are using a mapping_file without 'parent_path' column then ignroe this warning."
+                )
 
             valid_ids.append(sample_id)
             map_line = MapLineTup(
@@ -735,7 +740,7 @@ def run_preprocessing(
             try:
                 symlink(str(sfi), str(new_path))  # if sfi is symlink then new_path is symlink to sfi's target
             except Exception as exc:
-                PREPPROC_LOG.warning(f"Failed to create symlink for {sfi}. {exc}")
+                PREPPROC_LOG.info(f"Failed to create symlink for {sfi}. {exc}")
                 PREPPROC_LOG.info(f"Copying {sfi} to {new_path}")
                 shutil.copy2(str(sfi), str(new_path))
 
@@ -829,7 +834,7 @@ def combine_spike_stats_file(samples_dirs: list, combined_spike_stat: str) -> Tu
             raise FileNotFoundError(f"{sam_dir_path} does not have spike_stat_file: {SPIKE_STAT_FILE_NAME}")
         # cleaned sample dirs
         samples_dirs_path.append(sam_dir_path)
-        PREP_LOG.info(f"Found spike_stat_file in {sam_dir}. Listed for combining...")
+        # PREP_LOG.info(f"Found spike_stat_file in {sam_dir}. Listed for combining...")  # It clutters the log
 
     sample_stat_files_paths = [sdir.joinpath(SPIKE_STAT_FILE_NAME) for sdir in samples_dirs_path]
 
@@ -891,7 +896,6 @@ def run_imngs2(
         only_file=False,
         propagate=False
     )
-    PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     POOL_SIZE = threads
 
@@ -944,7 +948,10 @@ def run_imngs2(
         pipeline_to_run[1] = True
     elif analysis_mode == SUPPORTED_ANALYSIS_MODE[2]:
         pipeline_to_run[2] = True
-
+    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[3]:
+        # main analysis function will run ZOTU pipeline anyway
+        pass
+    PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
     # master preprocessing logger
     PREC_PROC_LOG = proc_helper.gimmelogger(
         # this logger makes sure that the logs are thread safe

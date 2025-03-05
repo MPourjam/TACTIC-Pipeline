@@ -71,7 +71,6 @@ def relabel_fasta(fasta_file: str, new_label: str):
         tar_gz_this_file.unlink()
     elif not seq_fasta_path.is_file():
         raise ValueError(f"{str(seq_fasta_path)} must contain path to each samples sequence file!")
-
     dataset_name = f"{new_label}"
     new_file_fasta = work_dir.joinpath(f"{dataset_name}_relabeled.fasta")
     new_file_fastq = work_dir.joinpath(f"{dataset_name}_relabeled.fastq")
@@ -1380,8 +1379,9 @@ def tic_pipeline(
     """
     zotus_seq_path = Path(zotus_seq_fasta).absolute()
     tic_analysis = TICAnalysis(
-        zotus_seq_path,
-        zotus_table_file
+        taxed_fasta_file_path=zotus_seq_path,
+        zotu_table_file=zotus_table_file,
+        logger_obj=tic_logger
     )
     tic_logger.info(
         '# Clustering ZOTUs at %s, %s, %s similarity thresholds for '

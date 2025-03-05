@@ -1,10 +1,10 @@
 *.pyc
-
 # test artifacts
 image.tar*
-
 # ide artifacts
 .idea
-
 # usearch
 *usearch*
+# cpython
+*cpython*
+*__pycache__*
