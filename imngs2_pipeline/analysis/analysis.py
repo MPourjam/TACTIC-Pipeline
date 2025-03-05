@@ -349,7 +349,7 @@ def filter16S(input_fasta_name: str, output_fasta_name: str):
 # cluster sequences to OTUs
 def clusterOTUs(
         sorted_uniques_file: str,
-        minsize: int = 2):
+        minsize: int = 8):
     # cmd_part_0 = USEARCH_11_BIN + ' -cluster_otus good-ZOTUs-sized.fasta -fulldp -otus otus1.fa -minsize 1 '
     # cmd_part_1 = ' -uparseout z2o.tab'
     # cmd_part_2 = ' > /dev/null 2>/dev/null'
@@ -364,7 +364,7 @@ def clusterOTUs(
         "-otus",
         "otus1.fa",
         "-minsize",
-        str(minsize),  # minsize 2 to discard
+        str(minsize),
         "-uparseout",
         "z2o.tab",
         "-relabel",
@@ -424,7 +424,7 @@ def build_OTU_table(raw_seq_file: str, otu_seq_file: str) -> None:
         "-otutabout",
         str(otu_tab),
         "-id",
-        str(ARGS_PREC.build_zotus_table.id),
+        "0.97",
         "-threads",
         f"{str(POOL_SIZE)}",
         "-strand",
@@ -1153,7 +1153,7 @@ def zotu_pipeline(
         abund_limit: float,
         sample_wise_correction: bool,
         zotu_p_logger: logging.Logger = ANA_LOG,
-        filter_non_human: bool = True) -> None:
+        filtered_non_human: bool = True) -> None:
     """
     This function will run the ZOTU pipeline.
     """
@@ -1163,7 +1163,7 @@ def zotu_pipeline(
     ZOTU_P_LOGGER.info('# Filtering out human sequences')
     # we have already checked the sequences to be non-human reads.
     # let's not do filter16S step for now
-    if not filter_non_human:
+    if not filtered_non_human:
         shutil.copyfile(
             "zotus.fasta",  # output of clusterZOTUs
             "ZOTUs-Seqs.fasta"
@@ -1220,17 +1220,18 @@ def otu_pipeline(
         abund_limit: float,
         sample_wise_correction: bool,
         otu_p_logger: logging.Logger = ANA_LOG,
-        filter_non_human: bool = True) -> None:
+        filtered_non_human: bool = True,
+        otus_minsize: int = 8) -> None:
     """
     This function will run the OTU pipeline
     """
     OTU_LOGGER = otu_p_logger
     OTU_LOGGER.info('# Clustering at OTU level')
-    clusterOTUs(sorted_uniques_file)
+    clusterOTUs(sorted_uniques_file, minsize=otus_minsize)
     OTU_LOGGER.info('# Filtering out human sequences')
     # we have already checked the sequences to be non-human reads in preprocessing step.
     # let's not do filter16S step
-    if not filter_non_human:
+    if not filtered_non_human:
         shutil.copyfile("otus1.fa", "OTUs-Seqs.fasta")
         non_human_zotus_file = "OTUs-Seqs.fasta"
     else:
@@ -1525,7 +1526,7 @@ def main(
         ANA_LOG.info('# Starting ZOTU pipeline')
         zotu_tab_file, non_human_zotus_seq_file = zotu_pipeline(
             sorted_file,
-            ARGS_CLS.denovo_cluster_zotus.minsize,
+            ARGS_PREC.cluster_zotus.minsize,
             # using dereplicated reads with size tag saves time in creation of zotu table
             # NOTE tested against using filtered reads and the results are the same
             DEREP_FILE_NAME,
@@ -1565,7 +1566,8 @@ def main(
                 ARGS_CLS.create_table.abund_limit,
                 ARGS_CLS.create_table.sample_wise_correction,
                 ANA_LOG,
-                False  # zotus are already non-human
+                False,  # zotus are already non-human
+                ARGS_CLS.denovo_cluster_zotus.minsize
             )
             # Normalizing Tables
             otu_norm_methods = "No"

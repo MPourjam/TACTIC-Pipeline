@@ -1132,7 +1132,7 @@ class DeNovoClusterZOTUsArgs(ArgsParserUtil):
         # "unoise3": sorted.fasta,
         # "zotus": zotus.fasta,
         # "tabbedout": denoising.tab,
-        "minsize": 2,
+        "minsize": 8,
     }
 
 
@@ -1154,7 +1154,7 @@ class BuildZOTUTableArgs(ArgsParserUtil):
         # "otutab": "filtered2.fasta",
         # "zotus": "ZOTUs.fasta",
         # "otutabout": "zotu_table.txt",
-        "id": 0.97,
+        "id": 0.99,
     }
 
 
@@ -1190,9 +1190,9 @@ class TrimSidesArgs(ArgsParserUtil):
 
 class ComplexTICArgs(ArgsParserUtil):
     default_args = {
-        "family_sim": 0.90,
-        "genus_sim": 0.95,
-        "species_sim": 0.97,
+        "family_sim": 0.95,
+        "genus_sim": 0.97,
+        "species_sim": 0.987,
     }
 
 

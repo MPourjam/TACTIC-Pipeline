@@ -11,10 +11,10 @@ MergePairsArgs:
   fastq_minmergelen: 200
   fastq_maxmergelen: 600
 TrimBothSidesArgs:
-  stripleft: 15  # 15 is optimum.  Change only if you know exact lenght of you primers
-  stripright: 15  # 15 is optimum. Change only if you know exact lenght of you primers
+  stripleft: 17  # for 341F primer (ref:https://probebase.csb.univie.ac.at/pb_report/probe/3844) Change only if you know exact lenght of you primers
+  stripright: 21  # for 785R primer. Change only if you know exact lenght of you primers
 TrimOneSideArgs:
-  stripleft: 15
+  stripleft: 17  # for 341F primer (ref:https://probebase.csb.univie.ac.at/pb_report/probe/3844) Change only if you know exact lenght of you primers
 FilterBothSidesArgs:
   fastq_maxee_rate: 0.002
 FilterOneSideArgs:
@@ -31,7 +31,7 @@ Filter16SArgs:
   num_alignments: 1
 # prepare_zotus:
 BuildZOTUTableArgs:
-  id: 0.97  # This value results more refined ZOTU count than 0.97 (default)
+  id: 0.99  # This value results more refined ZOTU count than 0.97 (default)
 AddTaxArgs:
   turn: all
 ################
@@ -43,9 +43,9 @@ TrimSidesArgs:
   stripleft: 5
   stripright: 5
 ComplexTICArgs:
-  family_sim: 0.90
-  genus_sim: 0.95
-  species_sim: 0.97
+  family_sim: 0.95
+  genus_sim: 0.97
+  species_sim: 0.987
 CreateTableTICArgs:
-  abund_limit: 0.0
+  abund_limit: 0.0025
   sample_wise_correction: false
