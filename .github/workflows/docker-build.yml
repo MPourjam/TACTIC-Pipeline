@@ -4,7 +4,8 @@ on:
   push:
     tags:
       - 'v*'
-
+	branches:
+	  - 'main'
 jobs:
 
   build:
@@ -57,5 +58,6 @@ jobs:
       with:
         files: |
           image.tar.gz
+	    draft: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
