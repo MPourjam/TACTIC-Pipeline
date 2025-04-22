@@ -874,12 +874,12 @@ def main_processing(
         PREPPROC_LOG.debug(read_report)
         PREPPROC_LOG.info('# Sort Sequences')
         sort_seqs()
-        PREPPROC_LOG.info('# Cluster ZOTUs')
         if minimum_preprocessing:
             PREPPROC_LOG.info("Minimum preprocessing is enabled, skipping clustering step")
+            PREPPROC_LOG.info("# Clean Up: Started")
             cleanup(input_id, full_clean=False, dir_path=path.abspath(input_dir))
-            PREPROC_LOG.info("# Clean Up: Started")
             return input_dir
+        PREPPROC_LOG.info('# Cluster ZOTUs')
         clusterZOTUs()
         PREPPROC_LOG.info('# Filter non 16S sequences')
         filter16S()
