@@ -642,7 +642,7 @@ def cleanup(input_id, full_clean=False, dir_path=None):
             r'nochi-ZOTUs\.fasta',
             # TODO we can collapse above patterns into fewer patterns
             r'krona\.html',
-            r'\.fastq(\.gz)?',
+            r'.*\.fastq(\.gz)?',
         ]
         deleted_dirs = [
             r'kvdb',
@@ -653,10 +653,11 @@ def cleanup(input_id, full_clean=False, dir_path=None):
         ]
         for entry in listdir(dir_path):
             entry_path = path.join(dir_path, entry)
-            matches = [re.search(pattern, entry) for pattern in deleted_files + deleted_dirs]
-            if any(matches) and path.isfile(entry_path):
+            file_matches = [re.fullmatch(pattern, entry, re.IGNORECASE) for pattern in deleted_files]
+            dir_matches = [re.fullmatch(pattern, entry, re.IGNORECASE) for pattern in deleted_dirs]
+            if any(file_matches) and path.isfile(entry_path):
                 remove(str(entry_path))
-            elif any(matches) and path.isdir(entry_path):
+            elif any(dir_matches) and path.isdir(entry_path):
                 shutil.rmtree(str(entry_path))
 
 
