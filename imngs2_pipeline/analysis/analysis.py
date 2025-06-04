@@ -1629,9 +1629,9 @@ def main(
                 zotus_seq_fasta=non_human_zotus_seq_file,
                 zotus_table_file=zotu_tab_file,
                 zotus_tree_file="ZOTUs-Tree-nj.tre",
-                species_id=0.987,
-                genus_id=0.97,
-                family_id=0.95,
+                species_id=ARGS_CLS.complex_tic.species_sim,
+                genus_id=ARGS_CLS.complex_tic.genus_sim,
+                family_id=ARGS_CLS.complex_tic.family_sim,
                 tic_logger=ANA_LOG
             )
             # Normalizing Tables
