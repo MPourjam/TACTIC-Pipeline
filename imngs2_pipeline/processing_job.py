@@ -879,48 +879,48 @@ def main_processing(
             PREPPROC_LOG.info("Minimum preprocessing is enabled, skipping clustering step")
             PREPPROC_LOG.info("# Clean Up: Started")
             cleanup(input_id, full_clean=False, dir_path=path.abspath(input_dir))
-            return input_dir
-        PREPPROC_LOG.info('# Cluster ZOTUs')
-        clusterZOTUs()
-        PREPPROC_LOG.info('# Filter non 16S sequences')
-        filter16S()
-        # prepare_zotus()  # Adds size=1 to end of zotus header
-        PREPPROC_LOG.info('# Build ZOTU Table')
-        build_ZOTU_table()
-        PREPPROC_LOG.info('# Filter ZOTUs by Abundance')
-        filter_zotu_abundance()  # ignore this step because the required abundance is 0
-        PREPPROC_LOG.info('# Select ZOTU Sequences')
-        select_zotu_seqs()
-        PREPPROC_LOG.info('# Add Taxonomy')
-        addTax(input_id)
-        create_final_ZOTU_table()
-        add_taxonomy_to_fasta()
-        PREPPROC_LOG.info("# Add Krona Graph")
-        addKrona(krona_importtext)
-        # udb for both similarity queries
-        PREPPROC_LOG.info('# Create UDB')
-        create_udb(input_id)
-        # update_s_flat(input_id, origin)
-        start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
-        calced_regions = calc_covered_region(start_mode, end_mode)
-        # Writing the start and end mode to the a file
-        with open('silva_start_end.txt', 'w+') as s_e_file:
-            # writing header
-            s_e_file.write("SilvaAlignmentStartPos\tSilvaAlignementEndPos\tCoveredRegion\n")
-            s_e_file.write(str(start_mode) + '\t' + str(end_mode) + '\t' + str(calced_regions) + '\n')
-        PREPPROC_LOG.info('# Zip Up')
-        create_zip(input_id)
-        PREPPROC_LOG.info('# Clean Up')
-        cleanup(input_id)
-        chdir(input_dir)
-        udb_file = path.join(input_dir, '{}.udb'.format(str(input_id)))
-        status_code = "Done"
-        status_msg = ""
-        if not path.isfile(udb_file):
-            status_code = "Error"
-            status_msg = "Process Failed! no UDB!"
-        update_task_pko(status_code, status_msg)
-        pko.close()
+        else:
+            PREPPROC_LOG.info('# Cluster ZOTUs')
+            clusterZOTUs()
+            PREPPROC_LOG.info('# Filter non 16S sequences')
+            filter16S()
+            # prepare_zotus()  # Adds size=1 to end of zotus header
+            PREPPROC_LOG.info('# Build ZOTU Table')
+            build_ZOTU_table()
+            PREPPROC_LOG.info('# Filter ZOTUs by Abundance')
+            filter_zotu_abundance()  # ignore this step because the required abundance is 0
+            PREPPROC_LOG.info('# Select ZOTU Sequences')
+            select_zotu_seqs()
+            PREPPROC_LOG.info('# Add Taxonomy')
+            addTax(input_id)
+            create_final_ZOTU_table()
+            add_taxonomy_to_fasta()
+            PREPPROC_LOG.info("# Add Krona Graph")
+            addKrona(krona_importtext)
+            # udb for both similarity queries
+            PREPPROC_LOG.info('# Create UDB')
+            create_udb(input_id)
+            # update_s_flat(input_id, origin)
+            start_mode, end_mode = find_silva_start_end('aligned_' + str(input_id) + '.fasta')
+            calced_regions = calc_covered_region(start_mode, end_mode)
+            # Writing the start and end mode to the a file
+            with open('silva_start_end.txt', 'w+') as s_e_file:
+                # writing header
+                s_e_file.write("SilvaAlignmentStartPos\tSilvaAlignementEndPos\tCoveredRegion\n")
+                s_e_file.write(str(start_mode) + '\t' + str(end_mode) + '\t' + str(calced_regions) + '\n')
+            PREPPROC_LOG.info('# Zip Up')
+            create_zip(input_id)
+            PREPPROC_LOG.info('# Clean Up')
+            cleanup(input_id)
+            chdir(input_dir)
+            udb_file = path.join(input_dir, '{}.udb'.format(str(input_id)))
+            status_code = "Done"
+            status_msg = ""
+            if not path.isfile(udb_file):
+                status_code = "Error"
+                status_msg = "Process Failed! no UDB!"
+            update_task_pko(status_code, status_msg)
+            pko.close()
     except BaseException as e:
         err_msg = str(e).split("]")[-1]  # To exclude possible '[Errno 2]' from the message
         PREPPROC_LOG.error(err_msg)
@@ -928,5 +928,8 @@ def main_processing(
         cleanup(input_id, full_clean=True, dir_path=path.abspath(input_dir))
         pko.close()
         raise e
+    else:
+        PREPPROC_LOG.info("# Finished Preprocessing")
+        update_task_pko("Done", "Process Completed Successfully")
 
     return input_dir
