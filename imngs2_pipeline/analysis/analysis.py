@@ -1355,8 +1355,8 @@ def tic_pipeline(
         zotus_table_file: str,
         zotus_tree_file: str = None,
         species_id: float = 0.987,
-        genus_id: float = 0.97,
-        family_id: float = 0.95,
+        genus_id: float = 0.0.95,  # These thresholds are taken from TIC paper
+        family_id: float = 0.90,  # These thresholds are taken from TIC paper
         tic_logger: logging.Logger = ANA_LOG) -> None:
     """
     TIC (Taxonomy Informed Clustering) pipeline, takes a set of ZOTUs and cluster

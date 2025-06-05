@@ -25,7 +25,7 @@ DereplicationArgs:
   sizeout: true
 # sort_sequences:
 ClusterZOTUsArgs:
-  minsize: 2  # This value gives highest possible ZOTUS for more resolution.
+  minsize: 2  # This value filters out amplicons with less than 4 reads. Lower values higher sensitivity, but may result in more noise.
 Filter16SArgs:
   e: 0.1
   num_alignments: 1
@@ -43,8 +43,8 @@ TrimSidesArgs:
   stripleft: 5
   stripright: 5
 ComplexTICArgs:
-  family_sim: 0.95
-  genus_sim: 0.97
+  family_sim: 0.90
+  genus_sim: 0.95
   species_sim: 0.987
 CreateTableTICArgs:
   abund_limit: 0.0025
