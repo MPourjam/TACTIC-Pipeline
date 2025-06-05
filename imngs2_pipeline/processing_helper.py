@@ -1118,21 +1118,32 @@ class SortArgs(ArgsParserUtil):
     }
 
 
+class IndividualSampleClusterZOTUsArgs(ArgsParserUtil):
+    default_args = {
+        "minsize": 2,
+    }
+
+
 class ClusterZOTUsArgs(ArgsParserUtil):
     default_args = {
         # "unoise3": sorted.fasta,
         # "zotus": zotus.fasta,
         # "tabbedout": denoising.tab,
         "minsize": 2,
+        "sample_wise_correction": False,
+        "match_id": 0.99,
+        "abund_limit": 0.0025,
     }
 
 
-class DeNovoClusterZOTUsArgs(ArgsParserUtil):
+class DeNovoClusterOTUsArgs(ArgsParserUtil):
     default_args = {
         # "unoise3": sorted.fasta,
         # "zotus": zotus.fasta,
         # "tabbedout": denoising.tab,
         "minsize": 8,
+        "abund_limit": 0.0025,
+        "sample_wise_correction": False,
     }
 
 
@@ -1154,7 +1165,7 @@ class BuildZOTUTableArgs(ArgsParserUtil):
         # "otutab": "filtered2.fasta",
         # "zotus": "ZOTUs.fasta",
         # "otutabout": "zotu_table.txt",
-        "id": 0.99,
+        "match_id": 0.99,
     }
 
 
@@ -1179,15 +1190,6 @@ class AddTaxArgs(ArgsParserUtil):
     }
 
 
-class TrimSidesArgs(ArgsParserUtil):
-    default_args = {
-        # "fastq_truncate": "analysis.fasta",
-        # "fastaout": "filtered1.fasta",
-        "stripleft": 0,
-        "stripright": 0,
-    }
-
-
 class ComplexTICArgs(ArgsParserUtil):
     default_args = {
         "family_sim": 0.95,
@@ -1200,6 +1202,14 @@ class CreateTableTICArgs(ArgsParserUtil):
     default_args = {
         "abund_limit": 0.0025,
         "sample_wise_correction": True,
+    }
+
+
+class TACClusterArgs(ArgsParserUtil):
+    default_args = {
+        "abund_limit": 0.0025,
+        "sample_wise_correction": True,
+        "cluster_thr": 0.987,
     }
 
 
@@ -1234,7 +1244,7 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
         self.filter_single_reads = FilterOneSideArgs(config_dict)
         self.dereplication = DereplicationArgs(config_dict)
         self.sort_seq = SortArgs(config_dict)
-        self.cluster_zotus = ClusterZOTUsArgs(config_dict)
+        self.individual_sample_cluster_zotus = IndividualSampleClusterZOTUsArgs(config_dict)
         self.filter_16S = Filter16SArgs(config_dict)
         self.build_zotus_table = BuildZOTUTableArgs(config_dict)
         self.add_tax = AddTaxArgs(config_dict)
@@ -1249,8 +1259,8 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             self.filter_merged == other.filter_merged,
             self.filter_single_reads == other.filter_single_reads,
             self.dereplication == other.dereplication,
+            self.individual_sample_cluster_zotus == other.individual_sample_cluster_zotus,
             self.sort_seq == other.sort_seq,
-            self.cluster_zotus == other.cluster_zotus,
             self.filter_16S == other.filter_16S,
             self.build_zotus_table == other.build_zotus_table,
             self.add_tax == other.add_tax,
@@ -1280,18 +1290,19 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
             argparse_logger.warning(e)
 
         # TODO add the argument parser classes of Analysis here.
-        self.trimsides = TrimSidesArgs(config_dict)
         self.complex_tic = ComplexTICArgs(config_dict)
-        self.create_table = CreateTableTICArgs(config_dict)
-        self.denovo_cluster_zotus = DeNovoClusterZOTUsArgs(config_dict)
+        self.denovo_cluster_otus = DeNovoClusterOTUsArgs(config_dict)
+        self.tac_cluster = TACClusterArgs(config_dict)
+        self.cluster_zotus = ClusterZOTUsArgs(config_dict)
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
         eq_tests = [
-            self.trimsides == other.trimsides,
             self.complex_tic == other.complex_tic,
-            self.create_table == other.create_table,
+            self.denovo_cluster_otus == other.denovo_cluster_otus,
+            self.tac_cluster == other.tac_cluster,
+            self.cluster_zotus == other.cluster_zotus,
         ]
         return all(eq_tests)
 

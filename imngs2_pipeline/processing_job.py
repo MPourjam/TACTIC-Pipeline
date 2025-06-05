@@ -306,7 +306,7 @@ def clusterZOTUs():
             "-unoise3",
             "sorted.fasta",
             "-minsize",
-            str(ARGS_CLS.cluster_zotus.minsize),
+            str(ARGS_CLS.individual_sample_cluster_zotus.minsize),
             "-zotus",
             "zotus.fasta",
             "-tabbedout",
@@ -387,7 +387,7 @@ def build_ZOTU_table():
             "-otutabout",
             "zotu_table.txt",
             "-id",
-            str(ARGS_CLS.build_zotus_table.id)
+            str(round(float(ARGS_CLS.build_zotus_table.match_id), 4))
         ],
         force_log=True)
 

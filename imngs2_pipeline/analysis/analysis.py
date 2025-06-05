@@ -359,6 +359,8 @@ def clusterOTUs(
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-cluster_otus",
+        # Input is a FASTA file containing quality filtered and globally trimmed reads from
+        # a marker gene amplicon sequencing experiment, e.g. 16S or ITS.
         sorted_uniques_file,
         "-fulldp",
         "-otus",
@@ -378,7 +380,7 @@ def clusterOTUs(
     onelinefasta("otus1.fa")
 
 
-def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
+def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str, match_id: float) -> None:
     # cmd_0 = USEARCH_11_BIN + ' -otutab analysis.fasta -top_hit_only -zotus nochi_ZOTUs.fasta '
     # cmd_1 = ' -otutabout zotu_table.txt -id 0.97'
     # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
@@ -395,7 +397,7 @@ def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
         "-otutabout",
         str(otu_tab),
         "-id",
-        str(ARGS_PREC.build_zotus_table.id),
+        str(round(float(match_id), 4)),  # ZOTU identity threshold
         "-threads",
         f"{str(POOL_SIZE)}",
         "-strand",
@@ -1112,7 +1114,7 @@ def uclust(
         "-uc",
         str(uc_file),
         "-id",
-        str(cluster_id),
+        str(round(float(cluster_id), 4)),
         "-strand",
         "both",
         '-threads',
@@ -1153,6 +1155,7 @@ def zotu_pipeline(
         abund_limit: float,
         sample_wise_correction: bool,
         zotu_p_logger: logging.Logger = ANA_LOG,
+        match_id: float = 0.99,
         filtered_non_human: bool = True) -> None:
     """
     This function will run the ZOTU pipeline.
@@ -1176,7 +1179,7 @@ def zotu_pipeline(
         )
 
     ZOTU_P_LOGGER.info('# Creating ZOTU table')
-    zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file)
+    zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file, match_id)
     ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance')
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
@@ -1233,27 +1236,27 @@ def otu_pipeline(
     # let's not do filter16S step
     if not filtered_non_human:
         shutil.copyfile("otus1.fa", "OTUs-Seqs.fasta")
-        non_human_zotus_file = "OTUs-Seqs.fasta"
+        non_human_otus_file = "OTUs-Seqs.fasta"
     else:
-        non_human_zotus_file = filter16S(
+        non_human_otus_file = filter16S(
             input_fasta_name="otus1.fa",
             output_fasta_name="OTUs-Seqs.fasta"
         )
     OTU_LOGGER.info('# Creating OTU table')
-    otu_tab_file = build_OTU_table(raw_seq_file, non_human_zotus_file)
+    otu_tab_file = build_OTU_table(raw_seq_file, non_human_otus_file)
     OTU_LOGGER.info('# Filtering OTUs by abundance')
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=otu_tab_file,
-        OTU_fasta_file_name=non_human_zotus_file,
+        OTU_fasta_file_name=non_human_otus_file,
         with_taxonomy=False,
         replace_originals=True,
         sample_wise_corr_flag=sample_wise_correction
     )
     OTU_LOGGER.info('# Adding Taxonomy to OTU sequences')
-    addTax_new(non_human_zotus_file)
+    addTax_new(non_human_otus_file)
     OTU_LOGGER.info('# Adding taxonomy to OTU table')
-    addTax_to_table(otu_tab_file, non_human_zotus_file)
+    addTax_to_table(otu_tab_file, non_human_otus_file)
     OTU_LOGGER.info('# Creating OTUs trees')
     sina_algn_shortened_file = shorten_sina_algn("test_OTUs-Seqs.fasta")
     create_krona(
@@ -1277,7 +1280,7 @@ def otu_pipeline(
     )
     return (
         str(Path(PurePath(otu_tab_file)).absolute()),
-        str(Path(PurePath(non_human_zotus_file)).absolute())
+        str(Path(PurePath(non_human_otus_file)).absolute())
     )
 
 
@@ -1304,7 +1307,10 @@ def tac_pipeline(
     zotus_table_path = Path(PurePath(zotus_table_file)).absolute()
     otu_table_path = zotus_table_path.parent.joinpath("OTUs-Table-TAC.tab")
     TAC_LOGGER.info(f"# Clustering ZOTUs at {str(cluster_id)} similarity")
-    uc_file, centroids_file = uclust(str(zotus_seq_path), cluster_id)
+    uc_file, centroids_file = uclust(
+        str(zotus_seq_path),
+        cluster_id
+    )
     uc_dict = parse_uc_file(uc_file)
     # print([zotus for key, zotus in uc_dict.items() if len(zotus) > 1])
     # exit()
@@ -1355,7 +1361,7 @@ def tic_pipeline(
         zotus_table_file: str,
         zotus_tree_file: str = None,
         species_id: float = 0.987,
-        genus_id: float = 0.0.95,  # These thresholds are taken from TIC paper
+        genus_id: float = 0.95,  # These thresholds are taken from TIC paper
         family_id: float = 0.90,  # These thresholds are taken from TIC paper
         tic_logger: logging.Logger = ANA_LOG) -> None:
     """
@@ -1526,13 +1532,14 @@ def main(
         ANA_LOG.info('# Starting ZOTU pipeline')
         zotu_tab_file, non_human_zotus_seq_file = zotu_pipeline(
             sorted_file,
-            ARGS_PREC.cluster_zotus.minsize,
+            ARGS_CLS.cluster_zotus.minsize,
             # using dereplicated reads with size tag saves time in creation of zotu table
             # NOTE tested against using filtered reads and the results are the same
             DEREP_FILE_NAME,
-            ARGS_CLS.create_table.abund_limit,
-            ARGS_CLS.create_table.sample_wise_correction,
-            ANA_LOG
+            ARGS_CLS.cluster_zotus.abund_limit,
+            ARGS_CLS.cluster_zotus.sample_wise_correction,
+            ANA_LOG,
+            ARGS_CLS.cluster_zotus.match_id,
         )
         # ANA_LOG.info('# Starting OTU pipeline')
         ANA_LOG.info('# Normalizing ZOTU Table')
@@ -1563,11 +1570,11 @@ def main(
             otu_tab_file, non_human_otu_seq_file = otu_pipeline(
                 sorted_file,
                 DEREP_FILE_NAME,  # contains sequences with sample ids and corresponding sizes
-                ARGS_CLS.create_table.abund_limit,
-                ARGS_CLS.create_table.sample_wise_correction,
+                ARGS_CLS.denovo_cluster_otus.abund_limit,
+                ARGS_CLS.denovo_cluster_otus.sample_wise_correction,
                 ANA_LOG,
-                False,  # zotus are already non-human
-                ARGS_CLS.denovo_cluster_zotus.minsize
+                False,  # filtered and trimmed sequences (sorted_file) are already non-human (in the preprocessing step)
+                ARGS_CLS.denovo_cluster_otus.minsize
             )
             # Normalizing Tables
             otu_norm_methods = "No"
@@ -1598,7 +1605,7 @@ def main(
                 zotus_seq_fasta=non_human_zotus_seq_file,
                 zotus_table_file=zotu_tab_file,
                 zotus_tree_file="ZOTUs-Tree-nj.tre",
-                cluster_id=0.987,
+                cluster_id=ARGS_CLS.tac_cluster.cluster_thr,
                 tac_logger=ANA_LOG
             )
             # Normalizing Tables

@@ -9,13 +9,12 @@ import os
 import glob
 import tempfile
 import re
-import shutil
 import csv
 
 
 global data, IMAGE_NAME
 IMAGE_NAME = "tic-pipeline-test"
-data = "test/data/truncated"
+data = "test/data"
 usearch_11_32_url = "https://drive5.com/downloads/usearch11.0.667_i86linux32.gz"
 
 
@@ -203,22 +202,46 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
     """
     return_bool = True
     files_to_be_there = [
-        re.compile(r"spike_mapping_file\.csv"),
-        re.compile(r"Analysis_log\.txt"),
-        re.compile(r"S?OTUs-Seqs\.fasta"),
-        re.compile(r"S?OTUs-Table\.tab"),
-        re.compile(r"S?OTUs-Tree-nj\.tre"),
-        re.compile(r"ZOTUs-Seqs\.fasta"),
-        re.compile(r"ZOTUs-Table\.tab"),
-        re.compile(r"ZOTUs-Tree-nj\.tre"),
-        re.compile(r"Map-ZOTU-S?OTU\.tab")
+        re.compile(r"spike_mapping_file.csv"),
+        re.compile(r"Analysis_log.txt"),
+        re.compile("ZOTUs-Seqs.fasta"),
+        re.compile("ZOTUs-Tree-nj.tre"),
+        re.compile("ZOTUs-Table.tab"),
+        re.compile("ZOTUs-Krona.html"),
+        re.compile("SampleMinCount_Normalized-ZOTUs-Table.tab")
     ]
     if analysis_mode == "TIC":
         files_to_be_there.extend(
-            # TODO file names have to be updated
             [
-                re.compile(r"Map-GOTU-FOTU\.tab"),
-                re.compile(r"Map-SOTU-GOTU\.tab"),
+                re.compile("Map-FOTU-GOTU.tab"),
+                re.compile("Map-GOTU-SOTU.tab"),
+                re.compile("Map-SOTU-ZOTU.tab"),
+                re.compile("SOTUs-Table-TIC.tab"),
+                re.compile("SOTUs-Seqs-TIC.fasta"),
+                re.compile("SOTUs-Tree-nj-TIC.tre"),
+                re.compile("SOTUs-Krona.html"),
+                re.compile("SampleMinCount_Normalized-SOTUs-Table-TIC.tab")
+            ]
+        )
+    if analysis_mode == "TAC":
+        files_to_be_there.extend(
+            [
+                re.compile(r"SampleMinCount_Normalized-OTUs-Table-TAC.tab"),
+                re.compile(r"OTUs-Tree-nj-TAC.tre"),
+                re.compile(r"OTUs-Table-TAC.tab"),
+                re.compile(r"OTUs-Seqs-TAC.fasta"),
+                re.compile(r"OTUs-Krona.html"),
+                re.compile(r"Map-ZOTUs-OTUs-TAC.tab")
+            ]
+        )
+    if analysis_mode == "de-novo":
+        files_to_be_there.extend(
+            [
+                re.compile("OTUs-Seqs.fasta"),
+                re.compile("OTUs-Table.tab"),
+                re.compile("OTUs-Tree-nj.tre"),
+                re.compile("OTUs-Krona.html"),
+                re.compile("SampleMinCount_Normalized-OTUs-Table.tab")
             ]
         )
 
@@ -320,12 +343,15 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             if arg_set.analysis_mode == "TIC":
                 assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table-TIC.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
                 file_set_complete = check_expected_files_exist(latest_analysis_folder, "TIC")
+                assert file_set_complete, "Some files are missing in the TIC analysis folder"
             elif arg_set.analysis_mode == "de-novo":
                 assert check_otutable_format(os.path.join(latest_analysis_folder, "OTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the OTU table"
                 file_set_complete = check_expected_files_exist(latest_analysis_folder, "de-novo")
+                assert file_set_complete, "Some files are missing in the de-novo analysis folder"
             elif arg_set.analysis_mode == "TAC":
-                # TODO to be added
-                pass
+                assert check_otutable_format(os.path.join(latest_analysis_folder, "OTUs-Table-TAC.tab"), arg_set, fastq_dir), "Some samples are missing in the OTU table"
+                file_set_complete = check_expected_files_exist(latest_analysis_folder, "TAC")
+                assert file_set_complete, "Some files are missing in the TAC analysis folder"
         elif not arg_set.skip_preprocess and arg_set.skip_analysis:
             file_set_complete_counter = 0
             dirs_checked = 0
@@ -345,16 +371,21 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             assert file_set_complete, "No analysis or preprocessing was done"
 
 
-@pytest.mark.xfail(reason="usearch_bin should be provided as argument")
+def copy_initial_files(run_dir: str) -> None:
+    """
+    Copy the fastq files from the data directory to the run directory.
+    The data directory is expected to be in the same directory as this script.
+    """
+    # move the contents of the data folder to the run_dir
+    for file in glob.glob(data + "/truncated/*"):
+        subprocess.run(["cp", file, str(run_dir) + "/"])
+    subprocess.run(["cp", data + "/IMNGS2Pipeline_args_test.yml", run_dir])
+
+
+@pytest.mark.xfail(reason="This test is not implemented yet. check_otutable_format() needs a mapping file to work properly.")
 def test_flat_autodiscover(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the empty folder
-        subprocess.run(["rmdir", run_dir + "/" + os.path.basename(data)])
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
 
@@ -363,7 +394,6 @@ def test_flat_autodiscover(build_image):
     run_container(setup_file_structure)
 
 
-@pytest.mark.xfail(reason="usearch_bin should be provided as argumemtn")
 def test_subfolder_autodiscover(build_image):
     def setup_file_structure(run_dir: str):
         # make a subfolder and copy the data to the temporary directory
@@ -377,16 +407,10 @@ def test_subfolder_autodiscover(build_image):
     run_container(setup_file_structure)
 
 
-@pytest.mark.xfail(reason="usearch_bin should be provided as argument")
 def test_flat_mapping(build_image):
     def setup_file_structure(run_dir: str):
         # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the empty folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
 
         # setting args
         args_set = ArgumentSet("", "")
@@ -405,16 +429,9 @@ def test_flat_mapping(build_image):
     run_container(setup_file_structure)
 
 
-@pytest.mark.xfail(reason="usearch_bin should be provided as argument")
 def test_preprocessing(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the empty folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -436,13 +453,7 @@ def test_preprocessing(build_image):
 @pytest.mark.xfail(reason="usearch is not a bin file and it should eixt with error code 161")
 def test_custom_usearch_bin_arg(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -468,13 +479,7 @@ def test_custom_usearch_bin_arg(build_image):
 
 def test_custom_usearch_bin_preprocessing(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -498,13 +503,7 @@ def test_custom_usearch_bin_preprocessing(build_image):
 
 def test_custom_usearch_bin_full_analysis(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -528,13 +527,7 @@ def test_custom_usearch_bin_full_analysis(build_image):
 
 def test_thread_arg(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -555,13 +548,7 @@ def test_thread_arg(build_image):
 
 def test_full_denovo_analysis(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -574,6 +561,7 @@ def test_full_denovo_analysis(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "de-novo"
+        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
 
         return args_set
 
@@ -582,13 +570,7 @@ def test_full_denovo_analysis(build_image):
 
 def test_full_TAC_analysis(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -601,21 +583,16 @@ def test_full_TAC_analysis(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "TAC"
+        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
 
         return args_set
 
     run_container(setup_file_structure)
 
 
-def test_full_TIC_analysis(build_image):
+def test_full_TIC_analysis_no_iz(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -628,6 +605,7 @@ def test_full_TIC_analysis(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "TIC"
+        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
 
         return args_set
 
@@ -636,13 +614,7 @@ def test_full_TIC_analysis(build_image):
 
 def test_full_TIC_analysis_iz(build_image):
     def setup_file_structure(run_dir: str):
-        # copy the contents of data to the temporary directory
-        subprocess.run(["cp", "-r", data, run_dir])
-        # move the contents of the data folder to the run_dir
-        for file in glob.glob(run_dir + "/" + os.path.basename(data) + "/*"):
-            subprocess.run(["mv", file, run_dir])
-        # rm the folder
-        shutil.rmtree(run_dir + "/" + os.path.basename(data))
+        copy_initial_files(run_dir)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -656,6 +628,7 @@ def test_full_TIC_analysis_iz(build_image):
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "TIC"
         args_set.individual_zotus = True
+        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
 
         return args_set
 

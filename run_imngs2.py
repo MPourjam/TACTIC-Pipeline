@@ -1174,7 +1174,7 @@ if __name__ == "__main__":
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
-        PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(FASTQ_DIR))})")
+        PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(INPUT_DIR))})")
 
     if args.place_template_files:
         shutil.copy2(
