@@ -525,8 +525,12 @@ def addTax_new(zotu_fasta_path):
         for line in silva_contents:
             line_tokens = line.split(',')
             silva_taxo = line_tokens[6]
+            silva_taxo_list = silva_taxo.strip().split(';')
+            padded_silva_taxo_list = silva_taxo_list + [""] * (7 - len(silva_taxo_list))
+            padded_silva_taxo_list = [str(p).strip() for p in padded_silva_taxo_list]
+            full_silva_taxo = ";".join(padded_silva_taxo_list[:7])
             seq_name = line_tokens[0]
-            out_file.write('>' + seq_name + ' ' + "tax=" + silva_taxo + '\n' + zotu_seq_dict[seq_name] + '\n')
+            out_file.write('>' + seq_name + ' ' + "tax=" + full_silva_taxo + '\n' + zotu_seq_dict[seq_name] + '\n')
     shutil.move(new_taxed_path, filename)
 
 
@@ -542,9 +546,10 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
     :return: none
     """
     # Path handling
+    tax_all_empty = ';;;;;;'
     table_file = os.path.abspath(table_file)
     taxed_seq_file = os.path.abspath(taxed_seq_file)
-    tax_regex = re.compile(r"tax=(?P<tax>([^;]+;)*([^;]+)?;?)$", re.IGNORECASE)
+    tax_regex = re.compile(r"tax=(?P<tax>([^;]*;)*[^;]*);*", re.IGNORECASE)
     seq_id_regex = re.compile(r"^>(?P<seq_header>[^;\s]+).*$", re.IGNORECASE)
     seq_headers = {}
     # seq_taxonomies = []
@@ -555,7 +560,7 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
                 _tax = ''
                 seq_id = seq_id_regex.search(seq_line).group('seq_header')
                 curr_tax = tax_regex.search(seq_line)
-                _tax += curr_tax.group('tax') if curr_tax.group('tax') else ';;;;;'
+                _tax += curr_tax.group('tax') if curr_tax.group('tax') else tax_all_empty
                 seq_headers[seq_id] = _tax
             seq_line = taxed_seq_fio.readline().strip()
 
@@ -572,8 +577,15 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
                 out_fio.write(table_line + "\n")
             else:
                 seq_name = str(table_line.split('\t')[0]).strip()
-                _tax = seq_headers.get(seq_name, ';;;;;')
-                new_line = table_line + '\t' + _tax + '\n'
+                _tax = seq_headers.get(seq_name, tax_all_empty)
+                _tax_list = _tax.strip().split(';')
+                # Pad _tax_list to ensure it has at least 7 elements
+                # This operation is redundant here as we already ensure that
+                # _tax_list has 7 elements in the function addTax_new() but
+                # we keep it anyway
+                padded_tax_list = _tax_list + [""] * (7 - len(_tax_list))
+                padded_tax_list = [str(p).strip() for p in padded_tax_list]
+                new_line = table_line + '\t' + ";".join(padded_tax_list[:7]) + '\n'
                 out_fio.write(new_line)
             table_line = table_fio.readline().strip()
 
@@ -1436,6 +1448,7 @@ def tic_pipeline(
         output_html_name="SOTUs-Krona.html"
     )
     # moving files in tic_analysis.tic_wd to parent directory
+    # TODO check if it works. It seems that the file is not moved.
     shutil.move(tic_analysis.non_bact_fasta_path, tic_analysis.tic_wd / "Invalid-Tax-Seqs-TIC.fasta")
     shutil.move(tic_analysis.sotu_fasta_path, tic_analysis.tic_wd / "SOTUs-Seqs-TIC.fasta")
     shutil.move(tic_analysis.sotu_table_path, tic_analysis.tic_wd / "SOTUs-Table-TIC.tab")
