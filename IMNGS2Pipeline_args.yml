@@ -41,7 +41,7 @@ AddTaxArgs:
 ClusterZOTUsArgs: ## Adjustable from GUI's expert mode
   # ref: https://www.drive5.com/usearch/manual/cmd_unoise3.html
   minsize: 2  # This value filters out amplicons with less than 4 reads. Lower values higher sensitivity, but may result in more noise.
-  abund_limit: 0.001
+  abund_limit: 0.000
   sample_wise_correction: false
   match_id: 0.99  # This value results more refined ZOTU count than 0.97 (default)
 DeNovoClusterOTUsArgs:  ## Adjustable from GUI's expert mode
