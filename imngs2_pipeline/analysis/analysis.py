@@ -1180,7 +1180,7 @@ def zotu_pipeline(
 
     ZOTU_P_LOGGER.info('# Creating ZOTU table')
     zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file, match_id)
-    ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance')
+    ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance cutt-off of %s', abund_limit)
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=zotu_tab_file,
@@ -1244,7 +1244,7 @@ def otu_pipeline(
         )
     OTU_LOGGER.info('# Creating OTU table')
     otu_tab_file = build_OTU_table(raw_seq_file, non_human_otus_file)
-    OTU_LOGGER.info('# Filtering OTUs by abundance')
+    OTU_LOGGER.info('# Filtering OTUs by abundance cut-off of %s', abund_limit)
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=otu_tab_file,

@@ -492,12 +492,13 @@ def is_relative_to(path, *other):
 
 def get_file_handler(logger, file_path) -> logging.FileHandler:
     abs_file_path = Path(file_path).resolve()
-    fh = logging.FileHandler(abs_file_path, mode='w')
+    # Check if a FileHandler for this file already exists
     for handler in logger.handlers:
         if isinstance(handler, logging.FileHandler):
-            if Path(handler.baseFilename).resolve() == file_path:
+            if Path(handler.baseFilename).resolve() == abs_file_path:
                 return handler
-    return fh
+    # Create a new FileHandler in text mode
+    return logging.FileHandler(abs_file_path, mode='w', encoding='utf-8')
 
 
 def get_stream_handler(logger) -> logging.StreamHandler:
