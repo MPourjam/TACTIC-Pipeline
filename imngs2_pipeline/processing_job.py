@@ -166,6 +166,8 @@ def filter_merged_reads():
             "filtered1.fastq",
             "-fastq_maxee_rate",
             str(ARGS_CLS.filter_merged.fastq_maxee_rate),
+            "-fastq_truncqual",
+            str(ARGS_CLS.filter_merged.fastq_truncqual),
             "-fastaout",
             "filtered2.fasta"
         ],

@@ -1088,6 +1088,7 @@ class FilterBothSidesArgs(ArgsParserUtil):
     default_args = {
         # "fastq_filter": "filtered1.fasta",
         # "fastaout": "filtered2.fasta",
+        "fastq_truncqual": 10,
         "fastq_maxee_rate": 0.002,
     }
 

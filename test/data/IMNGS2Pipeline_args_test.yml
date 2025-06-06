@@ -5,22 +5,26 @@
 #####################
 ### Preprocessing ###
 #####################
-MergePairsArgs:
+MergePairsArgs:  ## Adjustable from GUI's expert mode
   fastq_maxdiffs: 50
   fastq_pctid: 50
   fastq_minmergelen: 200
   fastq_maxmergelen: 600
-TrimBothSidesArgs:
+TrimBothSidesArgs:  ## Adjustable from GUI's basic mode
   stripleft: 17  # for 341F primer (ref:https://probebase.csb.univie.ac.at/pb_report/probe/3844) Change only if you know exact lenght of you primers
   stripright: 21  # for 785R primer. Change only if you know exact lenght of you primers
 TrimOneSideArgs:
   stripleft: 17  # for 341F primer (ref:https://probebase.csb.univie.ac.at/pb_report/probe/3844) Change only if you know exact lenght of you primers
-FilterBothSidesArgs:
-  fastq_maxee_rate: 0.002
-FilterOneSideArgs:
-  fastq_maxee_rate: 0.002
-  fastq_truncqual: 10
-IndividualSampleClusterZOTUsArgs:
+FilterBothSidesArgs:  ## Adjustable from GUI's expert mode
+  # ref: https://www.drive5.com/usearch/manual/cmd_fastq_filter.html
+  fastq_maxee_rate: 0.002  # Discard reads with > E total expected errors for all bases in the read after any truncation options have been applied.
+  fastq_truncqual: 10  # Truncate the read at the first position having quality score <= N, so that all remaining Q scores are >N.
+FilterOneSideArgs:  ## Adjustable from GUI's expert mode
+  # ref: https://www.drive5.com/usearch/manual/cmd_fastq_filter.html
+  fastq_maxee_rate: 0.002  # Discard reads with > E total expected errors for all bases in the read after any truncation options have been applied.
+  fastq_truncqual: 10  # Truncate the read at the first position having quality score <= N, so that all remaining Q scores are >N.
+IndividualSampleClusterZOTUsArgs:  ## Adjustable from GUI's basic mode
+  # ref: https://www.drive5.com/usearch/manual/cmd_unoise3.html
   minsize: 2  # This value
 Filter16SArgs:
   e: 0.1
@@ -34,22 +38,24 @@ AddTaxArgs:
 ### Analysis ###
 ################
 ### Clustering pipelines ###
-ClusterZOTUsArgs:
+ClusterZOTUsArgs: ## Adjustable from GUI's expert mode
+  # ref: https://www.drive5.com/usearch/manual/cmd_unoise3.html
   minsize: 2  # This value filters out amplicons with less than 4 reads. Lower values higher sensitivity, but may result in more noise.
   abund_limit: 0.0025
   sample_wise_correction: false
   match_id: 0.99  # This value results more refined ZOTU count than 0.97 (default)
-DeNovoClusterOTUsArgs:
-  minsize: 9
+DeNovoClusterOTUsArgs:  ## Adjustable from GUI's expert mode
+  # ref: https://www.drive5.com/usearch/manual/pipe_otus.html
+  minsize: 8
   abund_limit: 0.0025
   sample_wise_correction: false
-ComplexTICArgs:
+ComplexTICArgs:  ## Adjustable from GUI's expert mode
   family_sim: 0.90
   genus_sim: 0.95
   species_sim: 0.987
   abund_limit: 0.0025  # Not implemented yet
   sample_wise_correction: false  # Not implemented yet
-TACClusterArgs:
-  abund_limit: 0.0025
+TACClusterArgs:  ## Adjustable from GUI's expert mode
+  abund_limit: 0.0025  # Not implemented yet
   sample_wise_correction: false  # Not implemented yet
-  cluster_thr: 0.987  # Not implemented yet
+  cluster_thr: 0.987
