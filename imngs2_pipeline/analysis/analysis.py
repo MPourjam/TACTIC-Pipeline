@@ -826,7 +826,8 @@ def cleanup(directory: str, to_keep: list = []) -> bool:
         re.compile(r"SampleMinCount_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
         re.compile(r"Spike_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
         re.compile(r"Analysis_log\.txt"),
-        re.compile(r"Seqs(-TIC|-TAC)?\.fasta")
+        re.compile(r"Seqs(-TIC|-TAC)?\.fasta"),
+        re.compile(r".*FullTaxonomy\.tab"),  # For ZOTU tables with full taxonomy
     ]
     white_list = [re.compile(f"{tk}") for tk in to_keep] + must_keep
     files = list(directory.glob("*"))

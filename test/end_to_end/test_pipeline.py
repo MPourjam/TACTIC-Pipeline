@@ -202,46 +202,49 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
     """
     return_bool = True
     files_to_be_there = [
-        re.compile(r"spike_mapping_file.csv"),
-        re.compile(r"Analysis_log.txt"),
-        re.compile("ZOTUs-Seqs.fasta"),
-        re.compile("ZOTUs-Tree-nj.tre"),
-        re.compile("ZOTUs-Table.tab"),
-        re.compile("ZOTUs-Krona.html"),
-        re.compile("SampleMinCount_Normalized-ZOTUs-Table.tab")
+        re.compile(r"spike_mapping_file\.csv"),
+        re.compile(r"Analysis_log\.txt"),
+        re.compile("ZOTUs-Seqs\.fasta"),
+        re.compile("ZOTUs-Tree-nj\.tre"),
+        re.compile("ZOTUs-Table\.tab"),
+        re.compile("ZOTUs-Krona\.html"),
+        re.compile("SampleMinCount_Normalized.*\.tab")
     ]
     if analysis_mode == "TIC":
         files_to_be_there.extend(
             [
-                re.compile("Map-FOTU-GOTU.tab"),
-                re.compile("Map-GOTU-SOTU.tab"),
-                re.compile("Map-SOTU-ZOTU.tab"),
-                re.compile("SOTUs-Table-TIC.tab"),
-                re.compile("SOTUs-Seqs-TIC.fasta"),
-                re.compile("SOTUs-Tree-nj-TIC.tre"),
-                re.compile("SOTUs-Krona.html"),
-                re.compile("SampleMinCount_Normalized-SOTUs-Table-TIC.tab")
+                re.compile("Map-FOTU-GOTU\.tab"),
+                re.compile("Map-GOTU-SOTU\.tab"),
+                re.compile("Map-SOTU-ZOTU\.tab"),
+                re.compile("SOTUs-Table-TIC\.tab"),
+                re.compile("SOTUs-Seqs-TIC\.fasta"),
+                re.compile("SOTUs-Tree-nj-TIC\.tre"),
+                re.compile("SOTUs-Krona\.html"),
+                # re.compile("SampleMinCount_Normalized.*\.tab"),
+                # re.compile("ZOTU-Table-All-FullTaxonomy.tab"),
+                re.compile("Invalid-Tax-Seqs-TIC\.fasta"),
+                re.compile("FullTaxonomy\.tab")
             ]
         )
     if analysis_mode == "TAC":
         files_to_be_there.extend(
             [
-                re.compile(r"SampleMinCount_Normalized-OTUs-Table-TAC.tab"),
-                re.compile(r"OTUs-Tree-nj-TAC.tre"),
-                re.compile(r"OTUs-Table-TAC.tab"),
-                re.compile(r"OTUs-Seqs-TAC.fasta"),
-                re.compile(r"OTUs-Krona.html"),
-                re.compile(r"Map-ZOTUs-OTUs-TAC.tab")
+                re.compile(r"SampleMinCount_Normalized.*\.tab"),
+                re.compile(r"OTUs-Tree-nj-TAC\.tre"),
+                re.compile(r"OTUs-Table-TAC\.tab"),
+                re.compile(r"OTUs-Seqs-TAC\.fasta"),
+                re.compile(r"OTUs-Krona\.html"),
+                re.compile(r"Map-ZOTUs-OTUs-TAC\.tab")
             ]
         )
     if analysis_mode == "de-novo":
         files_to_be_there.extend(
             [
-                re.compile("OTUs-Seqs.fasta"),
-                re.compile("OTUs-Table.tab"),
-                re.compile("OTUs-Tree-nj.tre"),
-                re.compile("OTUs-Krona.html"),
-                re.compile("SampleMinCount_Normalized-OTUs-Table.tab")
+                re.compile("OTUs-Seqs\.fasta"),
+                re.compile("OTUs-Table\.tab"),
+                re.compile("OTUs-Tree-nj\.tre"),
+                re.compile("OTUs-Krona\.html"),
+                re.compile("SampleMinCount_Normalized.*\.tab")
             ]
         )
 
@@ -253,13 +256,17 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
     else:
         existing_files_list = os.listdir(analysis_folder)
     # use re search to check if patterns in files_to_be_there exist in the existing_files_list
-    for file_there in files_to_be_there:
+    not_there = []
+    for existing_f in existing_files_list:
         is_there = False
-        for existing_f in existing_files_list:
-            if re.search(file_there, existing_f):
+        for file_pat in files_to_be_there:
+            if re.search(file_pat, existing_f):
                 is_there = True
                 break
+        if not is_there:
+            not_there.append(existing_f)
         return_bool = return_bool and is_there
+    # print(f"Files not found in {analysis_folder}: {not_there}")
 
     return return_bool
 
