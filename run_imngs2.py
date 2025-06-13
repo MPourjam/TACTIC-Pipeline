@@ -7,7 +7,7 @@ import shutil
 import math
 import sys
 import logging
-from os import symlink, chdir
+from os import symlink, chdir, environ
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.analysis.analysis import main as main_analysis
 from collections import namedtuple
@@ -883,6 +883,8 @@ def run_imngs2(
         only_file=False,
         propagate=False
     )
+
+    PREP_LOG.info("Starting pipeline version {}".format(environ.get("TAG_GIT", "NA")))
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     POOL_SIZE = threads
 

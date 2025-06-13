@@ -1,5 +1,9 @@
-FROM python:3.11.0-slim-bullseye
+FROM python:3.12-slim-bookworm
 
+
+# Version information
+ARG GIT_TAG=NA
+ENV GIT_TAG=${GIT_TAG}
 # Setting some environment variables
 # Install locales package
 # Install dependencies
