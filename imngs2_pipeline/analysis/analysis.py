@@ -14,6 +14,11 @@ from .analysis_helper import onelinefasta
 import logging
 from ticlust import TICAnalysis
 
+import warnings
+# In Python ≤3.11, invalid escape sequences (like "\d" outside raw strings) were allowed but discouraged.
+# In Python 3.12, they raise SyntaxWarning by default to encourage cleaner, future-proof code.
+warnings.filterwarnings("ignore", category=SyntaxWarning)
+
 
 BIN_DIR = "/base/binaries/"
 USEARCH_11_BIN = BIN_DIR + "usearch11.0.667_i86linux64"
