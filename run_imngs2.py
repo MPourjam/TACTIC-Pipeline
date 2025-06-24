@@ -887,7 +887,7 @@ def run_imngs2(
         propagate=False
     )
 
-    PREP_LOG.info("Starting pipeline version {}".format(environ.get("TAG_GIT", "NA")))
+    # PREP_LOG.info("Starting pipeline version {}".format(environ.get("TAG_GIT", "NA")))
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     POOL_SIZE = threads
 
