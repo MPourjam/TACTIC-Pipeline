@@ -1,4 +1,8 @@
 #! /usr/local/bin/python
+import warnings
+# In Python ≤3.11, invalid escape sequences (like "\d" outside raw strings) were allowed but discouraged.
+# In Python 3.12, they raise SyntaxWarning by default to encourage cleaner, future-proof code.
+warnings.filterwarnings("ignore", category=SyntaxWarning)
 import re
 import signal
 import argparse
@@ -20,10 +24,7 @@ if sys.version_info[0] < 3:
     from pathlib2 import Path, PurePath, PureWindowsPath, PurePosixPath  # pip2 install pathlib2
 else:
     from pathlib import Path, PurePath, PureWindowsPath, PurePosixPath
-import warnings
-# In Python ≤3.11, invalid escape sequences (like "\d" outside raw strings) were allowed but discouraged.
-# In Python 3.12, they raise SyntaxWarning by default to encourage cleaner, future-proof code.
-warnings.filterwarnings("ignore", category=SyntaxWarning)
+
 
 global INPUT_DIR, DBS_DIR, POOL_SIZE, PREP_LOG, MAPPING_FILE_COLS
 global FASTQ_DIR, MapLineTup, ARGS_YAML_FILE, PROC_DIR_SUFFIX
