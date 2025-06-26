@@ -1,4 +1,7 @@
-FROM python:3.12.3-slim-bookworm
+FROM python:3.12-slim
+
+# Ensure system packages are up-to-date and remove unnecessary package lists to reduce vulnerabilities
+
 
 
 # Version information
@@ -9,17 +12,13 @@ ENV PYTHONWARNINGS="ignore::SyntaxWarning"
 # Setting some environment variables
 # Install locales package
 # Install dependencies
-RUN apt update -y && apt upgrade -y
-RUN apt update --fix-missing
-RUN apt install -y libharfbuzz-dev libfribidi-dev cmake
-RUN apt install -y vim rsync wget
-RUN apt install -y fastqc
-RUN apt install -y graphlan gfortran
-RUN apt-get update && apt-get install -y locales
-RUN apt update -y && apt upgrade -y
-RUN apt-get update --fix-missing
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends libharfbuzz-dev libfribidi-dev cmake vim rsync wget fastqc graphlan gfortran locales && \
+    apt-get update --fix-missing && \
+    rm -rf /var/lib/apt/lists/*
+    
 # Generate the locale
-
 RUN touch /etc/locale.gen
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
