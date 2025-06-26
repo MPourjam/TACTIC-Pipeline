@@ -1,4 +1,8 @@
 #! /usr/local/bin/python
+import warnings
+# In Python ≤3.11, invalid escape sequences (like "\d" outside raw strings) were allowed but discouraged.
+# In Python 3.12, they raise SyntaxWarning by default to encourage cleaner, future-proof code.
+warnings.filterwarnings("ignore", category=SyntaxWarning)
 import re
 import signal
 import argparse
@@ -7,7 +11,7 @@ import shutil
 import math
 import sys
 import logging
-from os import symlink, chdir
+from os import symlink, chdir, environ
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.analysis.analysis import main as main_analysis
 from collections import namedtuple
@@ -280,6 +284,7 @@ def valid_for_analysis(dir_path: str, given_arg_file: str) -> bool:
     given_arg_file = Path(given_arg_file).resolve()
     if not dir_path.is_dir() and not given_arg_file.is_file():
         return False
+    # NOTE if -iz is used then this will check for existence of 'taxed_ZOTUs.fasta' as well.
     is_complete = is_processed_dir_healthy(dir_path)
     old_arg_file = dir_path.joinpath(DEFAULT_ARG_FILE_NAME)
     same_argset = not is_argset_different(given_arg_file, old_arg_file)
@@ -392,7 +397,7 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
     """
     # find the taxed_zotu.fasta files in the processed samples
     # get the parent of the processed samples
-    samp_dir_with_target_file = {}
+    filtered_samples_dir = {}
     for mapline_files_tup in mapping_line_tup_list:
         # NOTE What if the name of processed directory does not match <SampleID> + PROC_DIR_SUFFIX
         # NOTE the sample ID in mapping_line_tup_list could be uniqified before if the base name of fastq files are not unique
@@ -403,18 +408,14 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
         fastq_files_parent_dir = Path(PurePath(curr_file_set[0])).parent.joinpath(f"{str(sample_id)}{PROC_DIR_SUFFIX}")
         gathered_samp_dirs = []
         for found_file in fastq_files_parent_dir.rglob(f"**/{DEREP_FILE_NAME}"):
-            gathered_samp_dirs.append(found_file.parent)
-            # We have changed the analysis to always do ZOTUs pipeline
-            # so that we don't need to check the presence of taxed_zotu.fasta file
-            """
-            if check_taxed_zotus_fasta(found_file):
+            cand_proc_dir = found_file.parent
+            if valid_for_analysis(str(cand_proc_dir), str(args_yml_path)):
                 gathered_samp_dirs.append(found_file.parent)
-            else:
-                PREP_LOG.warning(f"{str(found_file.relative_to(FASTQ_DIR))} file is not formatted correctly."
-                                 " Proper fasta header format: '>SEQID;size=XXX;tax=KKK,PPP;CCC;OOO")
-            """
 
-        samp_dir_with_target_file[mapline_files_tup] = gathered_samp_dirs
+        # Choosing the latest processed sample directory
+        if gathered_samp_dirs:
+            latest_samp_dir = sorted(gathered_samp_dirs, key=lambda x: x.stat().st_ctime, reverse=True)[0]
+            filtered_samples_dir[mapline_files_tup] = latest_samp_dir
 
     # So far we have all taxed_zotu.fasta files of given samples in mapping file
     # Now we need to filter out the samples that are not in the mapping file
@@ -424,17 +425,7 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
     # 1- Argument set of selected sample should be the same as given one in the argument
     # 2- It should have "taxed_zotu.fasta"
     # Show warning if the sample is filtered out with a reason
-    filtered_samples_dir = {}
 
-    for mapline_files_tup, samp_dirs_list in samp_dir_with_target_file.items():
-        for samp_dir in samp_dirs_list:
-            if valid_for_analysis(str(samp_dir), str(args_yml_path)):
-                # If the forcing argument to reprocess samples are used then we might have several copies of same processed set
-                filtered_samples_dir[mapline_files_tup] = samp_dir
-                # we should get sure that only one processed version from each sample is passed for analysis
-                break
-            else:
-                PREP_LOG.warning(f"{samp_dir.relative_to(FASTQ_DIR)} is not a correctly processed sample.")
     # calculating missed_samples in preprocessing step
     missed_samples = set(mapping_line_tup_list) - set(filtered_samples_dir.keys())
     missed_samples_ids = [mapline_obj.SampleID for mapline_obj, files_tup in missed_samples]
@@ -896,6 +887,8 @@ def run_imngs2(
         only_file=False,
         propagate=False
     )
+
+    # PREP_LOG.info("Starting pipeline version {}".format(environ.get("TAG_GIT", "NA")))
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     POOL_SIZE = threads
 
@@ -1020,6 +1013,7 @@ def run_imngs2(
 
     # We do find preprocessed samples for analysis regardless of the preprocessing step. If the samples are not preprocessed, then the function
     # below must not find them.
+    # NOTE This will get a result of preprocessing and does not take into account if it's related to latest preprocessing or not.
     samples_dirs, missed_samples_ids = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
     union_failed_preprocess = set(missed_samples_ids) | set(failed_preprocesses_sample_id)
     analysis_exit_code = 1
@@ -1186,7 +1180,7 @@ if __name__ == "__main__":
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
-        PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(FASTQ_DIR))})")
+        PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(INPUT_DIR))})")
 
     if args.place_template_files:
         shutil.copy2(

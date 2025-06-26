@@ -5,7 +5,9 @@ services:
     container_name: tactic_pipeline_cont
     build:
       context: .
-      dockerfile: Dockerfile.IMNGS2Pipeline
+      dockerfile: Dockerfile.TACTIC
+      args:
+        GIT_TAG: ${GIT_TAG:-NA}
     image: tactic_pipeline
     hostname: tactic
     command: "tail -F /base/requirements.txt"
@@ -13,4 +15,4 @@ services:
     #   - /media/adminuser/CFM/inputs:/base/inputs
     #   - /media/adminuser/MSD-Storage/databases:/base/databases
     env_file:
-      - ./.env.prod
+      - ./.env

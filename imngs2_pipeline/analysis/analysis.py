@@ -14,6 +14,11 @@ from .analysis_helper import onelinefasta
 import logging
 from ticlust import TICAnalysis
 
+import warnings
+# In Python ≤3.11, invalid escape sequences (like "\d" outside raw strings) were allowed but discouraged.
+# In Python 3.12, they raise SyntaxWarning by default to encourage cleaner, future-proof code.
+warnings.filterwarnings("ignore", category=SyntaxWarning)
+
 
 BIN_DIR = "/base/binaries/"
 USEARCH_11_BIN = BIN_DIR + "usearch11.0.667_i86linux64"
@@ -359,6 +364,8 @@ def clusterOTUs(
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-cluster_otus",
+        # Input is a FASTA file containing quality filtered and globally trimmed reads from
+        # a marker gene amplicon sequencing experiment, e.g. 16S or ITS.
         sorted_uniques_file,
         "-fulldp",
         "-otus",
@@ -378,7 +385,7 @@ def clusterOTUs(
     onelinefasta("otus1.fa")
 
 
-def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
+def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str, match_id: float) -> None:
     # cmd_0 = USEARCH_11_BIN + ' -otutab analysis.fasta -top_hit_only -zotus nochi_ZOTUs.fasta '
     # cmd_1 = ' -otutabout zotu_table.txt -id 0.97'
     # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
@@ -395,7 +402,7 @@ def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str) -> None:
         "-otutabout",
         str(otu_tab),
         "-id",
-        str(ARGS_PREC.build_zotus_table.id),
+        str(round(float(match_id), 4)),  # ZOTU identity threshold
         "-threads",
         f"{str(POOL_SIZE)}",
         "-strand",
@@ -523,8 +530,12 @@ def addTax_new(zotu_fasta_path):
         for line in silva_contents:
             line_tokens = line.split(',')
             silva_taxo = line_tokens[6]
+            silva_taxo_list = silva_taxo.strip().split(';')
+            padded_silva_taxo_list = silva_taxo_list + [""] * (7 - len(silva_taxo_list))
+            padded_silva_taxo_list = [str(p).strip() for p in padded_silva_taxo_list]
+            full_silva_taxo = ";".join(padded_silva_taxo_list[:7])
             seq_name = line_tokens[0]
-            out_file.write('>' + seq_name + ' ' + "tax=" + silva_taxo + '\n' + zotu_seq_dict[seq_name] + '\n')
+            out_file.write('>' + seq_name + ' ' + "tax=" + full_silva_taxo + '\n' + zotu_seq_dict[seq_name] + '\n')
     shutil.move(new_taxed_path, filename)
 
 
@@ -540,9 +551,10 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
     :return: none
     """
     # Path handling
+    tax_all_empty = ';;;;;;'
     table_file = os.path.abspath(table_file)
     taxed_seq_file = os.path.abspath(taxed_seq_file)
-    tax_regex = re.compile(r"tax=(?P<tax>([^;]+;)*([^;]+)?;?)$", re.IGNORECASE)
+    tax_regex = re.compile(r"tax=(?P<tax>([^;]*;)*[^;]*);*", re.IGNORECASE)
     seq_id_regex = re.compile(r"^>(?P<seq_header>[^;\s]+).*$", re.IGNORECASE)
     seq_headers = {}
     # seq_taxonomies = []
@@ -553,7 +565,7 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
                 _tax = ''
                 seq_id = seq_id_regex.search(seq_line).group('seq_header')
                 curr_tax = tax_regex.search(seq_line)
-                _tax += curr_tax.group('tax') if curr_tax.group('tax') else ';;;;;'
+                _tax += curr_tax.group('tax') if curr_tax.group('tax') else tax_all_empty
                 seq_headers[seq_id] = _tax
             seq_line = taxed_seq_fio.readline().strip()
 
@@ -570,8 +582,15 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
                 out_fio.write(table_line + "\n")
             else:
                 seq_name = str(table_line.split('\t')[0]).strip()
-                _tax = seq_headers.get(seq_name, ';;;;;')
-                new_line = table_line + '\t' + _tax + '\n'
+                _tax = seq_headers.get(seq_name, tax_all_empty)
+                _tax_list = _tax.strip().split(';')
+                # Pad _tax_list to ensure it has at least 7 elements
+                # This operation is redundant here as we already ensure that
+                # _tax_list has 7 elements in the function addTax_new() but
+                # we keep it anyway
+                padded_tax_list = _tax_list + [""] * (7 - len(_tax_list))
+                padded_tax_list = [str(p).strip() for p in padded_tax_list]
+                new_line = table_line + '\t' + ";".join(padded_tax_list[:7]) + '\n'
                 out_fio.write(new_line)
             table_line = table_fio.readline().strip()
 
@@ -812,7 +831,8 @@ def cleanup(directory: str, to_keep: list = []) -> bool:
         re.compile(r"SampleMinCount_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
         re.compile(r"Spike_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
         re.compile(r"Analysis_log\.txt"),
-        re.compile(r"Seqs(-TIC|-TAC)?\.fasta")
+        re.compile(r"Seqs(-TIC|-TAC)?\.fasta"),
+        re.compile(r".*FullTaxonomy\.tab"),  # For ZOTU tables with full taxonomy
     ]
     white_list = [re.compile(f"{tk}") for tk in to_keep] + must_keep
     files = list(directory.glob("*"))
@@ -1112,7 +1132,7 @@ def uclust(
         "-uc",
         str(uc_file),
         "-id",
-        str(cluster_id),
+        str(round(float(cluster_id), 4)),
         "-strand",
         "both",
         '-threads',
@@ -1153,6 +1173,7 @@ def zotu_pipeline(
         abund_limit: float,
         sample_wise_correction: bool,
         zotu_p_logger: logging.Logger = ANA_LOG,
+        match_id: float = 0.99,
         filtered_non_human: bool = True) -> None:
     """
     This function will run the ZOTU pipeline.
@@ -1176,8 +1197,8 @@ def zotu_pipeline(
         )
 
     ZOTU_P_LOGGER.info('# Creating ZOTU table')
-    zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file)
-    ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance')
+    zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file, match_id)
+    ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance cutt-off of %s', abund_limit)
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=zotu_tab_file,
@@ -1233,27 +1254,27 @@ def otu_pipeline(
     # let's not do filter16S step
     if not filtered_non_human:
         shutil.copyfile("otus1.fa", "OTUs-Seqs.fasta")
-        non_human_zotus_file = "OTUs-Seqs.fasta"
+        non_human_otus_file = "OTUs-Seqs.fasta"
     else:
-        non_human_zotus_file = filter16S(
+        non_human_otus_file = filter16S(
             input_fasta_name="otus1.fa",
             output_fasta_name="OTUs-Seqs.fasta"
         )
     OTU_LOGGER.info('# Creating OTU table')
-    otu_tab_file = build_OTU_table(raw_seq_file, non_human_zotus_file)
-    OTU_LOGGER.info('# Filtering OTUs by abundance')
+    otu_tab_file = build_OTU_table(raw_seq_file, non_human_otus_file)
+    OTU_LOGGER.info('# Filtering OTUs by abundance cut-off of %s', abund_limit)
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=otu_tab_file,
-        OTU_fasta_file_name=non_human_zotus_file,
+        OTU_fasta_file_name=non_human_otus_file,
         with_taxonomy=False,
         replace_originals=True,
         sample_wise_corr_flag=sample_wise_correction
     )
     OTU_LOGGER.info('# Adding Taxonomy to OTU sequences')
-    addTax_new(non_human_zotus_file)
+    addTax_new(non_human_otus_file)
     OTU_LOGGER.info('# Adding taxonomy to OTU table')
-    addTax_to_table(otu_tab_file, non_human_zotus_file)
+    addTax_to_table(otu_tab_file, non_human_otus_file)
     OTU_LOGGER.info('# Creating OTUs trees')
     sina_algn_shortened_file = shorten_sina_algn("test_OTUs-Seqs.fasta")
     create_krona(
@@ -1277,7 +1298,7 @@ def otu_pipeline(
     )
     return (
         str(Path(PurePath(otu_tab_file)).absolute()),
-        str(Path(PurePath(non_human_zotus_file)).absolute())
+        str(Path(PurePath(non_human_otus_file)).absolute())
     )
 
 
@@ -1304,7 +1325,10 @@ def tac_pipeline(
     zotus_table_path = Path(PurePath(zotus_table_file)).absolute()
     otu_table_path = zotus_table_path.parent.joinpath("OTUs-Table-TAC.tab")
     TAC_LOGGER.info(f"# Clustering ZOTUs at {str(cluster_id)} similarity")
-    uc_file, centroids_file = uclust(str(zotus_seq_path), cluster_id)
+    uc_file, centroids_file = uclust(
+        str(zotus_seq_path),
+        cluster_id
+    )
     uc_dict = parse_uc_file(uc_file)
     # print([zotus for key, zotus in uc_dict.items() if len(zotus) > 1])
     # exit()
@@ -1355,8 +1379,8 @@ def tic_pipeline(
         zotus_table_file: str,
         zotus_tree_file: str = None,
         species_id: float = 0.987,
-        genus_id: float = 0.97,
-        family_id: float = 0.95,
+        genus_id: float = 0.95,  # These thresholds are taken from TIC paper
+        family_id: float = 0.90,  # These thresholds are taken from TIC paper
         tic_logger: logging.Logger = ANA_LOG) -> None:
     """
     TIC (Taxonomy Informed Clustering) pipeline, takes a set of ZOTUs and cluster
@@ -1430,6 +1454,7 @@ def tic_pipeline(
         output_html_name="SOTUs-Krona.html"
     )
     # moving files in tic_analysis.tic_wd to parent directory
+    # TODO check if it works. It seems that the file is not moved.
     shutil.move(tic_analysis.non_bact_fasta_path, tic_analysis.tic_wd / "Invalid-Tax-Seqs-TIC.fasta")
     shutil.move(tic_analysis.sotu_fasta_path, tic_analysis.tic_wd / "SOTUs-Seqs-TIC.fasta")
     shutil.move(tic_analysis.sotu_table_path, tic_analysis.tic_wd / "SOTUs-Table-TIC.tab")
@@ -1526,13 +1551,14 @@ def main(
         ANA_LOG.info('# Starting ZOTU pipeline')
         zotu_tab_file, non_human_zotus_seq_file = zotu_pipeline(
             sorted_file,
-            ARGS_PREC.cluster_zotus.minsize,
+            ARGS_CLS.cluster_zotus.minsize,
             # using dereplicated reads with size tag saves time in creation of zotu table
             # NOTE tested against using filtered reads and the results are the same
             DEREP_FILE_NAME,
-            ARGS_CLS.create_table.abund_limit,
-            ARGS_CLS.create_table.sample_wise_correction,
-            ANA_LOG
+            ARGS_CLS.cluster_zotus.abund_limit,
+            ARGS_CLS.cluster_zotus.sample_wise_correction,
+            ANA_LOG,
+            ARGS_CLS.cluster_zotus.match_id,
         )
         # ANA_LOG.info('# Starting OTU pipeline')
         ANA_LOG.info('# Normalizing ZOTU Table')
@@ -1563,11 +1589,11 @@ def main(
             otu_tab_file, non_human_otu_seq_file = otu_pipeline(
                 sorted_file,
                 DEREP_FILE_NAME,  # contains sequences with sample ids and corresponding sizes
-                ARGS_CLS.create_table.abund_limit,
-                ARGS_CLS.create_table.sample_wise_correction,
+                ARGS_CLS.denovo_cluster_otus.abund_limit,
+                ARGS_CLS.denovo_cluster_otus.sample_wise_correction,
                 ANA_LOG,
-                False,  # zotus are already non-human
-                ARGS_CLS.denovo_cluster_zotus.minsize
+                False,  # filtered and trimmed sequences (sorted_file) are already non-human (in the preprocessing step)
+                ARGS_CLS.denovo_cluster_otus.minsize
             )
             # Normalizing Tables
             otu_norm_methods = "No"
@@ -1598,7 +1624,7 @@ def main(
                 zotus_seq_fasta=non_human_zotus_seq_file,
                 zotus_table_file=zotu_tab_file,
                 zotus_tree_file="ZOTUs-Tree-nj.tre",
-                cluster_id=0.987,
+                cluster_id=ARGS_CLS.tac_cluster.cluster_thr,
                 tac_logger=ANA_LOG
             )
             # Normalizing Tables
@@ -1629,9 +1655,9 @@ def main(
                 zotus_seq_fasta=non_human_zotus_seq_file,
                 zotus_table_file=zotu_tab_file,
                 zotus_tree_file="ZOTUs-Tree-nj.tre",
-                species_id=0.987,
-                genus_id=0.97,
-                family_id=0.95,
+                species_id=ARGS_CLS.complex_tic.species_sim,
+                genus_id=ARGS_CLS.complex_tic.genus_sim,
+                family_id=ARGS_CLS.complex_tic.family_sim,
                 tic_logger=ANA_LOG
             )
             # Normalizing Tables

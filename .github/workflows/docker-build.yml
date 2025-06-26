@@ -41,7 +41,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: "./Dockerfile.IMNGS2Pipeline"
+        file: "./Dockerfile.TACTIC"
         platforms: linux/amd64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
@@ -53,7 +53,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: "./Dockerfile.IMNGS2Pipeline"
+        file: "./Dockerfile.TACTIC"
         tags: ${{ steps.meta.outputs.tags }}
         outputs: type=tar,dest=image.tar
         build-args: |

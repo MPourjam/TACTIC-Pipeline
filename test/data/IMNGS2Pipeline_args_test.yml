@@ -17,11 +17,11 @@ TrimOneSideArgs:
   stripleft: 17  # for 341F primer (ref:https://probebase.csb.univie.ac.at/pb_report/probe/3844) Change only if you know exact lenght of you primers
 FilterBothSidesArgs:  ## Adjustable from GUI's expert mode
   # ref: https://www.drive5.com/usearch/manual/cmd_fastq_filter.html
-  fastq_maxee_rate: 0.002  # Discard reads with > E expected errors per base.Calculated after any truncation options have been applied. For example, with the fastq_maxee_rate option set to 0.01, then a read of length 100 will be discarded if the expected errors is >1, and a read of length 1,000 will be discarded if the expected errors is >10.
+  fastq_maxee_rate: 0.002  # Discard reads with > E total expected errors for all bases in the read after any truncation options have been applied.
   fastq_truncqual: 10  # Truncate the read at the first position having quality score <= N, so that all remaining Q scores are >N.
 FilterOneSideArgs:  ## Adjustable from GUI's expert mode
   # ref: https://www.drive5.com/usearch/manual/cmd_fastq_filter.html
-  fastq_maxee_rate: 0.002  # Discard reads with > E expected errors per base.Calculated after any truncation options have been applied. For example, with the fastq_maxee_rate option set to 0.01, then a read of length 100 will be discarded if the expected errors is >1, and a read of length 1,000 will be discarded if the expected errors is >10.
+  fastq_maxee_rate: 0.002  # Discard reads with > E total expected errors for all bases in the read after any truncation options have been applied.
   fastq_truncqual: 10  # Truncate the read at the first position having quality score <= N, so that all remaining Q scores are >N.
 IndividualSampleClusterZOTUsArgs:  ## Adjustable from GUI's basic mode
   # ref: https://www.drive5.com/usearch/manual/cmd_unoise3.html
@@ -41,7 +41,7 @@ AddTaxArgs:
 ClusterZOTUsArgs: ## Adjustable from GUI's expert mode
   # ref: https://www.drive5.com/usearch/manual/cmd_unoise3.html
   minsize: 2  # This value filters out amplicons with less than 4 reads. Lower values higher sensitivity, but may result in more noise.
-  abund_limit: 0.000
+  abund_limit: 0.0025
   sample_wise_correction: false
   match_id: 0.99  # This value results more refined ZOTU count than 0.97 (default)
 DeNovoClusterOTUsArgs:  ## Adjustable from GUI's expert mode

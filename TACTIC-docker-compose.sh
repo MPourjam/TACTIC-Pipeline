@@ -2,9 +2,12 @@
 
 
 
-printf "\t╦╔╦╗╔╗╔╔═╗╔═╗  ___  ╔═╗┬┌─┐┌─┐┬  ┬┌┐┌┌─┐\n"
-printf "\t║║║║║║║║ ╦╚═╗  ___| ╠═╝│├─┘├┤ │  ││││├┤ \n"
-printf "\t╩╩ ╩╝╚╝╚═╝╚═╝ |___  ╩  ┴┴  └─┘┴─┘┴┘└┘└─┘\n"
+printf "________________  ____________________.____________  \n"
+printf "\__    ___/  _  \ \_   ___ \__    ___/|   \_   ___ \ \n"
+printf "  |    | /  /_\  \/    \  \/ |    |   |   /    \  \/ \n"
+printf "  |    |/    |    \     \____|    |   |   \     \____\n"
+printf "  |____|\____|__  /\______  /|____|   |___|\______  /\n"
+printf "                \/        \/                      \/ \n"
 
 # validateAction checks if the actions if one of the known actions
 function validateAction {
@@ -57,16 +60,18 @@ done
 
 validateAction $action
 
-compose_file="docker-compose-IMNGS2Pipeline.yml"
+compose_file="docker-compose-TACTIC.yml"
 
 echo ${compose_file}
 
 case $action in
     build)
+        ./generate_env.sh
         docker-compose -f $compose_file build
         ;;
 
     build-no-cache)
+        ./generate_env.sh
         docker-compose -f $compose_file build --no-cache > build.logs
         ;;
 
