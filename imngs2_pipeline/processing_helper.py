@@ -9,6 +9,7 @@ import shutil
 import zipfile
 import inspect
 import threading
+import tempfile
 from os import getcwd, makedirs, listdir, access, X_OK
 from collections import namedtuple
 from datetime import datetime as dt
@@ -16,7 +17,7 @@ from collections.abc import MutableMapping
 from collections import Counter
 import mimetypes as mtypes
 from os import path as ospath
-from os import remove
+from os import remove, replace
 from sys import version_info
 from copy import deepcopy
 if version_info[0] < 3:
@@ -1335,3 +1336,36 @@ class MyCounter(Counter):
 
     def total(self):
         return sum([va for ke, va in self.items()])
+
+
+def onelinefasta(fastafilepath):
+    proper_filepath = Path(fastafilepath).resolve()
+    dirpath = proper_filepath.parent
+    filename = proper_filepath.name
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=str(proper_filepath.suffix),
+        dir=str(dirpath)
+        ) as temp_file:
+        newfile_temp_name = temp_file.name
+    with proper_filepath.open('r') as f, open(newfile_temp_name, "w+") as onelinefa:
+        line = f.readline()
+        sequence = ""
+        while line:
+            if line[0] == '>':
+                if sequence:
+                    onelinefa.write(sequence + "\n")
+                    sequence = ""
+                onelinefa.write(line)
+            elif line == '\n' or line == '\r\n':
+                pass
+            else:
+                sequence += line.strip()
+            line = f.readline()
+        if sequence:
+            onelinefa.write(sequence + "\n")
+    try:
+        replace(newfile_temp_name, proper_filepath)
+    finally:
+        if Path(newfile_temp_name).exists():
+            Path(newfile_temp_name).unlink()

@@ -314,40 +314,44 @@ def clusterZOTUs(sorted_uniques_file: str, minsize: int):
 
 
 # Filter non 16S sequences
-def filter16S(input_fasta_name: str, output_fasta_name: str):
+def filter16S(input_fasta_name: str, output_fasta_name: str, skip: bool = False):
 
-    system_sub(
-        [
-            SORT_ME_RNA_BIN,
-            "--threads",
-            str(POOL_SIZE),
-            "--ref",
-            ref16RNAdb_1,
-            "--ref",
-            ref16RNAdb_2,
-            "--reads",
-            input_fasta_name,
-            "--fastx",
-            "good-" + input_fasta_name,
-            "--other",
-            str(ARGS_PREC.filter_16S.other),
-            "--workdir",
-            ".",
-            "-e",
-            str(ARGS_PREC.filter_16S.e),
-            "--num_alignments",
-            str(ARGS_PREC.filter_16S.num_alignments)
-        ],
-        force_log=True
-    )
-    system_sub(
-        [
-            "mv",
-            "out/aligned." + input_fasta_name.split(".")[-1],
-            output_fasta_name
-        ]
-    )
-    system_sub(["rm", "-r", "idx", "kvdb", "out"])
+    if skip:
+        shutil.copyfile(input_fasta_name, output_fasta_name)
+        onelinefasta(output_fasta_name)
+    else:
+        system_sub(
+            [
+                SORT_ME_RNA_BIN,
+                "--threads",
+                str(POOL_SIZE),
+                "--ref",
+                ref16RNAdb_1,
+                "--ref",
+                ref16RNAdb_2,
+                "--reads",
+                input_fasta_name,
+                "--fastx",
+                "good-" + input_fasta_name,
+                "--other",
+                str(ARGS_PREC.filter_16S.other),
+                "--workdir",
+                ".",
+                "-e",
+                str(ARGS_PREC.filter_16S.e),
+                "--num_alignments",
+                str(ARGS_PREC.filter_16S.num_alignments)
+            ],
+            force_log=True
+        )
+        system_sub(
+            [
+                "mv",
+                "out/aligned." + input_fasta_name.split(".")[-1],
+                output_fasta_name
+            ]
+        )
+        system_sub(["rm", "-r", "idx", "kvdb", "out"])
     return output_fasta_name
 
 
@@ -1174,27 +1178,22 @@ def zotu_pipeline(
         sample_wise_correction: bool,
         zotu_p_logger: logging.Logger = ANA_LOG,
         match_id: float = 0.99,
-        filtered_non_human: bool = True) -> None:
+        filtered_non_bacterial: bool = True) -> None:
     """
     This function will run the ZOTU pipeline.
     """
     ZOTU_P_LOGGER = zotu_p_logger
     ZOTU_P_LOGGER.info('# Clustering at ZOTU level')
     clusterZOTUs(sorted_uniques_file, zotu_minsize)
-    ZOTU_P_LOGGER.info('# Filtering out human sequences')
     # we have already checked the sequences to be non-human reads.
     # let's not do filter16S step for now
-    if not filtered_non_human:
-        shutil.copyfile(
-            "zotus.fasta",  # output of clusterZOTUs
-            "ZOTUs-Seqs.fasta"
-        )
-        non_human_zotus_file = "ZOTUs-Seqs.fasta"
-    else:
-        non_human_zotus_file = filter16S(
-            input_fasta_name="zotus.fasta",
-            output_fasta_name="ZOTUs-Seqs.fasta"
-        )
+    ZOTU_P_LOGGER.info(f'# Filtering out non-bacterial 16S: {not filtered_non_bacterial}')
+    # filtered_non_bacterial means that the sequences does not include non-bacterial reads
+    non_human_zotus_file = filter16S(
+        input_fasta_name="zotus.fasta",
+        output_fasta_name="ZOTUs-Seqs.fasta",
+        skip=filtered_non_bacterial
+    )
 
     ZOTU_P_LOGGER.info('# Creating ZOTU table')
     zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file, match_id)
@@ -1241,7 +1240,7 @@ def otu_pipeline(
         abund_limit: float,
         sample_wise_correction: bool,
         otu_p_logger: logging.Logger = ANA_LOG,
-        filtered_non_human: bool = True,
+        filtered_non_bacterial: bool = True,
         otus_minsize: int = 8) -> None:
     """
     This function will run the OTU pipeline
@@ -1249,17 +1248,15 @@ def otu_pipeline(
     OTU_LOGGER = otu_p_logger
     OTU_LOGGER.info('# Clustering at OTU level')
     clusterOTUs(sorted_uniques_file, minsize=otus_minsize)
-    OTU_LOGGER.info('# Filtering out human sequences')
-    # we have already checked the sequences to be non-human reads in preprocessing step.
+    # This filtering step depends on the passed argument to the whole pipeline
     # let's not do filter16S step
-    if not filtered_non_human:
-        shutil.copyfile("otus1.fa", "OTUs-Seqs.fasta")
-        non_human_otus_file = "OTUs-Seqs.fasta"
-    else:
-        non_human_otus_file = filter16S(
-            input_fasta_name="otus1.fa",
-            output_fasta_name="OTUs-Seqs.fasta"
-        )
+    OTU_LOGGER.info(f'# Filtering out non-bacterial 16S: {not filtered_non_bacterial}')
+    # filtered_non_bacterial means that the sequences does not include non-bacterial reads
+    non_human_otus_file = filter16S(
+        input_fasta_name="otus1.fa",
+        output_fasta_name="OTUs-Seqs.fasta",
+        skip=filtered_non_bacterial
+    )
     OTU_LOGGER.info('# Creating OTU table')
     otu_tab_file = build_OTU_table(raw_seq_file, non_human_otus_file)
     OTU_LOGGER.info('# Filtering OTUs by abundance cut-off of %s', abund_limit)
@@ -1476,7 +1473,9 @@ def main(
         usearch_11_bin: str = USEARCH_11_BIN,
         run_otu_pipeline: bool = False,
         run_tac_pipeline: bool = False,
-        run_tic_pipeline: bool = False) -> list:
+        run_tic_pipeline: bool = False,
+        skip_non_bacterial_filter: bool = False
+    ) -> list:
     """
     sample_seq_files_path: a list of file path to
      each samples' sequence file which is going to be combined with other samples passed to analysis.
@@ -1559,6 +1558,7 @@ def main(
             ARGS_CLS.cluster_zotus.sample_wise_correction,
             ANA_LOG,
             ARGS_CLS.cluster_zotus.match_id,
+            skip_non_bacterial_filter
         )
         # ANA_LOG.info('# Starting OTU pipeline')
         ANA_LOG.info('# Normalizing ZOTU Table')
@@ -1592,7 +1592,7 @@ def main(
                 ARGS_CLS.denovo_cluster_otus.abund_limit,
                 ARGS_CLS.denovo_cluster_otus.sample_wise_correction,
                 ANA_LOG,
-                False,  # filtered and trimmed sequences (sorted_file) are already non-human (in the preprocessing step)
+                skip_non_bacterial_filter,  # gets defined from the CLI.
                 ARGS_CLS.denovo_cluster_otus.minsize
             )
             # Normalizing Tables

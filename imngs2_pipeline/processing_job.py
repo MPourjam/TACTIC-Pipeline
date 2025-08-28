@@ -8,7 +8,8 @@ from .processing_helper import (
     IMNGS2ArgsParser,
     gimmelogger,
     calc_covered_region,
-    calc_spikes)
+    calc_spikes,
+    onelinefasta)
 from .processing_helper import system_sub as sys_sub
 import re
 import random
@@ -319,7 +320,7 @@ def clusterZOTUs():
 
 
 # Filter non 16S sequences
-def filter16S():
+def filter16S(skip=False):
     # cmd_0 = SORT_ME_RNA_BIN + " --ref " + ref16RNAdb_1 + " --ref " + ref16RNAdb_2 + " --reads "
     # cmd_1 = " zotus.fasta --fastx good-ZOTUs --other " + str(ARGS_CLS.filter_16S.other) + " --workdir ."
     # cmd_2 = " -e " + str(ARGS_CLS.filter_16S.e) + " --num_alignments " + str(ARGS_CLS.filter_16S.num_alignments)
@@ -329,37 +330,47 @@ def filter16S():
     # system_sub(cmd_0 + cmd_1 + cmd_2)
     # system_sub('mv out/aligned.fasta good_ZOTUs.fa')
     # system('rm -r idx out kvdb')
-    system_sub(
-        [
-            SORT_ME_RNA_BIN,
-            "--threads",
-            "1",
-            "--ref",
-            ref16RNAdb_1,
-            "--ref",
-            ref16RNAdb_2,
-            "--reads",
-            "zotus.fasta",
-            "--fastx",
-            "good-ZOTUs",
-            "--other",
-            str(ARGS_CLS.filter_16S.other),
-            "--workdir",
-            ".",
-            "-e",
-            str(ARGS_CLS.filter_16S.e),
-            "--num_alignments",
-            str(ARGS_CLS.filter_16S.num_alignments)
-        ],
-        force_log=True
-    )
-    system_sub(
-        [
-            "mv",
-            "out/aligned.fasta",
-            "good_ZOTUs.fa"
-        ]
-    )
+    if not skip:
+        system_sub(
+            [
+                SORT_ME_RNA_BIN,
+                "--threads",
+                "1",
+                "--ref",
+                ref16RNAdb_1,
+                "--ref",
+                ref16RNAdb_2,
+                "--reads",
+                "zotus.fasta",
+                "--fastx",
+                "good-ZOTUs",
+                "--other",
+                str(ARGS_CLS.filter_16S.other),
+                "--workdir",
+                ".",
+                "-e",
+                str(ARGS_CLS.filter_16S.e),
+                "--num_alignments",
+                str(ARGS_CLS.filter_16S.num_alignments)
+            ],
+            force_log=True
+        )
+        system_sub(
+            [
+                "mv",
+                "out/aligned.fasta",
+                "good_ZOTUs.fa"
+            ]
+        )
+    else:
+        system_sub(
+            [
+                "cp",
+                "zotus.fasta",
+                "good_ZOTUs.fa"
+            ]
+        )
+        onelinefasta("good_ZOTUs.fa")
 
 
 def prepare_zotus():
@@ -786,7 +797,9 @@ def main_processing(
         spike_amount: float = 0.0,
         usearch_11_bin: str = USEARCH_11_BIN,
         logger_obj: logging.Logger = None,
-        minimum_preprocessing: bool = False):
+        minimum_preprocessing: bool = False,
+        skip_non_bacterial_filter: bool = False
+    ):
     global PREPPROC_LOG, USEARCH_11_BIN
     # usearch_11_bin must be a global variable and pointing to a file
     USEARCH_11_BIN = usearch_11_bin + " -strand both -threads 1"
@@ -884,8 +897,8 @@ def main_processing(
         else:
             PREPPROC_LOG.info('# Cluster ZOTUs')
             clusterZOTUs()
-            PREPPROC_LOG.info('# Filter non 16S sequences')
-            filter16S()
+            PREPPROC_LOG.info(f'# Filter non-bacterial sequences: {not skip_non_bacterial_filter}')
+            filter16S(skip_non_bacterial_filter)
             # prepare_zotus()  # Adds size=1 to end of zotus header
             PREPPROC_LOG.info('# Build ZOTU Table')
             build_ZOTU_table()

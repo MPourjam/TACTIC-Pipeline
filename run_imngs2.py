@@ -676,7 +676,9 @@ def run_preprocessing(
         sample_weight: float = float("NAN"),  # spike normalizer handles this
         spike_amount: float = 0.0,
         force_preprocess: bool = False,
-        individual_zotus: bool = False) -> Path:
+        individual_zotus: bool = False,
+        skip_non_bacterial_filter: bool = False
+    ) -> Path:
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -764,6 +766,7 @@ def run_preprocessing(
             usearch_11_bin=usearch_11_bin,
             logger_obj=PREPPROC_LOG,
             minimum_preprocessing=False if individual_zotus else True,
+            skip_non_bacterial_filter=skip_non_bacterial_filter
         )
     except MemoryError as mem_exc:
         err_msg = f"{mem_exc}"
@@ -877,8 +880,10 @@ def run_imngs2(
         skip_analysis: bool = False,
         force_preprocess: bool = False,
         analysis_mode: str = "TIC",
-        indvidual_zotus: bool = False,
-        threads: int = POOL_SIZE):
+        individual_zotus: bool = False,
+        skip_non_bacterial_filter: bool = False,
+        threads: int = POOL_SIZE,
+    ):
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE
     PREP_LOG = proc_helper.gimmelogger(
@@ -959,7 +964,7 @@ def run_imngs2(
             res_dict = {}
             task_batches = slice_list(list(mapping_line_tup_dict.items()), POOL_SIZE)
             # updating HEALTHY_PROC_FILES
-            if indvidual_zotus:
+            if individual_zotus:
                 HEALTHY_PROC_FILES.append(TAXED_ZOTU_FILE_NAME)
             # create a queue for the tasks
             failed_preprocesses_sample_id = []
@@ -978,7 +983,8 @@ def run_imngs2(
                                 float(arg_tup[0].total_weight_in_g),  # sample_weight
                                 float(arg_tup[0].spike_amount),   # spike_amount
                                 force_preprocess,
-                                indvidual_zotus,
+                                individual_zotus,
+                                skip_non_bacterial_filter
                             ),
                             preproc_queue,
                             arg_tup[0].SampleID,  # res_dict_key must be unique to bound process to sample_id
@@ -1062,6 +1068,7 @@ def run_imngs2(
                 run_otu_pipeline=pipeline_to_run[0],
                 run_tac_pipeline=pipeline_to_run[1],
                 run_tic_pipeline=pipeline_to_run[2],
+                skip_non_bacterial_filter=skip_non_bacterial_filter
             )
 
         except MemoryError as exc:
@@ -1146,6 +1153,10 @@ if __name__ == "__main__":
                         action="store_true",
                         help="If set, the preprocessing step will not produce individual ZOTUs table for each sample."
                         " It speeds up the pipeline.")
+    parser.add_argument("-snbf", "--skip-non-bacterial-filter",
+                        action="store_true",
+                        help="If set, the filtering step to filter non-bacterial 16S sequences will be skipped."
+                        " It speeds up the pipeline and make pipeline capable of handling non-16S sequences.")
     parser.add_argument("-t", "--threads",
                         type=int,
                         help="Number of threads to use for parallel processing",
@@ -1205,6 +1216,7 @@ if __name__ == "__main__":
             usearch_11_bin=given_usearch_bin,
             force_preprocess=args.force_preprocess,
             analysis_mode=args.analysis_mode,
-            indvidual_zotus=args.individual_zotus,
+            individual_zotus=args.individual_zotus,
+            skip_non_bacterial_filter=args.skip_non_bacterial_filter,
             threads=POOL_SIZE
         )
