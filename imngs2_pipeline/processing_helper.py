@@ -52,10 +52,9 @@ except ModuleNotFoundError:
     def unlock_file(f):
         msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, file_size(f))
 
-# Setting
-global bowtie2, SPIKESIDX
-BIN_DIR = "/base/binaries/"
-bowtie2 = BIN_DIR + "bowtie2/bowtie2"
+global BOWTIE2, BOWTIE2_BUILD, SPIKESIDX
+BOWTIE2 = "/base/binaries/bowtie2/bowtie2"
+BOWTIE2_BUILD = "/base/binaries/bowtie2/bowtie2-build"
 SPIKESIDX = "/base/spikesidx/spike"
 
 # The Start and end positions are according to reference Escherichia Coli K12 subst. MG1655
@@ -260,7 +259,61 @@ def gzip_to_fastq(*files) -> list:
     return fastq_paths
 
 
-def calc_spikes(*fastq_files, spike_amount: float = 0.0):
+def index_spikes_fasta_dir(
+        spike_fasta_dir: str,
+        bowtie2_build: str = BOWTIE2_BUILD,
+        index_base_name: str = "TACTIC_merged__spike",
+        dry_run: bool = False) -> str:
+    """
+    Given a path to a directory contianing spikes fastas files, the funciton merge
+    the fasta files into one file named 'spike' and then build bowtie2 indices from
+    them.
+
+    :spike_fasta_dir: The path to the directory containing spike fasta files.
+    :bowtie2: The path to the bowtie2 binary.
+    :index_base_name: The name of the merged fasta file (default: "TACTIC_merged__spike").
+    :dry_run: If True, only the paths will be returned without creating files.
+
+    Returns the path to indices base names.
+    """
+    if not spike_fasta_dir:
+        raise ValueError("spike_fasta_dir must be provided.")
+    spike_fasta_dir = Path(PurePath(spike_fasta_dir)).absolute()
+    if not spike_fasta_dir.is_dir():
+        raise NotADirectoryError(f"{spike_fasta_dir} is not a directory.")
+    # If it does not contain fasta files
+    if not any(spike_fasta_dir.glob("*.fasta")):
+        raise FileNotFoundError(f"No fasta files found in {spike_fasta_dir}.")
+    bowtie2_index_dir = spike_fasta_dir / "bowtie2_index"
+    makedirs(bowtie2_index_dir, mode=777, exist_ok=True)
+    merged_fasta_path = bowtie2_index_dir / f"{index_base_name}.fasta"
+    indices_base_path = bowtie2_index_dir / index_base_name
+    if dry_run:
+        return str(indices_base_path)
+    # Merging fasta files
+    with open(merged_fasta_path, 'w') as merged_fasta:
+        for fasta_file in spike_fasta_dir.glob("*.fasta"):
+            with open(fasta_file, 'r') as f:
+                merged_fasta.write(f.read())
+    if merged_fasta_path.is_file() and merged_fasta_path.stat().st_size > 0:
+        onelinefasta(merged_fasta_path)
+        # Building bowtie2 indices
+        cmd = [
+            bowtie2_build,
+            str(merged_fasta_path),
+            str(indices_base_path)
+        ]
+
+        call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
+        return str(indices_base_path)
+    return None
+
+
+def calc_spikes(
+        *fastq_files,
+        spike_amount: float = 0.0,
+        bowtie2: str = BOWTIE2,
+        spikes_indices: str = SPIKESIDX) -> tuple:
     '''
     #NOTE fastq_files MUST NOT be gzipped or zippped.
     spike_amount is in ng
@@ -290,7 +343,7 @@ def calc_spikes(*fastq_files, spike_amount: float = 0.0):
         fastq_unaligned = fastq_aligned + "_unal"
 
         if len(fastq_names) == 2:
-            cmd = [bowtie2, "-x", SPIKESIDX, "-1", fastqs_abs_paths[0], "-2",
+            cmd = [bowtie2, "-x", spikes_indices, "-1", fastqs_abs_paths[0], "-2",
                    fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
                    fastq_unaligned]
             call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
@@ -305,7 +358,7 @@ def calc_spikes(*fastq_files, spike_amount: float = 0.0):
                 shutil.copy(fastq_unaligned + ".2", fastqs_abs_paths[1])
 
         elif len(fastq_names) == 1:
-            cmd = [bowtie2, "-x", SPIKESIDX, "-U", fastqs_abs_paths[0], "--al-conc",
+            cmd = [bowtie2, "-x", spikes_indices, "-U", fastqs_abs_paths[0], "--al-conc",
                    fastq_aligned, "--un-conc", fastq_unaligned]
             # system(" ".join(cmd))
             call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
@@ -321,7 +374,12 @@ def calc_spikes(*fastq_files, spike_amount: float = 0.0):
                 shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
 
         shutil.rmtree(spike_res_dir, ignore_errors=True)
-        unaligned_reads, _ = calc_spikes(*fastqs_abs_paths, spike_amount=0.0)
+        unaligned_reads, _ = calc_spikes(
+            *fastqs_abs_paths,
+            spike_amount=0.0,
+            bowtie2=bowtie2,
+            spikes_indices=spikes_indices
+        )
         # to pass it as reads_number and spike number to seq_met model
         return unaligned_reads, spike_counter
 
@@ -1343,10 +1401,9 @@ def onelinefasta(fastafilepath):
     dirpath = proper_filepath.parent
     filename = proper_filepath.name
     with tempfile.NamedTemporaryFile(
-        delete=False,
-        suffix=str(proper_filepath.suffix),
-        dir=str(dirpath)
-        ) as temp_file:
+            delete=False,
+            suffix=str(proper_filepath.suffix),
+            dir=str(dirpath)) as temp_file:
         newfile_temp_name = temp_file.name
     with proper_filepath.open('r') as f, open(newfile_temp_name, "w+") as onelinefa:
         line = f.readline()

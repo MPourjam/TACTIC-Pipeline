@@ -11,12 +11,15 @@ import shutil
 import math
 import sys
 import logging
-from os import symlink, chdir, environ
+from os import symlink, chdir
 from imngs2_pipeline.processing_job import main_processing as preprocessing
 from imngs2_pipeline.analysis.analysis import main as main_analysis
 from collections import namedtuple
 import imngs2_pipeline.processing_helper as proc_helper
-from imngs2_pipeline.processing_helper import gzip_to_fastq, calc_spikes, slice_list
+from imngs2_pipeline.processing_helper import (
+    gzip_to_fastq, calc_spikes, slice_list,
+    index_spikes_fasta_dir
+)
 from multiprocessing import cpu_count, Queue, Process
 from typing import List, Tuple, Dict
 
@@ -75,6 +78,10 @@ HEALTHY_PROC_FILES = [
     DEREP_FILE_NAME,
     # TAXED_ZOTU_FILE_NAME
 ]
+global BOWTIE2, SPIKESIDX
+BIN_DIR = "/base/binaries/"
+BOWTIE2 = BIN_DIR + "bowtie2/bowtie2"
+SPIKESIDX = "/base/spikesidx/spike"
 
 
 def handle_system_signals(signum, frame):
@@ -652,7 +659,12 @@ def remove_spikes(
     parent_path = Path(PurePath(files_paths_abs[0])).parent.relative_to(FASTQ_DIR)
 
     # postponing file opening to avoid race condition if ran parallel
-    real_reads_c, spike_reads_c = calc_spikes(*fastq_files_abs_path, spike_amount=spike_amount)
+    real_reads_c, spike_reads_c = calc_spikes(
+        *fastq_files_abs_path,
+        spike_amount=spike_amount,
+        bowtie2=BOWTIE2,
+        spikes_indices=SPIKESIDX
+    )
     out_tup = (spike_reads_c, spike_stat_mapping_path, tuple(fastq_files_abs_path))
     with open(spike_stat_mapping_path, 'a') as stats_h:
         # appending\
@@ -677,8 +689,7 @@ def run_preprocessing(
         spike_amount: float = 0.0,
         force_preprocess: bool = False,
         individual_zotus: bool = False,
-        skip_non_bacterial_filter: bool = False
-    ) -> Path:
+        skip_non_bacterial_filter: bool = False) -> Path:
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -882,8 +893,8 @@ def run_imngs2(
         analysis_mode: str = "TIC",
         individual_zotus: bool = False,
         skip_non_bacterial_filter: bool = False,
-        threads: int = POOL_SIZE,
-    ):
+        spikes_references_dir: str = "",
+        threads: int = POOL_SIZE):
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE
     PREP_LOG = proc_helper.gimmelogger(
@@ -892,6 +903,21 @@ def run_imngs2(
         only_file=False,
         propagate=False
     )
+    # update SPIKESIDX
+    if spikes_references_dir:
+        try:
+            global SPIKESIDX
+            PREP_LOG.info(f"Indexing spike references in {spikes_references_dir} ...")
+            given_spikes_indices = index_spikes_fasta_dir(
+                spike_fasta_dir=spikes_references_dir
+            )
+            if given_spikes_indices is None:
+                raise ValueError("Failed to index spike references.")
+            SPIKESIDX = given_spikes_indices
+        except Exception as exc:
+            PREP_LOG.warning(
+                f"Failed to index spike references: {exc}."
+                "Falling back to default spike references.")
 
     # PREP_LOG.info("Starting pipeline version {}".format(environ.get("TAG_GIT", "NA")))
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
@@ -1057,7 +1083,7 @@ def run_imngs2(
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
             reduced_samples_dirs, _ = combine_spike_stats_file(samples_dirs, combined_spike_stat=combined_spike_stats_path)
 
-            output_tuple: Tuple[str] = main_analysis(
+            _: Tuple[str] = main_analysis(
                 analysis_dir=analysis_dir,
                 spike_stat_file=combined_spike_stats_path,
                 fastqs_dir=str(FASTQ_DIR),
@@ -1136,6 +1162,11 @@ if __name__ == "__main__":
                         type=str,
                         help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
                         default=DBS_DIR)
+    parser.add_argument("-spk-ref", "--spikes-references-dir",
+                        type=str,
+                        default=SPIKESIDX,
+                        help="The directory containing fasta files of spike-in references. Relative to <--input-directory>."
+                        f" Default is {SPIKESIDX}")
     parser.add_argument("-sp", "--skip-preprocess",
                         action="store_true",
                         help="Should skip preprocessing step")
@@ -1172,6 +1203,8 @@ if __name__ == "__main__":
         only_file=False,
         propagate=False
     )
+    # updating spikes references dir
+    args.spikes_references_dir = str(INPUT_DIR.joinpath(args.spikes_references_dir).absolute()) if args.spikes_references_dir else str(SPIKESIDX)
     given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if str(args.usearch_bin) != str(USEARCH_11_BIN) else str(USEARCH_11_BIN)
     # warning the cli users for the given usearch file
     try:
@@ -1186,6 +1219,7 @@ if __name__ == "__main__":
     cli_map_file = INPUT_DIR.joinpath(args.mapping_file) if args.mapping_file else ""
     # Exposing default argument files.
     cli_spike_stat_file = INPUT_DIR.joinpath(args.spike_stat) if args.spike_stat else ""
+    # Check the spike fasta directory. It should be relative to INPUT_DIR
     if not cli_args_file.is_file():
         shutil.copy2(
             str(ARGS_YAML_FILE),
@@ -1218,5 +1252,6 @@ if __name__ == "__main__":
             analysis_mode=args.analysis_mode,
             individual_zotus=args.individual_zotus,
             skip_non_bacterial_filter=args.skip_non_bacterial_filter,
+            spikes_references_dir=args.spikes_references_dir,
             threads=POOL_SIZE
         )

@@ -45,6 +45,7 @@ class ArgumentSet:
     threads = 0
     analysis_mode = ""
     individual_zotus = False
+    spikes_reference_dir = None
 
     def __init__(self, input_dir, fastq_dir, **kwargs):
         self.input_dir = input_dir
@@ -81,6 +82,9 @@ class ArgumentSet:
             args += ["--analysis-mode", self.analysis_mode]
         if self.individual_zotus:
             args += ["-iz"]
+        if self.spikes_references_dir:
+            args += ["--spikes-references-dir", self.spikes_references_dir]
+
         return args
 
     def __repr__(self) -> str:
@@ -388,6 +392,13 @@ def copy_initial_files(run_dir: str) -> None:
         subprocess.run(["cp", file, str(run_dir) + "/"])
     subprocess.run(["cp", data + "/IMNGS2Pipeline_args_test.yml", run_dir])
 
+def copy_spikes_dir(run_dir: str) -> None:
+    """
+    Copy the spikes directory from the data directory to the run directory.
+    The data directory is expected to be in the same directory as this script.
+    """
+    subprocess.run(["cp", "-r", data + "/custom_spikes", run_dir + "/custom_spikes"])
+
 
 @pytest.mark.xfail(reason="This test is not implemented yet. check_otutable_format() needs a mapping file to work properly.")
 def test_flat_autodiscover(build_image):
@@ -640,3 +651,29 @@ def test_full_TIC_analysis_iz(build_image):
         return args_set
 
     run_container(setup_file_structure)
+
+
+def test_full_TIC_analysis_custom_spike(build_image):
+    def setup_file_structure(run_dir: str):
+        copy_initial_files(run_dir)
+        copy_spikes_dir(run_dir)
+        # setting args
+        args_set = ArgumentSet("", "")
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.analysis_mode = "TIC"
+        args_set.individual_zotus = False
+        args_set.spikes_references_dir = "custom_spikes"
+        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
+
+        return args_set
+
+    run_container(setup_file_structure)
+

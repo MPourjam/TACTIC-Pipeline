@@ -798,8 +798,7 @@ def main_processing(
         usearch_11_bin: str = USEARCH_11_BIN,
         logger_obj: logging.Logger = None,
         minimum_preprocessing: bool = False,
-        skip_non_bacterial_filter: bool = False
-    ):
+        skip_non_bacterial_filter: bool = False):
     global PREPPROC_LOG, USEARCH_11_BIN
     # usearch_11_bin must be a global variable and pointing to a file
     USEARCH_11_BIN = usearch_11_bin + " -strand both -threads 1"
@@ -864,7 +863,12 @@ def main_processing(
             spike_amount = 0.0
             PREPPROC_LOG.warning("Negative value for spike_amount replaced with default value (0.0)")
         # default threads value for bowtie2 used in calc_spikes is 1
-        real_reads_c, spike_reads_c = calc_spikes(*files_paths, spike_amount=spike_amount)
+        real_reads_c, spike_reads_c = calc_spikes(
+            *files_paths,
+            spike_amount=spike_amount,
+            bowtie2=bowtie2,
+            spikes_indices=SPIKESIDX
+        )
         PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
         PREPPROC_LOG.info('# FastQC')
         run_FastQC(forward_file, reverse_file)
