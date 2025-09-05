@@ -1,78 +1,58 @@
+# Smallest practical Debian-based Python runtime
 FROM python:3.12-slim
 
-# Ensure system packages are up-to-date and remove unnecessary package lists to reduce vulnerabilities
+# --- Minimal, size-friendly defaults ---
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    LANG=C.UTF-8 LC_ALL=C.UTF-8 \
+    PYTHONWARNINGS="ignore::SyntaxWarning"
 
-
-
-# Version information
+# Version info
 ARG GIT_TAG=NA
 ENV GIT_TAG=${GIT_TAG}
-# Suppressing warning about SyntaxWarning of python 3.12
-ENV PYTHONWARNINGS="ignore::SyntaxWarning"
-# Setting some environment variables
-# Install locales package
-# Install dependencies
+
+
+# drop dev tools like cmake/gfortran/vim; add back ONLY if required at runtime
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends libharfbuzz-dev libfribidi-dev cmake vim rsync wget fastqc graphlan gfortran locales && \
-    apt-get update --fix-missing && \
-    rm -rf /var/lib/apt/lists/*
-    
-# Generate the locale
-RUN touch /etc/locale.gen
-RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US:en
-ENV LC_ALL=en_US.UTF-8
+    apt-get install -y --no-install-recommends \
+        ca-certificates libharfbuzz-dev libfribidi-dev rsync wget fastqc locales\
+    && rm -rf /var/lib/apt/lists/*
 
+# Generate UTF-8 locale (lightweight)
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-#########################
-# Downloading Databases #
-#########################
-RUN mkdir -p /base/binaries
-RUN mkdir -p /base/databases
+# --- App layout ---
+WORKDIR /base
+RUN mkdir -p /base/binaries /base/spikesidx /base/imngs2_pipeline
+
+# keep only what you need at runtime
 COPY binaries/ /base/binaries/
-COPY databases/ /base/databases/
-RUN /bin/bash /base/databases/SILVA_download.sh
-
-###########################
-# Copying necessary files #
-###########################
-RUN mkdir -p /base
-RUN mkdir -p /base/spikesidx
-RUN mkdir -p /base/imngs2_pipeline
+RUN chmod +x /base/binaries/SILVA_download.sh
 COPY spikesidx/ /base/spikesidx/
+COPY databases_raw //base/databases_raw
 COPY imngs2_pipeline /base/imngs2_pipeline/
 COPY run_imngs2.py /base/run_imngs2.py
 COPY IMNGS2Pipeline_args.yml /base/IMNGS2Pipeline_args.yml
 COPY mapping_file_TEMPLATE.csv /base/mapping_file_TEMPLATE.csv
 COPY requirements.txt /base/requirements.txt
 
+# --- Python deps (no cache, no bytecode) ---
+RUN python -m pip install --no-cache-dir --upgrade pip && \
+    python -m pip install --no-cache-dir -r /base/requirements.txt
 
-######################
-## PIP DEPENDENCIES ##
-######################
-RUN pip install --upgrade pip
-RUN pip install --upgrade -r /base/requirements.txt
+VOLUME ["/base/inputs/"]
 
+# Tiny entrypoint to lazy-fetch DBs only once into the mounted volume
+COPY entrypoint.sh /base/entrypoint.sh
+RUN chmod +x /base/entrypoint.sh
 
-######################
-## R and R PACKAGES ##
-######################
-#RUN Rscript -e '\
-#library("devtools"); install_version("vegan", version="2.6-2", repos="https://cran.r-project.org");\
-#install_version("ggplot2", version="3.4.2", repos="https://cran.r-project.org");\
-#install_version("iNEXT", version="2.0.20", repos="https://cran.r-project.org");\
-#install_version("GUniFrac", version="1.7", repos="https://cran.r-project.org");\
-#'
+# Convenience symlink
+RUN ln -s /base/run_imngs2.py /usr/local/bin/run_imngs2 && chmod 755 /base/run_imngs2.py
 
-# Cleaning apt-cache
-RUN apt clean autoclean
-RUN apt autoremove --yes
-RUN rm -rf /var/lib/{apt,dpkg,cache,log}/
+# Final cleanup (already minimal, but make sure)
+RUN rm -rf /root/.cache
 
-# Adding run_imngs2 command to PATH
-RUN /bin/chmod 777 -R /base 
-RUN /bin/ln -s /base/run_imngs2.py /usr/local/bin/run_imngs2
-WORKDIR /base
+ENTRYPOINT ["/base/entrypoint.sh"]
+

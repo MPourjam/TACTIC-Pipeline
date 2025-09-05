@@ -27,7 +27,7 @@ USEARCH_11_BIN = USEARCH_11_BIN + " -strand both -threads 1"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
 USEARCH8_1 = USEARCH_8_BIN + " -threads 1"
 SINA_BIN = BIN_DIR + 'sina/sina'
-DBS_DIR = "/base/databases/"
+DBS_DIR = "/base/inputs/databases/"
 GOLD_REFDB_USEARCH = DBS_DIR + 'SILVA-bac-16s-90.udb'
 SINA_ARB = DBS_DIR + 'SILVA_LATEST.arb'
 ref16RNAdb_1 = DBS_DIR + "silva-bac-16s-id90.fasta"
@@ -35,7 +35,7 @@ ref16RNAdb_2 = DBS_DIR + "silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
 bowtie2 = BIN_DIR + "bowtie2/bowtie2"
 krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
-SPIKESIDX = "/base/spikesidx/spike"
+SPIKESIDX = "/base/spikesidx/bowtie2_spike_indices/spike"
 S_FLAT_LOCATION = '/base/s_flat.txt'
 
 
@@ -859,17 +859,20 @@ def main_processing(
         chdir(input_dir)
         PREPPROC_LOG.info("# Spike Removal")
         # spike_amount should not be negative
-        if not (math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0):
+        if math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0:
             spike_amount = 0.0
-            PREPPROC_LOG.warning("Negative value for spike_amount replaced with default value (0.0)")
-        # default threads value for bowtie2 used in calc_spikes is 1
-        real_reads_c, spike_reads_c = calc_spikes(
-            *files_paths,
-            spike_amount=spike_amount,
-            bowtie2=bowtie2,
-            spikes_indices=SPIKESIDX
-        )
-        PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
+            PREPPROC_LOG.warning(
+                "Spike amount is zero or negative, skipping spike removal step"
+            )
+        if float(spike_amount) > 0.0:
+            # default threads value for bowtie2 used in calc_spikes is 1
+            real_reads_c, spike_reads_c = calc_spikes(
+                *files_paths,
+                spike_amount=spike_amount,
+                bowtie2=bowtie2,
+                spikes_indices=SPIKESIDX
+            )
+            PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
         PREPPROC_LOG.info('# FastQC')
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is CRUCIAL to be here

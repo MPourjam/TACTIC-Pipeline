@@ -122,6 +122,10 @@ class ArgsetException(Exception):
     pass
 
 
+class SpikeRemovalException(Exception):
+    pass
+
+
 def calc_covered_region(start: int, end: int, regions_dict: dict = SixteenS_regions_dict):
     # Calculating Regions
     regions_coved = "NA"
@@ -163,20 +167,36 @@ def loud_subprocess(cmd_args_list: list, shell_bool: bool = False, cap_output: b
 
 
 class LogPrint(logging.Logger):
-    def debug(msg):
-        print(f"\033[95m{msg}\033[0m")
 
-    def info(msg):
-        print(f"\033[94m{msg}\033[0m")
+    def __init__(self, name="print_logger"):
+        super().__init__(name)
+        self.setLevel(logging.DEBUG)
+        # create console handler and set level to debug
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+        # create formatter
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s:%(filename)s:%(lineno)d - %(levelname)s - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
+        ch.setFormatter(formatter)
+        # add ch to logger
+        self.addHandler(ch)
 
-    def warning(msg):
-        print(f"\033[93m{msg}\033[0m")
+    def debug(self, msg):
+        self.log(logging.DEBUG, msg)
 
-    def error(msg):
-        print(f"\033[91m{msg}\033[0m")
+    def info(self, msg):
+        self.log(logging.INFO, msg)
 
-    def critical(msg):
-        print(f"\033[1m\033[91m{msg}\033[0m")
+    def warning(self, msg):
+        self.log(logging.WARNING, msg)
+
+    def error(self, msg):
+        self.log(logging.ERROR, msg)
+
+    def critical(self, msg):
+        self.log(logging.CRITICAL, msg)
 
 
 def system_sub(cmd_args_list: list,
@@ -262,7 +282,7 @@ def gzip_to_fastq(*files) -> list:
 def index_spikes_fasta_dir(
         spike_fasta_dir: str,
         bowtie2_build: str = BOWTIE2_BUILD,
-        index_base_name: str = "TACTIC_merged__spike",
+        index_base_name: str = "spike",
         dry_run: bool = False) -> str:
     """
     Given a path to a directory contianing spikes fastas files, the funciton merge
@@ -276,18 +296,21 @@ def index_spikes_fasta_dir(
 
     Returns the path to indices base names.
     """
+    idx_logger = gimmelogger(
+        "run_imngs2",
+        only_file=False,
+        propagate=False
+    )
     if not spike_fasta_dir:
         raise ValueError("spike_fasta_dir must be provided.")
     spike_fasta_dir = Path(PurePath(spike_fasta_dir)).absolute()
     if not spike_fasta_dir.is_dir():
         raise NotADirectoryError(f"{spike_fasta_dir} is not a directory.")
-    # If it does not contain fasta files
-    if not any(spike_fasta_dir.glob("*.fasta")):
-        raise FileNotFoundError(f"No fasta files found in {spike_fasta_dir}.")
-    bowtie2_index_dir = spike_fasta_dir / "bowtie2_index"
+    indices_base_path = spike_fasta_dir / index_base_name
+    bowtie2_index_dir = indices_base_path.parent
     makedirs(bowtie2_index_dir, mode=777, exist_ok=True)
-    merged_fasta_path = bowtie2_index_dir / f"{index_base_name}.fasta"
-    indices_base_path = bowtie2_index_dir / index_base_name
+    merged_fasta_path = spike_fasta_dir / f"{index_base_name}_merged_by_TACTIC.fasta"
+    # indices_base_path = bowtie2_index_dir / index_base_name
     if dry_run:
         return str(indices_base_path)
     # Merging fasta files
@@ -303,8 +326,20 @@ def index_spikes_fasta_dir(
             str(merged_fasta_path),
             str(indices_base_path)
         ]
+        idx_logger.info(f"Indexing spikes fasta files in {spike_fasta_dir} ...")
+        _ = system_sub(
+            cmd,
+            capture_output=True,
+            quiet=False,
+            logger_obj=idx_logger
+        )
 
-        call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
+    indices_files = list(bowtie2_index_dir.glob("*.bt2"))
+    faulty_indices = [True if not f.is_file() and f.stat().st_size == 0 else False for f in indices_files]
+    if not indices_files or any(faulty_indices):
+        idx_logger.warning(f"Some or all indices were not created properly: {indices_base_path}*.bt2")
+    else:
+        idx_logger.info(f"Spike indices found: {indices_base_path}*.bt2")
         return str(indices_base_path)
     return None
 
@@ -373,6 +408,9 @@ def calc_spikes(
             if spike_counter != 0:
                 shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
 
+        # Checking the status of bowtie2 run
+        if call_out.returncode != 0:
+            raise SpikeRemovalException(f"Error in running command {' '.join(cmd_list)}:\n{call_out.stderr}")
         shutil.rmtree(spike_res_dir, ignore_errors=True)
         unaligned_reads, _ = calc_spikes(
             *fastqs_abs_paths,
@@ -1399,7 +1437,7 @@ class MyCounter(Counter):
 def onelinefasta(fastafilepath):
     proper_filepath = Path(fastafilepath).resolve()
     dirpath = proper_filepath.parent
-    filename = proper_filepath.name
+
     with tempfile.NamedTemporaryFile(
             delete=False,
             suffix=str(proper_filepath.suffix),

@@ -1,4 +1,4 @@
-#! /usr/local/bin/python
+#! /usr/bin/env python3
 import warnings
 # In Python ≤3.11, invalid escape sequences (like "\d" outside raw strings) were allowed but discouraged.
 # In Python 3.12, they raise SyntaxWarning by default to encourage cleaner, future-proof code.
@@ -38,7 +38,7 @@ global DEFAULT_ARG_FILE_NAME
 DEFAULT_ARG_FILE_NAME = "IMNGS2Pipeline_args.yml"
 ARGS_YAML_FILE = Path(PurePath("/base/" + DEFAULT_ARG_FILE_NAME)).absolute()
 MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.csv")).absolute()
-DBS_DIR = "/base/databases/"
+DBS_DIR = "/base/inputs/databases/"
 max_pool = int(cpu_count() * 0.7)
 POOL_SIZE = max_pool if max_pool > 0 else 1
 # Preparing the logger
@@ -78,10 +78,12 @@ HEALTHY_PROC_FILES = [
     DEREP_FILE_NAME,
     # TAXED_ZOTU_FILE_NAME
 ]
-global BOWTIE2, SPIKESIDX
+global BOWTIE2, SPIKESIDX, BIN_DIR, BOWTIE2, SPIKESIDX_PREFIX, SPIKESIDX_PARENT
 BIN_DIR = "/base/binaries/"
 BOWTIE2 = BIN_DIR + "bowtie2/bowtie2"
-SPIKESIDX = "/base/spikesidx/spike"
+SPIKESIDX_PREFIX = "bowtie2_spike_indices/spike"
+SPIKESIDX_PARENT = "/base/spikesidx/"
+SPIKESIDX = SPIKESIDX_PARENT + SPIKESIDX_PREFIX
 
 
 def handle_system_signals(signum, frame):
@@ -773,7 +775,7 @@ def run_preprocessing(
             reverse_file=fastq_files_tuple[1] if len(fastq_files_tuple) == 2 else "",
             input_id=sample_id,
             args_file_path=sample_arg_file,
-            spike_amount=0,  # We run it always with 0 as we remove spikes before if there is
+            spike_amount=0.0,  # We run it always with 0 as we remove spikes before if there is
             usearch_11_bin=usearch_11_bin,
             logger_obj=PREPPROC_LOG,
             minimum_preprocessing=False if individual_zotus else True,
@@ -789,12 +791,22 @@ def run_preprocessing(
             shutil.rmtree(str(sample_dir.parent))
         sample_dir = None
         sys.exit(160)
+    except proc_helper.SpikeRemovalException as spike_exc:
+        PREPPROC_LOG.error(f"Failed to remove spikes for {sample_id}. {spike_exc}")
+        # If parent of sample_dir is empty then remove it
+        if not list(sample_dir.parent.iterdir()):
+            shutil.rmtree(str(sample_dir.parent))
+        sample_dir = None
+        # TODO check if bowtie2 raises any other return code than 0 if the sample
+        # does not have any spike reads
+        raise spike_exc
     except proc_helper.ArgsetException as argset_exc:
         PREPPROC_LOG.error(f"Failed to run preprocessing for {sample_id}. {argset_exc}")
         # If parent of sample_dir is empty then remove it
         if not list(sample_dir.parent.iterdir()):
             shutil.rmtree(str(sample_dir.parent))
         sample_dir = None
+        raise argset_exc
     except Exception as exc:
         msg = f"{exc}"
         PREPPROC_LOG.error(msg)
@@ -818,9 +830,14 @@ def parallel_preprocessing(args: tuple, process_queue: Queue, res_dict_key: str)
         process_queue.put((res_dict_key, None))
         PREP_LOG.error(f"run_preprocessing argument error for {str(args[0])}. {argset_exc}")
         sys.exit(164)
+    except proc_helper.SpikeRemovalException as spike_exc:
+        process_queue.put((res_dict_key, None))
+        PREP_LOG.error(f"Failed to remove spikes for {str(args[0])}. {spike_exc}")
+        sys.exit(171)
     except Exception as exc:
         process_queue.put((res_dict_key, None))
         PREP_LOG.error(f"Failed to run preprocessing for {str(args[0])}. {exc}")
+        sys.exit(1)
 
     return
 
@@ -893,8 +910,8 @@ def run_imngs2(
         analysis_mode: str = "TIC",
         individual_zotus: bool = False,
         skip_non_bacterial_filter: bool = False,
-        spikes_references_dir: str = "",
-        threads: int = POOL_SIZE):
+        spikes_references_dir: str = SPIKESIDX_PARENT,
+        threads: int = POOL_SIZE) -> str:
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE
     PREP_LOG = proc_helper.gimmelogger(
@@ -904,20 +921,25 @@ def run_imngs2(
         propagate=False
     )
     # update SPIKESIDX
-    if spikes_references_dir:
-        try:
-            global SPIKESIDX
-            PREP_LOG.info(f"Indexing spike references in {spikes_references_dir} ...")
-            given_spikes_indices = index_spikes_fasta_dir(
-                spike_fasta_dir=spikes_references_dir
-            )
-            if given_spikes_indices is None:
-                raise ValueError("Failed to index spike references.")
+    spikes_references_dir = Path(PurePath(spikes_references_dir)).absolute()
+    try:
+        global SPIKESIDX
+        PREP_LOG.info(f"Indexing spike references in {spikes_references_dir} ...")
+        given_spikes_indices = index_spikes_fasta_dir(
+            spike_fasta_dir=spikes_references_dir,
+            index_base_name=SPIKESIDX_PREFIX
+        )
+        if given_spikes_indices is None:
+            PREP_LOG.warning("Failed to index spike references. Falling back to default spike references.")
+            raise proc_helper.SpikeRemovalException("Failed to index spike references.")
+        else:
             SPIKESIDX = given_spikes_indices
-        except Exception as exc:
-            PREP_LOG.warning(
-                f"Failed to index spike references: {exc}."
-                "Falling back to default spike references.")
+    except proc_helper.SpikeRemovalException as spike_exc:
+        PREP_LOG.warning(f"Failed to index spike references: {spike_exc}.")
+        sys.exit(171)
+    except Exception as exc:
+        PREP_LOG.warning(f"Failed to index spike references: {exc}. Falling back to default spike references.")
+        sys.exit(171)
 
     # PREP_LOG.info("Starting pipeline version {}".format(environ.get("TAG_GIT", "NA")))
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
@@ -953,7 +975,7 @@ def run_imngs2(
     mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else ""  # it will return a path to current directory if mapping_file = ""
     # Preparing mapping file entries
     # Gathering sequence files
-    PREP_LOG.debug("Gathering sequence files in {}".format(str(fastq_file_dir)))
+    PREP_LOG.info("# Gathering sequence files in {}".format(str(fastq_file_dir)))
     seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
     seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
     PREP_LOG.info("{} samples were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
@@ -990,7 +1012,7 @@ def run_imngs2(
             res_dict = {}
             task_batches = slice_list(list(mapping_line_tup_dict.items()), POOL_SIZE)
             # updating HEALTHY_PROC_FILES
-            if individual_zotus:
+            if individual_zotus and TAXED_ZOTU_FILE_NAME not in HEALTHY_PROC_FILES:
                 HEALTHY_PROC_FILES.append(TAXED_ZOTU_FILE_NAME)
             # create a queue for the tasks
             failed_preprocesses_sample_id = []
@@ -1021,8 +1043,11 @@ def run_imngs2(
                 for proc in this_batch:
                     proc.join(timeout=2400)  # 40 minutes of waiting
                     if proc.is_alive():
+                        PREC_PROC_LOG.warning("Process for sample is taking too long. Terminating it.")
                         proc.terminate()
                         proc.join()
+                    elif proc.exitcode != 0:
+                        PREC_PROC_LOG.warning(f"Process for sample exited with code {proc.exitcode}")
                 while not preproc_queue.empty():
                     sample_id, res = preproc_queue.get()
                     if res:
@@ -1034,7 +1059,6 @@ def run_imngs2(
             samples_dirs = list(res_dict.values())
         except Exception as exc:
             PREC_PROC_LOG.error(f"Preprocessing Failed: {exc}")
-            skip_analysis = True
             samples_dirs = []
             sys.exit(165)
         else:
@@ -1164,7 +1188,7 @@ if __name__ == "__main__":
                         default=DBS_DIR)
     parser.add_argument("-spk-ref", "--spikes-references-dir",
                         type=str,
-                        default=SPIKESIDX,
+                        default="",
                         help="The directory containing fasta files of spike-in references. Relative to <--input-directory>."
                         f" Default is {SPIKESIDX}")
     parser.add_argument("-sp", "--skip-preprocess",
@@ -1204,7 +1228,8 @@ if __name__ == "__main__":
         propagate=False
     )
     # updating spikes references dir
-    args.spikes_references_dir = str(INPUT_DIR.joinpath(args.spikes_references_dir).absolute()) if args.spikes_references_dir else str(SPIKESIDX)
+    args.spikes_references_dir = str(INPUT_DIR.joinpath(args.spikes_references_dir).absolute()) if args.spikes_references_dir else SPIKESIDX_PARENT
+    # updating usearch path
     given_usearch_bin = str(INPUT_DIR.joinpath(args.usearch_bin).absolute()) if str(args.usearch_bin) != str(USEARCH_11_BIN) else str(USEARCH_11_BIN)
     # warning the cli users for the given usearch file
     try:
