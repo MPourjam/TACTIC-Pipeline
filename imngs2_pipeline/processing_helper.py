@@ -1160,7 +1160,7 @@ class MergePairsArgs(ArgsParserUtil):
         # "fastq_mergepairs": [FORWARD_FILE],
         # "reverse": [REVERSE_FILE],
         # "fastqout": merged.fasta,
-        "fasq_maxdiffs": 50,
+        "fastq_maxdiffs": 50,
         "fastq_pctid": 50,
         "fastq_minmergelen": 200,
         "fastq_maxmergelen": 600,
