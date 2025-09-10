@@ -12,11 +12,11 @@ import math
 import sys
 import logging
 from os import symlink, chdir
-from imngs2_pipeline.processing_job import main_processing as preprocessing
-from imngs2_pipeline.analysis.analysis import main as main_analysis
+from tactic_pipeline.processing_job import main_processing as preprocessing
+from tactic_pipeline.analysis.analysis import main as main_analysis
 from collections import namedtuple
-import imngs2_pipeline.processing_helper as proc_helper
-from imngs2_pipeline.processing_helper import (
+import tactic_pipeline.processing_helper as proc_helper
+from tactic_pipeline.processing_helper import (
     gzip_to_fastq, calc_spikes, slice_list,
     index_spikes_fasta_dir
 )
@@ -35,7 +35,7 @@ INPUT_DIR = Path(PurePath("/base/inputs/")).absolute()
 FASTQ_DIR = INPUT_DIR
 PROC_DIR_SUFFIX = "__processed"
 global DEFAULT_ARG_FILE_NAME
-DEFAULT_ARG_FILE_NAME = "IMNGS2Pipeline_args.yml"
+DEFAULT_ARG_FILE_NAME = "TACTICPipeline_args.yml"
 ARGS_YAML_FILE = Path(PurePath("/base/" + DEFAULT_ARG_FILE_NAME)).absolute()
 MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.csv")).absolute()
 DBS_DIR = "/base/inputs/databases/"
@@ -43,7 +43,7 @@ max_pool = int(cpu_count() * 0.7)
 POOL_SIZE = max_pool if max_pool > 0 else 1
 # Preparing the logger
 PREP_LOG = proc_helper.gimmelogger(
-    "run_imngs2",
+    "run_tactic",
     log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
     only_file=False,
     propagate=False
@@ -164,8 +164,8 @@ def is_argset_different(existing_arg_file: Path, processed_arg_file: Path = None
     existing_arg_file = Path(PurePath(existing_arg_file)).absolute()
     proce_arg_file = Path(PurePath(processed_arg_file)).absolute() if processed_arg_file else None
     if proce_arg_file:
-        given_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=existing_arg_file)
-        proce_argset_obj = proc_helper.IMNGS2ArgsParser(config_yaml=proce_arg_file)
+        given_argset_obj = proc_helper.TACTICArgsParser(config_yaml=existing_arg_file)
+        proce_argset_obj = proc_helper.TACTICArgsParser(config_yaml=proce_arg_file)
         is_different = given_argset_obj.preproc_args != proce_argset_obj.preproc_args
 
     return is_different
@@ -703,7 +703,7 @@ def run_preprocessing(
     if not any(seq_files_t):
         return sample_dir
     PREPPROC_LOG = proc_helper.gimmelogger(
-        logger_name=f"run_imngs2.preprocessing.{str(sample_id)}",
+        logger_name=f"run_tactic.preprocessing.{str(sample_id)}",
         only_file=True,
         propagate=False
     )
@@ -733,7 +733,7 @@ def run_preprocessing(
 
         log_file_path = sample_dir.joinpath(f"{str(sample_id)}_logs.txt")
         PREPPROC_LOG = proc_helper.gimmelogger(
-            logger_name=f"run_imngs2.preprocessing.{str(sample_id)}",
+            logger_name=f"run_tactic.preprocessing.{str(sample_id)}",
             log_file=log_file_path,
             only_file=True,
         )
@@ -897,7 +897,7 @@ def check_taxed_zotus_fasta(file_path: str) -> bool:
     return format_is_correct
 
 
-def run_imngs2(
+def run_tactic(
         fastq_file_dir: str,
         usearch_11_bin: str = str(USEARCH_11_BIN),
         args_yml_file: str = str(ARGS_YAML_FILE),
@@ -915,7 +915,7 @@ def run_imngs2(
     # NOTE if this function is imported then the default global variables will be used
     global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE
     PREP_LOG = proc_helper.gimmelogger(
-        "run_imngs2",
+        "run_tactic",
         log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
         only_file=False,
         propagate=False
@@ -965,7 +965,7 @@ def run_imngs2(
         pass
     except Exception:
         PREP_LOG.debug("Failed to copy given arguments file to {}".format(str(fastq_file_dir.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))))
-        sys.exit(163)  # https://github.com/MPourjam/IMNGS2Pipeline/issues/42
+        sys.exit(163)  # https://github.com/MPourjam/TACTICPipeline/issues/42
     # preproc_dir = fastq_file_dir.joinpath("Preprocessing")
     # preproc_dir.mkdir(parents=True, exist_ok=True)
     default_spike_stat_compiled = fastq_file_dir.joinpath(SPIKE_STAT_FILE_NAME)
@@ -1001,7 +1001,7 @@ def run_imngs2(
     # master preprocessing logger
     PREC_PROC_LOG = proc_helper.gimmelogger(
         # this logger makes sure that the logs are thread safe
-        "run_imngs2.preprocessing",
+        "run_tactic.preprocessing",
         only_file=True
     )
     if not skip_preprocess or force_preprocess:
@@ -1222,7 +1222,7 @@ if __name__ == "__main__":
     # If they are the same it returns unchanged. If fastq_dir is subpath of input it returns the longest one
     FASTQ_DIR = INPUT_DIR.joinpath(args.fastq_directory).absolute()
     PREP_LOG = proc_helper.gimmelogger(
-        "run_imngs2",
+        "run_tactic",
         log_file=FASTQ_DIR.joinpath("Pipeline_log.txt"),
         only_file=False,
         propagate=False
@@ -1264,7 +1264,13 @@ if __name__ == "__main__":
         if args.db_directory != DBS_DIR:
             DBS_DIR = args.db_directory
         # NOTE Every needed file and directory should be in /base/inputs/
-        run_imngs2(
+        # download the databases
+        PREP_LOG.info(
+            "# Downloading and preparing necessary databases."
+        )
+        proc_helper.download_databases(logger_obj=PREP_LOG)
+        # run the main pipeline
+        run_tactic(
             fastq_file_dir=FASTQ_DIR,
             args_yml_file=cli_args_file,
             dbs_dir=INPUT_DIR.joinpath(args.db_directory),

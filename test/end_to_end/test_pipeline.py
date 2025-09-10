@@ -25,8 +25,8 @@ def build_image():
         return
     print("Building the image using file system image")
     # build the image using tar file target
-    # docker buildx build -f Dockerfile.IMNGS2Pipeline --output type=tar,dest=image.tar .
-    subprocess.run(["docker", "buildx", "build", "-f", "Dockerfile.IMNGS2Pipeline", "--output", "type=tar,dest=image.tar", "."])
+    # docker buildx build -f Dockerfile.TACTICPipeline --output type=tar,dest=image.tar .
+    subprocess.run(["docker", "buildx", "build", "-f", "Dockerfile.TACTICPipeline", "--output", "type=tar,dest=image.tar", "."])
     # load with tag
     subprocess.run(["docker", "image", "import", "image.tar", IMAGE_NAME])
 
@@ -125,7 +125,7 @@ def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
     ```
     .
     ├── spike_stat_mapping_file.csv  # Must be there
-    ├── IMNGS2Pipeline_args.yml  # Must be there
+    ├── TACTICPipeline_args.yml  # Must be there
     ├── taxed_ZOTUs.fasta  # Must be there
     ├── silva_start_end.txt  # Must be there
     ├── ZOTUs-table.final.tab
@@ -145,7 +145,7 @@ def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
     return_bool = True
     files_to_be_there = [
         re.compile(r"spike_stat_mapping_file\.csv"),
-        re.compile(r"IMNGS2Pipeline_args\.yml"),
+        re.compile(r"TACTICPipeline_args\.yml"),
         re.compile(r"taxed_ZOTUs\.fasta"),  # also in zip file
         re.compile(r"silva_start_end\.txt"),
         re.compile(r"ZOTUs-table\.final\.tab"),  # also in zip file
@@ -312,13 +312,13 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         # copy the data to the temporary directory
         arg_set = setup_file_structure(run_dir)
 
-        # if we are in a container created with image name IMAGE_NAME, the input directory we run run_imngs2 in /base/run_imngs2.py
-        # cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "python", "/base/run_imngs2.py"]
+        # if we are in a container created with image name IMAGE_NAME, the input directory we run run_tactic in /base/run_tactic.py
+        # cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "python", "/base/run_tactic.py"]
         if os.path.isfile("/.dockerenv"):  # then we are in a container
-            cmd = ["python", "/base/run_imngs2.py"]
+            cmd = ["python", "/base/run_tactic.py"]
             arg_set.input_dir = run_dir
         else:
-            cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "run_imngs2"]
+            cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "run_tactic"]
         cmd += arg_set.to_args()
         # Write the command to a file
         with open(run_dir + "/cmd.txt", "w") as f:
@@ -390,7 +390,7 @@ def copy_initial_files(run_dir: str) -> None:
     # move the contents of the data folder to the run_dir
     for file in glob.glob(data + "/truncated/*"):
         subprocess.run(["cp", file, str(run_dir) + "/"])
-    subprocess.run(["cp", data + "/IMNGS2Pipeline_args_test.yml", run_dir])
+    subprocess.run(["cp", data + "/TACTICPipeline_args_test.yml", run_dir])
 
 def copy_spikes_dir(run_dir: str) -> None:
     """
@@ -579,7 +579,7 @@ def test_full_denovo_analysis(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "de-novo"
-        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
+        args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
 
         return args_set
 
@@ -601,7 +601,7 @@ def test_full_TAC_analysis(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "TAC"
-        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
+        args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
 
         return args_set
 
@@ -623,7 +623,7 @@ def test_full_TIC_analysis_no_iz(build_image):
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "TIC"
-        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
+        args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
 
         return args_set
 
@@ -646,7 +646,7 @@ def test_full_TIC_analysis_iz(build_image):
         args_set.mapping_file = "mapping_file.csv"
         args_set.analysis_mode = "TIC"
         args_set.individual_zotus = True
-        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
+        args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
 
         return args_set
 
@@ -671,7 +671,7 @@ def test_full_TIC_analysis_custom_spike(build_image):
         args_set.analysis_mode = "TIC"
         args_set.individual_zotus = False
         args_set.spikes_references_dir = "custom_spikes"
-        args_set.yml_file = "IMNGS2Pipeline_args_test.yml"  # path to the yml file
+        args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
 
         return args_set
 

@@ -5,7 +5,7 @@ from collections import Counter
 from statistics import stdev, mean
 from .processing_helper import TaskPickle
 from .processing_helper import (
-    IMNGS2ArgsParser,
+    TACTICArgsParser,
     gimmelogger,
     calc_covered_region,
     calc_spikes,
@@ -110,7 +110,7 @@ def mymkdir(input_dir):
 
 def merge_pairs(forward_file, reverse_file):
     # cmd_0 = USEARCH_11_BIN + " -fastq_mergepairs " + forward_file + ' -reverse ' + reverse_file
-    # cmd_1 = " -fastq_maxdiffs " + str(ARGS_CLS.merge_pairs.fasq_maxdiffs)
+    # cmd_1 = " -fastq_maxdiffs " + str(ARGS_CLS.merge_pairs.fastq_maxdiffs)
     # cmd_1 += " -fastq_pctid " + str(ARGS_CLS.merge_pairs.fastq_pctid) + " -fastqout merged.fastq"
     # cmd_2 = " -fastq_minmergelen " + str(ARGS_CLS.merge_pairs.fastq_minmergelen)
     # cmd_2 += " -fastq_maxmergelen " + str(ARGS_CLS.merge_pairs.fastq_maxmergelen) + " >/dev/null 2>/dev/null"
@@ -123,7 +123,7 @@ def merge_pairs(forward_file, reverse_file):
         "-reverse",
         reverse_file,
         "-fastq_maxdiffs",
-        str(ARGS_CLS.merge_pairs.fasq_maxdiffs),
+        str(ARGS_CLS.merge_pairs.fastq_maxdiffs),
         "-fastq_pctid",
         str(ARGS_CLS.merge_pairs.fastq_pctid),
         "-fastqout",
@@ -581,7 +581,7 @@ def create_zip(input_id):
         "krona.html",
         "silva_start_end.txt",
         "reads_report.txt",
-        "IMNGS2Pipeline.log"
+        "TACTICPipeline.log"
     ]
 
     with zipfile.ZipFile(f"../{input_id}_processed.zip", "w") as zipf:
@@ -807,7 +807,7 @@ def main_processing(
         PREPPROC_LOG = logger_obj
     else:
         PREPPROC_LOG = gimmelogger(
-            logger_name=f"run_imngs2.preprocessing.{str(input_id)}",
+            logger_name=f"run_tactic.preprocessing.{str(input_id)}",
             log_file=logger_file_path,
             only_file=True,
         )
@@ -824,7 +824,7 @@ def main_processing(
     # if args_file_path is empty then default values in processing_helper.py
     # are loaded
     global ARGS_CLS
-    ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).preproc_args
+    ARGS_CLS = TACTICArgsParser(config_yaml=args_file_path).preproc_args
     try:
         if not path.exists(pk_file):
             # Creation of TaskPickle instance for the run
@@ -861,7 +861,7 @@ def main_processing(
         # spike_amount should not be negative
         if math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0:
             spike_amount = 0.0
-            PREPPROC_LOG.warning(
+            PREPPROC_LOG.info(
                 "Spike amount is zero or negative, skipping spike removal step"
             )
         if float(spike_amount) > 0.0:

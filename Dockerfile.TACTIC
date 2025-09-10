@@ -25,16 +25,16 @@ RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 # --- App layout ---
 WORKDIR /base
-RUN mkdir -p /base/binaries /base/spikesidx /base/imngs2_pipeline
+RUN mkdir -p /base/binaries /base/spikesidx /base/tactic_pipeline
 
 # keep only what you need at runtime
 COPY binaries/ /base/binaries/
 RUN chmod +x /base/binaries/SILVA_download.sh
 COPY spikesidx/ /base/spikesidx/
 COPY databases_raw //base/databases_raw
-COPY imngs2_pipeline /base/imngs2_pipeline/
-COPY run_imngs2.py /base/run_imngs2.py
-COPY IMNGS2Pipeline_args.yml /base/IMNGS2Pipeline_args.yml
+COPY tactic_pipeline /base/tactic_pipeline/
+COPY run_tactic.py /base/run_tactic.py
+COPY TACTICPipeline_args.yml /base/TACTICPipeline_args.yml
 COPY mapping_file_TEMPLATE.csv /base/mapping_file_TEMPLATE.csv
 COPY requirements.txt /base/requirements.txt
 
@@ -49,7 +49,7 @@ COPY entrypoint.sh /base/entrypoint.sh
 RUN chmod +x /base/entrypoint.sh
 
 # Convenience symlink
-RUN ln -s /base/run_imngs2.py /usr/local/bin/run_imngs2 && chmod 755 /base/run_imngs2.py
+RUN ln -s /base/run_tactic.py /usr/local/bin/run_tactic && chmod 755 /base/run_tactic.py
 
 # Final cleanup (already minimal, but make sure)
 RUN rm -rf /root/.cache

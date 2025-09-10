@@ -6,7 +6,7 @@ from ete3 import Tree
 from os import chdir
 import os.path as ospath
 from multiprocessing import cpu_count, Pool
-from processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
+from processing_helper import TACTICArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
@@ -823,7 +823,7 @@ def filter_otus_by_abundance(
 def cleanup(directory: str, to_keep: list = []) -> bool:
     directory = Path(PurePath(directory)).absolute()
     must_keep = [
-        re.compile(r"IMNGS2Pipeline_args\.yml"),
+        re.compile(r"TACTICPipeline_args\.yml"),
         re.compile(r"spike_mapping_file\.csv"),
         # Pipelne outputs
         re.compile(r"[ZS]?OTUs-Seqs(-TAC|-TIC)?\.fasta"),
@@ -1492,12 +1492,12 @@ def main(
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
     gimmelogger(
-        logger_name="run_imngs2.analysis",
+        logger_name="run_tactic.analysis",
         log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
         only_file=True,
     )
     ANA_LOG = gimmelogger(
-        logger_name="run_imngs2.analysis.main",
+        logger_name="run_tactic.analysis.main",
     )
     # updating POOL_SIZE
     try:
@@ -1517,8 +1517,8 @@ def main(
     except Exception as exc:
         ANA_LOG.warning(f"Copying args file to {ANALYSIS_DIR} failed: {exc}")
 
-    ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
-    ARGS_PREC = IMNGS2ArgsParser(config_yaml=args_file_path).preproc_args
+    ARGS_CLS = TACTICArgsParser(config_yaml=args_file_path).analysis_args
+    ARGS_PREC = TACTICArgsParser(config_yaml=args_file_path).preproc_args
     # Parsing spike_stat_file
     try:
         parsed_spike_stat_file_path = Path(PurePath(ANALYSIS_DIR + 'spike_mapping_file.csv'))

@@ -1,4 +1,4 @@
-# The config yaml file for IMNGS2 Pipeline The arguemnts should be placed with the
+# The config yaml file for TACTIC Pipeline The arguemnts should be placed with the
 # name of pipeline step (CamelCase) and the arguments added as indentaion to.
 # If an argument parser exists with the same name of pipeline step (e.g: MergePairsArgs),
 # then the arguments would be implemented in processing.

@@ -19,7 +19,6 @@ SINA_BIN="/base/binaries/sina/bin/sina"
 # Get this files parent path and store it in a variable
 parent_path="/base/inputs/databases" #  It should be sub-directory of /base/inputs as we mount /base/inputs to /base/databases in the container
 # Create the parent path if it does not exist
-log "# Database preparation started"
 mkdir -p ${parent_path}
 # cd to the parent path
 cd ${parent_path}

@@ -212,7 +212,7 @@ def system_sub(cmd_args_list: list,
 
     run_output, cmd_list = loud_subprocess(cmd_args_list, shell_bool=shell, cap_output=capture_output)
     if run_output.returncode == 137:  # Process killed due to memory limit
-        # raise exception is captured by thread calling function in run_imngs2.py
+        # raise exception is captured by thread calling function in run_tactic.py
         err_msg = f"Command {' '.join(cmd_list)} exceeded memory limit."
         err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
         err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
@@ -297,7 +297,7 @@ def index_spikes_fasta_dir(
     Returns the path to indices base names.
     """
     idx_logger = gimmelogger(
-        "run_imngs2",
+        "run_tactic",
         only_file=False,
         propagate=False
     )
@@ -642,7 +642,7 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
 
 
 global argparse_logger
-argparse_logger = gimmelogger("run_imngs2.ArgumentParser")
+argparse_logger = gimmelogger("run_tactic.ArgumentParser")
 
 
 def flatten_dict(
@@ -1322,7 +1322,7 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             **kwargs):
         """
         This class reads a yaml file and parse it to a dictionary and finally arguments
-        of preprocessing arguments needed for IMNGS2 Pipeline. If additional config_dict
+        of preprocessing arguments needed for TACTIC Pipeline. If additional config_dict
         is given, this dictionary items gets added to the the dictionary created from
         yaml file without updating the yaml dictionary.
         """
@@ -1377,7 +1377,7 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
             **kwargs):
         """
         This class reads a yaml file and parse it to a dictionary and finally arguments
-        of analysis needed for IMNGS2 Pipeline. If additional config_dict is given, this
+        of analysis needed for TACTIC Pipeline. If additional config_dict is given, this
         dictionary items gets added to the the dictionary created from yaml file without
         updating the yaml dictionary.
         """
@@ -1406,7 +1406,7 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
         return all(eq_tests)
 
 
-class IMNGS2ArgsParser(ArgsParserDunderUtil):
+class TACTICArgsParser(ArgsParserDunderUtil):
 
     def __init__(
             self,
@@ -1415,7 +1415,7 @@ class IMNGS2ArgsParser(ArgsParserDunderUtil):
             *args,
             **kwargs):
         """
-        Parses all arguments needed for IMNGS2 Pipeline
+        Parses all arguments needed for TACTIC Pipeline
         """
         self.preproc_args = PreprocessingArgsParser(config_yaml, config_dict)
         self.analysis_args = AnalysisArgsParser(config_yaml, config_dict)
@@ -1464,3 +1464,33 @@ def onelinefasta(fastafilepath):
     finally:
         if Path(newfile_temp_name).exists():
             Path(newfile_temp_name).unlink()
+
+
+def download_databases(logger_obj: logging.Logger):
+    """
+    Only triggers /base/binaries/SILVA_download.sh to ensure the SILVA database is present.
+    The defualt location for the database is /base/inputs/databases/
+    """
+    SILVA_DOWNLOAD_SCRIPT = "/base/binaries/SILVA_download.sh"
+    if not Path(SILVA_DOWNLOAD_SCRIPT).is_file():
+        raise FileNotFoundError(f"SILVA download script not found: {SILVA_DOWNLOAD_SCRIPT}")
+    # Call the SILVA database download script to ensure the database is present
+    result = system_sub(
+        [
+            "/bin/bash",
+            SILVA_DOWNLOAD_SCRIPT
+        ],
+        capture_output=True,
+        force_log=True,
+        logger_obj=logger_obj
+    )
+
+    if result.returncode != 0:
+        raise RuntimeError(f"SILVA database download script failed with exit code {result.returncode}.")
+    
+    if result.stdout:
+        logger_obj.info(result.stdout)
+    if result.stderr:
+        logger_obj.error(result.stderr)
+
+    return True

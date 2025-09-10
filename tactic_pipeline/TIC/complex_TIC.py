@@ -12,7 +12,7 @@ from processing_helper import system_sub as sys_sub
 
 global TIC_LOG
 TIC_LOG = gimmelogger(
-    logger_name="run_imngs2.analysis.TIC",
+    logger_name="run_tactic.analysis.TIC",
 )
 
 

@@ -6,7 +6,7 @@ from multiprocessing import cpu_count
 from TIC.complex_TIC import main_complex_TIC
 from TIC.split_based_on_taxonomy import split_based_on_taxonomy
 from TIC.create_fasta_and_table import main as create_fasta_and_table_main
-from processing_helper import IMNGS2ArgsParser, gimmelogger, MyCounter
+from processing_helper import TACTICArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
@@ -1070,12 +1070,12 @@ def main(
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
     gimmelogger(
-        logger_name="run_imngs2.analysis",
+        logger_name="run_tactic.analysis",
         log_file=ANALYSIS_DIR.joinpath("Analysis_log.txt"),
         only_file=True,
     )
     ANA_LOG = gimmelogger(
-        logger_name="run_imngs2.analysis.TIC_analysis",
+        logger_name="run_tactic.analysis.TIC_analysis",
     )
     # updating POOL_SIZE
     try:
@@ -1085,7 +1085,7 @@ def main(
 
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
     ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"
-    ARGS_CLS = IMNGS2ArgsParser(config_yaml=args_file_path).analysis_args
+    ARGS_CLS = TACTICArgsParser(config_yaml=args_file_path).analysis_args
     # Parsing spike_stat_file
     try:
         parsed_spike_stat_file_path = Path(PurePath(ANALYSIS_DIR + 'spike_mapping_file.csv'))

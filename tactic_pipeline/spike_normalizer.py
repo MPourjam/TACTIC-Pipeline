@@ -5,7 +5,7 @@ import math
 import statistics
 import pandas as pd
 from enum import Enum
-from imngs2_pipeline.processing_helper import gimmelogger
+from tactic_pipeline.processing_helper import gimmelogger
 from sys import version_info
 if version_info[0] < 3:
     from pathlib2 import Path  # pip2 install pathlib2
@@ -22,7 +22,7 @@ class SpikeNormValidity(str, Enum):
 
 global NORM_LOG
 NORM_LOG = gimmelogger(
-    logger_name="run_imngs2.normalization"
+    logger_name="run_tactic.normalization"
 )
 
 
