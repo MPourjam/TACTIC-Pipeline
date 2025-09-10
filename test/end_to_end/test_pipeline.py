@@ -45,7 +45,7 @@ class ArgumentSet:
     threads = 0
     analysis_mode = ""
     individual_zotus = False
-    spikes_reference_dir = None
+    spikes_references_dir = None
 
     def __init__(self, input_dir, fastq_dir, **kwargs):
         self.input_dir = input_dir
