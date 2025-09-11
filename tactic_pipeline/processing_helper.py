@@ -341,6 +341,10 @@ def index_spikes_fasta_dir(
     else:
         idx_logger.info(f"Spike indices found: {indices_base_path}*.bt2")
         return str(indices_base_path)
+    # removing the merged fasta file
+    if merged_fasta_path.is_file():
+        remove(merged_fasta_path)
+
     return None
 
 
@@ -348,13 +352,15 @@ def calc_spikes(
         *fastq_files,
         spike_amount: float = 0.0,
         bowtie2: str = BOWTIE2,
-        spikes_indices: str = SPIKESIDX) -> tuple:
+        spikes_indices: str = SPIKESIDX,
+        logger_obj=None) -> tuple:
     '''
     #NOTE fastq_files MUST NOT be gzipped or zippped.
     spike_amount is in ng
     '''
-    fastq_names = [ospath.abspath(f) for f in fastq_files if bool(f)]
-    fastqs_abs_paths = [ospath.abspath(f) for f in fastq_names if ospath.isfile(f)]
+    logger_obj = logger_obj if logger_obj and isinstance(logger_obj, logging.Logger) else LogPrint("print_logger")
+    fastq_names = [str(Path(f).absolute()) for f in fastq_files if bool(f)]
+    fastqs_abs_paths = [str(Path(f).absolute()) for f in fastq_names if Path(f).is_file()]
     # Changing spike_amount to float
     spike_amount = float(spike_amount)
     if math.isclose(spike_amount, 0.0, abs_tol=1e-5) or math.isnan(spike_amount) or spike_amount < 0.0:
@@ -369,19 +375,36 @@ def calc_spikes(
         return line_count, 0  # non_spike_reads spike_reads
     else:
         spike_amount = float("{}e-9".format(spike_amount))  # ng to g
-        name_regx = r"[a-zA-Z0-9\-]+"
-        spike_res_dir = ospath.split(fastqs_abs_paths[0])[0] + "/spike_result/"
-        makedirs(spike_res_dir, mode=777, exist_ok=True)
-        _, forw_name = ospath.split(fastqs_abs_paths[0])
-        fastq_aligned = forw_name[re.search(name_regx, forw_name).start():re.search(name_regx, forw_name).end()]
-        fastq_aligned = ospath.join(spike_res_dir, fastq_aligned)
-        fastq_unaligned = fastq_aligned + "_unal"
+        # name_regx = r"[a-zA-Z0-9\-]+"
+        spike_res_dir = Path(fastqs_abs_paths[0]).parent / "spike_result"
+        makedirs(spike_res_dir, mode=0o777, exist_ok=True)
+        forw_name = Path(fastqs_abs_paths[0]).stem
+        # match = re.search(name_regx, forw_name)
+        fastq_aligned = str(spike_res_dir / forw_name)
+        fastq_unaligned = str(fastq_aligned) + "_unal"
 
         if len(fastq_names) == 2:
-            cmd = [bowtie2, "-x", spikes_indices, "-1", fastqs_abs_paths[0], "-2",
-                   fastqs_abs_paths[1], "--al-conc", fastq_aligned, "--un-conc",
-                   fastq_unaligned]
-            call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
+            cmd = [
+                bowtie2,
+                "--very-sensitive",
+                "--end-to-end",
+                "--no-mixed",
+                "--no-discordant",
+                "-x", spikes_indices,
+                "-1", fastqs_abs_paths[0],
+                "-2", fastqs_abs_paths[1],
+                "--al-conc", fastq_aligned,
+                "--un-conc", fastq_unaligned
+            ]
+            sys_sub_args = {
+                "cmd_args_list": cmd,
+                "force_log": True,
+                "capture_output": True,
+                "logger_obj": logger_obj
+            }
+            call_out = system_sub(
+                **sys_sub_args
+            )
             spike_counter = 0
             for fi in [fastq_aligned + ".1", fastq_aligned + ".2"]:
                 with open(fi, 'r') as fastq_al:
@@ -389,15 +412,34 @@ def calc_spikes(
                         spike_counter += 1
             spike_counter = int(spike_counter // 4) // 2
             if spike_counter != 0:
-                shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
-                shutil.copy(fastq_unaligned + ".2", fastqs_abs_paths[1])
+                # We remove the original files because if they are links
+                # to other files they will not be replaced
+                remove(fastqs_abs_paths[0])
+                remove(fastqs_abs_paths[1])
+                replace(fastq_unaligned + ".1", fastqs_abs_paths[0])
+                replace(fastq_unaligned + ".2", fastqs_abs_paths[1])
 
         elif len(fastq_names) == 1:
-            cmd = [bowtie2, "-x", spikes_indices, "-U", fastqs_abs_paths[0], "--al-conc",
-                   fastq_aligned, "--un-conc", fastq_unaligned]
+            cmd = [
+                bowtie2,
+                "--very-sensitive",
+                "--end-to-end",
+                "-x", spikes_indices,
+                "-U", fastqs_abs_paths[0],
+                "--al-conc", fastq_aligned,
+                "--un-conc", fastq_unaligned
+            ]
             # system(" ".join(cmd))
-            call_out, cmd_list = loud_subprocess(cmd, cap_output=True)
-            files_inspike = listdir(spike_res_dir)
+            sys_sub_args = {
+                "cmd_args_list": cmd,
+                "force_log": True,
+                "capture_output": True,
+                "logger_obj": logger_obj
+            }
+            call_out = system_sub(
+                **sys_sub_args
+            )
+            files_inspike = listdir(str(spike_res_dir))
             spike_counter = 0
             for fi in [f for f in files_inspike if re.search(fastq_aligned, ospath.abspath(f))]:
                 with open(fi, 'r') as fastq_al:
@@ -406,12 +448,13 @@ def calc_spikes(
             spike_counter = spike_counter // 4
             # Check if the unaligned file is empty
             if spike_counter != 0:
-                shutil.copy(fastq_unaligned + ".1", fastqs_abs_paths[0])
+                remove(fastqs_abs_paths[0])
+                replace(fastq_unaligned + ".1", fastqs_abs_paths[0])
 
         # Checking the status of bowtie2 run
         if call_out.returncode != 0:
-            raise SpikeRemovalException(f"Error in running command {' '.join(cmd_list)}:\n{call_out.stderr}")
-        shutil.rmtree(spike_res_dir, ignore_errors=True)
+            raise SpikeRemovalException(f"Error in running command {' '.join(cmd)}:\n{call_out.stderr}")
+        shutil.rmtree(str(spike_res_dir), ignore_errors=True)
         unaligned_reads, _ = calc_spikes(
             *fastqs_abs_paths,
             spike_amount=0.0,
@@ -1487,7 +1530,7 @@ def download_databases(logger_obj: logging.Logger):
 
     if result.returncode != 0:
         raise RuntimeError(f"SILVA database download script failed with exit code {result.returncode}.")
-    
+
     if result.stdout:
         logger_obj.info(result.stdout)
     if result.stderr:

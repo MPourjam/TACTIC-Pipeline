@@ -638,6 +638,7 @@ def remove_spikes(
     files_paths_abs = [Path(PurePath(fi_pa)) for fi_pa in files_paths if Path(PurePath(fi_pa)).is_file()]
     spike_stat_mapping_path = files_paths_abs[0].parent.joinpath(SPIKE_STAT_FILE_NAME)
     # NOTE calc_spikes() only works with fastq files. After this step the path to files would change
+    logger_obj.info(f'# Spike Removal and Counting: {sample_id}')
     # It's important to continue downstream analysis with new files.
     fastq_files_abs_path = gzip_to_fastq(*files_paths_abs)
     # Preparing default output
@@ -660,16 +661,22 @@ def remove_spikes(
     # putting parent path into the spike_mapping_file
     parent_path = Path(PurePath(files_paths_abs[0])).parent.relative_to(FASTQ_DIR)
 
-    # postponing file opening to avoid race condition if ran parallel
+    # postponing file opening to avoid race condition if ran parallelly
+    # We coerce the spike_amount to be non-negative and non-zero to remove always spikes
+    if spike_amount <= 0.0 or math.isnan(spike_amount):
+        logger_obj.info(f"Sample '{sample_id}': Non-positive or NaN spike amount ({spike_amount}).")
+    spike_amount_coerced = 1.0
     real_reads_c, spike_reads_c = calc_spikes(
         *fastq_files_abs_path,
-        spike_amount=spike_amount,
+        spike_amount=spike_amount_coerced,
         bowtie2=BOWTIE2,
-        spikes_indices=SPIKESIDX
+        spikes_indices=SPIKESIDX,
+        logger_obj=logger_obj
     )
+    logger_obj.info(f"Sample '{sample_id}': {spike_reads_c} spike reads removed from {real_reads_c + spike_reads_c} total reads.")
     out_tup = (spike_reads_c, spike_stat_mapping_path, tuple(fastq_files_abs_path))
     with open(spike_stat_mapping_path, 'a') as stats_h:
-        # appending\
+        # appending
         new_row = [
             str(sample_id),
             str(spike_reads_c),

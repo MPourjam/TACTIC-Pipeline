@@ -1197,7 +1197,7 @@ def zotu_pipeline(
 
     ZOTU_P_LOGGER.info('# Creating ZOTU table')
     zotu_tab_file = build_ZOTU_table(raw_seq_file, non_human_zotus_file, match_id)
-    ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance cutt-off of %s', abund_limit)
+    ZOTU_P_LOGGER.info('# Filtering ZOTUs by abundance cut-off of %s', abund_limit)
     filter_otus_by_abundance(
         abundance_limit=abund_limit,
         OTU_table_file_name=zotu_tab_file,
@@ -1474,8 +1474,7 @@ def main(
         run_otu_pipeline: bool = False,
         run_tac_pipeline: bool = False,
         run_tic_pipeline: bool = False,
-        skip_non_bacterial_filter: bool = False
-    ) -> list:
+        skip_non_bacterial_filter: bool = False) -> list:
     """
     sample_seq_files_path: a list of file path to
      each samples' sequence file which is going to be combined with other samples passed to analysis.

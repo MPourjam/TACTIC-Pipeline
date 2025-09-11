@@ -857,15 +857,12 @@ def main_processing(
         else:
             pko = TaskPickle(pk_file)
         chdir(input_dir)
-        PREPPROC_LOG.info("# Spike Removal")
         # spike_amount should not be negative
-        if math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount > 0.0:
+        if math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount <= 0.0 or math.isnan(spike_amount):
             spike_amount = 0.0
-            PREPPROC_LOG.info(
-                "Spike amount is zero or negative, skipping spike removal step"
-            )
         if float(spike_amount) > 0.0:
             # default threads value for bowtie2 used in calc_spikes is 1
+            PREPPROC_LOG.info('# Spike Removal and Counting')
             real_reads_c, spike_reads_c = calc_spikes(
                 *files_paths,
                 spike_amount=spike_amount,
