@@ -61,8 +61,15 @@ RUN tar -xzf /opt/picrust2.tar.gz && rm /opt/picrust2.tar.gz && ./bin/conda-unpa
 # Put env binaries first on PATH so `picrust2_pipeline.py` is callable
 ENV PATH="${PATH}:/opt/picrust2/bin"
 
+# Wrapper makes `picrust2` behave, while keeping system Python default
+RUN printf '%s\n' \
+  '#!/usr/bin/env bash' \
+  'export PATH="/opt/picrust2/bin:$PATH"' \
+  'exec /opt/picrust2/bin/python /opt/picrust2/bin/picrust2_pipeline.py "$@"' \
+  > /usr/local/bin/picrust2 && chmod +x /usr/local/bin/picrust2
+
 # Quick sanity check—fail the build early if broken
-RUN picrust2_pipeline.py -h >/dev/null 2>&1 && echo "PICRUSt2 OK"
+RUN picrust2 -h >/dev/null 2>&1 && echo "PICRUSt2 OK"
 
 # Return to your app dir
 WORKDIR /base
