@@ -1,0 +1,82 @@
+# ===== Stage 1: build & pack PICRUSt2 env (not shipped in final image) =====
+# ===== Stage 1: build & pack PICRUSt2 env (not shipped in final image) =====
+FROM mambaorg/micromamba:1.5.8 AS picrust2-builder
+ARG ENV_NAME=picrust2
+ARG PICRUST2_VERSION=2.6.2
+
+# Create env and pack it so it's relocatable
+RUN micromamba create -y -n ${ENV_NAME} -c bioconda -c conda-forge picrust2=${PICRUST2_VERSION} && \
+    micromamba run -n ${ENV_NAME} python -m pip install --no-cache-dir conda-pack && \
+    micromamba run -n ${ENV_NAME} conda-pack -p /opt/conda/envs/${ENV_NAME} -o /tmp/${ENV_NAME}.tar.gz && \
+    micromamba clean --all --yes
+
+# ===== Stage 2: main image =====
+# Smallest practical Debian-based Python runtime
+FROM python:3.12-slim AS tactic_pipeline
+
+# --- Minimal, size-friendly defaults ---
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    LANG=C.UTF-8 LC_ALL=C.UTF-8 \
+    PYTHONWARNINGS="ignore::SyntaxWarning"
+
+# Version info
+ARG GIT_TAG=NA
+ENV GIT_TAG=${GIT_TAG}
+
+# drop dev tools like cmake/gfortran/vim; add back ONLY if required at runtime
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    ca-certificates libharfbuzz-dev libfribidi-dev rsync wget fastqc locales \
+    && rm -rf /var/lib/apt/lists/*
+
+# Generate UTF-8 locale (lightweight)
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+
+# --- App layout ---
+WORKDIR /base
+RUN mkdir -p /base/binaries /base/spikesidx /base/tactic_pipeline
+
+# keep only what you need at runtime
+COPY binaries/ /base/binaries/
+RUN chmod +x /base/binaries/SILVA_download.sh
+COPY spikesidx/ /base/spikesidx/
+COPY databases_raw //base/databases_raw
+COPY tactic_pipeline /base/tactic_pipeline/
+COPY run_tactic.py /base/run_tactic.py
+COPY TACTICPipeline_args.yml /base/TACTICPipeline_args.yml
+COPY mapping_file_TEMPLATE.csv /base/mapping_file_TEMPLATE.csv
+COPY requirements.txt /base/requirements.txt
+
+# --- Python deps (no cache, no bytecode) ---
+RUN python -m pip install --no-cache-dir --upgrade pip && \
+    python -m pip install --no-cache-dir -r /base/requirements.txt
+
+# === Add PICRUSt2 env from builder (packed) ===
+# Copies only the packed env artifact; the builder image/layers are not included in the final image.
+COPY --from=picrust2-builder /tmp/picrust2.tar.gz /opt/picrust2.tar.gz
+WORKDIR /opt/picrust2
+RUN tar -xzf /opt/picrust2.tar.gz && rm /opt/picrust2.tar.gz && ./bin/conda-unpack
+# Put env binaries first on PATH so `picrust2_pipeline.py` is callable
+ENV PATH="/opt/picrust2/bin:${PATH}"
+# Quick sanity check—fail the build early if broken
+RUN picrust2_pipeline.py -h >/dev/null 2>&1 && echo "PICRUSt2 OK"
+
+# Return to your app dir
+WORKDIR /base
+
+VOLUME ["/base/inputs/"]
+
+# Tiny entrypoint to lazy-fetch DBs only once into the mounted volume
+COPY entrypoint.sh /base/entrypoint.sh
+RUN chmod +x /base/entrypoint.sh
+
+# Convenience symlink
+RUN ln -s /base/run_tactic.py /usr/local/bin/run_tactic && chmod 755 /base/run_tactic.py
+
+# Final cleanup (already minimal, but make sure)
+RUN rm -rf /root/.cache
+
+ENTRYPOINT ["/base/entrypoint.sh"]
