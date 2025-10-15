@@ -59,7 +59,8 @@ COPY --from=picrust2-builder /tmp/picrust2.tar.gz /opt/picrust2.tar.gz
 WORKDIR /opt/picrust2
 RUN tar -xzf /opt/picrust2.tar.gz && rm /opt/picrust2.tar.gz && ./bin/conda-unpack
 # Put env binaries first on PATH so `picrust2_pipeline.py` is callable
-ENV PATH="/opt/picrust2/bin:${PATH}"
+ENV PATH="${PATH}:/opt/picrust2/bin"
+
 # Quick sanity check—fail the build early if broken
 RUN picrust2_pipeline.py -h >/dev/null 2>&1 && echo "PICRUSt2 OK"
 
