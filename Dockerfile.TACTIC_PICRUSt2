@@ -1,5 +1,4 @@
 # ===== Stage 1: build & pack PICRUSt2 env (not shipped in final image) =====
-# ===== Stage 1: build & pack PICRUSt2 env (not shipped in final image) =====
 FROM mambaorg/micromamba:1.5.8 AS picrust2-builder
 ARG ENV_NAME=picrust2
 ARG PICRUST2_VERSION=2.6.2
@@ -12,7 +11,7 @@ RUN micromamba create -y -n ${ENV_NAME} -c bioconda -c conda-forge picrust2=${PI
 
 # ===== Stage 2: main image =====
 # Smallest practical Debian-based Python runtime
-FROM python:3.12-slim AS tactic_pipeline
+FROM python:3.12-slim AS tactic_image
 
 # --- Minimal, size-friendly defaults ---
 ENV PYTHONDONTWRITEBYTECODE=1 \
