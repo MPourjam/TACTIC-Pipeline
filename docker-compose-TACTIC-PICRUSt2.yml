@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  tactic_pipeline:
+    container_name: tactic_pipeline_cont
+    build:
+      context: .
+      dockerfile: Dockerfile.TACTIC_PICRUSt2
+      args:
+        GIT_TAG: ${GIT_TAG:-NA}
+    image: tactic_pipeline_picrust2
+    hostname: tactic
+    command: "tail -F /base/requirements.txt"
+    # volumes:
+    #   - /media/adminuser/CFM/inputs:/base/inputs
+    #   - /media/adminuser/MSD-Storage/databases:/base/databases
+    env_file:
+      - ./.env
