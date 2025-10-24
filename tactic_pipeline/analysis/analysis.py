@@ -10,7 +10,7 @@ from processing_helper import TACTICArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
-from .analysis_helper import onelinefasta
+from .analysis_helper import onelinefasta, prepare_picrust2_input
 import logging
 from ticlust import TICAnalysis
 
@@ -1680,6 +1680,8 @@ def main(
             )
             to_return[3] = tic_otu_table
 
+    ANA_LOG.info('# Preparing PICRUSt2 input files')
+    prepare_picrust2_input(str(ANALYSIS_DIR))
     ANA_LOG.info('ANALYSIS DONE')
     # to keep the same return value as the main function
     ANA_LOG.info('# Cleaning up')
