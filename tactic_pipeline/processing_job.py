@@ -169,6 +169,9 @@ def filter_merged_reads():
             str(ARGS_CLS.filter_merged.fastq_maxee_rate),
             "-fastq_truncqual",
             str(ARGS_CLS.filter_merged.fastq_truncqual),
+            "-fastq_minlen",
+            # We use the same amount for merged reads min length as for filtering step
+            str(ARGS_CLS.merge_pairs.fastq_minmergelen),
             "-fastaout",
             "filtered2.fasta"
         ],
