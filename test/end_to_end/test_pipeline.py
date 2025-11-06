@@ -34,11 +34,11 @@ def build_image():
 class ArgumentSet:
     # Some class-wide arguments
     container_input_dir: str = "/base/inputs"
-    yml_file: str = None  # path to the yml file
-    mapping_file: str = None  # path to the mapping file
-    spike_stats_file: str = None  # path to the spike stats file
-    usearch_bin: str = None  # path to the usearch binary
-    db_directory: str = None  # path to the database directory
+    yml_file: str = ""  # path to the yml file
+    mapping_file: str = ""  # path to the mapping file
+    spike_stats_file: str = ""  # path to the spike stats file
+    usearch_bin: str = ""  # path to the usearch binary
+    db_directory: str = ""  # path to the database directory
     skip_preprocess = False
     skip_analysis = False
     place_template_file = False
@@ -119,7 +119,7 @@ class MappingFile:
         self.last_written_file = file
 
 
-def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
+def check_expected_preprocessed_files(preprocessed_dir: str, args: ArgumentSet) -> bool:
     """
     The preprocessed folder should contain the following files:
     ```
@@ -163,6 +163,15 @@ def check_expected_preprocessed_files(preprocessed_dir: str) -> bool:
         # re.compile(r"rank_abundance_plot\.png"),  # also in zip file
         # re.compile(r"rarefaction_curve\.png"),  # also in zip file
     ]
+    if not args.individual_zotus:
+        files_to_be_there = [
+            re.compile(r"spike_stat_mapping_file\.csv"),
+            re.compile(r"TACTICPipeline_args\.yml"),
+            re.compile(r"R1-per_base_quality\.png"),  # also in zip file
+            re.compile(r"R2-per_base_quality\.png"),
+            re.compile(r"reads_report\.txt"),
+            re.compile(r"sorted\.fasta")
+        ]
     existing_files_list = []
     # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
     if preprocessed_dir.endswith(".zip") and os.path.isfile(os.path.join(preprocessed_dir)):
@@ -252,13 +261,27 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
             ]
         )
 
+    # Extending for PICRUST2 expectations
+    files_to_be_there.extend(
+        [
+            re.compile(r"PICRUSt2-Inputs/.*[ZS]?OTUs?-Table.*-For-PICRUSt2\.tab"),
+            re.compile(r"PICRUSt2-Inputs/.*[ZS]?OTUs?-Seqs.*-For-PICRUSt2\.fasta")
+        ]
+    )
+
     existing_files_list = []
     # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
-    if analysis_folder.endswith(".zip") and os.path.isfile(os.path.join(analysis_folder)):
+    # If it's a zip file and the path exists, list all entries inside the zip.
+    if analysis_folder.endswith(".zip") and os.path.isfile(analysis_folder):
         with zipfile.ZipFile(analysis_folder, "r") as z:
             existing_files_list = z.namelist()
     else:
-        existing_files_list = os.listdir(analysis_folder)
+        # Walk the directory recursively and collect file paths relative to analysis_folder
+        existing_files_list = []
+        for root, _, files in os.walk(analysis_folder):
+            for fname in files:
+                relpath = os.path.relpath(os.path.join(root, fname), analysis_folder)
+                existing_files_list.append(relpath)
     # use re search to check if patterns in files_to_be_there exist in the existing_files_list
     not_there = []
     for existing_f in existing_files_list:
@@ -330,7 +353,6 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             capture_output=False, text=True
         )
 
-        assert result.returncode == 0, f"Command failed with return code {result.returncode}"
         file_set_complete = False
         fastq_dir = os.path.join(run_dir, arg_set.fastq_dir)
         if not arg_set.skip_analysis:
@@ -363,6 +385,8 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                 assert check_otutable_format(os.path.join(latest_analysis_folder, "OTUs-Table-TAC.tab"), arg_set, fastq_dir), "Some samples are missing in the OTU table"
                 file_set_complete = check_expected_files_exist(latest_analysis_folder, "TAC")
                 assert file_set_complete, "Some files are missing in the TAC analysis folder"
+            # Test return code
+            assert result.returncode == 0, f"Command failed with return code {result.returncode}"
         elif not arg_set.skip_preprocess and arg_set.skip_analysis:
             file_set_complete_counter = 0
             dirs_checked = 0
@@ -373,13 +397,17 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                     if re.search(r"[0-9]{8}_[0-9]{6}", tmstmp_dir):
                         dirs_checked += 1
                         print("preprocessed_folder =", tmstmp_dir)
-                        file_set_complete_counter += int(check_expected_preprocessed_files(tmstmp_dir))
+                        file_set_complete_counter += int(check_expected_preprocessed_files(tmstmp_dir, arg_set))
             file_set_complete = bool(dirs_checked > 0 and file_set_complete_counter == dirs_checked)
             assert file_set_complete, "Some files are missing in the preprocessed folder"
+            # Test return code
+            # List of valid codes here: https://github.com/MPourjam/TACTIC-Pipeline/issues/42
+            assert result.returncode == 169, f"Command failed with return code {result.returncode}, expected return code is 169 for skipped analysis"
         elif arg_set.skip_preprocess and arg_set.skip_analysis:
             print("No analysis or preprocessing was done")
             file_set_complete = False
             assert file_set_complete, "No analysis or preprocessing was done"
+            assert result.returncode == 169, f"Command failed with return code {result.returncode}, expected return code is 169 for skipped preprocessing and analysis"
 
 
 def copy_initial_files(run_dir: str) -> None:
@@ -400,7 +428,7 @@ def copy_spikes_dir(run_dir: str) -> None:
     subprocess.run(["cp", "-r", data + "/custom_spikes", run_dir + "/custom_spikes"])
 
 
-@pytest.mark.xfail(reason="This test is not implemented yet. check_otutable_format() needs a mapping file to work properly.")
+@pytest.mark.xfail(reason="check_otutable_format() checks complete processing only by existence of spike_mapping_file.csv")
 def test_flat_autodiscover(build_image):
     def setup_file_structure(run_dir: str):
         copy_initial_files(run_dir)

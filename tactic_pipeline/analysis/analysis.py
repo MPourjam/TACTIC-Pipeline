@@ -958,7 +958,7 @@ def parse_uc_file(
     :return: dict
     """
     uc_file = Path(uc_file).absolute()
-    tax_reg = re.compile(r"\s(?P<tax_tag>tax=)?(?P<tax>([^;]+;)*([^;]+)?;?)", re.IGNORECASE)
+    tax_reg = re.compile(r"\s+(?P<tax_tag>tax=)?(?P<tax>(?:[^;\t]*(?:;|$))+)", re.IGNORECASE)
 
     uc_dict = {}
     with open(uc_file, 'r', encoding='utf-8') as uc_h:
@@ -1327,6 +1327,7 @@ def tac_pipeline(
         cluster_id
     )
     uc_dict = parse_uc_file(uc_file)
+
     # print([zotus for key, zotus in uc_dict.items() if len(zotus) > 1])
     # exit()
     # Creating OTU table

@@ -572,7 +572,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                     f"Could not parse parent path from mapping file. Line: {line}\n"
                     f" Check the mapping file format. Columns should be"
                     f" separated by TAB. Continuing with default value of 0.\n"
-                    f" If you are using a mapping_file without 'parent_path' column then ignroe this warning."
+                    f" If you are using a mapping_file without 'parent_path' column then ignore this warning."
                 )
 
             valid_ids.append(sample_id)
@@ -1011,6 +1011,8 @@ def run_tactic(
         "run_tactic.preprocessing",
         only_file=True
     )
+
+    failed_preprocesses_sample_id = []
     if not skip_preprocess or force_preprocess:
         try:
             # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
@@ -1022,7 +1024,6 @@ def run_tactic(
             if individual_zotus and TAXED_ZOTU_FILE_NAME not in HEALTHY_PROC_FILES:
                 HEALTHY_PROC_FILES.append(TAXED_ZOTU_FILE_NAME)
             # create a queue for the tasks
-            failed_preprocesses_sample_id = []
             for task_b in task_batches:
                 preproc_queue = Queue()
                 this_batch = []
@@ -1156,73 +1157,99 @@ def run_tactic(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    help_text = "The directory to find recursively all fastq files inside. It should be relative to <--input-directory>. Default is <--input-directory>"
-    parser.add_argument("-i", "--input-directory",
-                        type=str,
-                        help="Every needed file and directory should be findable relative to this directory",
-                        default=".")  # WORKDIR of container is /base/inputs
-    parser.add_argument("-d", "--fastq-directory",
-                        type=str,
-                        help=help_text,
-                        default=".")  # WORKDIR of container is /base/inputs
-    parser.add_argument("-am", "--analysis-mode",
-                        choices=SUPPORTED_ANALYSIS_MODE,
-                        type=str,
-                        help="Choose a analysis mode. Default is TIC",
-                        default="TIC")
+    help_text_fastq = "Directory containing FASTQ files to be processed; should be relative to <--input-directory>. Default is <--input-directory>."
+    help_text_input = "Base directory for all pipeline inputs and outputs; every needed file and directory should be findable relative to this directory."
+    parser.add_argument(
+        "-i", "--input-directory",
+        type=str,
+        help=help_text_input,
+        default="."
+    )  # WORKDIR of container is /base/inputs
+    parser.add_argument(
+        "-d", "--fastq-directory",
+        type=str,
+        help=help_text_fastq,
+        default="."
+    )  # WORKDIR of container is /base/inputs
+    parser.add_argument(
+        "-am", "--analysis-mode",
+        choices=SUPPORTED_ANALYSIS_MODE,
+        help="Choose an analysis mode. Default is 'TIC'.",
+        default="TIC"
+    )
     # >BEGIN: Arguments need to be parsed from input and fastq directory
-    parser.add_argument("-y", "--yml-file",
-                        type=str,
-                        help="Path to arguments yaml file. Relative to <--input-directory>",
-                        default=None)
-    parser.add_argument("-map", "--mapping-file",
-                        type=str,
-                        default=None,
-                        help="The path to a mapping file defining sample weight and spike amount for each sample. Relative to <--input-directory>")
-    parser.add_argument("-stat", "--spike-stat",
-                        type=str,
-                        default=None,
-                        help=f"The path to a mapping file defining spike count, sample weight and spike amount for each sample.\n{SPIKE_STAT_HEADER}.\n"
-                        "Relative to <--input-directory>")
-    # <END
-    parser.add_argument("-ut", "--usearch-bin",
-                        type=str,
-                        help="Path to binary of usearch version 11. Default is usearch11.0.667_i86linux32.",
-                        default=str(USEARCH_11_BIN))
-    parser.add_argument("-db", "--db-directory",
-                        type=str,
-                        help="Path to directory containing silva, sortmerna files. Relative to <--input-directory>",
-                        default=DBS_DIR)
-    parser.add_argument("-spk-ref", "--spikes-references-dir",
-                        type=str,
-                        default="",
-                        help="The directory containing fasta files of spike-in references. Relative to <--input-directory>."
-                        f" Default is {SPIKESIDX}")
-    parser.add_argument("-sp", "--skip-preprocess",
-                        action="store_true",
-                        help="Should skip preprocessing step")
-    parser.add_argument("-sa", "--skip-analysis",
-                        action="store_true",
-                        help="Should skip analysis step")
-    parser.add_argument("-fp", "--force-preprocess",
-                        action="store_true",
-                        help="Force preprocessing samples. It invalidates --skip-preprocess argument.")
-    parser.add_argument("-tf", "--place-template-files",
-                        action="store_true",
-                        help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
-                        " to <--input-directory>, print help text and exits.")
-    parser.add_argument("-iz", "--individual-zotus",
-                        action="store_true",
-                        help="If set, the preprocessing step will not produce individual ZOTUs table for each sample."
-                        " It speeds up the pipeline.")
-    parser.add_argument("-snbf", "--skip-non-bacterial-filter",
-                        action="store_true",
-                        help="If set, the filtering step to filter non-bacterial 16S sequences will be skipped."
-                        " It speeds up the pipeline and make pipeline capable of handling non-16S sequences.")
-    parser.add_argument("-t", "--threads",
-                        type=int,
-                        help="Number of threads to use for parallel processing",
-                        default=POOL_SIZE)
+    parser.add_argument(
+        "-y", "--yml-file",
+        type=str,
+        help="Path to pipeline configuration file in YAML format. This file defines the arguments for the pipeline and should be relative to <--input-directory>.",
+        default=None
+    )
+    parser.add_argument(
+        "-map", "--mapping-file",
+        type=str,
+        default=None
+    )
+    parser.add_argument(
+        "-stat", "--spike-stat",
+        type=str,
+        default=None,
+        help=f"The path to a mapping file defining spike count, sample weight and spike amount for each sample.\n{SPIKE_STAT_HEADER}. Relative to <--input-directory>"
+    )
+    parser.add_argument(
+        "-ut", "--usearch-bin",
+        type=str,
+        default=str(USEARCH_11_BIN),
+        help="Path to binary of usearch version 11. Default is usearch11.0.667_i86linux64."
+    )
+    parser.add_argument(
+        "-db", "--db-directory",
+        type=str,
+        help="Path to directory containing required databases (e.g., SILVA, SortMeRNA). Relative to <--input-directory>.",
+        default=DBS_DIR
+    )
+    parser.add_argument(
+        "-spk-ref", "--spikes-references-dir",
+        type=str,
+        default="",
+        help="Directory containing FASTA files of spike-in references (required for spike removal). Should be relative to <--input-directory>. Default is {SPIKESIDX}."
+    )
+    parser.add_argument(
+        "-sp", "--skip-preprocess",
+        action="store_true",
+        help="Should skip preprocessing step"
+    )
+    parser.add_argument(
+        "-sa", "--skip-analysis",
+        action="store_true",
+        help="Should skip analysis step"
+    )
+    parser.add_argument(
+        "-fp", "--force-preprocess",
+        action="store_true",
+        help="Force preprocessing samples. It invalidates --skip-preprocess argument."
+    )
+    parser.add_argument(
+        "-tf", "--place-template-files",
+        action="store_true",
+        help=f"Writes the default argument yaml template file ({DEFAULT_ARG_FILE_NAME}) and mapping template file (mapping_file.csv)"
+        " to <--input-directory>, print help text and exits."
+    )
+    parser.add_argument(
+        "-iz", "--individual-zotus",
+        action="store_true",
+        help="If set, the preprocessing step will produce individual ZOTUs tables for each sample (slower, more detailed output). If not set, only a combined table is produced, which speeds up the pipeline."
+    )
+    parser.add_argument(
+        "-snbf", "--skip-non-bacterial-filter",
+        action="store_true",
+        help="Skip filtering of non-bacterial 16S sequences."
+    )
+    parser.add_argument(
+        "-t", "--threads",
+        type=int,
+        help=f"Number of threads to use for parallel processing (default: {POOL_SIZE}). Recommended range: 1 to {cpu_count()}.",
+        default=POOL_SIZE
+    )
     args = parser.parse_args()
     # Updating INPUT_DIR
     INPUT_DIR = INPUT_DIR.joinpath(args.input_directory).absolute()

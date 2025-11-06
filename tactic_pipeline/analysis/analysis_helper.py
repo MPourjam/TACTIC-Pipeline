@@ -104,6 +104,6 @@ def prepare_picrust2_input(analysis_dir: str) -> None:
             elif match_fasta:
                 prefix = match_fasta.group("prefix")
                 otu_fasta_file = item
-                picrust2_otu_fasta_file = picrust2_inputs_dir / f"{prefix}-Seqs-PICRUSt2.fasta"
+                picrust2_otu_fasta_file = picrust2_inputs_dir / f"{prefix}-For-PICRUSt2.fasta"
                 keep_seq_id_only(otu_fasta_file, picrust2_otu_fasta_file)
                 onelinefasta(picrust2_otu_fasta_file)
