@@ -15,8 +15,11 @@ minor_version=2
 version=${major_version}.${minor_version}
 version_date=03_07_24
 SILVA_DB_FILE="SILVA_${version}_SSURef_NR99_${version_date}_opt.arb.gz"
-SILVA_ARB_API_ROOT="https://www.arb-silva.de/fileadmin/silva_databases"
-SILVA_DB_URL="${SILVA_ARB_API_ROOT}/release_${major_version}_${minor_version}/ARB_files/${SILVA_DB_FILE}"
+# curl -fL --retry 3 --http1.1   -H "User-Agent: Mozilla/5.0"   -H "Referer: https://ftp.arb-silva.de/current/ARB_files/"   -o /tmp/SILVA_138.2_SSURef_NR99_03_07_24_opt.arb.gz   "https://ftp.arb-silva.de/current/ARB_files/SILVA_138.2_SSURef_NR99_03_07_24_opt.arb.gz"
+SILVA_ARB_API_ROOT="https://ftp.arb-silva.de/current/ARB_files"
+SILVA_DB_URL="${SILVA_ARB_API_ROOT}/${SILVA_DB_FILE}"
+SILVA_MD5_FILE="${SILVA_DB_FILE}.md5"
+SILVA_MD5_URL="${SILVA_ARB_API_ROOT}/${SILVA_MD5_FILE}"
 SILVA_ARB_FILE_LATEST="SILVA_LATEST.arb"
 SILVA_DB_INDEX_FILE="${SILVA_ARB_FILE_LATEST%.arb}.sidx"
 SINA_BIN="/base/binaries/sina/bin/sina"
@@ -26,11 +29,24 @@ parent_path="/base/inputs/databases" #  It should be sub-directory of /base/inpu
 mkdir -p "${parent_path}"
 # cd to the parent path
 cd "${parent_path}"
+
+
 if [[ ! -s "${SILVA_ARB_FILE_LATEST}" || ! -s "${SILVA_DB_INDEX_FILE}" ]]; then
     log "${SILVA_ARB_FILE_LATEST} or ${SILVA_DB_INDEX_FILE} not found"
-    # wget --no-check-certificate https://www.arb-silva.de/fileadmin/arb_web_db/release_138_1/ARB_files/${SILVA_DB_FILE}.gz
     log "Downloading SILVA database ${SILVA_DB_URL}"
-    wget "${SILVA_DB_URL}" -O "${SILVA_DB_FILE}" > download_SILVA.log 2>&1
+    curl -fL --retry 3 --http1.1 -H "User-Agent: Mozilla/5.0" -o "${SILVA_DB_FILE}" "${SILVA_DB_URL}" > download_SILVA.log 2>&1
+    # Downloading MD5 checksum file
+    log "Downloading SILVA database MD5 checksum file ${SILVA_MD5_URL}"
+    curl -fL --retry 3 --http1.1 -H "User-Agent: Mozilla/5.0" -o "${SILVA_MD5_FILE}" "${SILVA_MD5_URL}" >> download_SILVA.log 2>&1
+    # Verifying MD5 checksum
+    log "Verifying MD5 checksum for ${SILVA_DB_FILE}"
+    if ! md5sum -c "${SILVA_MD5_FILE}" >> download_SILVA.log 2>&1; then
+        echo "md5sum check failed — see download_SILVA.log" >&2
+        exit 1
+    fi
+    rm "${SILVA_MD5_FILE}"
+    # Unzipping SILVA database
+    log "Unzipping SILVA database to ${SILVA_ARB_FILE_LATEST}"
     gunzip -d "${SILVA_DB_FILE}" -c > "${SILVA_ARB_FILE_LATEST}" && rm "${SILVA_DB_FILE}"
     # Creating database index
     touch fake1.fasta

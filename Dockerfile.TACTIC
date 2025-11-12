@@ -17,8 +17,18 @@ ENV GIT_TAG=${GIT_TAG}
 # drop dev tools like cmake/gfortran/vim; add back ONLY if required at runtime
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        ca-certificates libharfbuzz-dev libfribidi-dev rsync wget fastqc locales\
-    && rm -rf /var/lib/apt/lists/*
+        ca-certificates libharfbuzz-dev libfribidi-dev rsync wget fastqc locales curl openssl dnsutils iproute2 \
+    && update-ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Make curl robust inside corp networks
+RUN printf '%s\n' \
+      'http1.1' \
+      'ipv4' \
+      'retry = 3' \
+      'fail' \
+    > /etc/curlrc
+
 
 # Generate UTF-8 locale (lightweight)
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
