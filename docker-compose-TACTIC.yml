@@ -10,8 +10,8 @@ services:
         GIT_TAG: ${GIT_TAG:-NA}
     image: tactic_pipeline
     hostname: tactic
-    command: "tail -F /base/requirements.txt"
-    # volumes:
+    volumes:
+      - shared_data:/data:rw
     #   - /media/adminuser/CFM/inputs:/base/inputs
     #   - /media/adminuser/MSD-Storage/databases:/base/databases
     env_file:
