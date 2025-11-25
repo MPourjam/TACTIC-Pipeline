@@ -10,6 +10,8 @@ import zipfile
 import inspect
 import threading
 import tempfile
+import requests
+from hashlib import md5
 from os import getcwd, makedirs, listdir, access, X_OK
 from collections import namedtuple
 from datetime import datetime as dt
@@ -20,6 +22,10 @@ from os import path as ospath
 from os import remove, replace
 from sys import version_info
 from copy import deepcopy
+from html.parser import HTMLParser
+from email.utils import parsedate_to_datetime
+from urllib.parse import urljoin
+
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # type: ignore # pip2 install pathlib2
 else:
@@ -687,6 +693,10 @@ def gimmelogger(logger_name: str = "", log_file: str = "", only_file: bool = Tru
 global argparse_logger
 argparse_logger = gimmelogger("run_tactic.ArgumentParser")
 
+global taxonomy_database_logger, SILVA_db_logger
+taxonomy_database_logger = gimmelogger("run_tactic.TaxonomyDatabase", only_file=False, propagate=False)
+SILVA_db_logger = gimmelogger("run_tactic.TaxonomyDatabase.SILVA", only_file=False, propagate=False)
+
 
 def flatten_dict(
         d: MutableMapping,
@@ -733,9 +743,13 @@ class FileUtil:
             return False
 
     @staticmethod
-    def gunzip(file_path: str) -> str:
+    def gunzip(file_path: str, keep: bool = False) -> str:
         """
         It gunzips the file and returns the path of the binary file.
+
+        Args:
+            file_path (str): The path to the gzip file.
+            keep (bool): If True, keeps the original gzip file. Default is False.
         """
         file_path = Path(PurePath(file_path)).absolute()
         with gzip.open(file_path, 'rb') as f:
@@ -743,21 +757,90 @@ class FileUtil:
         bin_file = Path(PurePath(file_path).parent).joinpath(Path(PurePath(file_path).stem))
         with open(bin_file, 'wb') as f:
             f.write(file_content)
-        if FileUtil.is_binary(bin_file):
+
+        # TODO we have narrowed down the functionality of the function
+        # to only return linux executable binaries.
+        if FileUtil.is_linux_executable(bin_file):
+            if not keep:
+                file_path.unlink()
             return str(bin_file)
+
         return ""
 
     @staticmethod
     def is_binary(file_path: str) -> bool:
+        """
+        Reliably check if a file is binary by reading a sample and checking for null bytes.
+        Args:
+            file_path: Path to the file to check
+        Returns:
+            True if file is binary, False if it's text
+        """
         file_path = Path(PurePath(file_path)).absolute()
+
         if not file_path.is_file():
             return False
-        # Check if the file is a binary file
-        with open(file_path, "rb") as f:
-            header = f.read(4)
-            if header != b'\x7fELF':
+
+        # Read first 8KB of file (enough to detect binary content)
+        chunk_size = 8192
+
+        try:
+            with open(file_path, 'rb') as f:
+                chunk = f.read(chunk_size)
+
+            # Empty file is considered text
+            if not chunk:
                 return False
-        return True
+
+            # Check for null bytes (common in binary files, rare in text)
+            if b'\x00' in chunk:
+                return True
+
+            # Check for high proportion of non-text bytes
+            # Text files typically have bytes in printable ASCII + common control chars
+            text_chars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7f})
+            non_text = chunk.translate(None, text_chars)
+
+            # If more than 30% non-text characters, likely binary
+            if len(non_text) / len(chunk) > 0.3:
+                return True
+
+            return False
+
+        except (IOError, OSError):
+            return False
+
+    @staticmethod
+    def is_executable_binary(file_path: str) -> bool:
+        """Check if file is an executable binary."""
+        file_path = Path(PurePath(file_path)).absolute()
+
+        if not file_path.is_file():
+            return False
+
+        with open(file_path, 'rb') as f:
+            header = f.read(4)
+
+        # Check common executable headers
+        return (
+            # Linux
+            header == b'\x7fELF' or
+            # Windows PE
+            header[:2] == b'MZ' or
+            # macOS Mach-O (32-bit)
+            header == b'\xfe\xed\xfa\xce' or
+            # macOS Mach-O (64-bit)
+            header == b'\xfe\xed\xfa\xcf'
+        )
+
+    @staticmethod
+    def is_linux_executable(file_path: str) -> bool:
+        file_path = Path(PurePath(file_path)).absolute()
+        if not FileUtil.is_executable_binary(file_path):
+            return False
+        with open(file_path, 'rb') as f:
+            header = f.read(4)
+        return header == b'\x7fELF'  # Linux ELF header
 
     @staticmethod
     def change_mode(file_path: str, mode: int = 0o777):
@@ -1509,31 +1592,343 @@ def onelinefasta(fastafilepath):
             Path(newfile_temp_name).unlink()
 
 
-def download_databases(logger_obj: logging.Logger):
+def gunzip_arb_file(gzip_file_path: str, keep: bool = False) -> str:
     """
-    Only triggers /base/binaries/SILVA_download.sh to ensure the SILVA database is present.
-    The defualt location for the database is /base/inputs/databases/
+    It gunzips the file and returns the path of the binary file.
     """
-    SILVA_DOWNLOAD_SCRIPT = "/base/binaries/SILVA_download.sh"
-    if not Path(SILVA_DOWNLOAD_SCRIPT).is_file():
-        raise FileNotFoundError(f"SILVA download script not found: {SILVA_DOWNLOAD_SCRIPT}")
-    # Call the SILVA database download script to ensure the database is present
-    result = system_sub(
-        [
-            "/bin/bash",
-            SILVA_DOWNLOAD_SCRIPT
-        ],
-        capture_output=True,
-        force_log=True,
-        logger_obj=logger_obj
+    gzip_file_path = Path(gzip_file_path).absolute()
+    with gzip.open(gzip_file_path, 'rb') as f:
+        file_content = f.read()
+    bin_file = Path(PurePath(gzip_file_path).parent).joinpath(Path(PurePath(gzip_file_path).stem))
+    with open(bin_file, 'wb') as f:
+        f.write(file_content)
+    if not keep:
+        gzip_file_path.unlink()
+    return str(bin_file)
+
+
+def check_md5sum(file_path: str, expected_md5: str) -> bool:
+    """
+    It checks the md5sum of a file against an expected md5sum value.
+    Returns True if the md5sum matches, False otherwise.
+    """
+    file_path = Path(PurePath(file_path)).absolute()
+    if not file_path.is_file():
+        return False
+    if not expected_md5 or len(expected_md5) != 32:
+        return False
+    hash_md5 = md5()
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    file_md5 = hash_md5.hexdigest()
+    return file_md5 == expected_md5
+
+
+md5_hash_files = {
+    "138_2": {
+        "arb_gz_file": "9deb2400c8a76b5ad18ff884fb9f075f",
+        "arb_file": "66ec84b965ab668d4d6affbcdc8ff196"
+    }
+}
+
+
+def index_silva_database(
+    silva_arb_file: str = "SILVA.arb",
+    sina_bin: str = "/base/binaries/sina/bin/sina",
+    logger_obj: logging.Logger = SILVA_db_logger) -> str:
+    """
+    Create an index for the SILVA database using SINA.
+
+    Args:
+        silva_arb_file: Name of the SILVA ARB file
+        sina_bin: Path to the SINA binary
+        parent_path: Directory containing the database files
+    """
+    silva_arb_path = Path(silva_arb_file).absolute()
+    parent_dir = silva_arb_path.parent
+
+    # Remove all suffixes to get root stem (handles both .arb and .arb.gz)
+    root_stem = silva_arb_path.name
+    temp_path = silva_arb_path
+    while temp_path.suffix:
+        root_stem = temp_path.stem
+        temp_path = Path(temp_path.stem)  # Only used for iteration
+
+    silva_index_file = parent_dir / f"{root_stem}.sidx"
+    silva_arb_path = Path(silva_arb_file).absolute()
+
+    # If the file is gzipped , gunzip it
+    if silva_arb_path.suffix == ".gz":
+        logger_obj.info(f"Gunzipping SILVA database file {silva_arb_path}")
+        silva_arb_path = Path(gunzip_arb_file(str(silva_arb_path), keep=True))
+
+    # Create temporary fake FASTA files
+    fake1 = parent_dir / "fake1.fasta"
+    fake2 = parent_dir / "fake2.fasta"
+
+    # If the sidx file exists, skip indexing
+    if silva_index_file.exists() and silva_index_file.stat().st_size > 0:
+        logger_obj.info("SILVA index file already exists, skipping indexing")
+        return str(silva_index_file)
+
+    try:
+        # Create empty fake input file
+        fake1.touch()
+
+        logger_obj.info(f"Building SILVA database index {silva_index_file}")
+
+        system_sub(
+            [
+                sina_bin,
+                "--db", str(silva_arb_path),
+                "--in", str(fake1),
+                "--out", str(fake2)
+            ],
+            capture_output=True,
+            force_log=True,
+            logger_obj=logger_obj
+        )
+
+        logger_obj.info("SILVA database index created successfully")
+
+    finally:
+        # Clean up temporary files
+        fake1.unlink(missing_ok=True)
+        fake2.unlink(missing_ok=True)
+
+    # Verify the created index file
+    if silva_index_file.exists() and silva_index_file.stat().st_size > 0:
+        logger_obj.info("Created index file MD5 matches expected value")
+        return str(silva_index_file)
+
+    return ""
+
+
+def get_silva_release_urls(
+    version: str = "latest",
+    base_url: str = "https://ftp.arb-silva.de/",
+    timeout: int = 10,
+    logger_obj: logging.Logger = SILVA_db_logger):
+    """
+    Return (chosen_arb_url, releases_list).
+
+    - chosen_arb_url: URL to the SILVA ARB gz file for the chosen release (or the release dir if not found)
+    - releases_list: list of tuples (release_text, arb_file_url, datetime_or_None) sorted newest-first
+
+    Only parses hrefs starting with "release_". Accepts version strings with "." or "_" interchangeably.
+    For each release, searches the ARB_files/ subdirectory for files matching:
+    SILVA.*SSURef.*NR99.*opt\.arb\.gz
+    """
+    if not base_url.endswith("/"):
+        base_url = base_url + "/"
+
+    class _IndexParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.entries = []
+            self._current = None
+
+        def handle_starttag(self, tag, attrs):
+            if tag.lower() == "a":
+                href = None
+                for k, v in attrs:
+                    if k.lower() == "href" and v:
+                        href = v
+                        break
+                if href is not None:
+                    self.entries.append({"href": href, "text": ""})
+                    self._current = len(self.entries) - 1
+
+        def handle_data(self, data):
+            if self._current is None:
+                return
+            if not data or not data.strip():
+                return
+            self.entries[self._current]["text"] += data.strip() + " "
+
+    resp = requests.get(base_url, timeout=timeout)
+    resp.raise_for_status()
+    parser = _IndexParser()
+    parser.feed(resp.text)
+
+    href_re = re.compile(r"^release_[^/]+/?$")
+    date_re = re.compile(r"(\d{1,2}-[A-Za-z]{3}-\d{4}\s+\d{2}:\d{2})")
+    arb_name_re = re.compile(r".*SSURef.*(NR99)?.*opt\.arb(\.gz)?$", re.IGNORECASE)
+
+    release_items = []
+    for ent in parser.entries:
+        href = (ent.get("href") or "").strip()
+        if not href or not href_re.match(href):
+            continue
+        name = href.rstrip("/")
+        version_text = name[len("release_"):]
+        release_url = urljoin(base_url, name + "/")
+        text = ent.get("text", "") or ""
+        dt_obj = None
+        m = date_re.search(text)
+        if m:
+            try:
+                dt_obj = dt.strptime(m.group(1), "%d-%b-%Y %H:%M")
+            except Exception:
+                dt_obj = None
+        release_items.append((version_text, release_url, dt_obj))
+
+    if not release_items:
+        raise ValueError(f"No release_ directories found at {base_url}")
+
+    def _resolve_arb_for_release(release_url: str) -> str:
+        """
+        Given a release URL (e.g. https://ftp.arb-silva.de/release_138.2/),
+        append '/ARB_files/', fetch the index, and search for an <a> href matching
+        SILVA.*SSURef.*NR99.*opt.arb.gz (case insensitive).
+        Returns the full URL to the .arb.gz file or the original release_url if not found.
+        """
+        arb_index = urljoin(release_url, "ARB_files/")
+        try:
+            r = requests.get(arb_index, timeout=timeout)
+            r.raise_for_status()
+        except requests.RequestException:
+            return ""
+
+        arb_parser = _IndexParser()
+        arb_parser.feed(r.text)
+        arb_urls_found = []
+        for ent in arb_parser.entries:
+            href = (ent.get("href") or "").strip()
+            if not href:
+                continue
+            # Match files like "SILVA_138.2_SSURef_NR99_03_07_24_opt.arb.gz"
+            if arb_name_re.search(href):
+                arb_urls_found.append(urljoin(arb_index, href))
+
+        arb_nr99 = [u for u in arb_urls_found if "nr99" in str(u).lower()]
+        arb_100 = [u for u in arb_urls_found if "nr99" not in str(u).lower()]
+        arb_urls_found = arb_nr99[0] if arb_nr99 else (arb_100[0] if arb_100 else "")
+
+        return arb_urls_found
+
+    # Resolve ARB file URLs and fetch missing dates
+    for i, (ver, rel_url, d) in enumerate(release_items):
+        if d is None:
+            try:
+                head = requests.head(rel_url, timeout=timeout, allow_redirects=True)
+                lm = head.headers.get("Last-Modified")
+                if lm:
+                    try:
+                        d = parsedate_to_datetime(lm)
+                    except Exception:
+                        d = None
+            except Exception:
+                d = None
+        
+        arb_url = _resolve_arb_for_release(rel_url)
+        if arb_url:
+            release_items[i] = (ver, arb_url, d)
+        else:
+            release_items[i] = (ver, "", d)
+    release_items = [ri for ri in release_items if ri[1]]
+    # Sort newest-first
+    epoch = dt(1970, 1, 1)
+    release_items.sort(key=lambda x: x[2] or epoch, reverse=True)
+
+    return release_items
+
+
+def download_silva_databases(
+    download_dir: str,
+    version: str = "latest",
+    md5_check: bool = True,
+    expected_file_basename: str = "",
+    logger_obj: logging.Logger = SILVA_db_logger):
+    """
+    It checks all available version of SILVA by get_silva_release_urls() function
+    and downloads the SILVA ARB file of the given version.
+    """
+    all_silva_versions_urls = get_silva_release_urls(version=version)
+    silva_version_tup = all_silva_versions_urls[0] if version == "latest" else next(
+        ((ver, url, dt_obj) for ver, url, dt_obj in all_silva_versions_urls if ver == version),
+        None
     )
 
-    if result.returncode != 0:
-        raise RuntimeError(f"SILVA database download script failed with exit code {result.returncode}.")
+    silva_file_base_url = silva_version_tup[1] if silva_version_tup else None
+    if not silva_file_base_url:
+        raise ValueError(f"SILVA version '{version}' not found.")
+    # File path setup
+    download_dir_path = Path(PurePath(download_dir)).absolute().joinpath(
+            "SILVA",
+            silva_version_tup[0]
+        )
+    download_dir_path.mkdir(parents=True, exist_ok=True)
+    silva_filename = silva_file_base_url.split("/")[-1]
+    # Taking last two suffixes in case of .arb.gz
+    if expected_file_basename:
+        silva_filename = expected_file_basename + "".join(Path(silva_filename).suffixes[-2:])
+    silva_filepath = download_dir_path.joinpath(silva_filename)
+    # md5 check
+    md5_url = silva_file_base_url + ".md5"
+    try:
+        response_md5 = requests.get(md5_url)
+        response_md5.raise_for_status()
+        md5_content = response_md5.text.strip()
+        expected_md5 = md5_content.split()[0] if md5_content else ""
+    except requests.RequestException:
+        logger_obj.warning(f"Could not fetch MD5 file from {md5_url}")
+        expected_md5 = ""
+    # logger_obj.debug(f"Expected MD5: {expected_md5}")
+    # Download the SILVA ARB file if not present or md5sum does not match
+    if not check_md5sum(str(silva_filepath), expected_md5):
+        # Downloading the SILVA ARB file to the download_dir
+        response = requests.get(silva_file_base_url, stream=True)
+        response.raise_for_status()
+        total_size_in_bytes = int(response.headers.get('content-length', 0))
+        block_size = 1024 * 1024  # 1 MB
 
-    if result.stdout:
-        logger_obj.info(result.stdout)
-    if result.stderr:
-        logger_obj.error(result.stderr)
+        logger_obj.info(f"Downloading SILVA database to {silva_filepath} ({total_size_in_bytes / (1024*1024):.2f} MB)")
+        with open(silva_filepath, 'wb') as silva_file:
+            for data in response.iter_content(block_size):
+                silva_file.write(data)
+        logger_obj.info(f"Downloaded SILVA database to {silva_filepath} ({total_size_in_bytes / (1024*1024):.2f} MB)")
+    else:
+        logger_obj.info(f"SILVA database already present and verified at {silva_filepath}")
+    # Download the md5sum file and verify the downloaded file
+    if not md5_check:
+        logger_obj.info("MD5 checksum verification skipped as per user request.")
+        return str(silva_filepath), silva_version_tup[0]
+    # Checking downloaded file's md5sum
+    logger_obj.debug(f"Expected MD5: {expected_md5}")
+    if not check_md5sum(str(silva_filepath), expected_md5):
+        silva_filepath.unlink(missing_ok=True)
+        raise ValueError("MD5 checksum verification failed.")
+    logger_obj.info("MD5 checksum verification passed.")
+    return str(silva_filepath), silva_version_tup[0]
 
-    return True
+
+def prepare_silva_database(
+    version: str = "latest",
+    md5_check: bool = True,
+    dest_dir: str = "/databases/",
+    sina_binary: str = "/base/binaries/sina/bin/sina",
+    logger_obj: logging.Logger = SILVA_db_logger):
+    """
+    It prepares the SILVA database for use with SINA.
+    It downloads the database if not present and indexes it.
+    """
+    # Downloa the SILVA database
+    silva_db_path, version = download_silva_databases(
+        download_dir=dest_dir,
+        version=version,
+        md5_check=md5_check,
+        expected_file_basename="SILVA",
+        logger_obj=logger_obj
+    )
+    # Index the SILVA database
+    index_silva_database(
+        silva_arb_file=silva_db_path,
+        logger_obj=logger_obj,
+        sina_bin=sina_binary
+    )
+
+    silva_db_path = Path(PurePath(silva_db_path)).absolute()
+    logger_obj.info(f"SILVA database is ready at {silva_db_path}")
+    return str(silva_db_path.parent), version
