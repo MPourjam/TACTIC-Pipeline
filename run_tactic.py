@@ -38,7 +38,7 @@ global DEFAULT_ARG_FILE_NAME
 DEFAULT_ARG_FILE_NAME = "TACTICPipeline_args.yml"
 ARGS_YAML_FILE = Path(PurePath("/base/" + DEFAULT_ARG_FILE_NAME)).absolute()
 MAP_FILE = Path(PurePath("/base/mapping_file_TEMPLATE.csv")).absolute()
-DBS_DIR = "/base/inputs/databases/"
+DBS_DIR = "/databases/"
 max_pool = int(cpu_count() * 0.7)
 POOL_SIZE = max_pool if max_pool > 0 else 1
 # Preparing the logger
@@ -698,7 +698,8 @@ def run_preprocessing(
         spike_amount: float = 0.0,
         force_preprocess: bool = False,
         individual_zotus: bool = False,
-        skip_non_bacterial_filter: bool = False) -> Path:
+        skip_non_bacterial_filter: bool = False,
+        dbs_dir: str = DBS_DIR) -> Path:
     """
     It takes a tuple of paths to sequencing files.
     Create directory for basename of files and move
@@ -786,7 +787,8 @@ def run_preprocessing(
             usearch_11_bin=usearch_11_bin,
             logger_obj=PREPPROC_LOG,
             minimum_preprocessing=False if individual_zotus else True,
-            skip_non_bacterial_filter=skip_non_bacterial_filter
+            skip_non_bacterial_filter=skip_non_bacterial_filter,
+            dbs_dir=dbs_dir
         )
     except MemoryError as mem_exc:
         err_msg = f"{mem_exc}"
@@ -959,7 +961,7 @@ def run_tactic(
     USEARCH_11_BIN = str(Path(PurePath(usearch_bin_path)).absolute())
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
-    dbs_dir = Path(PurePath(dbs_dir))
+    dbs_dir = Path(PurePath(dbs_dir)).absolute()
     assert fastq_file_dir.is_dir(), "fastq_file_dir must be a path to directory"
     assert dbs_dir.is_dir(), "dbs_dir must be a path to directory"
     assert args_yml_file.is_file(), "args_yml_file should be a valid path to YAML file reachable through input_dir"
@@ -1040,7 +1042,8 @@ def run_tactic(
                                 float(arg_tup[0].spike_amount),   # spike_amount
                                 force_preprocess,
                                 individual_zotus,
-                                skip_non_bacterial_filter
+                                skip_non_bacterial_filter,
+                                str(dbs_dir)
                             ),
                             preproc_queue,
                             arg_tup[0].SampleID,  # res_dict_key must be unique to bound process to sample_id
@@ -1120,7 +1123,7 @@ def run_tactic(
                 spike_stat_file=combined_spike_stats_path,
                 fastqs_dir=str(FASTQ_DIR),
                 args_file_path=args_yml_file,
-                dbs_loc=dbs_dir,
+                dbs_loc=str(dbs_dir),
                 threads=POOL_SIZE,
                 usearch_11_bin=str(USEARCH_11_BIN),
                 run_otu_pipeline=pipeline_to_run[0],
@@ -1204,7 +1207,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-db", "--db-directory",
         type=str,
-        help="Path to directory containing required databases (e.g., SILVA, SortMeRNA). Relative to <--input-directory>.",
+        help="Path to directory containing required databases (e.g., SILVA, SortMeRNA).",
         default=DBS_DIR
     )
     parser.add_argument(
@@ -1302,12 +1305,37 @@ if __name__ == "__main__":
         PREP_LOG.info(
             "# Downloading and preparing necessary databases."
         )
-        proc_helper.download_databases(logger_obj=PREP_LOG)
+        silva_db_dir, silva_version = proc_helper.prepare_silva_database(
+            version="latest",
+            md5_check=True,
+            dest_dir=args.db_directory,
+            logger_obj=PREP_LOG
+        )
+        # PREP_LOG.info(f"SILVA database version {silva_version} is downloaded.")
+        # gunzip sortmerna files
+        PREP_LOG.info("Preparing SILVA archaeal and bacterial reference database files")
+        proc_helper.gunzip_sortmerna_fasta_file(
+            source_dir="/base/databases_raw",
+            target_dir=silva_db_dir,
+            filename="silva-arc-16s-id95.fasta",
+            expected_md5="8b4e6c6f17f6f35444a60fdc915e052c",
+            logger_obj=PREP_LOG
+        )
+        proc_helper.gunzip_sortmerna_fasta_file(
+            source_dir="/base/databases_raw",
+            target_dir=silva_db_dir,
+            filename="silva-bac-16s-id90.fasta",
+            expected_md5="db6e72022cf650c4b33bd888b92a0391",
+            logger_obj=PREP_LOG
+        )
+
+        # PREP_LOG.info(f"SILVA database version {silva_version} is ready.")
+
         # run the main pipeline
         run_tactic(
             fastq_file_dir=FASTQ_DIR,
             args_yml_file=cli_args_file,
-            dbs_dir=INPUT_DIR.joinpath(args.db_directory),
+            dbs_dir=silva_db_dir,
             mapping_file=cli_map_file,
             spike_stat_file=cli_spike_stat_file,
             skip_preprocess=args.skip_preprocess,

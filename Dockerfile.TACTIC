@@ -53,6 +53,7 @@ RUN python -m pip install --no-cache-dir --upgrade pip && \
     python -m pip install --no-cache-dir -r /base/requirements.txt
 
 VOLUME ["/base/inputs/"]
+VOLUME ["/databases/"]
 
 # Tiny entrypoint to lazy-fetch DBs only once into the mounted volume
 COPY entrypoint.sh /base/entrypoint.sh

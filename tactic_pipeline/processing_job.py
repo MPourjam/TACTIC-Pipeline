@@ -27,9 +27,9 @@ USEARCH_11_BIN = USEARCH_11_BIN + " -strand both -threads 1"
 SORT_ME_RNA_BIN = BIN_DIR + 'sortmerna'
 USEARCH8_1 = USEARCH_8_BIN + " -threads 1"
 SINA_BIN = BIN_DIR + 'sina/sina'
-DBS_DIR = "/base/inputs/databases/"
+DBS_DIR = "/databases/"
 GOLD_REFDB_USEARCH = DBS_DIR + 'SILVA-bac-16s-90.udb'
-SINA_ARB = DBS_DIR + 'SILVA_LATEST.arb'
+SINA_ARB = DBS_DIR + 'SILVA.arb'
 ref16RNAdb_1 = DBS_DIR + "silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = DBS_DIR + "silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
@@ -801,8 +801,13 @@ def main_processing(
         usearch_11_bin: str = USEARCH_11_BIN,
         logger_obj: logging.Logger = None,
         minimum_preprocessing: bool = False,
-        skip_non_bacterial_filter: bool = False):
-    global PREPPROC_LOG, USEARCH_11_BIN
+        skip_non_bacterial_filter: bool = False,
+        dbs_dir: str = DBS_DIR):
+    global PREPPROC_LOG, USEARCH_11_BIN, ref16RNAdb_1, ref16RNAdb_2, SINA_ARB
+    SINA_ARB = str(path.join(dbs_dir, "SILVA.arb"))
+    ref16RNAdb_1 = str(path.join(dbs_dir, "silva-bac-16s-id90.fasta"))
+    ref16RNAdb_2 = str(path.join(dbs_dir, "silva-arc-16s-id95.fasta"))
+    logger_obj.info("Using DBs from: {}".format(dbs_dir))
     # usearch_11_bin must be a global variable and pointing to a file
     USEARCH_11_BIN = usearch_11_bin + " -strand both -threads 1"
     logger_file_path = path.join(path.abspath(input_dir), f"{str(input_id)}_logs.txt")

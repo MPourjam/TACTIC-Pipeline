@@ -892,17 +892,18 @@ class Usearch(FileUtil):
         and returns the path of the binary file.
         """
         ret_tup = (1, "")
-        if FileUtil.is_binary(self.file):
-            # if the file is a binary file
-            self.binfile = self.file
-        elif FileUtil.is_gzip(self.file):
+        if FileUtil.is_gzip(self.file):
             # If the file is a gzip file
             self.binfile = FileUtil.gunzip(self.file)
+        elif FileUtil.is_linux_executable(self.file):
+            # if the file is a binary file
+            # print("Binary file found:", self.files)
+            self.binfile = self.file
         else:
             # If the file is not a binary file
             # then we check if the binary file is inside
             bin_file = self.file.parent.joinpath(self.file.stem)
-            if FileUtil.is_binary(bin_file):
+            if FileUtil.is_linux_executable(bin_file):
                 self.binfile = bin_file
             else:
                 # if the binary file is not found
@@ -1634,9 +1635,9 @@ md5_hash_files = {
 
 
 def index_silva_database(
-    silva_arb_file: str = "SILVA.arb",
-    sina_bin: str = "/base/binaries/sina/bin/sina",
-    logger_obj: logging.Logger = SILVA_db_logger) -> str:
+        silva_arb_file: str = "SILVA.arb",
+        sina_bin: str = "/base/binaries/sina/bin/sina",
+        logger_obj: logging.Logger = SILVA_db_logger) -> str:
     """
     Create an index for the SILVA database using SINA.
 
@@ -1706,11 +1707,11 @@ def index_silva_database(
 
 
 def get_silva_release_urls(
-    version: str = "latest",
-    base_url: str = "https://ftp.arb-silva.de/",
-    timeout: int = 10,
-    logger_obj: logging.Logger = SILVA_db_logger):
-    """
+        version: str = "latest",
+        base_url: str = "https://ftp.arb-silva.de/",
+        timeout: int = 10,
+        logger_obj: logging.Logger = SILVA_db_logger):
+    '''
     Return (chosen_arb_url, releases_list).
 
     - chosen_arb_url: URL to the SILVA ARB gz file for the chosen release (or the release dir if not found)
@@ -1719,7 +1720,7 @@ def get_silva_release_urls(
     Only parses hrefs starting with "release_". Accepts version strings with "." or "_" interchangeably.
     For each release, searches the ARB_files/ subdirectory for files matching:
     SILVA.*SSURef.*NR99.*opt\.arb\.gz
-    """
+    '''
     if not base_url.endswith("/"):
         base_url = base_url + "/"
 
@@ -1821,7 +1822,7 @@ def get_silva_release_urls(
                         d = None
             except Exception:
                 d = None
-        
+
         arb_url = _resolve_arb_for_release(rel_url)
         if arb_url:
             release_items[i] = (ver, arb_url, d)
@@ -1836,11 +1837,11 @@ def get_silva_release_urls(
 
 
 def download_silva_databases(
-    download_dir: str,
-    version: str = "latest",
-    md5_check: bool = True,
-    expected_file_basename: str = "",
-    logger_obj: logging.Logger = SILVA_db_logger):
+        download_dir: str,
+        version: str = "latest",
+        md5_check: bool = True,
+        expected_file_basename: str = "",
+        logger_obj: logging.Logger = SILVA_db_logger):
     """
     It checks all available version of SILVA by get_silva_release_urls() function
     and downloads the SILVA ARB file of the given version.
@@ -1856,9 +1857,9 @@ def download_silva_databases(
         raise ValueError(f"SILVA version '{version}' not found.")
     # File path setup
     download_dir_path = Path(PurePath(download_dir)).absolute().joinpath(
-            "SILVA",
-            silva_version_tup[0]
-        )
+        "SILVA",
+        silva_version_tup[0]
+    )
     download_dir_path.mkdir(parents=True, exist_ok=True)
     silva_filename = silva_file_base_url.split("/")[-1]
     # Taking last two suffixes in case of .arb.gz
@@ -1905,11 +1906,11 @@ def download_silva_databases(
 
 
 def prepare_silva_database(
-    version: str = "latest",
-    md5_check: bool = True,
-    dest_dir: str = "/databases/",
-    sina_binary: str = "/base/binaries/sina/bin/sina",
-    logger_obj: logging.Logger = SILVA_db_logger):
+        version: str = "latest",
+        md5_check: bool = True,
+        dest_dir: str = "/databases/",
+        sina_binary: str = "/base/binaries/sina/bin/sina",
+        logger_obj: logging.Logger = SILVA_db_logger):
     """
     It prepares the SILVA database for use with SINA.
     It downloads the database if not present and indexes it.
@@ -1930,19 +1931,18 @@ def prepare_silva_database(
     )
 
     silva_db_path = Path(PurePath(silva_db_path)).absolute()
-    logger_obj.info(f"SILVA database is ready at {silva_db_path}")
     return str(silva_db_path.parent), version
 
 
 def gunzip_sortmerna_fasta_file(
-    source_dir: str,
-    target_dir: str,
-    filename: str,
-    expected_md5: str = "",
-    logger_obj: logging.Logger = SILVA_db_logger):
+        source_dir: str,
+        target_dir: str,
+        filename: str,
+        expected_md5: str = "",
+        logger_obj: logging.Logger = SILVA_db_logger):
     """
     Ensure a SILVA FASTA file exists by extracting it from a gzipped source if needed.
-    
+
     Args:
         parent_path: Target directory for the FASTA file
         database_dir: Source directory containing the gzipped file
@@ -1950,7 +1950,7 @@ def gunzip_sortmerna_fasta_file(
     """
     target_file = Path(target_dir) / filename
     source_file = Path(source_dir) / f"{filename}.gz"
-    
+
     if not check_md5sum(str(target_file), expected_md5):
         logger_obj.info(f"Placing {filename}.gz in {target_dir}")
         with gzip.open(source_file, 'rb') as f_in:
@@ -1963,4 +1963,3 @@ def gunzip_sortmerna_fasta_file(
         if not check_md5sum(str(target_file), expected_md5):
             raise ValueError(f"MD5 checksum verification failed for {target_file}")
         logger_obj.info(f"MD5 checksum verification passed for {target_file}")
-

@@ -23,8 +23,8 @@ warnings.filterwarnings("ignore", category=SyntaxWarning)
 BIN_DIR = "/base/binaries/"
 USEARCH_11_BIN = BIN_DIR + "usearch11.0.667_i86linux64"
 USEARCH_8_bin = BIN_DIR + "usearch8.1"
-DB_LOC = "/base/inputs/databases/"
-SINA_ARB = DB_LOC + "SILVA_LATEST.arb"
+DB_LOC = "/databases/"
+SINA_ARB = DB_LOC + "SILVA.arb"
 SINA_BIN = BIN_DIR + "sina/sina"
 GOLD_REFDB_USEARCH = DB_LOC + "SILVA-bac-16s-90.udb"
 # USERS_DIR = '/srv/crc/users/'
@@ -1490,6 +1490,10 @@ def main(
 
     DB_LOC = Path(PurePath(dbs_loc))
     assert DB_LOC.is_dir(), "DBS_LOC should be path to direcotry containing SILVA database files (arb)"
+    global SINA_ARB, ref16RNAdb_1, ref16RNAdb_2
+    SINA_ARB = str(DB_LOC.joinpath("SILVA.arb"))
+    ref16RNAdb_1 = str(DB_LOC.joinpath("silva-bac-16s-id90.fasta"))
+    ref16RNAdb_2 = str(DB_LOC.joinpath("silva-arc-16s-id95.fasta"))
     ANALYSIS_DIR = Path(PurePath(analysis_dir)).absolute()
     gimmelogger(
         logger_name="run_tactic.analysis",
@@ -1499,6 +1503,7 @@ def main(
     ANA_LOG = gimmelogger(
         logger_name="run_tactic.analysis.main",
     )
+    ANA_LOG.info(f"Using DBs from: {str(DB_LOC)}")
     # updating POOL_SIZE
     try:
         POOL_SIZE = int(threads)

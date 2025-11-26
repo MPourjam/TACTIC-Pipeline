@@ -366,7 +366,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                 date = int(date)
                 time = int(time)
                 # latest folder has the highest date and time
-                if date > latest_analysis_folder_date or (date == latest_analysis_folder_date and time > latest_analysis_folder_time):
+                if date >= latest_analysis_folder_date and time > latest_analysis_folder_time:
                     latest_analysis_folder_date = date
                     latest_analysis_folder_time = time
                     latest_analysis_folder = analysis_folder
