@@ -1932,3 +1932,35 @@ def prepare_silva_database(
     silva_db_path = Path(PurePath(silva_db_path)).absolute()
     logger_obj.info(f"SILVA database is ready at {silva_db_path}")
     return str(silva_db_path.parent), version
+
+
+def gunzip_sortmerna_fasta_file(
+    source_dir: str,
+    target_dir: str,
+    filename: str,
+    expected_md5: str = "",
+    logger_obj: logging.Logger = SILVA_db_logger):
+    """
+    Ensure a SILVA FASTA file exists by extracting it from a gzipped source if needed.
+    
+    Args:
+        parent_path: Target directory for the FASTA file
+        database_dir: Source directory containing the gzipped file
+        filename: Name of the FASTA file (without .gz extension)
+    """
+    target_file = Path(target_dir) / filename
+    source_file = Path(source_dir) / f"{filename}.gz"
+    
+    if not check_md5sum(str(target_file), expected_md5):
+        logger_obj.info(f"Placing {filename}.gz in {target_dir}")
+        with gzip.open(source_file, 'rb') as f_in:
+            with open(target_file, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+    else:
+        logger_obj.info(f"{filename} found, skipping download")
+    # Optional MD5 checksum verification
+    if expected_md5:
+        if not check_md5sum(str(target_file), expected_md5):
+            raise ValueError(f"MD5 checksum verification failed for {target_file}")
+        logger_obj.info(f"MD5 checksum verification passed for {target_file}")
+

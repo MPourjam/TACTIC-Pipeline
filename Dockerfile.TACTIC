@@ -41,7 +41,7 @@ RUN mkdir -p /base/binaries /base/spikesidx /base/tactic_pipeline
 COPY binaries/ /base/binaries/
 RUN chmod +x /base/binaries/SILVA_download.sh
 COPY spikesidx/ /base/spikesidx/
-COPY databases_raw //base/databases_raw
+COPY databases_raw /base/databases_raw
 COPY tactic_pipeline /base/tactic_pipeline/
 COPY run_tactic.py /base/run_tactic.py
 COPY TACTICPipeline_args.yml /base/TACTICPipeline_args.yml
