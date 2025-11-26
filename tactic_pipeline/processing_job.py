@@ -39,6 +39,9 @@ SPIKESIDX = "/base/spikesidx/bowtie2_spike_indices/spike"
 S_FLAT_LOCATION = '/base/s_flat.txt'
 
 
+PREPPROC_LOG = gimmelogger()
+
+
 # overwriting system to run it with subprocess.run
 def system_sub(*args, **kwargs):
     return sys_sub(*args, logger_obj=PREPPROC_LOG, **kwargs)
@@ -106,6 +109,56 @@ def mymkdir(input_dir):
         mkdir(input_dir)
     except BaseException:
         pass
+
+
+def filter_truncqual(
+        forward_file,
+        reverse_file,
+        qual_threshold: int = 20,
+        usearch_bin: str = USEARCH_11_BIN) -> (str, str):
+    """
+    It takes the forward and reverse files truncate them based on their quality scores.
+
+    Returns the names of the truncated files.
+
+    :param forward_file: str, path to the forward reads file
+    :param reverse_file: str, path to the reverse reads file
+    :return: (str, str), names of the truncated forward and reverse files
+    """
+    forw_out = forward_file.replace(".fastq", "_truncqual.fastq").replace(".fq", "_truncqual.fq")
+    reve_out = reverse_file.replace(".fastq", "_truncqual.fastq").replace(".fq", "_truncqual.fq")
+    # discarded files
+    forw_disc = forward_file.replace(".fastq", "_discarded.fastq").replace(".fq", "_discarded.fq")
+    reve_disc = reverse_file.replace(".fastq", "_discarded.fastq").replace(".fq", "_discarded.fq")
+    system_sub(
+        [
+            *list(usearch_bin.split(" ")),
+            '-fastq_filter',
+            forward_file,
+            "-fastq_truncqual",
+            str(qual_threshold),
+            "-fastqout",
+            forw_out,
+            "-fastqout_discarded",
+            forw_disc
+        ],
+        force_log=True
+    )
+    system_sub(
+        [
+            *list(usearch_bin.split(" ")),
+            '-fastq_filter',
+            reverse_file,
+            "-fastq_truncqual",
+            str(qual_threshold),
+            "-fastqout",
+            reve_out,
+            "-fastqout_discarded",
+            reve_disc
+        ],
+        force_log=True
+    )
+    return forw_out, reve_out
 
 
 def merge_pairs(forward_file, reverse_file):
