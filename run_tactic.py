@@ -1296,6 +1296,11 @@ if __name__ == "__main__":
         )
         # log
         PREP_LOG.info(f"Mapping file template files written to {str(FASTQ_DIR.joinpath('mapping_file_TEMPLATE.csv').relative_to(INPUT_DIR))}")
+        shutil.copy2(
+            str(ARGS_YAML_FILE),
+            str(FASTQ_DIR.joinpath(DEFAULT_ARG_FILE_NAME))
+        )
+        PREP_LOG.info(f"Argument file template files written to {str(FASTQ_DIR.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))}")
         exit(0)
     else:
         if args.db_directory != DBS_DIR:
