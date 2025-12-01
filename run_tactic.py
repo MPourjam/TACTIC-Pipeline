@@ -1290,21 +1290,27 @@ if __name__ == "__main__":
         PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(INPUT_DIR))})")
 
     if args.place_template_files:
+        temp_map_file = FASTQ_DIR.joinpath("mapping_file_TEMPLATE.csv")
         shutil.copy2(
             str(MAP_FILE),
-            str(FASTQ_DIR.joinpath("mapping_file_TEMPLATE.csv"))
+            str(temp_map_file)
         )
         # log
-        PREP_LOG.info(f"Mapping file template files written to {str(FASTQ_DIR.joinpath('mapping_file_TEMPLATE.csv').relative_to(INPUT_DIR))}")
+        PREP_LOG.info(f"Mapping file template files written to {str(temp_map_file)}")
+        temp_args_file = FASTQ_DIR.joinpath(ARGS_YAML_FILE.name.replace(".yml", "_TEMPLATE.yml"))
         shutil.copy2(
             str(ARGS_YAML_FILE),
-            str(FASTQ_DIR.joinpath(DEFAULT_ARG_FILE_NAME))
+            str(temp_args_file)
         )
-        PREP_LOG.info(f"Argument file template files written to {str(FASTQ_DIR.joinpath(DEFAULT_ARG_FILE_NAME).relative_to(INPUT_DIR))}")
+        PREP_LOG.info(f"Argument file template files written to {str(temp_args_file)}")
         exit(0)
     else:
-        if args.db_directory != DBS_DIR:
+        if Path(args.db_directory).is_absolute():
             DBS_DIR = args.db_directory
+        else:
+            DBS_DIR = str(INPUT_DIR.joinpath(args.db_directory).absolute())
+            args.db_directory = DBS_DIR
+        Path(DBS_DIR).mkdir(parents=True, exist_ok=True)
         # NOTE Every needed file and directory should be in /base/inputs/
         # download the databases
         PREP_LOG.info(
@@ -1313,7 +1319,7 @@ if __name__ == "__main__":
         silva_db_dir, silva_version = proc_helper.prepare_silva_database(
             version="latest",
             md5_check=True,
-            dest_dir=args.db_directory,
+            dest_dir=str(args.db_directory),
             logger_obj=PREP_LOG
         )
         # PREP_LOG.info(f"SILVA database version {silva_version} is downloaded.")

@@ -67,7 +67,7 @@ class ArgumentSet:
             args += ["--spike-stats-file", self.spike_stats_file]
         if self.usearch_bin:
             args += ["--usearch-bin", self.usearch_bin]
-        if self.db_directory:
+        if True:
             args += ["--db-directory", self.db_directory]
         if self.skip_preprocess:
             args += ["--skip-preprocess"]
@@ -420,6 +420,7 @@ def copy_initial_files(run_dir: str) -> None:
         subprocess.run(["cp", file, str(run_dir) + "/"])
     subprocess.run(["cp", data + "/TACTICPipeline_args_test.yml", run_dir])
 
+
 def copy_spikes_dir(run_dir: str) -> None:
     """
     Copy the spikes directory from the data directory to the run directory.
@@ -705,3 +706,29 @@ def test_full_TIC_analysis_custom_spike(build_image):
 
     run_container(setup_file_structure)
 
+
+def test_full_TIC_analysis_custom_database_path(build_image):
+    def setup_file_structure(run_dir: str):
+        copy_initial_files(run_dir)
+        copy_spikes_dir(run_dir)
+        # setting args
+        args_set = ArgumentSet("", "")
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.analysis_mode = "TIC"
+        args_set.individual_zotus = False
+        # args_set.spikes_references_dir = "custom_spikes"
+        args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
+        args_set.db_directory = "My/custom/database/path"  # If absolute path then not relative to INPUT_DIR
+        args_set.skip_analysis = True
+
+        return args_set
+
+    run_container(setup_file_structure)
