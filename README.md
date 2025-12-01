@@ -222,13 +222,45 @@ You can run the pipeline quickly with _fastq files auto-discovery_ and _default 
 __Running via Script__:
 ```bash
 cd TACTIC-Pipeline
-python run_tactic.py --input-dir /path/to/your/project/directory
+python run_tactic.py --input-directory /path/to/your/project/directory
 ```
 __Running via Docker__:
 
 ```bash
 docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 
 ```
+
+> With `-v` argument we are mounting our desired local path to a the path `/base/inputs` (default `--input-directory`) in which the pipeline by default look for fastq files. Any fastq files (also nested inside other sub directories) will be visible to the pipeline when only setting `--input-directory` (i.e., `/base/inputs/`). In case we want to mount an upper level directory as our `--input-directory` and narrow the pipeline's search and analysis scope we can set `--fastq-directory` argument which should be set relative to `--input-directory`. This way the pipeline searches for fastq files within the path given via `-fastq-dir`. Sample mapping file and arguments YAML file could be still relative to `--input-directory`.
+
+For example we can narrow the pipeline to a sub-directory within the `--input-directory` like below:
+
+```bash
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --fastq-directory Sequencing_Run_1/
+```
+or 
+
+```bash
+python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/
+```
+In the example above the content of `/path/to/your/project/directory` which is (`/base/inputs` in the docker container) looks like:
+```bash
+.
+├── Sequencing_Run_1
+│   └── fastqs
+│       ├── 001-654_Stool_R1_001.fastq.gz
+│       ├── 001-654_Stool_R2_001.fastq.gz
+│       ├── 002-342_Stool_R1_001.fastq.gz
+│       └── 002-342_Stool_R2_001.fastq.gz
+└── Sequencing_Run_2
+    └── fastqs
+        ├── 001-435_Saliva_R1_001.fastq.gz
+        ├── 001-435_Saliva_R2_001.fastq.gz
+        ├── 002-436_Saliva_R1_001.fastq.gz
+        └── 002-436_Saliva_R2_001.fastq.gz
+```
+All fastq files, in this example,, in the directory `Sequencing_Run_1` will be processed with the default argument.
+
+
 
 #### Run with custom pipeline arguments
 The pipeline reads the arguments from a [YAML](https://en.wikipedia.org/wiki/YAML) file it expects as input to `-y` or `--yml-file`. To have a template of such YAML file and fill in your desired arguments you can run the pipeline as described in [Quickstart](#quickstart) and with the switch `-tf` or `--place-template-files`. This will put template files of the argument YAML file and the mapping file (described in the next section) in your project directory.
@@ -245,17 +277,144 @@ __Running via Docker__:
 ```bash
 docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --place-template-files
 # or
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 -y
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 -tf
 ```
 
 These commands will put two files in your project directory:
 1. `mapping_file_TEMPLATE.csv`: This is the template file to give samples in a mapping file with their sample weight and spike amount for spike normalization.
-2. `TACTICPipeline_args.yml`: This is a YAML file containing the arguments to the pipeline.
+2. `TACTICPipeline_args_TEMPLATE.yml`: This is a YAML file containing the arguments to the pipeline.
+
+Now that we want to tweak arguments of the analysis, we can directly open the `TACTICPipeline_args_TEMPLATE.yml` and change the desired argument. After the change is applied, we put the argument file in a path visible to the pipeline (i.e., any sub-path to `--input-directory` or `/path/to/your/project/directory` when using docker image). As an example, the commands below will run the pipeline on two different batches of fastq files with two different argument set.
+
+My project directory now looks like:
+
+```bash
+├── Sequencing_Run_1
+│   └── fastqs
+│       ├── 001-654_Stool_R1_001.fastq.gz
+│       ├── 001-654_Stool_R2_001.fastq.gz
+│       ├── 002-342_Stool_R1_001.fastq.gz
+│       └── 002-342_Stool_R2_001.fastq.gz
+├── Sequencing_Run_2
+│   └── fastqs
+│       ├── 001-435_Saliva_R1_001.fastq.gz
+│       ├── 001-435_Saliva_R2_001.fastq.gz
+│       ├── 002-436_Saliva_R1_001.fastq.gz
+│       └── 002-436_Saliva_R2_001.fastq.gz
+├── TACTICPipeline_args_set_1.yml
+└── TACTICPipeline_args_set_2.yml
+```
+
+__Arguemnt set 1__:
+
+When using docker image:
+
+```bash
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
+```
+
+or when using the script:
+
+```bash
+python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
+```
+
+__Argument set 2__:
+
+```bash
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
+```
+
+or when using the script:
+
+```bash
+python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
+```
+
+> Note that every path argument to the CLI is given __relative to `--input-directory``__ !!!
 
 #### Run with custom set of your fastq files
 
+The _auto discovery_ of pipeline can also be overridden by a giving mapping file in tab-separated format file. In the case like below, you can choose a custom set of fastq files from different directory to analyze by giving a __uniq__ part of their name in a mapping file.
+
+
+My project directory looks like below:
+```bash
+├── Sequencing_Run_1
+│   └── fastqs
+│       ├── 001-654_Stool_R1_001.fastq.gz
+│       ├── 001-654_Stool_R2_001.fastq.gz
+│       ├── 002-342_Stool_R1_001.fastq.gz
+│       └── 002-342_Stool_R2_001.fastq.gz
+├── Sequencing_Run_2
+│   └── fastqs
+│       ├── 001-435_Saliva_R1_001.fastq.gz
+│       ├── 001-435_Saliva_R2_001.fastq.gz
+│       ├── 002-436_Saliva_R1_001.fastq.gz
+│       └── 002-436_Saliva_R2_001.fastq.gz
+├── TACTICPipeline_args_set_1.yml
+├── TACTICPipeline_args_set_2.yml
+├── TACTICPipeline_args_set_combined.yml
+└── my_maping_file.csv
+```
+
+I want to pick one file from each sequencing run and run the analysis. In order to do so, I follow the steps below:
+
+1. I generate a _mapping file template_ by running _TACTIC_ by `-tf` or `--place-template-files`.
+2. I modify the `mapping_file_TEMPLATE.csv` placed in the working directory and make sure that `#SampleID` column of the file include __uniq__ base name of desired fastq files cut from __R1__ or __R2__ suffix.
+3. I run the pipeline with `-map` or `--mapping-file` argument and pass my modified mapping file to it.
+
+In this example, I have modified the mapping file like below as I only want to run one sample from each sequencing run.
+
+```my_mapping_file.csv
+#SampleID       total_weight_in_g       spike_amount    parent_path
+001-435_Saliva    1  nan
+001-654_Stool    1.2  nan
+```
+
+__Columns__:
+
+- __#SampleID__: contains the uniq basename of samples
+- __total_weight_in_g__: The weight of sample taken for sequencing. The value should be given if your samples are spiked. Otherwise any positive value could be given.
+- __spike_amoung__: amount of spike (in __nano gram__) added to your samples if you have asked for spiked sequencing. If your samples are not spiked the value of this column for your samples should be "__nan__".
+- __parent_path__: This column could contain the path (relative to `--fastq-directory`) to parent directory of given samples. This clarifies the situations in which two exact samples with the same file names exist in two different directories. In this case, by giving proper parent directory path to this column, the pipeline will pick the correct (pairs of) files.  
+
+
+After, I have prepared the `mapping_file.csv`, I run the pipeline like below:
+
+
+```bash
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv
+```
+
+or when using the script:
+
+```bash
+python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv
+```
+
+> Note that the search scope of the pipeline is not narrowed down to specific directory by `--fastq-directory` as our samples are in two different directories within our `--input-directory`.
+
+#### Setting fixed databases directory
+Every time the pipeline runs, it checks the existence of required database files. By default it checks `/databases` direcotry but this could be set manually to avoid re-download and re-indexing of of databases which takes time. In order to set the databases directory:
+
+```bash
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" -v "/path/to/desired/database/directory:/databases" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv 
+```
+
+> We defined a mount point in the docker container by the second `-v` so that the container sees our fixed database directory in its `/databases`
+
+or when using the script:
+
+```bash
+python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv --db-directory /path/to/desired/database/directory
+```
+
+> `--db-directory` could be relative or absolute. If given as absolute (with preceding "/") then the absolute path is taken, if given as relative path then it will be a path inside `--input-directory`. 
+
+<!--
 ### Inputs
 To run the pipeline with default 
 ### Outputs
-### Quickstart
 # References
+-->
