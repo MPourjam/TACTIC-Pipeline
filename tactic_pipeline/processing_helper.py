@@ -19,7 +19,7 @@ from collections.abc import MutableMapping
 from collections import Counter
 import mimetypes as mtypes
 from os import path as ospath
-from os import remove, replace
+from os import remove, replace, rmdir
 from sys import version_info
 from copy import deepcopy
 from html.parser import HTMLParser
@@ -1635,42 +1635,49 @@ md5_hash_files = {
 
 
 def index_silva_database(
-        silva_arb_file: str = "SILVA.arb",
-        sina_bin: str = "/base/binaries/sina/bin/sina",
-        logger_obj: logging.Logger = SILVA_db_logger) -> str:
+    silva_arb_file: str = "SILVA.arb",
+    sina_bin: str = "/base/binaries/sina/bin/sina",
+    logger_obj: logging.Logger = SILVA_db_logger) -> str:
     """
     Create an index for the SILVA database using SINA.
 
     Args:
         silva_arb_file: Name of the SILVA ARB file
         sina_bin: Path to the SINA binary
-        parent_path: Directory containing the database files
     """
     silva_arb_path = Path(silva_arb_file).absolute()
-    parent_dir = silva_arb_path.parent
 
-    # Remove all suffixes to get root stem (handles both .arb and .arb.gz)
-    root_stem = silva_arb_path.name
-    temp_path = silva_arb_path
-    while temp_path.suffix:
-        root_stem = temp_path.stem
-        temp_path = Path(temp_path.stem)  # Only used for iteration
-
-    silva_index_file = parent_dir / f"{root_stem}.sidx"
-    silva_arb_path = Path(silva_arb_file).absolute()
-
-    # If the file is gzipped , gunzip it
+    # If the file is gzipped, gunzip it
     if silva_arb_path.suffix == ".gz":
-        logger_obj.info(f"Gunzipping SILVA database file {silva_arb_path}")
-        silva_arb_path = Path(gunzip_arb_file(str(silva_arb_path), keep=True))
+        # logger_obj.info(f"Gunzipping SILVA database file {silva_arb_path}")
+        silva_arb_path = Path(gunzip_arb_file(str(silva_arb_path), keep=True)).absolute()
 
-    # Create temporary fake FASTA files
-    fake1 = parent_dir / "fake1.fasta"
-    fake2 = parent_dir / "fake2.fasta"
+    # we expect the index file to have the same name as the arb fie but with .sidx suffix
+    silva_arb_stem = silva_arb_path.stem
+    silva_index_file = silva_arb_path.parent / f"{silva_arb_stem}.sidx"
+    silva_idx_success_touch = silva_index_file.with_suffix(".sidx.success")
 
-    # If the sidx file exists, skip indexing
+    fake1 = silva_arb_path.parent / "fake1.fasta"
+    fake2 = silva_arb_path.parent / "fake2.fasta"
+
+    # If the sidx file exists, skip indexing (only if verified by success file)
+    reindex_needed = True
     if silva_index_file.exists() and silva_index_file.stat().st_size > 0:
-        logger_obj.info("SILVA index file already exists, skipping indexing")
+        if silva_idx_success_touch.exists():
+            try:
+                with open(silva_idx_success_touch, "r", encoding="utf-8") as touch_file:
+                    touch_content = touch_file.read()
+                if "d3fa056627656a96abf4006b9f5d928b" in touch_content:
+                    logger_obj.info("SILVA index file already exists and verified, skipping indexing")
+                    reindex_needed = False
+                else:
+                    logger_obj.warning("SILVA index success touch file is invalid, re-indexing SILVA database")
+            except Exception as e:
+                logger_obj.warning(f"Could not read SILVA success touch file: {e}; re-indexing")
+        else:
+            logger_obj.warning("SILVA index success touch file missing, re-indexing SILVA database")
+
+    if not reindex_needed:
         return str(silva_index_file)
 
     try:
@@ -1679,7 +1686,7 @@ def index_silva_database(
 
         logger_obj.info(f"Building SILVA database index {silva_index_file}")
 
-        system_sub(
+        sub_ret = system_sub(
             [
                 sina_bin,
                 "--db", str(silva_arb_path),
@@ -1691,19 +1698,44 @@ def index_silva_database(
             logger_obj=logger_obj
         )
 
-        logger_obj.info("SILVA database index created successfully")
+        if sub_ret.returncode != 0:
+            logger_obj.error(f"SINA indexing failed with return code {sub_ret.returncode}")
+            stderr_val = getattr(sub_ret, "stderr", "")
+            if isinstance(stderr_val, (bytes, bytearray)):
+                try:
+                    stderr_str = stderr_val.decode().strip()
+                except Exception:
+                    stderr_str = str(stderr_val)
+            else:
+                stderr_str = str(stderr_val).strip()
+            logger_obj.error(f"SINA stderr: {stderr_str}")
+            # remove incomplete index file if created
+            silva_index_file.unlink(missing_ok=True)
+            return ""
+        else:
+            logger_obj.info("SILVA database index created successfully")
+            # place a touch file to indicate successful creation and include metadata
+            try:
+                with open(silva_idx_success_touch, "w", encoding="utf-8") as touch_file:
+                    touch_file.write(f"SILVA index created on {dt.now().isoformat()}\n")
+                    touch_file.write(f"SILVA ARB file: {silva_arb_path}\n")
+                    touch_file.write(f"SINA binary: {sina_bin}\n")
+                    touch_file.write("d3fa056627656a96abf4006b9f5d928b\n")  # md5sum of "Kiarash's Birthday: 2025-12-15 19:14:00"
+            except Exception as e:
+                logger_obj.warning(f"Could not write SILVA success touch file: {e}")
 
     finally:
         # Clean up temporary files
-        fake1.unlink(missing_ok=True)
-        fake2.unlink(missing_ok=True)
+        try:
+            fake1.unlink(missing_ok=True)
+        except Exception:
+            pass
+        try:
+            fake2.unlink(missing_ok=True)
+        except Exception:
+            pass
 
-    # Verify the created index file
-    if silva_index_file.exists() and silva_index_file.stat().st_size > 0:
-        logger_obj.info("Created index file MD5 matches expected value")
-        return str(silva_index_file)
-
-    return ""
+    return str(silva_index_file)
 
 
 def get_silva_release_urls(
