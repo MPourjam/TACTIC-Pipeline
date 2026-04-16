@@ -4,6 +4,7 @@ import shutil
 import tarfile
 from ete3 import Tree
 from os import chdir
+from sys import exit
 import os.path as ospath
 from multiprocessing import cpu_count, Pool
 from processing_helper import TACTICArgsParser, gimmelogger, MyCounter
@@ -823,7 +824,7 @@ def filter_otus_by_abundance(
 def cleanup(directory: str, to_keep: list = []) -> bool:
     directory = Path(PurePath(directory)).absolute()
     must_keep = [
-        re.compile(r"TACTICPipeline_args\.yml"),
+        re.compile(r".*\.yml"),
         re.compile(r"spike_mapping_file\.csv"),
         # Pipelne outputs
         re.compile(r"[ZS]?OTUs-Seqs(-TAC|-TIC)?\.fasta"),
@@ -834,7 +835,7 @@ def cleanup(directory: str, to_keep: list = []) -> bool:
         re.compile(r"Map-.*\.tab"),
         re.compile(r"SampleMinCount_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
         re.compile(r"Spike_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
-        re.compile(r"Analysis_log\.txt"),
+        re.compile(r".*log\.txt"),
         re.compile(r"Seqs(-TIC|-TAC)?\.fasta"),
         re.compile(r".*FullTaxonomy\.tab"),  # For ZOTU tables with full taxonomy
     ]
@@ -1329,7 +1330,7 @@ def tac_pipeline(
     uc_dict = parse_uc_file(uc_file)
 
     # print([zotus for key, zotus in uc_dict.items() if len(zotus) > 1])
-    # exit()
+
     # Creating OTU table
     TAC_LOGGER.info('# Creating OTU table')
     otu_zotu_map = collapse_zotu_table(
@@ -1484,7 +1485,6 @@ def main(
     global USEARCH_11_BIN, POOL_SIZE, ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC, ARGS_PREC
     # updating USEARCH_11_BIN
     USEARCH_11_BIN = usearch_11_bin
-
     spike_stat_file = Path(PurePath(spike_stat_file))
     assert spike_stat_file.is_file(), "spike_stat_file must be a path to a file"
 
@@ -1512,21 +1512,36 @@ def main(
         ANA_LOG.warning(f"threads must be an integer. Using default value of {POOL_SIZE}")
 
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
-    ANALYSIS_DIR = str(ANALYSIS_DIR) + "/"
     cleanup(str(ANALYSIS_DIR))
-    # copy the args_file_path to the analysis directory
-    this_args_file = Path(PurePath(args_file_path)).absolute()
-    new_args_file = Path(PurePath(ANALYSIS_DIR + this_args_file.name))
-    try:
-        shutil.copy2(this_args_file, new_args_file)
-    except Exception as exc:
-        ANA_LOG.warning(f"Copying args file to {ANALYSIS_DIR} failed: {exc}")
+    # copy the args_file_path to the analysis directory (only if provided and valid)
+    if args_file_path:
+        this_args_file = Path(PurePath(args_file_path)).absolute()
+        if this_args_file.is_file():
+            new_args_file = ANALYSIS_DIR / this_args_file.name
+            try:
+                ANA_LOG.info(f"Copying args file {this_args_file} to {new_args_file}")
+                shutil.copy2(str(this_args_file), str(new_args_file))
+            except Exception as exc:
+                ANA_LOG.warning(f"Copying args file {this_args_file} to {ANALYSIS_DIR} failed: {exc}")
+            else:
+                try:
+                    rel = new_args_file.relative_to(fastqs_dir)
+                except Exception:
+                    rel = new_args_file
+                ANA_LOG.info(f"Copied args file to {rel}")
+                args_file_path = str(new_args_file)
+        else:
+            ANA_LOG.warning(f"Provided args_file_path does not exist or is not a file: {args_file_path}")
+            exit(163)
+    else:
+        ANA_LOG.info("No args_file_path provided; skipping args file copy.")
+        exit(163)
 
     ARGS_CLS = TACTICArgsParser(config_yaml=args_file_path).analysis_args
     ARGS_PREC = TACTICArgsParser(config_yaml=args_file_path).preproc_args
     # Parsing spike_stat_file
     try:
-        parsed_spike_stat_file_path = Path(PurePath(ANALYSIS_DIR + 'spike_mapping_file.csv'))
+        parsed_spike_stat_file_path = ANALYSIS_DIR / 'spike_mapping_file.csv'
         map_lines_dict, parsed_spike_stat_file_path = parse_spike_stat_file(
             spike_stat_file,
             fastq_dir=fastqs_dir,
@@ -1535,7 +1550,7 @@ def main(
         raise ValueError(f"spike_stat_file: {str(exc)}")
 
     ANA_LOG.info("# Gathering Sequences")
-    chdir(ANALYSIS_DIR)
+    chdir(str(ANALYSIS_DIR))
     # gather_samples_files(list(map_lines_dict.values()), TRIMMED_READS_FILE)
     # gather_samples_files(list(map_lines_dict.values()), FILTERED_READS_FILE)
     gather_samples_files(list(map_lines_dict.values()), DEREP_FILE_NAME)
@@ -1580,7 +1595,7 @@ def main(
             str(ANALYSIS_DIR),
             [
                 Path(PurePath(sorted_file)).name,
-                Path(PurePath(DEREP_FILE_NAME)).name,
+                Path(PurePath(DEREP_FILE_NAME)).name
             ]
         )
         to_return[0] = zotu_tab_file

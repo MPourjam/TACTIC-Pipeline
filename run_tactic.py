@@ -1081,7 +1081,10 @@ def run_tactic(
     # We do find preprocessed samples for analysis regardless of the preprocessing step. If the samples are not preprocessed, then the function
     # below must not find them.
     # NOTE This will get a result of preprocessing and does not take into account if it's related to latest preprocessing or not.
-    samples_dirs, missed_samples_ids = select_samples_for_analysis(list(mapping_line_tup_dict.values()), args_yml_file)
+    samples_dirs, missed_samples_ids = select_samples_for_analysis(
+        list(mapping_line_tup_dict.values()),
+        args_yml_file
+    )
     union_failed_preprocess = set(missed_samples_ids) | set(failed_preprocesses_sample_id)
     analysis_exit_code = 1
     if len(missed_samples_ids) == len(list(mapping_line_tup_dict.values())):
@@ -1287,7 +1290,10 @@ if __name__ == "__main__":
             str(ARGS_YAML_FILE),
             str(cli_args_file)
         )
-        PREP_LOG.warning(f"No argument file is provided. Using default argument file!!! (./{str(cli_args_file.relative_to(INPUT_DIR))})")
+        PREP_LOG.warning(
+            "No argument file is provided. Using default argument file!!! "
+            f"(./{str(cli_args_file.relative_to(INPUT_DIR))})"
+        )
 
     if args.place_template_files:
         temp_map_file = FASTQ_DIR.joinpath("mapping_file_TEMPLATE.csv")
