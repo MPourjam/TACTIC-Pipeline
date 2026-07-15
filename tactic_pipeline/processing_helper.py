@@ -1753,6 +1753,16 @@ def get_silva_release_urls(
     For each release, searches the ARB_files/ subdirectory for files matching:
     SILVA.*SSURef.*NR99.*opt\.arb\.gz
     '''
+    def _version_key(version_text: str):
+        normalized = str(version_text).strip().replace("_", ".")
+        parts = []
+        for part in normalized.split("."):
+            if part.isdigit():
+                parts.append(int(part))
+            else:
+                parts.append(part)
+        return tuple(parts)
+
     if not base_url.endswith("/"):
         base_url = base_url + "/"
 
@@ -1786,7 +1796,6 @@ def get_silva_release_urls(
     parser.feed(resp.text)
 
     href_re = re.compile(r"^release_[^/]+/?$")
-    date_re = re.compile(r"(\d{1,2}-[A-Za-z]{3}-\d{4}\s+\d{2}:\d{2})")
     arb_name_re = re.compile(r".*SSURef.*(NR99)?.*opt\.arb(\.gz)?$", re.IGNORECASE)
 
     release_items = []
@@ -1796,16 +1805,9 @@ def get_silva_release_urls(
             continue
         name = href.rstrip("/")
         version_text = name[len("release_"):]
+        version_sort_key = _version_key(version_text)
         release_url = urljoin(base_url, name + "/")
-        text = ent.get("text", "") or ""
-        dt_obj = None
-        m = date_re.search(text)
-        if m:
-            try:
-                dt_obj = dt.strptime(m.group(1), "%d-%b-%Y %H:%M")
-            except Exception:
-                dt_obj = None
-        release_items.append((version_text, release_url, dt_obj))
+        release_items.append((version_text, version_sort_key, release_url, None))
 
     if not release_items:
         raise ValueError(f"No release_ directories found at {base_url}")
@@ -1841,31 +1843,33 @@ def get_silva_release_urls(
 
         return arb_urls_found
 
-    # Resolve ARB file URLs and fetch missing dates
-    for i, (ver, rel_url, d) in enumerate(release_items):
-        if d is None:
-            try:
-                head = requests.head(rel_url, timeout=timeout, allow_redirects=True)
-                lm = head.headers.get("Last-Modified")
-                if lm:
-                    try:
-                        d = parsedate_to_datetime(lm)
-                    except Exception:
-                        d = None
-            except Exception:
-                d = None
+    def _arb_last_modified(arb_url: str, fallback_dt=None):
+        try:
+            head = requests.head(arb_url, timeout=timeout, allow_redirects=True)
+            lm = head.headers.get("Last-Modified")
+            if lm:
+                try:
+                    return parsedate_to_datetime(lm)
+                except Exception:
+                    return fallback_dt
+        except Exception:
+            return fallback_dt
+        return fallback_dt
 
+    # Resolve ARB file URLs and fetch missing dates
+    for i, (ver, ver_key, rel_url, d) in enumerate(release_items):
         arb_url = _resolve_arb_for_release(rel_url)
         if arb_url:
-            release_items[i] = (ver, arb_url, d)
+            arb_dt = _arb_last_modified(arb_url)
+            release_items[i] = (ver, ver_key, arb_url, arb_dt)
         else:
-            release_items[i] = (ver, "", d)
-    release_items = [ri for ri in release_items if ri[1]]
-    # Sort newest-first
+            release_items[i] = (ver, ver_key, "", d)
+    release_items = [ri for ri in release_items if ri[2]]
+    # Sort by version first, then by the ARB file timestamp for ties.
     epoch = dt(1970, 1, 1)
-    release_items.sort(key=lambda x: x[2] or epoch, reverse=True)
+    release_items.sort(key=lambda x: (x[1], x[3] or epoch), reverse=True)
 
-    return release_items
+    return [(ver, arb_url, arb_dt) for ver, _, arb_url, arb_dt in release_items]
 
 
 def download_silva_databases(
@@ -1879,11 +1883,23 @@ def download_silva_databases(
     and downloads the SILVA ARB file of the given version.
     """
     all_silva_versions_urls = get_silva_release_urls(version=version)
+    def _version_key(version_text: str):
+        normalized = str(version_text).strip().replace("_", ".")
+        parts = []
+        for part in normalized.split("."):
+            if part.isdigit():
+                parts.append(int(part))
+            else:
+                parts.append(part)
+        return tuple(parts)
+
+    selected_version_key = _version_key(version)
     silva_version_tup = all_silva_versions_urls[0] if version == "latest" else next(
-        ((ver, url, dt_obj) for ver, url, dt_obj in all_silva_versions_urls if ver == version),
+        ((ver, url, dt_obj) for ver, url, dt_obj in all_silva_versions_urls if _version_key(ver) == selected_version_key),
         None
     )
-
+    print(f"Available SILVA versions: {[ver for ver, url, dt_obj in all_silva_versions_urls]}")
+    print(f"Selected SILVA version: {silva_version_tup if silva_version_tup else 'Not found'}")
     silva_file_base_url = silva_version_tup[1] if silva_version_tup else None
     if not silva_file_base_url:
         raise ValueError(f"SILVA version '{version}' not found.")

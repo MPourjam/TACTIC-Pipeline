@@ -934,6 +934,7 @@ def main_processing(
                 spikes_indices=SPIKESIDX
             )
             PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
+
         PREPPROC_LOG.info('# FastQC')
         run_FastQC(forward_file, reverse_file)
         chdir(input_dir)  # This is CRUCIAL to be here
