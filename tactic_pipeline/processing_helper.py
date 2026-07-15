@@ -1898,8 +1898,6 @@ def download_silva_databases(
         ((ver, url, dt_obj) for ver, url, dt_obj in all_silva_versions_urls if _version_key(ver) == selected_version_key),
         None
     )
-    print(f"Available SILVA versions: {[ver for ver, url, dt_obj in all_silva_versions_urls]}")
-    print(f"Selected SILVA version: {silva_version_tup if silva_version_tup else 'Not found'}")
     silva_file_base_url = silva_version_tup[1] if silva_version_tup else None
     if not silva_file_base_url:
         raise ValueError(f"SILVA version '{version}' not found.")
