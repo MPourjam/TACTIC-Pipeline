@@ -224,15 +224,24 @@ __Running via Script__:
 cd TACTIC-Pipeline
 python run_tactic.py --input-directory /path/to/your/project/directory
 ```
-__Running via Docker__:
+__Running via Docker (recommended)__:
 
 ```bash
 docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 
 ```
 
-> With `-v` argument we are mounting our desired local path to a the path `/base/inputs` (default `--input-directory`) in which the pipeline by default look for fastq files. Any fastq files (also nested inside other sub directories) will be visible to the pipeline when only setting `--input-directory` (i.e., `/base/inputs/`). In case we want to mount an upper level directory as our `--input-directory` and narrow the pipeline's search and analysis scope we can set `--fastq-directory` argument which should be set relative to `--input-directory`. This way the pipeline searches for fastq files within the path given via `-fastq-dir`. Sample mapping file and arguments YAML file could be still relative to `--input-directory`.
+> With `-v` argument we are mounting our desired local path to a the path `/base/inputs` (default `--input-directory`) in which the pipeline by default look for fastq files. Any fastq files (also nested inside other sub directories) will be visible to the pipeline when only setting `--input-directory` (i.e., `/base/inputs/`). If we want to mount an upper-level directory as our `--input-directory` and narrow the pipeline's search and analysis scope, we can set the `--fastq-directory` argument, which should be relative to `--input-directory`. This way the pipeline searches for fastq files within the path given via `-fastq-dir`. Sample mapping file and arguments YAML file could be still relative to `--input-directory`.
 
-For example we can narrow the pipeline to a sub-directory within the `--input-directory` like below:
+
+> It is **recommended** (for pipeline **version>=v0.7.4**) to set an additional volume to store the SILVA database and its indices. To do so, pick a directory in your local machine to be your SILVA database storage and **always** introduce that directory as a volume to `/databases`. See below for an example:
+
+```bash
+# setting both input directory and database directory volumes
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" -v "/path/to/your/database/directory:/databases" ghcr.io/mpourjam/tactic-pipeline:0.7.4 --fastq-directory Sequencing_Run_1/
+```
+
+
+We can narrow the pipeline to a sub-directory within the `--input-directory` like below:
 
 ```bash
 docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --fastq-directory Sequencing_Run_1/
