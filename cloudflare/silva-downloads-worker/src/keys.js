@@ -1,5 +1,6 @@
 // Only these published releases and artifact names can receive download URLs.
-const releases = new Set(["138.2", "144"]);
+export const publishedReleases = ["144", "138.2"];
+const releases = new Set(publishedReleases);
 const databaseFiles = new Set([
   "manifest.json",
   "SILVA.arb",

@@ -1,5 +1,5 @@
 import { AwsClient } from "aws4fetch";
-import { objectKey } from "./keys.js";
+import { objectKey, publishedReleases } from "./keys.js";
 
 // Large database objects need enough time for a slow client's initial request.
 const URL_TTL_SECONDS = 3600;
@@ -12,17 +12,43 @@ function error(message, status, extraHeaders = {}) {
   });
 }
 
-export default {
-  async fetch(request, env, ctx) {
-    // Configure Cloudflare Access on the entire Worker (All traffic).
-    // Access sets this context only after authenticating the request.
-    if (!ctx.access) return error("Cloudflare Access authentication required", 403);
+function configured(env) {
+  return Boolean(env.SILVA_BUCKET && env.R2_ACCOUNT_ID && env.R2_BUCKET_NAME &&
+    env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY);
+}
 
+export default {
+  async fetch(request, env) {
+    // Public reference data: only allowlisted objects receive GET-only URLs.
     if (request.method !== "GET") {
       return error("Method not allowed", 405, { Allow: "GET" });
     }
 
     const requestUrl = new URL(request.url);
+    if (requestUrl.pathname === "/v1/releases") {
+      if (!configured(env)) return error("Worker is not configured", 503);
+      try {
+        const releases = [];
+        for (const release of publishedReleases) {
+          const groups = [
+            ["manifest.json"],
+            ["SILVA.arb.zst", "SILVA.arb"],
+            ["SILVA.sidx.zst", "SILVA.sidx"],
+          ];
+          const available = await Promise.all(groups.map(async (files) => {
+            const keys = files.map((file) => objectKey(release, file)).filter(Boolean);
+            const objects = await Promise.all(keys.map((key) => env.SILVA_BUCKET.head(key)));
+            return objects.some((object) => object && object.size > 0);
+          }));
+          if (available.every(Boolean)) {
+            releases.push(release);
+          }
+        }
+        return Response.json({ releases }, { headers: noStore });
+      } catch {
+        return error("Storage lookup failed", 502);
+      }
+    }
     if (requestUrl.pathname !== "/v1/download-url") {
       return error("Not found", 404);
     }
@@ -36,8 +62,7 @@ export default {
     const key = objectKey(releaseValues[0], fileValues[0]);
     if (!key) return error("Release or file is not available", 404);
 
-    if (!env.SILVA_BUCKET || !env.R2_ACCOUNT_ID || !env.R2_BUCKET_NAME ||
-        !env.R2_ACCESS_KEY_ID || !env.R2_SECRET_ACCESS_KEY) {
+    if (!configured(env)) {
       return error("Worker is not configured", 503);
     }
 

@@ -4,8 +4,8 @@ import { objectKey } from "../src/keys.js";
 
 test("maps the uploaded SILVA release artifacts", () => {
   assert.equal(
-    objectKey("144", "SILVA.sidx"),
-    "silva/144/sina-1.6.0/k10-fast/linux-amd64/SILVA.sidx",
+    objectKey("144", "SILVA.arb.zst"),
+    "silva/144/sina-1.6.0/k10-fast/linux-amd64/SILVA.arb.zst",
   );
   assert.equal(
     objectKey("138.2", "manifest.json"),
