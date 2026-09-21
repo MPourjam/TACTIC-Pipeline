@@ -41,9 +41,10 @@ GET /v1/download-url?release=144&file=SILVA.sidx
 The JSON response includes `url`, `key`, `size_bytes`, and
 `expires_in_seconds`. The URL is valid for one hour and authorizes only a GET
 of the requested object. Treat it as a secret until it expires; do not log it.
-The `file` parameter accepts the exact names in `src/keys.js`, including
-`manifest.json`, raw or compressed SILVA ARB/SIDX files, and the two
-SortMeRNA FASTA files. A missing R2 object returns 404.
+The `file` parameter accepts only the exact names in `src/keys.js`: the
+release manifest and SILVA ARB/SIDX artifacts. SortMeRNA files are hosted
+separately and are not available through this Worker. A missing R2 object
+returns 404.
 
 The laptop client should fetch the release manifest first, then request the
 required artifact. It must verify the downloaded size and SHA-256 against the
