@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "silva-downloads-worker",
+  "main": "./src/index.js",
+  "compatibility_date": "2026-09-21",
+  "vars": {
+    "R2_ACCOUNT_ID": "eeec0645324a94bc81cef5e30fb1ce0c",
+    "R2_BUCKET_NAME": "silva-dbs"
+  },
+  "r2_buckets": [
+    {
+      "binding": "SILVA_BUCKET",
+      "bucket_name": "silva-dbs"
+    }
+  ]
+}
