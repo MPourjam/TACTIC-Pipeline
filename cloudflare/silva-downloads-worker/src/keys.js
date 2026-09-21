@@ -3,7 +3,6 @@ const releases = new Set(["138.2", "144"]);
 const databaseFiles = new Set([
   "manifest.json",
   "SILVA.arb",
-  "SILVA.arb.gz",
   "SILVA.arb.zst",
   "SILVA.sidx",
   "SILVA.sidx.zst",
