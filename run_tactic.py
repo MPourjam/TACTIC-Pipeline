@@ -103,6 +103,9 @@ def parse_analysis_modes(analysis_mode_arg) -> List[str]:
         # Accept comma-separated and whitespace-separated mode lists.
         normalized_modes = [m.strip().upper() for m in re.split(r"[,\s]+", raw_mode) if m.strip()]
         for mode in normalized_modes:
+            # For compatibility to BiotaWiz versions calling OTU analysis as "DE-NOVO"
+            mode = "OTU" if mode.upper() == "DE-NOVO" else mode  # Normalize "DE-NOVO" to "OTU"
+            #print(f"Raw analysis mode input: {raw_mode}")  # Debugging line
             if mode not in SUPPORTED_ANALYSIS_MODE:
                 PREP_LOG.error(f"Analysis mode: {mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
                 sys.exit(170)
