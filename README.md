@@ -240,6 +240,25 @@ docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourj
 docker run --rm -v "/path/to/your/project/directory:/base/inputs" -v "/path/to/your/database/directory:/databases" ghcr.io/mpourjam/tactic-pipeline:0.7.4 --fastq-directory Sequencing_Run_1/
 ```
 
+For images built from this source, SILVA preparation uses a token-gated
+Cloudflare Worker to find and download verified prebuilt ARB and SINA index
+files. The GitHub Actions build includes the shared application token in the
+image, so Docker users need no sign-in or runtime configuration. Anyone with
+the image can extract the token. Use your newly built image tag below:
+
+```bash
+docker run --rm -v "/path/to/your/project/directory:/base/inputs" -v "/path/to/your/database/directory:/databases" YOUR_NEW_IMAGE_TAG --fastq-directory Sequencing_Run_1/
+```
+
+The Worker must be deployed with Cloudflare Access disabled for its production
+URL; see the [Worker setup](cloudflare/silva-downloads-worker/README.md).
+The R2 credentials stay on the Worker; only the limited application token
+is distributed with the image. If the Worker or R2 files are unavailable, the
+pipeline logs a warning and falls back to SILVA FTP and local SINA indexing.
+This fallback can require substantial RAM. Missing or rejected tokens, checksum
+failures, and local file errors remain errors. Set `SILVA_SOURCE=ftp` to use
+FTP directly.
+
 
 We can narrow the pipeline to a sub-directory within the `--input-directory` like below:
 

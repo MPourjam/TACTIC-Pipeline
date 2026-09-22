@@ -45,6 +45,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
+        secrets: |
+          silva_app_token=${{ secrets.SILVA_APP_TOKEN }}
         build-args: |
           GIT_TAG=${{ github.ref_name }}  # it only works if the trigger is a tag
         #labels: ${{ steps.meta.outputs.labels }}
@@ -56,6 +58,8 @@ jobs:
         file: "./Dockerfile.TACTIC"
         tags: ${{ steps.meta.outputs.tags }}
         outputs: type=tar,dest=image.tar
+        secrets: |
+          silva_app_token=${{ secrets.SILVA_APP_TOKEN }}
         build-args: |
           GIT_TAG=${{ github.ref_name }}  # it only works if the trigger is a tag
 

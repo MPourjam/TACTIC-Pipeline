@@ -26,6 +26,10 @@ from html.parser import HTMLParser
 from email.utils import parsedate_to_datetime
 from urllib.parse import urljoin
 
+from tactic_pipeline.silva_remote import (
+    DEFAULT_WORKER_URL, SUCCESS_MARKER, SilvaRemoteUnavailable, prepare_prebuilt_silva_database,
+)
+
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # type: ignore # pip2 install pathlib2
 else:
@@ -1724,7 +1728,7 @@ def index_silva_database(
             try:
                 with open(silva_idx_success_touch, "r", encoding="utf-8") as touch_file:
                     touch_content = touch_file.read()
-                if "d3fa056627656a96abf4006b9f5d928b" in touch_content:
+                if SUCCESS_MARKER in touch_content:
                     logger_obj.info("SILVA index file already exists and verified, skipping indexing")
                     reindex_needed = False
                 else:
@@ -1781,7 +1785,7 @@ def index_silva_database(
                 touch_file.write(f"SILVA index created on {dt.now().isoformat()}\n")
                 touch_file.write(f"SILVA ARB file: {silva_arb_path}\n")
                 touch_file.write(f"SINA binary: {sina_bin}\n")
-                touch_file.write("d3fa056627656a96abf4006b9f5d928b\n")  # md5sum of "Kiarash's Birthday: 2025-12-15 19:14:00"
+                touch_file.write(f"{SUCCESS_MARKER}\n")
         except Exception as e:
             logger_obj.warning(f"Could not write SILVA success touch file: {e}")
 
@@ -2026,9 +2030,31 @@ def prepare_silva_database(
         sina_index_threads: int = 1):
     """
     It prepares the SILVA database for use with SINA.
-    It downloads the database if not present and indexes it.
+    Try a verified prebuilt index first, falling back to SILVA FTP and local
+    indexing if remote files are unavailable. SILVA_SOURCE=ftp skips the Worker.
+    Integrity failures and local file errors are not fallback conditions.
     """
-    # Downloa the SILVA database
+    source = os.environ.get("SILVA_SOURCE", "worker").strip().lower()
+    if source == "worker":
+        try:
+            return prepare_prebuilt_silva_database(
+                download_dir=dest_dir,
+                version=version,
+                sina_binary=sina_binary,
+                worker_url=os.environ.get("SILVA_WORKER_URL", DEFAULT_WORKER_URL),
+                logger_obj=logger_obj,
+            )
+        except SilvaRemoteUnavailable as exc:
+            logger_obj.warning(
+                "Prebuilt SILVA files are unavailable (%s). Falling back to SILVA FTP "
+                "and local SINA indexing with %s thread(s); local indexing may require "
+                "substantial RAM.",
+                exc, sina_index_threads,
+            )
+    elif source != "ftp":
+        raise ValueError("SILVA_SOURCE must be 'worker' or 'ftp'")
+
+    # Download from SILVA FTP when requested or when the remote index is unavailable.
     silva_db_path, version = download_silva_databases(
         download_dir=dest_dir,
         version=version,
