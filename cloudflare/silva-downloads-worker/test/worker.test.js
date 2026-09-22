@@ -3,11 +3,19 @@ import test from "node:test";
 import worker from "../src/index.js";
 
 const endpoint = "https://example.workers.dev/v1/download-url";
+const appToken = "test-app-token";
 
-test("issues a GET-only download URL without client authentication", async () => {
+function authenticatedRequest(url, options = {}) {
+  const headers = new Headers(options.headers);
+  headers.set("Authorization", `Bearer ${appToken}`);
+  return new Request(url, { ...options, headers });
+}
+
+test("issues a GET-only download URL with the application token", async () => {
   const response = await worker.fetch(
-    new Request(`${endpoint}?release=144&file=SILVA.sidx.zst`),
+    authenticatedRequest(`${endpoint}?release=144&file=SILVA.sidx.zst`),
     {
+      SILVA_APP_TOKEN: appToken,
       R2_ACCOUNT_ID: "test-account",
       R2_BUCKET_NAME: "silva-dbs",
       R2_ACCESS_KEY_ID: "test-key",
@@ -28,10 +36,11 @@ test("issues a GET-only download URL without client authentication", async () =>
   assert.ok(!JSON.stringify(result).includes("test-secret"));
 });
 
-test("lists only complete, nonempty published releases without authentication", async () => {
+test("lists only complete, nonempty published releases with authentication", async () => {
   const response = await worker.fetch(
-    new Request("https://example.workers.dev/v1/releases"),
+    authenticatedRequest("https://example.workers.dev/v1/releases"),
     {
+      SILVA_APP_TOKEN: appToken,
       R2_ACCOUNT_ID: "test-account",
       R2_BUCKET_NAME: "silva-dbs",
       R2_ACCESS_KEY_ID: "test-key",
@@ -52,8 +61,8 @@ test("lists only complete, nonempty published releases without authentication", 
 
 test("reports missing server configuration for release discovery", async () => {
   const response = await worker.fetch(
-    new Request("https://example.workers.dev/v1/releases"),
-    {},
+    authenticatedRequest("https://example.workers.dev/v1/releases"),
+    { SILVA_APP_TOKEN: appToken },
     {},
   );
   assert.equal(response.status, 503);
@@ -61,8 +70,8 @@ test("reports missing server configuration for release discovery", async () => {
 
 test("rejects object paths outside the allowlist", async () => {
   const response = await worker.fetch(
-    new Request(`${endpoint}?release=144&file=..%2Fprivate.txt`),
-    {},
+    authenticatedRequest(`${endpoint}?release=144&file=..%2Fprivate.txt`),
+    { SILVA_APP_TOKEN: appToken },
     {},
   );
   assert.equal(response.status, 404);
@@ -71,8 +80,9 @@ test("rejects object paths outside the allowlist", async () => {
 test("does not sign an R2 object that does not exist", async () => {
   let lookedUpKey;
   const response = await worker.fetch(
-    new Request(`${endpoint}?release=144&file=SILVA.sidx.zst`),
+    authenticatedRequest(`${endpoint}?release=144&file=SILVA.sidx.zst`),
     {
+      SILVA_APP_TOKEN: appToken,
       R2_ACCOUNT_ID: "test-account",
       R2_BUCKET_NAME: "silva-dbs",
       R2_ACCESS_KEY_ID: "test-key",
@@ -93,7 +103,7 @@ test("does not sign an R2 object that does not exist", async () => {
   );
 });
 
-test("public download endpoint rejects writes", async () => {
+test("download endpoint rejects writes", async () => {
   const response = await worker.fetch(
     new Request(`${endpoint}?release=144&file=SILVA.sidx.zst`, { method: "PUT" }),
     {},
@@ -101,4 +111,31 @@ test("public download endpoint rejects writes", async () => {
   );
   assert.equal(response.status, 405);
   assert.equal(response.headers.get("Allow"), "GET");
+});
+
+test("rejects missing and incorrect tokens before any R2 lookup", async () => {
+  let lookups = 0;
+  const env = {
+    SILVA_APP_TOKEN: appToken,
+    SILVA_BUCKET: { async head() { lookups++; return { size: 42 }; } },
+  };
+  for (const url of ["https://example.workers.dev/v1/releases",
+    `${endpoint}?release=144&file=SILVA.sidx`]) {
+    for (const headers of [{}, { Authorization: "Bearer wrong-token" }]) {
+      const response = await worker.fetch(new Request(url, { headers }), env, {});
+      assert.equal(response.status, 401);
+      assert.equal(response.headers.get("WWW-Authenticate"), "Bearer");
+      assert.equal(response.headers.get("Cache-Control"), "no-store");
+    }
+  }
+  assert.equal(lookups, 0);
+});
+
+test("fails closed when the application token secret is absent", async () => {
+  const response = await worker.fetch(
+    authenticatedRequest("https://example.workers.dev/v1/releases"),
+    {},
+    {},
+  );
+  assert.equal(response.status, 503);
 });

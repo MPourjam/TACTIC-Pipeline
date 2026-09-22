@@ -17,14 +17,26 @@ function configured(env) {
     env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY);
 }
 
+function authorized(request, token) {
+  return request.headers.get("Authorization") === `Bearer ${token}`;
+}
+
 export default {
   async fetch(request, env) {
-    // Public reference data: only allowlisted objects receive GET-only URLs.
+    // Only allowlisted objects receive GET-only URLs.
     if (request.method !== "GET") {
       return error("Method not allowed", 405, { Allow: "GET" });
     }
 
     const requestUrl = new URL(request.url);
+    if (requestUrl.pathname !== "/v1/releases" && requestUrl.pathname !== "/v1/download-url") {
+      return error("Not found", 404);
+    }
+    if (!env.SILVA_APP_TOKEN) return error("Worker is not configured", 503);
+    if (!authorized(request, env.SILVA_APP_TOKEN)) {
+      return error("Unauthorized", 401, { "WWW-Authenticate": "Bearer" });
+    }
+
     if (requestUrl.pathname === "/v1/releases") {
       if (!configured(env)) return error("Worker is not configured", 503);
       try {
@@ -49,10 +61,6 @@ export default {
         return error("Storage lookup failed", 502);
       }
     }
-    if (requestUrl.pathname !== "/v1/download-url") {
-      return error("Not found", 404);
-    }
-
     const releaseValues = requestUrl.searchParams.getAll("release");
     const fileValues = requestUrl.searchParams.getAll("file");
     if (releaseValues.length !== 1 || fileValues.length !== 1) {
