@@ -90,20 +90,32 @@ def prepare_picrust2_input(analysis_dir: str) -> None:
     picrust2_inputs_dir = analysis_dir / "PICRUSt2-Inputs"
     picrust2_inputs_dir.mkdir(exist_ok=True)
 
-    for item in analysis_dir.iterdir():
+    for item in analysis_dir.rglob("*"):
         if item.is_file():
+            if picrust2_inputs_dir in item.parents:
+                continue
             match_table = otu_table_pattern.match(item.name)
             match_fasta = otu_fasta_pattern.match(item.name)
 
             if match_table:
                 prefix = match_table.group("prefix")
                 otu_table_file = item
+                rel_parent = item.parent.relative_to(analysis_dir)
+                rel_parent_str = str(rel_parent).replace(os.sep, "__")
+                rel_parent_str = rel_parent_str.strip(".")
+                if rel_parent_str:
+                    prefix = f"{rel_parent_str}__{prefix}"
                 picrust2_otu_table_file = picrust2_inputs_dir / f"{prefix}-For-PICRUSt2.tab"
                 remove_taxonomy_from_table(otu_table_file, picrust2_otu_table_file)
 
             elif match_fasta:
                 prefix = match_fasta.group("prefix")
                 otu_fasta_file = item
+                rel_parent = item.parent.relative_to(analysis_dir)
+                rel_parent_str = str(rel_parent).replace(os.sep, "__")
+                rel_parent_str = rel_parent_str.strip(".")
+                if rel_parent_str:
+                    prefix = f"{rel_parent_str}__{prefix}"
                 picrust2_otu_fasta_file = picrust2_inputs_dir / f"{prefix}-For-PICRUSt2.fasta"
                 keep_seq_id_only(otu_fasta_file, picrust2_otu_fasta_file)
                 onelinefasta(picrust2_otu_fasta_file)

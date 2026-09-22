@@ -64,10 +64,10 @@ TAXED_ZOTU_FILE_NAME = "taxed_ZOTUs.fasta"
 DEREP_FILE_NAME = "sorted.fasta"
 global SUPPORTED_ANALYSIS_MODE, USEARCH_11_BIN, HEALTHY_PROC_FILES
 SUPPORTED_ANALYSIS_MODE = [
-    "de-novo",
+    "ZOTU",
+    "OTU",
     "TAC",
     "TIC",
-    "ZOTU"
 ]
 USEARCH_11_BIN = Path(PurePath("/base/binaries/usearch11.0.667_i86linux64"))
 HEALTHY_PROC_FILES = [
@@ -84,6 +84,36 @@ BOWTIE2 = BIN_DIR + "bowtie2/bowtie2"
 SPIKESIDX_PREFIX = "bowtie2_spike_indices/spike"
 SPIKESIDX_PARENT = "/base/spikesidx/"
 SPIKESIDX = SPIKESIDX_PARENT + SPIKESIDX_PREFIX
+
+
+def parse_analysis_modes(analysis_mode_arg) -> List[str]:
+    """
+    Parse analysis mode argument which can be a single mode string or a
+    comma-separated list of modes.
+    """
+    if isinstance(analysis_mode_arg, (list, tuple, set)):
+        raw_items = [str(item).strip() for item in analysis_mode_arg]
+    else:
+        raw_items = [str(analysis_mode_arg).strip()]
+
+    modes = []
+    for raw_mode in raw_items:
+        if not raw_mode:
+            continue
+        # Accept comma-separated and whitespace-separated mode lists.
+        normalized_modes = [m.strip().upper() for m in re.split(r"[,\s]+", raw_mode) if m.strip()]
+        for mode in normalized_modes:
+            if mode not in SUPPORTED_ANALYSIS_MODE:
+                PREP_LOG.error(f"Analysis mode: {mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
+                sys.exit(170)
+            if mode not in modes:
+                modes.append(mode)
+
+    if not modes:
+        PREP_LOG.error(f"No valid analysis mode was provided. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
+        sys.exit(170)
+
+    return modes
 
 
 def handle_system_signals(signum, frame):
@@ -992,21 +1022,12 @@ def run_tactic(
     # Sometimes failed processing leaves fastq files in the processing directories
     mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
 
+    analysis_modes = parse_analysis_modes(analysis_mode)
     # choosing analysis_mode
-    pipeline_to_run = [False, False, False]
-    if analysis_mode not in SUPPORTED_ANALYSIS_MODE:
-        PREP_LOG.error(f"Analysis mode: {analysis_mode} is not supported. Supported modes are {SUPPORTED_ANALYSIS_MODE}")
-        sys.exit(170)
-    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[0]:
-        pipeline_to_run[0] = True
-    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[1]:
-        pipeline_to_run[1] = True
-    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[2]:
-        pipeline_to_run[2] = True
-    elif analysis_mode == SUPPORTED_ANALYSIS_MODE[3]:
-        # main analysis function will run ZOTU pipeline anyway
-        pass
-    PREP_LOG.info(f"# Starting {str(analysis_mode)} pipeline...")
+    pipeline_to_run = {mode: False for mode in SUPPORTED_ANALYSIS_MODE}
+    for mode in analysis_modes:
+        pipeline_to_run[mode] = True
+    PREP_LOG.info(f"# Starting pipeline with analysis modes: {', '.join(analysis_modes)}")
     # master preprocessing logger
     PREC_PROC_LOG = proc_helper.gimmelogger(
         # this logger makes sure that the logs are thread safe
@@ -1129,9 +1150,10 @@ def run_tactic(
                 dbs_loc=str(dbs_dir),
                 threads=POOL_SIZE,
                 usearch_11_bin=str(USEARCH_11_BIN),
-                run_otu_pipeline=pipeline_to_run[0],
-                run_tac_pipeline=pipeline_to_run[1],
-                run_tic_pipeline=pipeline_to_run[2],
+                run_zotu_pipeline=pipeline_to_run["ZOTU"],
+                run_otu_pipeline=pipeline_to_run["OTU"],
+                run_tac_pipeline=pipeline_to_run["TAC"],
+                run_tic_pipeline=pipeline_to_run["TIC"],
                 skip_non_bacterial_filter=skip_non_bacterial_filter
             )
 
@@ -1179,9 +1201,13 @@ if __name__ == "__main__":
     )  # WORKDIR of container is /base/inputs
     parser.add_argument(
         "-am", "--analysis-mode",
-        choices=SUPPORTED_ANALYSIS_MODE,
-        help="Choose an analysis mode. Default is 'TIC'.",
-        default="TIC"
+        nargs="+",
+        help=(
+            "Choose one or more analysis modes. Accepts space-separated "
+            "(e.g. 'TIC TAC') or comma-separated values (e.g. 'TIC,TAC'). "
+            "Supported modes: ZOTU, OTU, TAC, TIC. Default is 'TIC'."
+        ),
+        default=["TIC"]
     )
     # >BEGIN: Arguments need to be parsed from input and fastq directory
     parser.add_argument(
