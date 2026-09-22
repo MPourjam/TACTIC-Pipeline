@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import tarfile
+import tempfile
 from ete3 import Tree
 from os import chdir
 from sys import exit
@@ -640,6 +641,39 @@ def shorten_sina_algn(sina_algn_file):
     return shortened_file_path
 
 
+_GENERATED_TREE_ID_RE = re.compile(r"(?:Zotu|OTU|SOTU)[0-9]+\Z", re.IGNORECASE)
+_QUOTED_GENERATED_TREE_ID_RE = re.compile(
+    r"(?<=[(,])'((?:Zotu|OTU|SOTU)[0-9]+)'(?=[:),;])",
+    re.IGNORECASE,
+)
+
+
+def _unquote_generated_tree_id(name: str) -> str:
+    if name.startswith("'") and name.endswith("'") and _GENERATED_TREE_ID_RE.fullmatch(name[1:-1]):
+        return name[1:-1]
+    return name
+
+
+def _normalize_generated_tree_file(tree_file: str) -> None:
+    """Remove redundant quotes from pipeline IDs without changing Newick branch lengths."""
+    path = Path(tree_file)
+    original = path.read_text(encoding="utf-8")
+    normalized = _QUOTED_GENERATED_TREE_ID_RE.sub(r"\1", original)
+    if normalized == original:
+        return
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", dir=path.parent,
+                prefix=f".{path.name}.", suffix=".tmp", delete=False) as output:
+            temporary_path = Path(output.name)
+            output.write(normalized)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
+
+
 def plant_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_name_root: str = None):
     algn_file_path = os.path.abspath(algn_file)
     algn_dirname, algn_filename = os.path.split(algn_file_path)
@@ -684,6 +718,7 @@ def plant_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_na
             f"{output_file_name}-Tree-nj.tre",
         ]
     system_sub(cmd_to_call_list)
+    _normalize_generated_tree_file(cmd_to_call_list[-1])
 
 
 def create_krona(krona_tool: str, taxed_otu_table: str, output_html_name: str):
@@ -928,13 +963,16 @@ def extract_and_rename_subtree(
         rename_map,
         output_file):
     # Load the tree from a file
-    tree = Tree(tree_file)
+    tree = Tree(str(tree_file))
+
+    # RapidNJ quotes generated IDs, which ETE treats as literal name characters.
+    # Accept both older quoted trees and normalized trees.
+    for leaf in tree:
+        leaf.name = _unquote_generated_tree_id(leaf.name)
 
     # Extract the sub-tree
     subtree = tree.copy()
     # print the tree
-    subset = [f"'{sub}'" for sub in subset]
-    rename_map = {f"'{k}'": f"'{v}'" for k, v in rename_map.items()}
     subtree.prune(subset, preserve_branch_length=True)
 
     # Rename the leaves
@@ -943,7 +981,7 @@ def extract_and_rename_subtree(
             leaf.name = rename_map[leaf.name]
 
     # Save the sub-tree to a new file
-    subtree.write(outfile=output_file)
+    subtree.write(outfile=str(output_file))
 
 
 def parse_uc_file(
