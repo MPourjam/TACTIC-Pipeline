@@ -26,6 +26,10 @@ from html.parser import HTMLParser
 from email.utils import parsedate_to_datetime
 from urllib.parse import urljoin
 
+from tactic_pipeline.silva_remote import (
+    DEFAULT_WORKER_URL, SUCCESS_MARKER, SilvaRemoteUnavailable, prepare_prebuilt_silva_database,
+)
+
 if version_info[0] < 3:
     from pathlib2 import Path, PurePath  # type: ignore # pip2 install pathlib2
 else:
@@ -1593,16 +1597,43 @@ def onelinefasta(fastafilepath):
             Path(newfile_temp_name).unlink()
 
 
-def gunzip_arb_file(gzip_file_path: str, keep: bool = False) -> str:
+def gunzip_arb_file(
+        gzip_file_path: str,
+        keep: bool = False,
+        chunk_size: int = 1024 * 1024) -> str:
     """
-    It gunzips the file and returns the path of the binary file.
+    Gunzip an ARB file without loading the complete database into memory.
+
+    The extracted file is first written beside the destination and then moved
+    into place atomically. This prevents an interrupted extraction from
+    leaving a partial ARB database that a later run could mistake for a valid
+    file.
     """
     gzip_file_path = Path(gzip_file_path).absolute()
-    with gzip.open(gzip_file_path, 'rb') as f:
-        file_content = f.read()
-    bin_file = Path(PurePath(gzip_file_path).parent).joinpath(Path(PurePath(gzip_file_path).stem))
-    with open(bin_file, 'wb') as f:
-        f.write(file_content)
+    if chunk_size < 1:
+        raise ValueError("chunk_size must be greater than zero")
+
+    bin_file = gzip_file_path.with_suffix("")
+    temp_file_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+                mode="wb",
+                dir=str(bin_file.parent),
+                prefix=f".{bin_file.name}.",
+                suffix=".tmp",
+                delete=False) as temp_file:
+            temp_file_path = Path(temp_file.name)
+            with gzip.open(gzip_file_path, "rb") as compressed_file:
+                shutil.copyfileobj(
+                    compressed_file,
+                    temp_file,
+                    length=chunk_size
+                )
+        replace(str(temp_file_path), str(bin_file))
+    finally:
+        if temp_file_path is not None and temp_file_path.exists():
+            temp_file_path.unlink()
+
     if not keep:
         gzip_file_path.unlink()
     return str(bin_file)
@@ -1637,20 +1668,46 @@ md5_hash_files = {
 def index_silva_database(
     silva_arb_file: str = "SILVA.arb",
     sina_bin: str = "/base/binaries/sina/bin/sina",
-    logger_obj: logging.Logger = SILVA_db_logger) -> str:
+    logger_obj: logging.Logger = SILVA_db_logger,
+    threads: int = 1) -> str:
     """
     Create an index for the SILVA database using SINA.
 
     Args:
         silva_arb_file: Name of the SILVA ARB file
         sina_bin: Path to the SINA binary
+        threads: Number of threads used while constructing the SINA index.
+            The default of one minimizes peak memory usage because SINA keeps
+            a partial index for each concurrent index-building worker.
     """
-    silva_arb_path = Path(silva_arb_file).absolute()
+    if not isinstance(threads, int) or isinstance(threads, bool) or threads < 1:
+        raise ValueError("threads must be a positive integer")
 
-    # If the file is gzipped, gunzip it
-    if silva_arb_path.suffix == ".gz":
-        # logger_obj.info(f"Gunzipping SILVA database file {silva_arb_path}")
-        silva_arb_path = Path(gunzip_arb_file(str(silva_arb_path), keep=True)).absolute()
+    silva_source_path = Path(silva_arb_file).absolute()
+    silva_arb_path = silva_source_path
+
+    if silva_source_path.suffix == ".gz":
+        silva_arb_path = silva_source_path.with_suffix("")
+
+        # Re-extracting on every run makes the ARB file newer than its .sidx,
+        # which causes SINA to reject and rebuild an otherwise valid index.
+        extraction_needed = (
+            not silva_arb_path.is_file()
+            or silva_arb_path.stat().st_size == 0
+            or silva_arb_path.stat().st_mtime < silva_source_path.stat().st_mtime
+        )
+        if extraction_needed:
+            logger_obj.info(
+                f"Gunzipping SILVA database file {silva_source_path}"
+            )
+            silva_arb_path = Path(
+                gunzip_arb_file(str(silva_source_path), keep=True)
+            ).absolute()
+
+    if not silva_arb_path.is_file() or silva_arb_path.stat().st_size == 0:
+        raise FileNotFoundError(
+            f"SILVA ARB database is missing or empty: {silva_arb_path}"
+        )
 
     # we expect the index file to have the same name as the arb fie but with .sidx suffix
     silva_arb_stem = silva_arb_path.stem
@@ -1663,11 +1720,15 @@ def index_silva_database(
     # If the sidx file exists, skip indexing (only if verified by success file)
     reindex_needed = True
     if silva_index_file.exists() and silva_index_file.stat().st_size > 0:
-        if silva_idx_success_touch.exists():
+        if silva_index_file.stat().st_mtime < silva_arb_path.stat().st_mtime:
+            logger_obj.warning(
+                "SILVA database is newer than its index; re-indexing"
+            )
+        elif silva_idx_success_touch.exists():
             try:
                 with open(silva_idx_success_touch, "r", encoding="utf-8") as touch_file:
                     touch_content = touch_file.read()
-                if "d3fa056627656a96abf4006b9f5d928b" in touch_content:
+                if SUCCESS_MARKER in touch_content:
                     logger_obj.info("SILVA index file already exists and verified, skipping indexing")
                     reindex_needed = False
                 else:
@@ -1691,7 +1752,8 @@ def index_silva_database(
                 sina_bin,
                 "--db", str(silva_arb_path),
                 "--in", str(fake1),
-                "--out", str(fake2)
+                "--out", str(fake2),
+                "--threads", str(threads)
             ],
             capture_output=True,
             force_log=True,
@@ -1699,7 +1761,6 @@ def index_silva_database(
         )
 
         if sub_ret.returncode != 0:
-            logger_obj.error(f"SINA indexing failed with return code {sub_ret.returncode}")
             stderr_val = getattr(sub_ret, "stderr", "")
             if isinstance(stderr_val, (bytes, bytearray)):
                 try:
@@ -1708,22 +1769,31 @@ def index_silva_database(
                     stderr_str = str(stderr_val)
             else:
                 stderr_str = str(stderr_val).strip()
-            logger_obj.error(f"SINA stderr: {stderr_str}")
-            # remove incomplete index file if created
-            silva_index_file.unlink(missing_ok=True)
-            return ""
-        else:
-            logger_obj.info("SILVA database index created successfully")
-            # place a touch file to indicate successful creation and include metadata
-            try:
-                with open(silva_idx_success_touch, "w", encoding="utf-8") as touch_file:
-                    touch_file.write(f"SILVA index created on {dt.now().isoformat()}\n")
-                    touch_file.write(f"SILVA ARB file: {silva_arb_path}\n")
-                    touch_file.write(f"SINA binary: {sina_bin}\n")
-                    touch_file.write("d3fa056627656a96abf4006b9f5d928b\n")  # md5sum of "Kiarash's Birthday: 2025-12-15 19:14:00"
-            except Exception as e:
-                logger_obj.warning(f"Could not write SILVA success touch file: {e}")
+            raise RuntimeError(
+                f"SINA indexing failed with return code {sub_ret.returncode}: "
+                f"{stderr_str}"
+            )
+        if not silva_index_file.exists() or silva_index_file.stat().st_size == 0:
+            raise RuntimeError(
+                f"SINA reported success but did not create {silva_index_file}"
+            )
 
+        logger_obj.info("SILVA database index created successfully")
+        # place a touch file to indicate successful creation and include metadata
+        try:
+            with open(silva_idx_success_touch, "w", encoding="utf-8") as touch_file:
+                touch_file.write(f"SILVA index created on {dt.now().isoformat()}\n")
+                touch_file.write(f"SILVA ARB file: {silva_arb_path}\n")
+                touch_file.write(f"SINA binary: {sina_bin}\n")
+                touch_file.write(f"{SUCCESS_MARKER}\n")
+        except Exception as e:
+            logger_obj.warning(f"Could not write SILVA success touch file: {e}")
+
+    except Exception:
+        # Never leave an incomplete index or a stale success marker behind.
+        silva_index_file.unlink(missing_ok=True)
+        silva_idx_success_touch.unlink(missing_ok=True)
+        raise
     finally:
         # Clean up temporary files
         try:
@@ -1956,12 +2026,35 @@ def prepare_silva_database(
         md5_check: bool = True,
         dest_dir: str = "/databases/",
         sina_binary: str = "/base/binaries/sina/bin/sina",
-        logger_obj: logging.Logger = SILVA_db_logger):
+        logger_obj: logging.Logger = SILVA_db_logger,
+        sina_index_threads: int = 1):
     """
     It prepares the SILVA database for use with SINA.
-    It downloads the database if not present and indexes it.
+    Try a verified prebuilt index first, falling back to SILVA FTP and local
+    indexing if remote files are unavailable. SILVA_SOURCE=ftp skips the Worker.
+    Integrity failures and local file errors are not fallback conditions.
     """
-    # Downloa the SILVA database
+    source = os.environ.get("SILVA_SOURCE", "worker").strip().lower()
+    if source == "worker":
+        try:
+            return prepare_prebuilt_silva_database(
+                download_dir=dest_dir,
+                version=version,
+                sina_binary=sina_binary,
+                worker_url=os.environ.get("SILVA_WORKER_URL", DEFAULT_WORKER_URL),
+                logger_obj=logger_obj,
+            )
+        except SilvaRemoteUnavailable as exc:
+            logger_obj.warning(
+                "Prebuilt SILVA files are unavailable (%s). Falling back to SILVA FTP "
+                "and local SINA indexing with %s thread(s); local indexing may require "
+                "substantial RAM.",
+                exc, sina_index_threads,
+            )
+    elif source != "ftp":
+        raise ValueError("SILVA_SOURCE must be 'worker' or 'ftp'")
+
+    # Download from SILVA FTP when requested or when the remote index is unavailable.
     silva_db_path, version = download_silva_databases(
         download_dir=dest_dir,
         version=version,
@@ -1973,7 +2066,8 @@ def prepare_silva_database(
     index_silva_database(
         silva_arb_file=silva_db_path,
         logger_obj=logger_obj,
-        sina_bin=sina_binary
+        sina_bin=sina_binary,
+        threads=sina_index_threads
     )
 
     silva_db_path = Path(PurePath(silva_db_path)).absolute()

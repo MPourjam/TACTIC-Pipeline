@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import tarfile
+import tempfile
 from ete3 import Tree
 from os import chdir
 from sys import exit
@@ -640,6 +641,39 @@ def shorten_sina_algn(sina_algn_file):
     return shortened_file_path
 
 
+_GENERATED_TREE_ID_RE = re.compile(r"(?:Zotu|OTU|SOTU)[0-9]+\Z", re.IGNORECASE)
+_QUOTED_GENERATED_TREE_ID_RE = re.compile(
+    r"(?<=[(,])'((?:Zotu|OTU|SOTU)[0-9]+)'(?=[:),;])",
+    re.IGNORECASE,
+)
+
+
+def _unquote_generated_tree_id(name: str) -> str:
+    if name.startswith("'") and name.endswith("'") and _GENERATED_TREE_ID_RE.fullmatch(name[1:-1]):
+        return name[1:-1]
+    return name
+
+
+def _normalize_generated_tree_file(tree_file: str) -> None:
+    """Remove redundant quotes from pipeline IDs without changing Newick branch lengths."""
+    path = Path(tree_file)
+    original = path.read_text(encoding="utf-8")
+    normalized = _QUOTED_GENERATED_TREE_ID_RE.sub(r"\1", original)
+    if normalized == original:
+        return
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", dir=path.parent,
+                prefix=f".{path.name}.", suffix=".tmp", delete=False) as output:
+            temporary_path = Path(output.name)
+            output.write(normalized)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
+
+
 def plant_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_name_root: str = None):
     algn_file_path = os.path.abspath(algn_file)
     algn_dirname, algn_filename = os.path.split(algn_file_path)
@@ -684,6 +718,7 @@ def plant_tree(algn_file, method: list = ["rapidnj", "FastTree"], output_file_na
             f"{output_file_name}-Tree-nj.tre",
         ]
     system_sub(cmd_to_call_list)
+    _normalize_generated_tree_file(cmd_to_call_list[-1])
 
 
 def create_krona(krona_tool: str, taxed_otu_table: str, output_html_name: str):
@@ -928,13 +963,16 @@ def extract_and_rename_subtree(
         rename_map,
         output_file):
     # Load the tree from a file
-    tree = Tree(tree_file)
+    tree = Tree(str(tree_file))
+
+    # RapidNJ quotes generated IDs, which ETE treats as literal name characters.
+    # Accept both older quoted trees and normalized trees.
+    for leaf in tree:
+        leaf.name = _unquote_generated_tree_id(leaf.name)
 
     # Extract the sub-tree
     subtree = tree.copy()
     # print the tree
-    subset = [f"'{sub}'" for sub in subset]
-    rename_map = {f"'{k}'": f"'{v}'" for k, v in rename_map.items()}
     subtree.prune(subset, preserve_branch_length=True)
 
     # Rename the leaves
@@ -943,7 +981,7 @@ def extract_and_rename_subtree(
             leaf.name = rename_map[leaf.name]
 
     # Save the sub-tree to a new file
-    subtree.write(outfile=output_file)
+    subtree.write(outfile=str(output_file))
 
 
 def parse_uc_file(
@@ -1169,6 +1207,36 @@ def move_content_to_parent_directory(directory: str):
         shutil.move(str(item), str(target_path))
 
     dir_path.rmdir()  # Remove the empty directory
+
+
+def run_in_dir(directory, target_function, *args, **kwargs):
+    """
+    Run a function inside a target working directory and restore the previous
+    working directory afterward.
+    """
+    directory = Path(PurePath(directory)).absolute()
+    directory.mkdir(parents=True, exist_ok=True)
+    prev_dir = Path.cwd()
+    chdir(str(directory))
+    try:
+        return target_function(*args, **kwargs)
+    finally:
+        chdir(str(prev_dir))
+
+
+def stage_file(source_file: str, dest_dir: str) -> str:
+    """
+    Copy source_file into dest_dir and return the staged absolute file path.
+    """
+    source_path = Path(PurePath(source_file)).absolute()
+    if not source_path.is_file():
+        raise ValueError(f"File does not exist and cannot be staged: {str(source_path)}")
+    dest_dir_path = Path(PurePath(dest_dir)).absolute()
+    dest_dir_path.mkdir(parents=True, exist_ok=True)
+    staged_path = dest_dir_path.joinpath(source_path.name)
+    if source_path != staged_path:
+        shutil.copy2(source_path, staged_path)
+    return str(staged_path)
 
 
 def zotu_pipeline(
@@ -1474,6 +1542,7 @@ def main(
         threads=POOL_SIZE,
         usearch_11_bin: str = USEARCH_11_BIN,
         run_otu_pipeline: bool = False,
+        run_zotu_pipeline: bool = False,
         run_tac_pipeline: bool = False,
         run_tic_pipeline: bool = False,
         skip_non_bacterial_filter: bool = False) -> list:
@@ -1513,6 +1582,15 @@ def main(
 
     assert ANALYSIS_DIR.is_dir(), "analysis_dir must be a path to a directory"
     cleanup(str(ANALYSIS_DIR))
+    pipeline_dirs = {
+        "shared": ANALYSIS_DIR / "Shared",
+        "zotu": ANALYSIS_DIR / "ZOTU_Pipeline",
+        "otu": ANALYSIS_DIR / "OTU_Pipeline",
+        "tac": ANALYSIS_DIR / "TAC_Pipeline",
+        "tic": ANALYSIS_DIR / "TIC_Pipeline",
+    }
+    for this_dir in pipeline_dirs.values():
+        this_dir.mkdir(parents=True, exist_ok=True)
     # copy the args_file_path to the analysis directory (only if provided and valid)
     if args_file_path:
         this_args_file = Path(PurePath(args_file_path)).absolute()
@@ -1550,55 +1628,84 @@ def main(
         raise ValueError(f"spike_stat_file: {str(exc)}")
 
     ANA_LOG.info("# Gathering Sequences")
-    chdir(str(ANALYSIS_DIR))
     # gather_samples_files(list(map_lines_dict.values()), TRIMMED_READS_FILE)
     # gather_samples_files(list(map_lines_dict.values()), FILTERED_READS_FILE)
-    gather_samples_files(list(map_lines_dict.values()), DEREP_FILE_NAME)
+    run_in_dir(
+        pipeline_dirs["shared"],
+        gather_samples_files,
+        list(map_lines_dict.values()),
+        DEREP_FILE_NAME
+    )
     # trimming the sequences
     # NOTE for now we discard trimming in the analysis
     # trim_sides(ARGS_CLS.trimsides.stripleft, ARGS_CLS.trimsides.stripright)
     ANA_LOG.info('# Dereplication')
-    derep_file = dereplication(DEREP_FILE_NAME, with_taxonomy=False)
+    derep_file = run_in_dir(
+        pipeline_dirs["shared"],
+        dereplication,
+        DEREP_FILE_NAME,
+        False
+    )
     # Sorting the sequences
     ANA_LOG.info('# Sorting')
-    sorted_file = sort_seqs(derep_file)
+    sorted_file = run_in_dir(
+        pipeline_dirs["shared"],
+        sort_seqs,
+        derep_file
+    )
+    sorted_file = str(Path(PurePath(sorted_file)).absolute())
+    raw_seq_file = str(pipeline_dirs["shared"].joinpath(DEREP_FILE_NAME).absolute())
+    # Setting correct pipeline run flags
+    # zOTU pipeline must be run if TIC and TAC are chosen
+    if run_tic_pipeline or run_tac_pipeline:
+        run_zotu_pipeline = True
+
     # ##########################################################################################
     # #################################### ZOTU Pipline ########################################
     # ##########################################################################################
     to_return = ["", "", "", ""]
-    try:
-        ANA_LOG.info('# Starting ZOTU pipeline')
-        zotu_tab_file, non_human_zotus_seq_file = zotu_pipeline(
-            sorted_file,
-            ARGS_CLS.cluster_zotus.minsize,
-            # using dereplicated reads with size tag saves time in creation of zotu table
-            # NOTE tested against using filtered reads and the results are the same
-            DEREP_FILE_NAME,
-            ARGS_CLS.cluster_zotus.abund_limit,
-            ARGS_CLS.cluster_zotus.sample_wise_correction,
-            ANA_LOG,
-            ARGS_CLS.cluster_zotus.match_id,
-            skip_non_bacterial_filter
-        )
-        # ANA_LOG.info('# Starting OTU pipeline')
-        ANA_LOG.info('# Normalizing ZOTU Table')
-        zotu_norm_methods = "No"
-        zotu_norm_methods = normalize_otu_table(zotu_tab_file, str(parsed_spike_stat_file_path))
-        ANA_LOG.info(f"{zotu_norm_methods} normalization method(s) applied on {zotu_tab_file}")
-    except Exception as exc:
-        ANA_LOG.warning(f"ZOTU pipeline failed: {exc}")
-        raise exc
-    else:
-        # preserving important files for next steps
-        # and cleaning up the rest
-        cleanup(
-            str(ANALYSIS_DIR),
-            [
-                Path(PurePath(sorted_file)).name,
-                Path(PurePath(DEREP_FILE_NAME)).name
-            ]
-        )
-        to_return[0] = zotu_tab_file
+    artifacts = {
+        "zotu_table": "",
+        "zotu_seqs": "",
+        "zotu_tree": None,
+        "otu_table": "",
+        "otu_seqs": "",
+        "tac_table": "",
+        "tac_seqs": "",
+        "tic_table": "",
+        "tic_seqs": "",
+    }
+    if run_zotu_pipeline:
+        try:
+            ANA_LOG.info('# Starting ZOTU pipeline')
+            zotu_tab_file, non_human_zotus_seq_file = run_in_dir(
+                pipeline_dirs["zotu"],
+                zotu_pipeline,
+                sorted_file,
+                ARGS_CLS.cluster_zotus.minsize,
+                # using dereplicated reads with size tag saves time in creation of zotu table
+                # NOTE tested against using filtered reads and the results are the same
+                raw_seq_file,
+                ARGS_CLS.cluster_zotus.abund_limit,
+                ARGS_CLS.cluster_zotus.sample_wise_correction,
+                ANA_LOG,
+                ARGS_CLS.cluster_zotus.match_id,
+                skip_non_bacterial_filter
+            )
+            # ANA_LOG.info('# Starting OTU pipeline')
+            ANA_LOG.info('# Normalizing ZOTU Table')
+            zotu_norm_methods = "No"
+            zotu_norm_methods = normalize_otu_table(zotu_tab_file, str(parsed_spike_stat_file_path))
+            ANA_LOG.info(f"{zotu_norm_methods} normalization method(s) applied on {zotu_tab_file}")
+        except Exception as exc:
+            ANA_LOG.warning(f"ZOTU pipeline failed: {exc}")
+            raise exc
+        else:
+            artifacts["zotu_table"] = zotu_tab_file
+            artifacts["zotu_seqs"] = non_human_zotus_seq_file
+            zotu_tree_file = pipeline_dirs["zotu"].joinpath("ZOTUs-Tree-nj.tre")
+            artifacts["zotu_tree"] = str(zotu_tree_file.absolute()) if zotu_tree_file.is_file() else None
+            to_return[0] = zotu_tab_file
 
     # ##########################################################################################
     # #################################### OTU Pipline #########################################
@@ -1606,9 +1713,11 @@ def main(
     if run_otu_pipeline:
         try:
             ANA_LOG.info('# Starting OTU pipeline')
-            otu_tab_file, non_human_otu_seq_file = otu_pipeline(
+            otu_tab_file, non_human_otu_seq_file = run_in_dir(
+                pipeline_dirs["otu"],
+                otu_pipeline,
                 sorted_file,
-                DEREP_FILE_NAME,  # contains sequences with sample ids and corresponding sizes
+                raw_seq_file,  # contains sequences with sample ids and corresponding sizes
                 ARGS_CLS.denovo_cluster_otus.abund_limit,
                 ARGS_CLS.denovo_cluster_otus.sample_wise_correction,
                 ANA_LOG,
@@ -1625,25 +1734,26 @@ def main(
             ANA_LOG.error(msg)
             raise exc
         else:
-            # preserving important files for next steps
-            # and cleaning up the rest
-            cleanup(
-                str(ANALYSIS_DIR),
-                [
-                    non_human_zotus_seq_file,
-                    DEREP_FILE_NAME,
-                    zotu_tab_file
-                ]
-            )
+            artifacts["otu_table"] = otu_tab_file
+            artifacts["otu_seqs"] = non_human_otu_seq_file
             to_return[1] = otu_tab_file
 
     if run_tac_pipeline:
+        if not artifacts["zotu_table"] or not artifacts["zotu_seqs"]:
+            raise ValueError("TAC pipeline requires ZOTU outputs but none were found.")
+        staged_zotu_seq_file = stage_file(artifacts["zotu_seqs"], pipeline_dirs["tac"])
+        staged_zotu_tab_file = stage_file(artifacts["zotu_table"], pipeline_dirs["tac"])
+        staged_zotu_tree_file = None
+        if artifacts["zotu_tree"]:
+            staged_zotu_tree_file = stage_file(artifacts["zotu_tree"], pipeline_dirs["tac"])
         try:
             ANA_LOG.info('# Starting TAC pipeline')
-            tac_otu_table, tac_otu_seq_file = tac_pipeline(
-                zotus_seq_fasta=non_human_zotus_seq_file,
-                zotus_table_file=zotu_tab_file,
-                zotus_tree_file="ZOTUs-Tree-nj.tre",
+            tac_otu_table, tac_otu_seq_file = run_in_dir(
+                pipeline_dirs["tac"],
+                tac_pipeline,
+                zotus_seq_fasta=staged_zotu_seq_file,
+                zotus_table_file=staged_zotu_tab_file,
+                zotus_tree_file=staged_zotu_tree_file,
                 cluster_id=ARGS_CLS.tac_cluster.cluster_thr,
                 tac_logger=ANA_LOG
             )
@@ -1657,24 +1767,26 @@ def main(
             ANA_LOG.error(msg)
             raise exc
         else:
-            # preserving important files for next steps
-            # and cleaning up the rest
-            cleanup(
-                str(ANALYSIS_DIR),
-                [
-                    non_human_zotus_seq_file,
-                    DEREP_FILE_NAME,
-                ]
-            )
+            artifacts["tac_table"] = tac_otu_table
+            artifacts["tac_seqs"] = tac_otu_seq_file
             to_return[2] = tac_otu_table
 
     if run_tic_pipeline:
+        if not artifacts["zotu_table"] or not artifacts["zotu_seqs"]:
+            raise ValueError("TIC pipeline requires ZOTU outputs but none were found.")
+        staged_zotu_seq_file = stage_file(artifacts["zotu_seqs"], pipeline_dirs["tic"])
+        staged_zotu_tab_file = stage_file(artifacts["zotu_table"], pipeline_dirs["tic"])
+        staged_zotu_tree_file = None
+        if artifacts["zotu_tree"]:
+            staged_zotu_tree_file = stage_file(artifacts["zotu_tree"], pipeline_dirs["tic"])
         try:
             ANA_LOG.info('# Starting TIC pipeline')
-            tic_otu_table, sotu_fasta_path = tic_pipeline(
-                zotus_seq_fasta=non_human_zotus_seq_file,
-                zotus_table_file=zotu_tab_file,
-                zotus_tree_file="ZOTUs-Tree-nj.tre",
+            tic_otu_table, sotu_fasta_path = run_in_dir(
+                pipeline_dirs["tic"],
+                tic_pipeline,
+                zotus_seq_fasta=staged_zotu_seq_file,
+                zotus_table_file=staged_zotu_tab_file,
+                zotus_tree_file=staged_zotu_tree_file,
                 species_id=ARGS_CLS.complex_tic.species_sim,
                 genus_id=ARGS_CLS.complex_tic.genus_sim,
                 family_id=ARGS_CLS.complex_tic.family_sim,
@@ -1690,21 +1802,12 @@ def main(
             ANA_LOG.error(msg)
             raise exc
         else:
-            # preserving important files for next steps
-            # and cleaning up the rest
-            cleanup(
-                str(ANALYSIS_DIR),
-                [
-                    non_human_zotus_seq_file,
-                    DEREP_FILE_NAME,
-                ]
-            )
+            artifacts["tic_table"] = tic_otu_table
+            artifacts["tic_seqs"] = sotu_fasta_path
             to_return[3] = tic_otu_table
 
     ANA_LOG.info('# Preparing PICRUSt2 input files')
     prepare_picrust2_input(str(ANALYSIS_DIR))
     ANA_LOG.info('ANALYSIS DONE')
     # to keep the same return value as the main function
-    ANA_LOG.info('# Cleaning up')
-    cleanup(str(ANALYSIS_DIR))
     return tuple(to_return)

@@ -56,15 +56,15 @@ class ArgumentSet:
     def to_args(self):
         args = []
         if self.input_dir:
-            args += ["--input-dir", self.input_dir]
+            args += ["--input-directory", self.input_dir]
         if self.fastq_dir:
-            args += ["--fastq-dir", self.fastq_dir]
+            args += ["--fastq-directory", self.fastq_dir]
         if self.yml_file:
             args += ["--yml-file", self.yml_file]
         if self.mapping_file:
             args += ["--mapping-file", self.mapping_file]
         if self.spike_stats_file:
-            args += ["--spike-stats-file", self.spike_stats_file]
+            args += ["--spike-stat", self.spike_stats_file]
         if self.usearch_bin:
             args += ["--usearch-bin", self.usearch_bin]
         if True:
@@ -74,12 +74,13 @@ class ArgumentSet:
         if self.skip_analysis:
             args += ["--skip-analysis"]
         if self.place_template_file:
-            args = ["--input-dir", self.input_dir, "--fastq-dir", self.fastq_dir]
-            args += ["--place-template-file"]
+            args = ["--input-directory", self.input_dir, "--fastq-directory", self.fastq_dir]
+            args += ["--place-template-files"]
         if self.threads:
             args += ["--threads", str(self.threads)]
         if self.analysis_mode:
-            args += ["--analysis-mode", self.analysis_mode]
+            modes = normalize_analysis_modes(self.analysis_mode)
+            args += ["--analysis-mode", *modes]
         if self.individual_zotus:
             args += ["-iz"]
         if self.spikes_references_dir:
@@ -117,6 +118,29 @@ class MappingFile:
             for entry in self.entries:
                 f.write(entry.csv_line(sep) + "\n")
         self.last_written_file = file
+
+
+def normalize_analysis_modes(analysis_mode) -> List[str]:
+    """
+    Normalize one or more analysis modes to a unique list accepted by run_tactic.
+    Supports legacy token 'de-novo' by mapping it to 'OTU'.
+    """
+    if isinstance(analysis_mode, (list, tuple, set)):
+        raw_items = [str(item).strip() for item in analysis_mode]
+    else:
+        raw_items = [str(analysis_mode).strip()] if analysis_mode else ["TIC"]
+
+    modes = []
+    for raw_mode in raw_items:
+        if not raw_mode:
+            continue
+        for mode in [m.strip().upper() for m in re.split(r"[,\s]+", raw_mode) if m.strip()]:
+            if mode == "DE-NOVO":
+                mode = "OTU"
+            if mode not in modes:
+                modes.append(mode)
+
+    return modes if modes else ["TIC"]
 
 
 def check_expected_preprocessed_files(preprocessed_dir: str, args: ArgumentSet) -> bool:
@@ -197,77 +221,65 @@ def check_expected_preprocessed_files(preprocessed_dir: str, args: ArgumentSet) 
 
 def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC") -> bool:
     """
-    The analysis folder should contain the following files:
-    ```
-    .
-    ├── Analysis_log.txt
-    ├── Map-GOTU-FOTU.tab
-    ├── Map-SOTU-GOTU.tab
-    ├── Map-ZOTU-SOTU.tab
-    ├── S?OTUs-Seqs.fasta
-    ├── S?OTUs-Table.tab
-    ├── S?OTUs-Tree-nj.tre
-    ├── spike_mapping_file.csv
-    ├── ZOTUs-Seqs.fasta
-    ├── ZOTUs-Table.tab
-    └── ZOTUs-Tree-nj.tre
-    ```
+    Validate the analysis output folder with the new nested structure:
+    Shared/, ZOTU_Pipeline/, OTU_Pipeline/, TAC_Pipeline/, TIC_Pipeline/
+    and PICRUSt2-Inputs/.
     """
-    return_bool = True
+    modes = normalize_analysis_modes(analysis_mode)
     files_to_be_there = [
-        re.compile(r"spike_mapping_file\.csv"),
-        re.compile(r"Analysis_log\.txt"),
-        re.compile("ZOTUs-Seqs\.fasta"),
-        re.compile("ZOTUs-Tree-nj\.tre"),
-        re.compile("ZOTUs-Table\.tab"),
-        re.compile("ZOTUs-Krona\.html"),
-        re.compile("SampleMinCount_Normalized.*\.tab")
+        re.compile(r"spike_mapping_file\.csv$"),
+        re.compile(r"Analysis_log\.txt$"),
+        re.compile(r"Shared/sorted\.fasta$"),
+        re.compile(r"PICRUSt2-Inputs/.*[ZS]?OTUs?-Table.*-For-PICRUSt2\.tab$"),
+        re.compile(r"PICRUSt2-Inputs/.*[ZS]?OTUs?-Seqs.*-For-PICRUSt2\.fasta$")
     ]
-    if analysis_mode == "TIC":
+
+    # ZOTU outputs are expected explicitly for ZOTU mode and as TAC/TIC dependencies.
+    if any(mode in {"ZOTU", "TAC", "TIC"} for mode in modes):
         files_to_be_there.extend(
             [
-                re.compile("Map-FOTU-GOTU\.tab"),
-                re.compile("Map-GOTU-SOTU\.tab"),
-                re.compile("Map-SOTU-ZOTU\.tab"),
-                re.compile("SOTUs-Table-TIC\.tab"),
-                re.compile("SOTUs-Seqs-TIC\.fasta"),
-                re.compile("SOTUs-Tree-nj-TIC\.tre"),
-                re.compile("SOTUs-Krona\.html"),
-                # re.compile("SampleMinCount_Normalized.*\.tab"),
-                # re.compile("ZOTU-Table-All-FullTaxonomy.tab"),
-                re.compile("Invalid-Tax-Seqs-TIC\.fasta"),
-                re.compile("FullTaxonomy\.tab")
-            ]
-        )
-    if analysis_mode == "TAC":
-        files_to_be_there.extend(
-            [
-                re.compile(r"SampleMinCount_Normalized.*\.tab"),
-                re.compile(r"OTUs-Tree-nj-TAC\.tre"),
-                re.compile(r"OTUs-Table-TAC\.tab"),
-                re.compile(r"OTUs-Seqs-TAC\.fasta"),
-                re.compile(r"OTUs-Krona\.html"),
-                re.compile(r"Map-ZOTUs-OTUs-TAC\.tab")
-            ]
-        )
-    if analysis_mode == "de-novo":
-        files_to_be_there.extend(
-            [
-                re.compile("OTUs-Seqs\.fasta"),
-                re.compile("OTUs-Table\.tab"),
-                re.compile("OTUs-Tree-nj\.tre"),
-                re.compile("OTUs-Krona\.html"),
-                re.compile("SampleMinCount_Normalized.*\.tab")
+                re.compile(r"ZOTU_Pipeline/ZOTUs-Seqs\.fasta$"),
+                re.compile(r"ZOTU_Pipeline/ZOTUs-Table\.tab$"),
+                re.compile(r"ZOTU_Pipeline/ZOTUs-Krona\.html$"),
+                re.compile(r"ZOTU_Pipeline/SampleMinCount_Normalized.*ZOTUs-Table.*\.tab$"),
             ]
         )
 
-    # Extending for PICRUST2 expectations
-    files_to_be_there.extend(
-        [
-            re.compile(r"PICRUSt2-Inputs/.*[ZS]?OTUs?-Table.*-For-PICRUSt2\.tab"),
-            re.compile(r"PICRUSt2-Inputs/.*[ZS]?OTUs?-Seqs.*-For-PICRUSt2\.fasta")
-        ]
-    )
+    if "OTU" in modes:
+        files_to_be_there.extend(
+            [
+                re.compile(r"OTU_Pipeline/OTUs-Seqs\.fasta$"),
+                re.compile(r"OTU_Pipeline/OTUs-Table\.tab$"),
+                re.compile(r"OTU_Pipeline/OTUs-Krona\.html$"),
+                re.compile(r"OTU_Pipeline/SampleMinCount_Normalized.*OTUs-Table.*\.tab$"),
+            ]
+        )
+
+    if "TAC" in modes:
+        files_to_be_there.extend(
+            [
+                re.compile(r"TAC_Pipeline/OTUs-Table-TAC\.tab$"),
+                re.compile(r"TAC_Pipeline/OTUs-Seqs-TAC\.fasta$"),
+                re.compile(r"TAC_Pipeline/OTUs-Krona\.html$"),
+                re.compile(r"TAC_Pipeline/Map-ZOTUs-OTUs-TAC\.tab$"),
+                re.compile(r"TAC_Pipeline/SampleMinCount_Normalized.*OTUs-Table-TAC.*\.tab$"),
+            ]
+        )
+
+    if "TIC" in modes:
+        files_to_be_there.extend(
+            [
+                re.compile(r"TIC_Pipeline/Map-FOTU-GOTU\.tab$"),
+                re.compile(r"TIC_Pipeline/Map-GOTU-SOTU\.tab$"),
+                re.compile(r"TIC_Pipeline/Map-SOTU-ZOTU\.tab$"),
+                re.compile(r"TIC_Pipeline/SOTUs-Table-TIC\.tab$"),
+                re.compile(r"TIC_Pipeline/SOTUs-Seqs-TIC\.fasta$"),
+                re.compile(r"TIC_Pipeline/SOTUs-Krona\.html$"),
+                re.compile(r"TIC_Pipeline/Invalid-Tax-Seqs-TIC\.fasta$"),
+                re.compile(r"TIC_Pipeline/.*FullTaxonomy\.tab$"),
+                re.compile(r"TIC_Pipeline/SampleMinCount_Normalized.*SOTUs-Table-TIC.*\.tab$"),
+            ]
+        )
 
     existing_files_list = []
     # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
@@ -282,20 +294,12 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
             for fname in files:
                 relpath = os.path.relpath(os.path.join(root, fname), analysis_folder)
                 existing_files_list.append(relpath)
-    # use re search to check if patterns in files_to_be_there exist in the existing_files_list
-    not_there = []
-    for existing_f in existing_files_list:
-        is_there = False
-        for file_pat in files_to_be_there:
-            if re.search(file_pat, existing_f):
-                is_there = True
-                break
-        if not is_there:
-            not_there.append(existing_f)
-        return_bool = return_bool and is_there
-    # print(f"Files not found in {analysis_folder}: {not_there}")
+    missing_patterns = []
+    for file_pat in files_to_be_there:
+        if not any(re.search(file_pat, existing_f) for existing_f in existing_files_list):
+            missing_patterns.append(file_pat.pattern)
 
-    return return_bool
+    return len(missing_patterns) == 0
 
 
 def check_otutable_format(otu_table: str, argument_set: ArgumentSet, run_dir: str) -> bool:
@@ -347,6 +351,10 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         with open(run_dir + "/cmd.txt", "w") as f:
             f.write(" ".join(cmd) + "\n")
         print("cmd =", cmd)
+        fastq_dir = os.path.join(run_dir, arg_set.fastq_dir)
+        # Snapshot analysis directories before running the command so we can
+        # reliably pick the output folder created by this invocation only.
+        pre_existing_analysis_dirs = set(glob.glob(os.path.join(fastq_dir, "Analysis_*")))
         # run docker cmd with the image
         result = subprocess.run(
             cmd,
@@ -354,13 +362,16 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         )
 
         file_set_complete = False
-        fastq_dir = os.path.join(run_dir, arg_set.fastq_dir)
         if not arg_set.skip_analysis:
-            # get latest analysis folder. those are marked with a timestamp
+            # Pick analysis folder(s) created by this run. Fall back to
+            # timestamp-based selection if needed for backward compatibility.
+            post_analysis_dirs = set(glob.glob(os.path.join(fastq_dir, "Analysis_*")))
+            created_analysis_dirs = sorted(post_analysis_dirs - pre_existing_analysis_dirs)
             latest_analysis_folder_date = 0
             latest_analysis_folder_time = 0
             latest_analysis_folder = ""
-            for analysis_folder in glob.glob(fastq_dir + "/Analysis_*"):
+            analysis_candidates = created_analysis_dirs if created_analysis_dirs else list(post_analysis_dirs)
+            for analysis_folder in analysis_candidates:
                 print("analysis_folder =", analysis_folder)
                 _, date, time = str(os.path.basename(analysis_folder).split(".")[0]).split("_")
                 date = int(date)
@@ -372,19 +383,34 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                     latest_analysis_folder = analysis_folder
             print("latest_analysis_folder =", latest_analysis_folder)
             assert latest_analysis_folder != ""
-            assert check_otutable_format(os.path.join(latest_analysis_folder, "ZOTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the ZOTU table"
-            if arg_set.analysis_mode == "TIC":
-                assert check_otutable_format(os.path.join(latest_analysis_folder, "SOTUs-Table-TIC.tab"), arg_set, fastq_dir), "Some samples are missing in the SOTU table"
-                file_set_complete = check_expected_files_exist(latest_analysis_folder, "TIC")
-                assert file_set_complete, "Some files are missing in the TIC analysis folder"
-            elif arg_set.analysis_mode == "de-novo":
-                assert check_otutable_format(os.path.join(latest_analysis_folder, "OTUs-Table.tab"), arg_set, fastq_dir), "Some samples are missing in the OTU table"
-                file_set_complete = check_expected_files_exist(latest_analysis_folder, "de-novo")
-                assert file_set_complete, "Some files are missing in the de-novo analysis folder"
-            elif arg_set.analysis_mode == "TAC":
-                assert check_otutable_format(os.path.join(latest_analysis_folder, "OTUs-Table-TAC.tab"), arg_set, fastq_dir), "Some samples are missing in the OTU table"
-                file_set_complete = check_expected_files_exist(latest_analysis_folder, "TAC")
-                assert file_set_complete, "Some files are missing in the TAC analysis folder"
+            selected_modes = normalize_analysis_modes(arg_set.analysis_mode)
+            if any(mode in {"ZOTU", "TAC", "TIC"} for mode in selected_modes):
+                assert check_otutable_format(
+                    os.path.join(latest_analysis_folder, "ZOTU_Pipeline", "ZOTUs-Table.tab"),
+                    arg_set,
+                    fastq_dir
+                ), "Some samples are missing in the ZOTU table"
+            if "OTU" in selected_modes:
+                assert check_otutable_format(
+                    os.path.join(latest_analysis_folder, "OTU_Pipeline", "OTUs-Table.tab"),
+                    arg_set,
+                    fastq_dir
+                ), "Some samples are missing in the OTU table"
+            if "TAC" in selected_modes:
+                assert check_otutable_format(
+                    os.path.join(latest_analysis_folder, "TAC_Pipeline", "OTUs-Table-TAC.tab"),
+                    arg_set,
+                    fastq_dir
+                ), "Some samples are missing in the TAC OTU table"
+            if "TIC" in selected_modes:
+                assert check_otutable_format(
+                    os.path.join(latest_analysis_folder, "TIC_Pipeline", "SOTUs-Table-TIC.tab"),
+                    arg_set,
+                    fastq_dir
+                ), "Some samples are missing in the SOTU table"
+
+            file_set_complete = check_expected_files_exist(latest_analysis_folder, selected_modes)
+            assert file_set_complete, f"Some files are missing in the analysis folder for modes: {selected_modes}"
             # Test return code
             assert result.returncode == 0, f"Command failed with return code {result.returncode}"
         elif not arg_set.skip_preprocess and arg_set.skip_analysis:
@@ -607,7 +633,31 @@ def test_full_denovo_analysis(build_image):
         mapping = MappingFile(samples)
         mapping.write(mapping_file)
         args_set.mapping_file = "mapping_file.csv"
-        args_set.analysis_mode = "de-novo"
+        args_set.analysis_mode = "OTU"
+        args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
+
+        return args_set
+
+    run_container(setup_file_structure)
+
+
+def test_full_multi_analysis_mode_selector(build_image):
+    def setup_file_structure(run_dir: str):
+        copy_initial_files(run_dir)
+        # setting args
+        args_set = ArgumentSet("", "")
+        # create a mapping file
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
+        ]
+        mapping = MappingFile(samples)
+        mapping.write(mapping_file)
+        args_set.mapping_file = "mapping_file.csv"
+        # Multiple-mode selector: OTU + TAC in one run.
+        # TAC implies ZOTU dependency outputs should also exist.
+        args_set.analysis_mode = ["OTU", "TAC"]
         args_set.yml_file = "TACTICPipeline_args_test.yml"  # path to the yml file
 
         return args_set
