@@ -1,0 +1,11 @@
+inferred_feature	target_tip	effective_identity	pident	bitscore	evalue	length
+Zotu1	Staphylococcus_warneri	100.0	100.0	468.0	7.92e-136	253.0
+Zotu10	Actinomyces_bowdenii	100.0	100.0	468.0	7.92e-136	253.0
+Zotu11	Acetatifactor_muris	100.0	100.0	468.0	7.92e-136	253.0
+Zotu12	Clostridium_ramosum	100.0	100.0	466.0	2.84e-135	252.0
+Zotu14	Flavonifractor_plautii	100.0	100.0	468.0	7.92e-136	253.0
+Zotu2	Bacillus_subtilis	100.0	100.0	468.0	7.92e-136	253.0
+Zotu3	Enterococcus_hirae	100.0	100.0	468.0	7.92e-136	253.0
+Zotu4	Enterorhabdus_mucosicola	100.0	100.0	466.0	2.84e-135	252.0
+Zotu6	Parabacteroides_goldsteinii	100.0	100.0	468.0	7.92e-136	253.0
+Zotu8	Bacteroides_sartorii	100.0	100.0	468.0	7.92e-136	253.0

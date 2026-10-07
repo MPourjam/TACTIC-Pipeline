@@ -1,0 +1,2 @@
+metric	label	stats_model	pairwise_test	multiple_test_correction	n_blocks	omnibus_stat	omnibus_p	omnibus_significant_alpha	alpha	n_permutations
+metric_family_sensitivity	Metric-family sensitivity	paired_permutation	signed_rank_permutation	True	27	45.11538461538463	0.00024993751562109475	True	0.05	4000

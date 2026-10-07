@@ -1,0 +1,2 @@
+metric	label	stats_model	pairwise_test	multiple_test_correction	n_blocks	n_pair_groups	omnibus_stat	omnibus_p	omnibus_significant_alpha	alpha	n_permutations
+pair_group_distance_contrast	Pair-group distance contrast	paired_permutation	signed_rank_permutation	True	27	10	173.4242424242425	0.00024993751562109475	True	0.05	4000

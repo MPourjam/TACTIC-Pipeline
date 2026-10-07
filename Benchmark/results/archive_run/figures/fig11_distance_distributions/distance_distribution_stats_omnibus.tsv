@@ -1,0 +1,7 @@
+metric	label	stats_model	pairwise_test	multiple_test_correction	n_blocks	omnibus_stat	omnibus_p	omnibus_significant_alpha	alpha	n_permutations
+jaccard	Jaccard	paired_permutation	signed_rank_permutation	True	27	50.68695652173916	0.00024993751562109475	True	0.05	4000
+weighted_jaccard	Weighted Jaccard	paired_permutation	signed_rank_permutation	True	27	53.09803921568628	0.00024993751562109475	True	0.05	4000
+braycurtis	Bray-Curtis	paired_permutation	signed_rank_permutation	True	27	53.50884086444008	0.00024993751562109475	True	0.05	4000
+gunifrac_a0.0	gUniFrac (alpha=0.0)	paired_permutation	signed_rank_permutation	True	27	34.42596348884381	0.00024993751562109475	True	0.05	4000
+gunifrac_a0.5	gUniFrac (alpha=0.5)	paired_permutation	signed_rank_permutation	True	27	64.98412698412704	0.00024993751562109475	True	0.05	4000
+gunifrac_a1.0	gUniFrac (alpha=1.0)	paired_permutation	signed_rank_permutation	True	27	53.29182879377433	0.00024993751562109475	True	0.05	4000

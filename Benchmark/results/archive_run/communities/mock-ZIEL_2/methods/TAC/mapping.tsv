@@ -1,0 +1,17 @@
+inferred_feature	target_species	best_tip	target_tip	effective_identity	pident	bitscore	evalue	length
+OTU1	Bacteroides_vulgatus	Bacteroides_vulgatus	Bacteroides_vulgatus	99.605	99.605	462.0	5.06e-134	253.0
+OTU10	Prevotella_copri	Prevotella_copri	Prevotella_copri	99.605	99.605	462.0	5.06e-134	253.0
+OTU11	Staphylococcus_epidermidis	Staphylococcus_epidermidis	Staphylococcus_epidermidis	100.0	100.0	468.0	1.09e-135	253.0
+OTU12	Ruminococcus_gnavus	Ruminococcus_gnavus	Ruminococcus_gnavus	100.0	100.0	468.0	1.09e-135	253.0
+OTU13	Collinsella_aerofaciens	Collinsella_aerofaciens	Collinsella_aerofaciens	100.0	100.0	468.0	1.09e-135	253.0
+OTU14	Akkermansia_muciniphila	Akkermansia_muciniphila	Akkermansia_muciniphila	100.0	100.0	468.0	1.09e-135	253.0
+OTU15	Bifidobacterium_longum	Bifidobacterium_longum	Bifidobacterium_longum	100.0	100.0	468.0	1.09e-135	253.0
+OTU17	Atopobium_parvulum	Atopobium_parvulum	Atopobium_parvulum	100.0	100.0	466.0	3.89e-135	252.0
+OTU18	Eggerthella_lenta	Eggerthella_lenta	Eggerthella_lenta	100.0	100.0	466.0	3.89e-135	252.0
+OTU19	Clostridium_ramosum	Clostridium_ramosum	Clostridium_ramosum	100.0	100.0	466.0	3.89e-135	252.0
+OTU2	Listeria_welshimeri	Listeria_welshimeri	Listeria_welshimeri	100.0	100.0	468.0	1.09e-135	253.0
+OTU3	Pseudomonas_aeruginosa	Pseudomonas_aeruginosa	Pseudomonas_aeruginosa	100.0	100.0	468.0	1.09e-135	253.0
+OTU4	Escherichia_coli	Escherichia_coli_LF82	Escherichia_coli_LF82	100.0	100.0	468.0	1.09e-135	253.0
+OTU5	Oscillibacter_valericigenes	Oscillibacter_valericigenes	Oscillibacter_valericigenes	100.0	100.0	468.0	1.09e-135	253.0
+OTU6	Enterobacter_cloacae	Enterobacter_cloacae	Enterobacter_cloacae	100.0	100.0	468.0	1.09e-135	253.0
+OTU7	Microbacterium_flavum	Microbacterium_flavum	Microbacterium_flavum	100.0	100.0	468.0	1.09e-135	253.0

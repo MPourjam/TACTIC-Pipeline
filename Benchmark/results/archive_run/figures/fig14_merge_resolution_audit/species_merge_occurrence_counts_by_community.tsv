@@ -1,0 +1,17 @@
+community_id	n_species_merge_occurrence_rows	n_samples_with_species_merge	n_methods_with_species_merge	n_merge_pair_events	sum_pair_weight
+mock-12	3	1	3	7	6.0
+mock-13	1	1	1	1	1.0
+mock-14	1	1	1	1	1.0
+mock-15	1	1	1	1	1.0
+mock-16	3	1	3	11	10.0
+mock-18	0	0	0	0	0.0
+mock-19	0	0	0	0	0.0
+mock-20	1	1	1	1	1.0
+mock-21	1	1	1	1	1.0
+mock-22	1	1	1	1	1.0
+mock-23	1	1	1	1	1.0
+mock-4	4	4	1	4	4.0
+mock-5	4	4	1	4	4.0
+mock-ZIEL_1	0	0	0	0	0.0
+mock-ZIEL_2	9	3	3	45	30.0
+mock-ZYMO	0	0	0	0	0.0

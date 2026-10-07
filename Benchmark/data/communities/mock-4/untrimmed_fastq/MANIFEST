@@ -1,0 +1,9 @@
+sample-id,filename,direction
+HMPMockV1.1.Even1,HMPMockV1.1.Even1_1_L001_R1_001.fastq.gz,forward
+HMPMockV1.1.Even1,HMPMockV1.1.Even1_1_L001_R2_001.fastq.gz,reverse
+HMPMockV1.2.Staggered2,HMPMockV1.2.Staggered2_2_L001_R1_001.fastq.gz,forward
+HMPMockV1.2.Staggered2,HMPMockV1.2.Staggered2_2_L001_R2_001.fastq.gz,reverse
+HMPMockV1.2.Staggered1,HMPMockV1.2.Staggered1_3_L001_R1_001.fastq.gz,forward
+HMPMockV1.2.Staggered1,HMPMockV1.2.Staggered1_3_L001_R2_001.fastq.gz,reverse
+HMPMockV1.1.Even2,HMPMockV1.1.Even2_4_L001_R1_001.fastq.gz,forward
+HMPMockV1.1.Even2,HMPMockV1.1.Even2_4_L001_R2_001.fastq.gz,reverse

@@ -1,0 +1,382 @@
+community_id	community_display	species	species_display	tip	tip_display_original	tip_display_reset	expected_tip_order	actual_copy_number	actual_copy_label	reset_copy_number	reset_copy_label
+mock-12	Mock 3	Bacteroides_cellulosilyticus	Bacteroides cellulosilyticus	Bacteroides_cellulosilyticus_DSM_14838	Bacteroides cellulosilyticus	Bacteroides cellulosilyticus | Copy1	23	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_eggerthii	Bacteroides eggerthii	Bacteroides_eggerthii_BEI_HM-210	Bacteroides eggerthii	Bacteroides eggerthii | Copy1	33	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_fragilis	Bacteroides fragilis	Bacteroides_fragilis	Bacteroides fragilis	Bacteroides fragilis | Copy1	30	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_massiliensis	Bacteroides massiliensis	Bacteroides_massiliensis	Bacteroides massiliensis	Bacteroides massiliensis | Copy1	15	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_ovatus	Bacteroides ovatus	Bacteroides_ovatus	Bacteroides ovatus	Bacteroides ovatus | Copy1	26	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_ovatus	Bacteroides ovatus	Bacteroides_ovatus__Copy1	Bacteroides ovatus | Copy1	Bacteroides ovatus | Copy2	27	1	Copy1	2	Copy2
+mock-12	Mock 3	Bacteroides_ovatus	Bacteroides ovatus	Bacteroides_ovatus__Copy5	Bacteroides ovatus | Copy5	Bacteroides ovatus | Copy3	28	5	Copy5	3	Copy3
+mock-12	Mock 3	Bacteroides_thetaiotaomicron	Bacteroides thetaiotaomicron	Bacteroides_thetaiotaomicron	Bacteroides thetaiotaomicron	Bacteroides thetaiotaomicron | Copy1	17	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_thetaiotaomicron	Bacteroides thetaiotaomicron	Bacteroides_thetaiotaomicron__Copy1	Bacteroides thetaiotaomicron | Copy1	Bacteroides thetaiotaomicron | Copy2	18	1	Copy1	2	Copy2
+mock-12	Mock 3	Bacteroides_uniformis	Bacteroides uniformis	Bacteroides_uniformis	Bacteroides uniformis	Bacteroides uniformis | Copy1	31	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-12	Mock 3	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-12	Mock 3	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-12	Mock 3	Barnesiella_intestinihominis	Barnesiella intestinihominis	Barnesiella_intestinihominis	Barnesiella intestinihominis	Barnesiella intestinihominis | Copy1	2	0	Copy0	1	Copy1
+mock-12	Mock 3	Clostridium_celatum	Clostridium celatum	Clostridium_celatum_JCM_1394	Clostridium celatum	Clostridium celatum | Copy1	13	0	Copy0	1	Copy1
+mock-12	Mock 3	Clostridium_cocleatum	Clostridium cocleatum	Clostridium_cocleatum	Clostridium cocleatum	Clostridium cocleatum | Copy1	21	0	Copy0	1	Copy1
+mock-12	Mock 3	Clostridium_methylpentosum	Clostridium methylpentosum	Clostridium_methylpentosum_DSM_5476	Clostridium methylpentosum	Clostridium methylpentosum | Copy1	22	0	Copy0	1	Copy1
+mock-12	Mock 3	Clostridium_phytofermentans	Clostridium phytofermentans	Clostridium_phytofermentans_ATCC_700394	Clostridium phytofermentans	Clostridium phytofermentans | Copy1	25	0	Copy0	1	Copy1
+mock-12	Mock 3	Clostridium_xylanovorans	Clostridium xylanovorans	Clostridium_xylanovorans	Clostridium xylanovorans	Clostridium xylanovorans | Copy1	24	0	Copy0	1	Copy1
+mock-12	Mock 3	Coprococcus_comes	Coprococcus comes	Coprococcus_comes_ATCC_27758	Coprococcus comes	Coprococcus comes | Copy1	16	0	Copy0	1	Copy1
+mock-12	Mock 3	Eubacterium_rectale	Eubacterium rectale	Eubacterium_rectale_DSM_17629	Eubacterium rectale	Eubacterium rectale | Copy1	20	0	Copy0	1	Copy1
+mock-12	Mock 3	Howardella_ureilytica	Howardella ureilytica	Howardella_ureilytica	Howardella ureilytica	Howardella ureilytica | Copy1	7	0	Copy0	1	Copy1
+mock-12	Mock 3	Parabacteroides_distasonis	Parabacteroides distasonis	Parabacteroides_distasonis_JCM_13401	Parabacteroides distasonis	Parabacteroides distasonis | Copy1	1	0	Copy0	1	Copy1
+mock-12	Mock 3	Parabacteroides_distasonis	Parabacteroides distasonis	Parabacteroides_distasonis_JCM_13400	Parabacteroides distasonis	Parabacteroides distasonis | Copy2	6	0	Copy0	2	Copy2
+mock-12	Mock 3	Parabacteroides_merdae	Parabacteroides merdae	Parabacteroides_merdae	Parabacteroides merdae	Parabacteroides merdae | Copy1	14	0	Copy0	1	Copy1
+mock-12	Mock 3	Parabacteroides_sp	Parabacteroides sp	Parabacteroides_sp._D13	Parabacteroides sp	Parabacteroides sp | Copy1	32	0	Copy0	1	Copy1
+mock-12	Mock 3	Paraprevotella_clara	Paraprevotella clara	Paraprevotella_clara_DSM_19731	Paraprevotella clara	Paraprevotella clara | Copy1	29	0	Copy0	1	Copy1
+mock-12	Mock 3	Prevotella_buccalis	Prevotella buccalis	Prevotella_buccalis	Prevotella buccalis	Prevotella buccalis | Copy1	19	0	Copy0	1	Copy1
+mock-12	Mock 3	Prevotella_copri	Prevotella copri	Prevotella_copri_DSM_18205	Prevotella copri	Prevotella copri | Copy1	10	0	Copy0	1	Copy1
+mock-12	Mock 3	Prevotella_copri	Prevotella copri	Prevotella_copri_DSM_18205__Copy2	Prevotella copri | Copy2	Prevotella copri | Copy2	11	2	Copy2	2	Copy2
+mock-12	Mock 3	Roseburia_intestinalis	Roseburia intestinalis	Roseburia_intestinalis_DSM_14610	Roseburia intestinalis	Roseburia intestinalis | Copy1	8	0	Copy0	1	Copy1
+mock-12	Mock 3	Roseburia_inulinivorans	Roseburia inulinivorans	Roseburia_inulinivorans_DSM_16841	Roseburia inulinivorans	Roseburia inulinivorans | Copy1	9	0	Copy0	1	Copy1
+mock-12	Mock 3	Ruminococcus_gnavus	Ruminococcus gnavus	Ruminococcus_gnavus_ATCC_29149	Ruminococcus gnavus	Ruminococcus gnavus | Copy1	12	0	Copy0	1	Copy1
+mock-13	Mock 4	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-13	Mock 4	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-13	Mock 4	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-13	Mock 4	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-13	Mock 4	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-13	Mock 4	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-13	Mock 4	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-13	Mock 4	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-13	Mock 4	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-13	Mock 4	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-13	Mock 4	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-13	Mock 4	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-13	Mock 4	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-13	Mock 4	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-13	Mock 4	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-13	Mock 4	Porphyromonas_gingivalis	Porphyromonas gingivalis	Porphyromonas_gingivalis_ATCC_33277	Porphyromonas gingivalis	Porphyromonas gingivalis | Copy1	24	0	Copy0	1	Copy1
+mock-13	Mock 4	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-13	Mock 4	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-13	Mock 4	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-13	Mock 4	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-13	Mock 4	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-13	Mock 4	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-13	Mock 4	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-13	Mock 4	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-14	Mock 5	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-14	Mock 5	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-14	Mock 5	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-14	Mock 5	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-14	Mock 5	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-14	Mock 5	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-14	Mock 5	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-14	Mock 5	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-14	Mock 5	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-14	Mock 5	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-14	Mock 5	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-14	Mock 5	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-14	Mock 5	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-14	Mock 5	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-14	Mock 5	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-14	Mock 5	Porphyromonas_gingivalis	Porphyromonas gingivalis	Porphyromonas_gingivalis_ATCC_33277	Porphyromonas gingivalis	Porphyromonas gingivalis | Copy1	24	0	Copy0	1	Copy1
+mock-14	Mock 5	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-14	Mock 5	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-14	Mock 5	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-14	Mock 5	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-14	Mock 5	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-14	Mock 5	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-14	Mock 5	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-14	Mock 5	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-15	Mock 6	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-15	Mock 6	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-15	Mock 6	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-15	Mock 6	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-15	Mock 6	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-15	Mock 6	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-15	Mock 6	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-15	Mock 6	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-15	Mock 6	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-15	Mock 6	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-15	Mock 6	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-15	Mock 6	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-15	Mock 6	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-15	Mock 6	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-15	Mock 6	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-15	Mock 6	Porphyromonas_gingivalis	Porphyromonas gingivalis	Porphyromonas_gingivalis_ATCC_33277	Porphyromonas gingivalis	Porphyromonas gingivalis | Copy1	24	0	Copy0	1	Copy1
+mock-15	Mock 6	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-15	Mock 6	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-15	Mock 6	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-15	Mock 6	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-15	Mock 6	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-15	Mock 6	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-15	Mock 6	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-15	Mock 6	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-16	Mock 7	Acidobacterium_capsulatum	Acidobacterium capsulatum	Acidobacterium_capsulatum_ATCC_51196	Acidobacterium capsulatum	Acidobacterium capsulatum | Copy1	1	0	Copy0	1	Copy1
+mock-16	Mock 7	Akkermansia_muciniphila	Akkermansia muciniphila	Akkermansia_muciniphila_ATCC_BAA-835	Akkermansia muciniphila	Akkermansia muciniphila | Copy1	2	0	Copy0	1	Copy1
+mock-16	Mock 7	Anaerocellum_thermophilum	Anaerocellum thermophilum	Anaerocellum_thermophilum	Anaerocellum thermophilum	Anaerocellum thermophilum | Copy1	10	0	Copy0	1	Copy1
+mock-16	Mock 7	Archaeoglobus_fulgidus	Archaeoglobus fulgidus	Archaeoglobus_fulgidus_DSM_4304	Archaeoglobus fulgidus	Archaeoglobus fulgidus | Copy1	3	0	Copy0	1	Copy1
+mock-16	Mock 7	Bacteroides_thetaiotaomicron	Bacteroides thetaiotaomicron	Bacteroides_thetaiotaomicron_VPI-5482	Bacteroides thetaiotaomicron	Bacteroides thetaiotaomicron | Copy1	4	0	Copy0	1	Copy1
+mock-16	Mock 7	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	5	0	Copy0	1	Copy1
+mock-16	Mock 7	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy1	Bacteroides vulgatus | Copy1	Bacteroides vulgatus | Copy2	6	1	Copy1	2	Copy2
+mock-16	Mock 7	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy2	Bacteroides vulgatus | Copy2	Bacteroides vulgatus | Copy3	7	2	Copy2	3	Copy3
+mock-16	Mock 7	Bordetella_bronchiseptica	Bordetella bronchiseptica	Bordetella_bronchiseptica_RB50	Bordetella bronchiseptica	Bordetella bronchiseptica | Copy1	8	0	Copy0	1	Copy1
+mock-16	Mock 7	Burkholderia_xenovorans	Burkholderia xenovorans	Burkholderia_xenovorans_LB400	Burkholderia xenovorans	Burkholderia xenovorans | Copy1	9	0	Copy0	1	Copy1
+mock-16	Mock 7	Caldicellulosiruptor_saccharolyticus	Caldicellulosiruptor saccharolyticus	Caldicellulosiruptor_saccharolyticus_DSM_8903	Caldicellulosiruptor saccharolyticus	Caldicellulosiruptor saccharolyticus | Copy1	11	0	Copy0	1	Copy1
+mock-16	Mock 7	Chlorobaculum_tepidum	Chlorobaculum tepidum	Chlorobaculum_tepidum_TLS	Chlorobaculum tepidum	Chlorobaculum tepidum | Copy1	15	0	Copy0	1	Copy1
+mock-16	Mock 7	Chlorobium_limicola	Chlorobium limicola	Chlorobium_limicola_DSM_245	Chlorobium limicola	Chlorobium limicola | Copy1	12	0	Copy0	1	Copy1
+mock-16	Mock 7	Chlorobium_phaeobacteroides	Chlorobium phaeobacteroides	Chlorobium_phaeobacteroides_DSM_266	Chlorobium phaeobacteroides	Chlorobium phaeobacteroides | Copy1	13	0	Copy0	1	Copy1
+mock-16	Mock 7	Chlorobium_phaeovibrioides	Chlorobium phaeovibrioides	Chlorobium_phaeovibrioides_DSM_265	Chlorobium phaeovibrioides	Chlorobium phaeovibrioides | Copy1	14	0	Copy0	1	Copy1
+mock-16	Mock 7	Chloroflexus_aurantiacus	Chloroflexus aurantiacus	Chloroflexus_aurantiacus_J-10-fl	Chloroflexus aurantiacus	Chloroflexus aurantiacus | Copy1	16	0	Copy0	1	Copy1
+mock-16	Mock 7	Chloroflexus_aurantiacus	Chloroflexus aurantiacus	Chloroflexus_aurantiacus_J-10-fl__Copy2	Chloroflexus aurantiacus | Copy2	Chloroflexus aurantiacus | Copy2	17	2	Copy2	2	Copy2
+mock-16	Mock 7	Chloroflexus_aurantiacus	Chloroflexus aurantiacus	Chloroflexus_aurantiacus_J-10-fl__Copy4	Chloroflexus aurantiacus | Copy4	Chloroflexus aurantiacus | Copy3	18	4	Copy4	3	Copy3
+mock-16	Mock 7	Clostridium_thermocellum	Clostridium thermocellum	Clostridium_thermocellum_ATCC_27405	Clostridium thermocellum	Clostridium thermocellum | Copy1	19	0	Copy0	1	Copy1
+mock-16	Mock 7	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_R1	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	20	0	Copy0	1	Copy1
+mock-16	Mock 7	Desulfovibrio_desulfuricans	Desulfovibrio desulfuricans	Desulfovibrio_desulfuricans_ATCC_27774	Desulfovibrio desulfuricans	Desulfovibrio desulfuricans | Copy1	65	0	Copy0	1	Copy1
+mock-16	Mock 7	Desulfovibrio_piger	Desulfovibrio piger	Desulfovibrio_piger_ATCC_29098	Desulfovibrio piger	Desulfovibrio piger | Copy1	21	0	Copy0	1	Copy1
+mock-16	Mock 7	Dictyoglomus_turgidum	Dictyoglomus turgidum	Dictyoglomus_turgidum_DSM_6724	Dictyoglomus turgidum	Dictyoglomus turgidum | Copy1	24	0	Copy0	1	Copy1
+mock-16	Mock 7	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_V583v	Enterococcus faecalis	Enterococcus faecalis | Copy1	25	0	Copy0	1	Copy1
+mock-16	Mock 7	Erwinia_chrysanthemi	Erwinia chrysanthemi	Erwinia_chrysanthemi	Erwinia chrysanthemi	Erwinia chrysanthemi | Copy1	22	0	Copy0	1	Copy1
+mock-16	Mock 7	Erwinia_chrysanthemi	Erwinia chrysanthemi	Erwinia_chrysanthemi__Copy1	Erwinia chrysanthemi | Copy1	Erwinia chrysanthemi | Copy2	23	1	Copy1	2	Copy2
+mock-16	Mock 7	Fusobacterium_nucleatum	Fusobacterium nucleatum	Fusobacterium_nucleatum	Fusobacterium nucleatum	Fusobacterium nucleatum | Copy1	26	0	Copy0	1	Copy1
+mock-16	Mock 7	Fusobacterium_nucleatum	Fusobacterium nucleatum	Fusobacterium_nucleatum__Copy1	Fusobacterium nucleatum | Copy1	Fusobacterium nucleatum | Copy2	27	1	Copy1	2	Copy2
+mock-16	Mock 7	Fusobacterium_nucleatum	Fusobacterium nucleatum	Fusobacterium_nucleatum__Copy3	Fusobacterium nucleatum | Copy3	Fusobacterium nucleatum | Copy3	28	3	Copy3	3	Copy3
+mock-16	Mock 7	Fusobacterium_nucleatum	Fusobacterium nucleatum	Fusobacterium_nucleatum__Copy5	Fusobacterium nucleatum | Copy5	Fusobacterium nucleatum | Copy4	29	5	Copy5	4	Copy4
+mock-16	Mock 7	Gemmatimonas_aurantiaca	Gemmatimonas aurantiaca	Gemmatimonas_aurantiaca_T-27	Gemmatimonas aurantiaca	Gemmatimonas aurantiaca | Copy1	30	0	Copy0	1	Copy1
+mock-16	Mock 7	Herpetosiphon_aurantiacus	Herpetosiphon aurantiacus	Herpetosiphon_aurantiacus_ATCC_23779	Herpetosiphon aurantiacus	Herpetosiphon aurantiacus | Copy1	31	0	Copy0	1	Copy1
+mock-16	Mock 7	Hydrogenobaculum_sp	Hydrogenobaculum sp	Hydrogenobaculum_sp._Y04AAS1	Hydrogenobaculum sp	Hydrogenobaculum sp | Copy1	32	0	Copy0	1	Copy1
+mock-16	Mock 7	Hydrogenobaculum_sp	Hydrogenobaculum sp	Hydrogenobaculum_sp._Y04AAS1__Copy1	Hydrogenobaculum sp | Copy1	Hydrogenobaculum sp | Copy2	33	1	Copy1	2	Copy2
+mock-16	Mock 7	Ignicoccus_hospitalis	Ignicoccus hospitalis	Ignicoccus_hospitalis_KIN4/I	Ignicoccus hospitalis	Ignicoccus hospitalis | Copy1	34	0	Copy0	1	Copy1
+mock-16	Mock 7	Ignicoccus_hospitalis	Ignicoccus hospitalis	Ignicoccus_hospitalis_KIN4/I__Copy1	Ignicoccus hospitalis | Copy1	Ignicoccus hospitalis | Copy2	35	1	Copy1	2	Copy2
+mock-16	Mock 7	Leptothrix_cholodnii	Leptothrix cholodnii	Leptothrix_cholodnii_SP-6	Leptothrix cholodnii	Leptothrix cholodnii | Copy1	36	0	Copy0	1	Copy1
+mock-16	Mock 7	Methanocaldococcus_jannaschii	Methanocaldococcus jannaschii	Methanocaldococcus_jannaschii_DSM_2661	Methanocaldococcus jannaschii	Methanocaldococcus jannaschii | Copy1	37	0	Copy0	1	Copy1
+mock-16	Mock 7	Methanocaldococcus_jannaschii	Methanocaldococcus jannaschii	Methanocaldococcus_jannaschii_DSM_2661__Copy1	Methanocaldococcus jannaschii | Copy1	Methanocaldococcus jannaschii | Copy2	38	1	Copy1	2	Copy2
+mock-16	Mock 7	Methanococcus_maripaludis	Methanococcus maripaludis	Methanococcus_maripaludis_C5	Methanococcus maripaludis	Methanococcus maripaludis | Copy1	39	0	Copy0	1	Copy1
+mock-16	Mock 7	Methanococcus_maripaludis	Methanococcus maripaludis	Methanococcus_maripaludis_S2	Methanococcus maripaludis	Methanococcus maripaludis | Copy2	40	0	Copy0	2	Copy2
+mock-16	Mock 7	Nanoarchaeum_equitans	Nanoarchaeum equitans	Nanoarchaeum_equitans_Kin4-M	Nanoarchaeum equitans	Nanoarchaeum equitans | Copy1	67	0	Copy0	1	Copy1
+mock-16	Mock 7	Nitrosomonas_europaea	Nitrosomonas europaea	Nitrosomonas_europaea_ATCC_19718	Nitrosomonas europaea	Nitrosomonas europaea | Copy1	41	0	Copy0	1	Copy1
+mock-16	Mock 7	Nostoc_sp	Nostoc sp	Nostoc_sp._PCC_7120	Nostoc sp	Nostoc sp | Copy1	42	0	Copy0	1	Copy1
+mock-16	Mock 7	Nostoc_sp	Nostoc sp	Nostoc_sp._PCC_7120__Copy2	Nostoc sp | Copy2	Nostoc sp | Copy2	43	2	Copy2	2	Copy2
+mock-16	Mock 7	Pelodictyon_phaeoclathratiforme	Pelodictyon phaeoclathratiforme	Pelodictyon_phaeoclathratiforme_BU-1	Pelodictyon phaeoclathratiforme	Pelodictyon phaeoclathratiforme | Copy1	44	0	Copy0	1	Copy1
+mock-16	Mock 7	Persephonella_marina	Persephonella marina	Persephonella_marina_EX-H1	Persephonella marina	Persephonella marina | Copy1	45	0	Copy0	1	Copy1
+mock-16	Mock 7	Porphyromonas_gingivalis	Porphyromonas gingivalis	Porphyromonas_gingivalis_ATCC_33277	Porphyromonas gingivalis	Porphyromonas gingivalis | Copy1	46	0	Copy0	1	Copy1
+mock-16	Mock 7	Pyrobaculum_aerophilum	Pyrobaculum aerophilum	Pyrobaculum_aerophilum_IM2	Pyrobaculum aerophilum	Pyrobaculum aerophilum | Copy1	47	0	Copy0	1	Copy1
+mock-16	Mock 7	Pyrobaculum_calidifontis	Pyrobaculum calidifontis	Pyrobaculum_calidifontis_JCM_11548	Pyrobaculum calidifontis	Pyrobaculum calidifontis | Copy1	48	0	Copy0	1	Copy1
+mock-16	Mock 7	Pyrococcus_horikoshii	Pyrococcus horikoshii	Pyrococcus_horikoshii_OT3	Pyrococcus horikoshii	Pyrococcus horikoshii | Copy1	49	0	Copy0	1	Copy1
+mock-16	Mock 7	Rhodopirellula_baltica	Rhodopirellula baltica	Rhodopirellula_baltica_SH_1	Rhodopirellula baltica	Rhodopirellula baltica | Copy1	50	0	Copy0	1	Copy1
+mock-16	Mock 7	Rhodospirillum_rubrum	Rhodospirillum rubrum	Rhodospirillum_rubrum_ATCC_11170	Rhodospirillum rubrum	Rhodospirillum rubrum | Copy1	66	0	Copy0	1	Copy1
+mock-16	Mock 7	Ruegeria_pomeroyi	Ruegeria pomeroyi	Ruegeria_pomeroyi_DSS-3	Ruegeria pomeroyi	Ruegeria pomeroyi | Copy1	51	0	Copy0	1	Copy1
+mock-16	Mock 7	Salinispora_arenicola	Salinispora arenicola	Salinispora_arenicola_CNS-205	Salinispora arenicola	Salinispora arenicola | Copy1	52	0	Copy0	1	Copy1
+mock-16	Mock 7	Shewanella_baltica	Shewanella baltica	Shewanella_baltica_OS185	Shewanella baltica	Shewanella baltica | Copy1	53	0	Copy0	1	Copy1
+mock-16	Mock 7	Sulfitobacter_sp	Sulfitobacter sp	Sulfitobacter_sp._NAS-14.1	Sulfitobacter sp	Sulfitobacter sp | Copy1	54	0	Copy0	1	Copy1
+mock-16	Mock 7	Sulfolobus_tokodaii	Sulfolobus tokodaii	Sulfolobus_tokodaii_str_7	Sulfolobus tokodaii	Sulfolobus tokodaii | Copy1	55	0	Copy0	1	Copy1
+mock-16	Mock 7	Sulfurihydrogenibium_yellowstonense	Sulfurihydrogenibium yellowstonense	Sulfurihydrogenibium_yellowstonense_SS-5	Sulfurihydrogenibium yellowstonense	Sulfurihydrogenibium yellowstonense | Copy1	56	0	Copy0	1	Copy1
+mock-16	Mock 7	Thermoanaerobacter_pseudethanolicus	Thermoanaerobacter pseudethanolicus	Thermoanaerobacter_pseudethanolicus_ATCC_33223	Thermoanaerobacter pseudethanolicus	Thermoanaerobacter pseudethanolicus | Copy1	57	0	Copy0	1	Copy1
+mock-16	Mock 7	Thermoanaerobacter_pseudethanolicus	Thermoanaerobacter pseudethanolicus	Thermoanaerobacter_pseudethanolicus_ATCC_33223__Copy3	Thermoanaerobacter pseudethanolicus | Copy3	Thermoanaerobacter pseudethanolicus | Copy2	58	3	Copy3	2	Copy2
+mock-16	Mock 7	Thermotoga_neapolitana	Thermotoga neapolitana	Thermotoga_neapolitana_DSM_4359	Thermotoga neapolitana	Thermotoga neapolitana | Copy1	59	0	Copy0	1	Copy1
+mock-16	Mock 7	Thermotoga_petrophila	Thermotoga petrophila	Thermotoga_petrophila_RKU-1	Thermotoga petrophila	Thermotoga petrophila | Copy1	60	0	Copy0	1	Copy1
+mock-16	Mock 7	Thermus_thermophilus	Thermus thermophilus	Thermus_thermophilus_HB8	Thermus thermophilus	Thermus thermophilus | Copy1	61	0	Copy0	1	Copy1
+mock-16	Mock 7	Treponema_denticola	Treponema denticola	Treponema_denticola_ATCC_35405	Treponema denticola	Treponema denticola | Copy1	62	0	Copy0	1	Copy1
+mock-16	Mock 7	Treponema_vincentii	Treponema vincentii	Treponema_vincentii_ATCC_35580	Treponema vincentii	Treponema vincentii | Copy1	63	0	Copy0	1	Copy1
+mock-16	Mock 7	Zymomonas_mobilis	Zymomonas mobilis	Zymomonas_mobilis_ZM4	Zymomonas mobilis	Zymomonas mobilis | Copy1	64	0	Copy0	1	Copy1
+mock-18	Mock 8	Anaerolinea_thermophila	Anaerolinea thermophila	Anaerolinea_thermophila_UNI-1	Anaerolinea thermophila	Anaerolinea thermophila | Copy1	9	0	Copy0	1	Copy1
+mock-18	Mock 8	Bacillus_subtilis	Bacillus subtilis	Bacillus_subtilis_ATCC-6051	Bacillus subtilis	Bacillus subtilis | Copy1	5	0	Copy0	1	Copy1
+mock-18	Mock 8	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC-8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	12	0	Copy0	1	Copy1
+mock-18	Mock 8	Chloroflexus_aurantiacus	Chloroflexus aurantiacus	Chloroflexus_aurantiacus_J-10-fl	Chloroflexus aurantiacus	Chloroflexus aurantiacus | Copy1	14	0	Copy0	1	Copy1
+mock-18	Mock 8	Clostridium_acetobutylicum	Clostridium acetobutylicum	Clostridium_acetobutylicum_ATCC-824	Clostridium acetobutylicum	Clostridium acetobutylicum | Copy1	7	0	Copy0	1	Copy1
+mock-18	Mock 8	Deinococcus_grandis	Deinococcus grandis	Deinococcus_grandis_DSM-3963	Deinococcus grandis	Deinococcus grandis | Copy1	11	0	Copy0	1	Copy1
+mock-18	Mock 8	Desulfitobacterium_hafniense	Desulfitobacterium hafniense	Desulfitobacterium_hafniense_DCB-2	Desulfitobacterium hafniense	Desulfitobacterium hafniense | Copy1	15	0	Copy0	1	Copy1
+mock-18	Mock 8	Desulfovibrio_vulgaris	Desulfovibrio vulgaris	Desulfovibrio_vulgaris_Hildenborough	Desulfovibrio vulgaris	Desulfovibrio vulgaris | Copy1	6	0	Copy0	1	Copy1
+mock-18	Mock 8	Escherichia_coli	Escherichia coli	Escherichia_coli_DH5a	Escherichia coli	Escherichia coli | Copy1	13	0	Copy0	1	Copy1
+mock-18	Mock 8	Gemmatimonas_aurantiaca	Gemmatimonas aurantiaca	Gemmatimonas_aurantiaca_T-27	Gemmatimonas aurantiaca	Gemmatimonas aurantiaca | Copy1	4	0	Copy0	1	Copy1
+mock-18	Mock 8	Microlunatus_phosphovorus	Microlunatus phosphovorus	Microlunatus_phosphovorus_NM-1	Microlunatus phosphovorus	Microlunatus phosphovorus | Copy1	8	0	Copy0	1	Copy1
+mock-18	Mock 8	Nitrobacter_winogradskyi	Nitrobacter winogradskyi	Nitrobacter_winogradskyi_ATCC-14123	Nitrobacter winogradskyi	Nitrobacter winogradskyi | Copy1	1	0	Copy0	1	Copy1
+mock-18	Mock 8	Nitrosomonas_europaea	Nitrosomonas europaea	Nitrosomonas_europaea_ATCC-19178	Nitrosomonas europaea	Nitrosomonas europaea | Copy1	2	0	Copy0	1	Copy1
+mock-18	Mock 8	Pseudomonas_putida	Pseudomonas putida	Pseudomonas_putida_KT2440	Pseudomonas putida	Pseudomonas putida | Copy1	3	0	Copy0	1	Copy1
+mock-18	Mock 8	Treponema_bryantii	Treponema bryantii	Treponema_bryantii_ATCC-33254	Treponema bryantii	Treponema bryantii | Copy1	10	0	Copy0	1	Copy1
+mock-19	Mock 9	Anaerolinea_thermophila	Anaerolinea thermophila	Anaerolinea_thermophila_UNI-1	Anaerolinea thermophila	Anaerolinea thermophila | Copy1	9	0	Copy0	1	Copy1
+mock-19	Mock 9	Bacillus_subtilis	Bacillus subtilis	Bacillus_subtilis_ATCC-6051	Bacillus subtilis	Bacillus subtilis | Copy1	5	0	Copy0	1	Copy1
+mock-19	Mock 9	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC-8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	12	0	Copy0	1	Copy1
+mock-19	Mock 9	Chloroflexus_aurantiacus	Chloroflexus aurantiacus	Chloroflexus_aurantiacus_J-10-fl	Chloroflexus aurantiacus	Chloroflexus aurantiacus | Copy1	14	0	Copy0	1	Copy1
+mock-19	Mock 9	Clostridium_acetobutylicum	Clostridium acetobutylicum	Clostridium_acetobutylicum_ATCC-824	Clostridium acetobutylicum	Clostridium acetobutylicum | Copy1	7	0	Copy0	1	Copy1
+mock-19	Mock 9	Deinococcus_grandis	Deinococcus grandis	Deinococcus_grandis_DSM-3963	Deinococcus grandis	Deinococcus grandis | Copy1	11	0	Copy0	1	Copy1
+mock-19	Mock 9	Desulfitobacterium_hafniense	Desulfitobacterium hafniense	Desulfitobacterium_hafniense_DCB-2	Desulfitobacterium hafniense	Desulfitobacterium hafniense | Copy1	15	0	Copy0	1	Copy1
+mock-19	Mock 9	Desulfovibrio_vulgaris	Desulfovibrio vulgaris	Desulfovibrio_vulgaris_Hildenborough	Desulfovibrio vulgaris	Desulfovibrio vulgaris | Copy1	6	0	Copy0	1	Copy1
+mock-19	Mock 9	Escherichia_coli	Escherichia coli	Escherichia_coli_DH5a	Escherichia coli	Escherichia coli | Copy1	13	0	Copy0	1	Copy1
+mock-19	Mock 9	Gemmatimonas_aurantiaca	Gemmatimonas aurantiaca	Gemmatimonas_aurantiaca_T-27	Gemmatimonas aurantiaca	Gemmatimonas aurantiaca | Copy1	4	0	Copy0	1	Copy1
+mock-19	Mock 9	Microlunatus_phosphovorus	Microlunatus phosphovorus	Microlunatus_phosphovorus_NM-1	Microlunatus phosphovorus	Microlunatus phosphovorus | Copy1	8	0	Copy0	1	Copy1
+mock-19	Mock 9	Nitrobacter_winogradskyi	Nitrobacter winogradskyi	Nitrobacter_winogradskyi_ATCC-14123	Nitrobacter winogradskyi	Nitrobacter winogradskyi | Copy1	1	0	Copy0	1	Copy1
+mock-19	Mock 9	Nitrosomonas_europaea	Nitrosomonas europaea	Nitrosomonas_europaea_ATCC-19178	Nitrosomonas europaea	Nitrosomonas europaea | Copy1	2	0	Copy0	1	Copy1
+mock-19	Mock 9	Pseudomonas_putida	Pseudomonas putida	Pseudomonas_putida_KT2440	Pseudomonas putida	Pseudomonas putida | Copy1	3	0	Copy0	1	Copy1
+mock-19	Mock 9	Treponema_bryantii	Treponema bryantii	Treponema_bryantii_ATCC-33254	Treponema bryantii	Treponema bryantii | Copy1	10	0	Copy0	1	Copy1
+mock-20	Mock 10	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-20	Mock 10	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-20	Mock 10	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-20	Mock 10	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-20	Mock 10	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-20	Mock 10	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-20	Mock 10	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-20	Mock 10	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-20	Mock 10	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-20	Mock 10	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-20	Mock 10	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-20	Mock 10	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-20	Mock 10	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-20	Mock 10	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-20	Mock 10	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-20	Mock 10	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-20	Mock 10	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-20	Mock 10	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-20	Mock 10	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-20	Mock 10	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-20	Mock 10	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-20	Mock 10	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-20	Mock 10	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-21	Mock 11	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-21	Mock 11	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-21	Mock 11	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-21	Mock 11	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-21	Mock 11	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-21	Mock 11	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-21	Mock 11	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-21	Mock 11	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-21	Mock 11	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-21	Mock 11	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-21	Mock 11	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-21	Mock 11	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-21	Mock 11	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-21	Mock 11	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-21	Mock 11	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-21	Mock 11	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-21	Mock 11	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-21	Mock 11	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-21	Mock 11	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-21	Mock 11	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-21	Mock 11	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-21	Mock 11	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-21	Mock 11	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-22	Mock 12	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-22	Mock 12	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-22	Mock 12	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-22	Mock 12	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-22	Mock 12	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-22	Mock 12	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-22	Mock 12	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-22	Mock 12	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-22	Mock 12	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-22	Mock 12	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-22	Mock 12	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-22	Mock 12	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-22	Mock 12	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-22	Mock 12	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-22	Mock 12	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-22	Mock 12	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-22	Mock 12	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-22	Mock 12	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-22	Mock 12	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-22	Mock 12	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-22	Mock 12	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-22	Mock 12	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-22	Mock 12	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-23	Mock 13	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-23	Mock 13	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-23	Mock 13	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-23	Mock 13	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-23	Mock 13	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-23	Mock 13	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-23	Mock 13	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-23	Mock 13	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-23	Mock 13	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-23	Mock 13	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-23	Mock 13	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-23	Mock 13	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-23	Mock 13	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-23	Mock 13	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-23	Mock 13	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-23	Mock 13	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-23	Mock 13	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-23	Mock 13	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-23	Mock 13	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-23	Mock 13	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-23	Mock 13	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-23	Mock 13	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-23	Mock 13	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-4	Mock 1	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-4	Mock 1	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-4	Mock 1	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-4	Mock 1	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-4	Mock 1	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-4	Mock 1	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-4	Mock 1	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-4	Mock 1	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-4	Mock 1	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-4	Mock 1	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-4	Mock 1	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-4	Mock 1	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-4	Mock 1	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-4	Mock 1	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-4	Mock 1	Methanobrevibacter_smithii	Methanobrevibacter smithii	Methanobrevibacter_smithii_ATCC_35061	Methanobrevibacter smithii	Methanobrevibacter smithii | Copy1	24	0	Copy0	1	Copy1
+mock-4	Mock 1	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-4	Mock 1	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-4	Mock 1	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-4	Mock 1	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-4	Mock 1	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-4	Mock 1	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-4	Mock 1	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-4	Mock 1	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-4	Mock 1	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-5	Mock 2	Acinetobacter_baumannii	Acinetobacter baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter baumannii	Acinetobacter baumannii | Copy1	1	0	Copy0	1	Copy1
+mock-5	Mock 2	Actinomyces_odontolyticus	Actinomyces odontolyticus	Actinomyces_odontolyticus_ATCC_17982	Actinomyces odontolyticus	Actinomyces odontolyticus | Copy1	22	0	Copy0	1	Copy1
+mock-5	Mock 2	Bacillus_cereus	Bacillus cereus	Bacillus_cereus_ATCC_10987	Bacillus cereus	Bacillus cereus | Copy1	2	0	Copy0	1	Copy1
+mock-5	Mock 2	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	3	0	Copy0	1	Copy1
+mock-5	Mock 2	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy3	Bacteroides vulgatus | Copy3	Bacteroides vulgatus | Copy2	4	3	Copy3	2	Copy2
+mock-5	Mock 2	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus_ATCC_8482__Copy4	Bacteroides vulgatus | Copy4	Bacteroides vulgatus | Copy3	5	4	Copy4	3	Copy3
+mock-5	Mock 2	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium beijerinckii	Clostridium beijerinckii | Copy1	6	0	Copy0	1	Copy1
+mock-5	Mock 2	Clostridium_beijerinckii	Clostridium beijerinckii	Clostridium_beijerinckii_ATCC_51743__Copy3	Clostridium beijerinckii | Copy3	Clostridium beijerinckii | Copy2	7	3	Copy3	2	Copy2
+mock-5	Mock 2	Deinococcus_radiodurans	Deinococcus radiodurans	Deinococcus_radiodurans_DSM_20539_	Deinococcus radiodurans	Deinococcus radiodurans | Copy1	8	0	Copy0	1	Copy1
+mock-5	Mock 2	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_47077	Enterococcus faecalis	Enterococcus faecalis | Copy1	9	0	Copy0	1	Copy1
+mock-5	Mock 2	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_700926	Escherichia coli	Escherichia coli | Copy1	10	0	Copy0	1	Copy1
+mock-5	Mock 2	Helicobacter_pylori	Helicobacter pylori	Helicobacter_pylori_ATCC_700392	Helicobacter pylori	Helicobacter pylori | Copy1	11	0	Copy0	1	Copy1
+mock-5	Mock 2	Lactobacillus_gasseri	Lactobacillus gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus gasseri	Lactobacillus gasseri | Copy1	12	0	Copy0	1	Copy1
+mock-5	Mock 2	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria monocytogenes	Listeria monocytogenes | Copy1	23	0	Copy0	1	Copy1
+mock-5	Mock 2	Methanobrevibacter_smithii	Methanobrevibacter smithii	Methanobrevibacter_smithii_ATCC_35061	Methanobrevibacter smithii	Methanobrevibacter smithii | Copy1	24	0	Copy0	1	Copy1
+mock-5	Mock 2	Neisseria_meningitidis	Neisseria meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria meningitidis	Neisseria meningitidis | Copy1	13	0	Copy0	1	Copy1
+mock-5	Mock 2	Propionibacterium_acnes	Propionibacterium acnes	Propionibacterium_acnes_DSM16379	Propionibacterium acnes	Propionibacterium acnes | Copy1	14	0	Copy0	1	Copy1
+mock-5	Mock 2	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	15	0	Copy0	1	Copy1
+mock-5	Mock 2	Rhodobacter_sphaeroides	Rhodobacter sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter sphaeroides	Rhodobacter sphaeroides | Copy1	16	0	Copy0	1	Copy1
+mock-5	Mock 2	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus aureus	Staphylococcus aureus | Copy1	17	0	Copy0	1	Copy1
+mock-5	Mock 2	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis_ATCC_12228__Copy4	Staphylococcus epidermidis | Copy4	Staphylococcus epidermidis | Copy1	18	4	Copy4	1	Copy1
+mock-5	Mock 2	Streptococcus_agalactiae	Streptococcus agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus agalactiae	Streptococcus agalactiae | Copy1	19	0	Copy0	1	Copy1
+mock-5	Mock 2	Streptococcus_mutans	Streptococcus mutans	Streptococcus_mutans_ATCC_700610	Streptococcus mutans	Streptococcus mutans | Copy1	20	0	Copy0	1	Copy1
+mock-5	Mock 2	Streptococcus_pneumoniae	Streptococcus pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus pneumoniae	Streptococcus pneumoniae | Copy1	21	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Acetatifactor_muris	Acetatifactor muris	Acetatifactor_muris	Acetatifactor muris	Acetatifactor muris | Copy1	11	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Actinomyces_bowdenii	Actinomyces bowdenii	Actinomyces_bowdenii	Actinomyces bowdenii	Actinomyces bowdenii | Copy1	1	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Alistipes_sp	Alistipes sp	Alistipes_sp.	Alistipes sp	Alistipes sp | Copy1	5	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Bacillus_subtilis	Bacillus subtilis	Bacillus_subtilis	Bacillus subtilis	Bacillus subtilis | Copy1	6	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Bacteroides_sartorii	Bacteroides sartorii	Bacteroides_sartorii	Bacteroides sartorii	Bacteroides sartorii | Copy1	4	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Cellulosimicrobium_cellulans	Cellulosimicrobium cellulans	Cellulosimicrobium_cellulans	Cellulosimicrobium cellulans	Cellulosimicrobium cellulans | Copy1	3	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Clostridium_ramosum	Clostridium ramosum	Clostridium_ramosum	Clostridium ramosum	Clostridium ramosum | Copy1	9	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Enterococcus_hirae	Enterococcus hirae	Enterococcus_hirae	Enterococcus hirae	Enterococcus hirae | Copy1	10	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Enterorhabdus_mucosicola	Enterorhabdus mucosicola	Enterorhabdus_mucosicola	Enterorhabdus mucosicola	Enterorhabdus mucosicola | Copy1	2	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Flavonifractor_plautii	Flavonifractor plautii	Flavonifractor_plautii	Flavonifractor plautii	Flavonifractor plautii | Copy1	8	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Parabacteroides_goldsteinii	Parabacteroides goldsteinii	Parabacteroides_goldsteinii	Parabacteroides goldsteinii	Parabacteroides goldsteinii | Copy1	7	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Pseudomonas_sp	Pseudomonas sp	Pseudomonas_sp.	Pseudomonas sp	Pseudomonas sp | Copy1	13	0	Copy0	1	Copy1
+mock-ZIEL_1	ZIEL I	Staphylococcus_warneri	Staphylococcus warneri	Staphylococcus_warneri	Staphylococcus warneri	Staphylococcus warneri | Copy1	12	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Akkermansia_muciniphila	Akkermansia muciniphila	Akkermansia_muciniphila	Akkermansia muciniphila	Akkermansia muciniphila | Copy1	11	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Atopobium_parvulum	Atopobium parvulum	Atopobium_parvulum	Atopobium parvulum	Atopobium parvulum | Copy1	3	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides_vulgatus	Bacteroides vulgatus	Bacteroides vulgatus | Copy1	13	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Bifidobacterium_longum	Bifidobacterium longum	Bifidobacterium_longum	Bifidobacterium longum	Bifidobacterium longum | Copy1	5	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Citrobacter_freundii	Citrobacter freundii	Citrobacter_freundii	Citrobacter freundii	Citrobacter freundii | Copy1	15	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Clostridium_ramosum	Clostridium ramosum	Clostridium_ramosum	Clostridium ramosum	Clostridium ramosum | Copy1	6	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Collinsella_aerofaciens	Collinsella aerofaciens	Collinsella_aerofaciens	Collinsella aerofaciens	Collinsella aerofaciens | Copy1	2	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Eggerthella_lenta	Eggerthella lenta	Eggerthella_lenta	Eggerthella lenta	Eggerthella lenta | Copy1	4	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Enterobacter_cloacae	Enterobacter cloacae	Enterobacter_cloacae	Enterobacter cloacae	Enterobacter cloacae | Copy1	16	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Escherichia_coli	Escherichia coli	Escherichia_coli_LF82	Escherichia coli	Escherichia coli | Copy1	9	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Klebsiella_pneumoniae	Klebsiella pneumoniae	Klebsiella_pneumoniae	Klebsiella pneumoniae	Klebsiella pneumoniae | Copy1	8	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Listeria_welshimeri	Listeria welshimeri	Listeria_welshimeri	Listeria welshimeri	Listeria welshimeri | Copy1	17	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Microbacterium_flavum	Microbacterium flavum	Microbacterium_flavum	Microbacterium flavum	Microbacterium flavum | Copy1	18	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Oscillibacter_valericigenes	Oscillibacter valericigenes	Oscillibacter_valericigenes	Oscillibacter valericigenes	Oscillibacter valericigenes | Copy1	10	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Prevotella_copri	Prevotella copri	Prevotella_copri	Prevotella copri	Prevotella copri | Copy1	1	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	14	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Ruminococcus_gnavus	Ruminococcus gnavus	Ruminococcus_gnavus	Ruminococcus gnavus	Ruminococcus gnavus | Copy1	12	0	Copy0	1	Copy1
+mock-ZIEL_2	ZIEL II	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus_epidermidis	Staphylococcus epidermidis	Staphylococcus epidermidis | Copy1	7	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Bacillus_subtilis	Bacillus subtilis	Bacillus_subtilis_ATCC_6051	Bacillus subtilis	Bacillus subtilis | Copy1	2	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Enterococcus_faecalis	Enterococcus faecalis	Enterococcus_faecalis_ATCC_19433	Enterococcus faecalis	Enterococcus faecalis | Copy1	6	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Escherichia_coli	Escherichia coli	Escherichia_coli_ATCC_11775	Escherichia coli	Escherichia coli | Copy1	3	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Lactobacillus_fermentum	Lactobacillus fermentum	Lactobacillus_fermentum_ATCC_14931	Lactobacillus fermentum	Lactobacillus fermentum | Copy1	5	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Listeria_monocytogenes	Listeria monocytogenes	Listeria_monocytogenes_ATCC_19115	Listeria monocytogenes	Listeria monocytogenes | Copy1	1	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Pseudomonas_aeruginosa	Pseudomonas aeruginosa	Pseudomonas_aeruginosa_strain_ATCC_10145	Pseudomonas aeruginosa	Pseudomonas aeruginosa | Copy1	8	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Salmonella_enterica	Salmonella enterica	Salmonella_enterica_LT2	Salmonella enterica	Salmonella enterica | Copy1	4	0	Copy0	1	Copy1
+mock-ZYMO	ZYMO	Staphylococcus_aureus	Staphylococcus aureus	Staphylococcus_aureus_ATCC_12600	Staphylococcus aureus	Staphylococcus aureus | Copy1	7	0	Copy0	1	Copy1

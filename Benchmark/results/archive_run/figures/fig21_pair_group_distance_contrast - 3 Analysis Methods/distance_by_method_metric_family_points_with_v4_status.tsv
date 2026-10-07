@@ -1,0 +1,163 @@
+community_id	sample_id	sample_key	method	metric_family	distance	community_label	sample_label	method_label	metric_family_label	v4_reference_status	has_multi_v4_species
+mock-12	Mock 3	mock-12|Mock 3	zOTU	phylogeny_agnostic	0.48263501841699413	Mock 3	Mock 3	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-12	Mock 3	mock-12|Mock 3	zOTU	phylogeny_aware	0.17138145724830534	Mock 3	Mock 3	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-12	Mock 3	mock-12|Mock 3	TIC	phylogeny_agnostic	0.2158674469115273	Mock 3	Mock 3	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-12	Mock 3	mock-12|Mock 3	TIC	phylogeny_aware	0.15543549376740715	Mock 3	Mock 3	TIC	Phylo-aware	multiple_v4_reference	True
+mock-12	Mock 3	mock-12|Mock 3	TAC	phylogeny_agnostic	0.2158674469115273	Mock 3	Mock 3	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-12	Mock 3	mock-12|Mock 3	TAC	phylogeny_aware	0.1557433531454726	Mock 3	Mock 3	TAC	Phylo-aware	multiple_v4_reference	True
+mock-13	Mock 4	mock-13|Mock 4	zOTU	phylogeny_agnostic	0.3879399937380965	Mock 4	Mock 4	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-13	Mock 4	mock-13|Mock 4	zOTU	phylogeny_aware	0.22884714445862286	Mock 4	Mock 4	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-13	Mock 4	mock-13|Mock 4	TIC	phylogeny_agnostic	0.34241515536506006	Mock 4	Mock 4	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-13	Mock 4	mock-13|Mock 4	TIC	phylogeny_aware	0.18958192660687379	Mock 4	Mock 4	TIC	Phylo-aware	multiple_v4_reference	True
+mock-13	Mock 4	mock-13|Mock 4	TAC	phylogeny_agnostic	0.34241515536506006	Mock 4	Mock 4	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-13	Mock 4	mock-13|Mock 4	TAC	phylogeny_aware	0.18958192660687376	Mock 4	Mock 4	TAC	Phylo-aware	multiple_v4_reference	True
+mock-14	Mock 5	mock-14|Mock 5	zOTU	phylogeny_agnostic	0.4419081144861521	Mock 5	Mock 5	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-14	Mock 5	mock-14|Mock 5	zOTU	phylogeny_aware	0.25798104215706574	Mock 5	Mock 5	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-14	Mock 5	mock-14|Mock 5	TIC	phylogeny_agnostic	0.41108497599208155	Mock 5	Mock 5	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-14	Mock 5	mock-14|Mock 5	TIC	phylogeny_aware	0.25087399059822235	Mock 5	Mock 5	TIC	Phylo-aware	multiple_v4_reference	True
+mock-14	Mock 5	mock-14|Mock 5	TAC	phylogeny_agnostic	0.4110849759920816	Mock 5	Mock 5	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-14	Mock 5	mock-14|Mock 5	TAC	phylogeny_aware	0.25817515057417667	Mock 5	Mock 5	TAC	Phylo-aware	multiple_v4_reference	True
+mock-15	Mock 6	mock-15|Mock 6	zOTU	phylogeny_agnostic	0.4254956386249907	Mock 6	Mock 6	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-15	Mock 6	mock-15|Mock 6	zOTU	phylogeny_aware	0.2588624749281595	Mock 6	Mock 6	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-15	Mock 6	mock-15|Mock 6	TIC	phylogeny_agnostic	0.38472938481511093	Mock 6	Mock 6	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-15	Mock 6	mock-15|Mock 6	TIC	phylogeny_aware	0.25214228889680906	Mock 6	Mock 6	TIC	Phylo-aware	multiple_v4_reference	True
+mock-15	Mock 6	mock-15|Mock 6	TAC	phylogeny_agnostic	0.384729384815111	Mock 6	Mock 6	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-15	Mock 6	mock-15|Mock 6	TAC	phylogeny_aware	0.2572402458389887	Mock 6	Mock 6	TAC	Phylo-aware	multiple_v4_reference	True
+mock-16	Mock 7	mock-16|Mock 7	zOTU	phylogeny_agnostic	0.39539711300641306	Mock 7	Mock 7	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-16	Mock 7	mock-16|Mock 7	zOTU	phylogeny_aware	0.17261179439099228	Mock 7	Mock 7	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-16	Mock 7	mock-16|Mock 7	TIC	phylogeny_agnostic	0.39585269158103475	Mock 7	Mock 7	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-16	Mock 7	mock-16|Mock 7	TIC	phylogeny_aware	0.16734616680335077	Mock 7	Mock 7	TIC	Phylo-aware	multiple_v4_reference	True
+mock-16	Mock 7	mock-16|Mock 7	TAC	phylogeny_agnostic	0.39827588626818233	Mock 7	Mock 7	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-16	Mock 7	mock-16|Mock 7	TAC	phylogeny_aware	0.16741729292276897	Mock 7	Mock 7	TAC	Phylo-aware	multiple_v4_reference	True
+mock-18	Mock 8	mock-18|Mock 8	zOTU	phylogeny_agnostic	0.15868394666107433	Mock 8	Mock 8	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-18	Mock 8	mock-18|Mock 8	zOTU	phylogeny_aware	0.0813013538215091	Mock 8	Mock 8	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-18	Mock 8	mock-18|Mock 8	TIC	phylogeny_agnostic	0.15868394666107433	Mock 8	Mock 8	TIC	Phylo-agnostic	single_v4_reference	False
+mock-18	Mock 8	mock-18|Mock 8	TIC	phylogeny_aware	0.08130135382150906	Mock 8	Mock 8	TIC	Phylo-aware	single_v4_reference	False
+mock-18	Mock 8	mock-18|Mock 8	TAC	phylogeny_agnostic	0.15868394666107433	Mock 8	Mock 8	TAC	Phylo-agnostic	single_v4_reference	False
+mock-18	Mock 8	mock-18|Mock 8	TAC	phylogeny_aware	0.0813013538215091	Mock 8	Mock 8	TAC	Phylo-aware	single_v4_reference	False
+mock-19	Mock 9	mock-19|Mock 9	zOTU	phylogeny_agnostic	0.0974442126351876	Mock 9	Mock 9	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-19	Mock 9	mock-19|Mock 9	zOTU	phylogeny_aware	0.047121489368904514	Mock 9	Mock 9	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-19	Mock 9	mock-19|Mock 9	TIC	phylogeny_agnostic	0.0974442126351876	Mock 9	Mock 9	TIC	Phylo-agnostic	single_v4_reference	False
+mock-19	Mock 9	mock-19|Mock 9	TIC	phylogeny_aware	0.047121489368904514	Mock 9	Mock 9	TIC	Phylo-aware	single_v4_reference	False
+mock-19	Mock 9	mock-19|Mock 9	TAC	phylogeny_agnostic	0.0974442126351876	Mock 9	Mock 9	TAC	Phylo-agnostic	single_v4_reference	False
+mock-19	Mock 9	mock-19|Mock 9	TAC	phylogeny_aware	0.047121489368904514	Mock 9	Mock 9	TAC	Phylo-aware	single_v4_reference	False
+mock-20	Mock 10	mock-20|Mock 10	zOTU	phylogeny_agnostic	0.428523078826408	Mock 10	Mock 10	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-20	Mock 10	mock-20|Mock 10	zOTU	phylogeny_aware	0.12807567893995545	Mock 10	Mock 10	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-20	Mock 10	mock-20|Mock 10	TIC	phylogeny_agnostic	0.39067677640644566	Mock 10	Mock 10	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-20	Mock 10	mock-20|Mock 10	TIC	phylogeny_aware	0.12670432487528982	Mock 10	Mock 10	TIC	Phylo-aware	multiple_v4_reference	True
+mock-20	Mock 10	mock-20|Mock 10	TAC	phylogeny_agnostic	0.3938886683902198	Mock 10	Mock 10	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-20	Mock 10	mock-20|Mock 10	TAC	phylogeny_aware	0.12692285123403535	Mock 10	Mock 10	TAC	Phylo-aware	multiple_v4_reference	True
+mock-21	Mock 11	mock-21|Mock 11	zOTU	phylogeny_agnostic	0.5720233040441667	Mock 11	Mock 11	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-21	Mock 11	mock-21|Mock 11	zOTU	phylogeny_aware	0.19731284371311508	Mock 11	Mock 11	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-21	Mock 11	mock-21|Mock 11	TIC	phylogeny_agnostic	0.542100069820455	Mock 11	Mock 11	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-21	Mock 11	mock-21|Mock 11	TIC	phylogeny_aware	0.19278146794600404	Mock 11	Mock 11	TIC	Phylo-aware	multiple_v4_reference	True
+mock-21	Mock 11	mock-21|Mock 11	TAC	phylogeny_agnostic	0.5279586556790409	Mock 11	Mock 11	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-21	Mock 11	mock-21|Mock 11	TAC	phylogeny_aware	0.19604945143619745	Mock 11	Mock 11	TAC	Phylo-aware	multiple_v4_reference	True
+mock-22	Mock 12	mock-22|Mock 12	zOTU	phylogeny_agnostic	0.24545569959449232	Mock 12	Mock 12	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-22	Mock 12	mock-22|Mock 12	zOTU	phylogeny_aware	0.06437577713785324	Mock 12	Mock 12	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-22	Mock 12	mock-22|Mock 12	TIC	phylogeny_agnostic	0.20313347726725506	Mock 12	Mock 12	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-22	Mock 12	mock-22|Mock 12	TIC	phylogeny_aware	0.06365484026868723	Mock 12	Mock 12	TIC	Phylo-aware	multiple_v4_reference	True
+mock-22	Mock 12	mock-22|Mock 12	TAC	phylogeny_agnostic	0.20313347726725506	Mock 12	Mock 12	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-22	Mock 12	mock-22|Mock 12	TAC	phylogeny_aware	0.06365484026868723	Mock 12	Mock 12	TAC	Phylo-aware	multiple_v4_reference	True
+mock-23	Mock 13	mock-23|Mock 13	zOTU	phylogeny_agnostic	0.3383997296770323	Mock 13	Mock 13	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-23	Mock 13	mock-23|Mock 13	zOTU	phylogeny_aware	0.12032467120455358	Mock 13	Mock 13	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-23	Mock 13	mock-23|Mock 13	TIC	phylogeny_agnostic	0.311810405880426	Mock 13	Mock 13	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-23	Mock 13	mock-23|Mock 13	TIC	phylogeny_aware	0.11983031579885743	Mock 13	Mock 13	TIC	Phylo-aware	multiple_v4_reference	True
+mock-23	Mock 13	mock-23|Mock 13	TAC	phylogeny_agnostic	0.311810405880426	Mock 13	Mock 13	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-23	Mock 13	mock-23|Mock 13	TAC	phylogeny_aware	0.11983031579885739	Mock 13	Mock 13	TAC	Phylo-aware	multiple_v4_reference	True
+mock-4	Even1	mock-4|Even1	zOTU	phylogeny_agnostic	0.6054770245374269	Mock 1	Mock 1|Even1	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Even1	mock-4|Even1	zOTU	phylogeny_aware	0.18502344237605953	Mock 1	Mock 1|Even1	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-4	Even2	mock-4|Even2	zOTU	phylogeny_agnostic	0.6090420438097586	Mock 1	Mock 1|Even2	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Even2	mock-4|Even2	zOTU	phylogeny_aware	0.22934308358474373	Mock 1	Mock 1|Even2	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-4	Staggered1	mock-4|Staggered1	zOTU	phylogeny_agnostic	0.6269604263202028	Mock 1	Mock 1|Staggered1	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Staggered1	mock-4|Staggered1	zOTU	phylogeny_aware	0.29156636903281313	Mock 1	Mock 1|Staggered1	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-4	Staggered2	mock-4|Staggered2	zOTU	phylogeny_agnostic	0.6230579424329664	Mock 1	Mock 1|Staggered2	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Staggered2	mock-4|Staggered2	zOTU	phylogeny_aware	0.2883656263707835	Mock 1	Mock 1|Staggered2	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-4	Even1	mock-4|Even1	TIC	phylogeny_agnostic	0.5659744656518034	Mock 1	Mock 1|Even1	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Even1	mock-4|Even1	TIC	phylogeny_aware	0.17473819391801937	Mock 1	Mock 1|Even1	TIC	Phylo-aware	multiple_v4_reference	True
+mock-4	Even2	mock-4|Even2	TIC	phylogeny_agnostic	0.5718147869978196	Mock 1	Mock 1|Even2	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Even2	mock-4|Even2	TIC	phylogeny_aware	0.22166950414009037	Mock 1	Mock 1|Even2	TIC	Phylo-aware	multiple_v4_reference	True
+mock-4	Staggered1	mock-4|Staggered1	TIC	phylogeny_agnostic	0.608907788024156	Mock 1	Mock 1|Staggered1	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Staggered1	mock-4|Staggered1	TIC	phylogeny_aware	0.2837308127195726	Mock 1	Mock 1|Staggered1	TIC	Phylo-aware	multiple_v4_reference	True
+mock-4	Staggered2	mock-4|Staggered2	TIC	phylogeny_agnostic	0.6051691538440497	Mock 1	Mock 1|Staggered2	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Staggered2	mock-4|Staggered2	TIC	phylogeny_aware	0.28051571888570964	Mock 1	Mock 1|Staggered2	TIC	Phylo-aware	multiple_v4_reference	True
+mock-4	Even1	mock-4|Even1	TAC	phylogeny_agnostic	0.5677710613560616	Mock 1	Mock 1|Even1	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Even1	mock-4|Even1	TAC	phylogeny_aware	0.17520520552590244	Mock 1	Mock 1|Even1	TAC	Phylo-aware	multiple_v4_reference	True
+mock-4	Even2	mock-4|Even2	TAC	phylogeny_agnostic	0.5729815148038474	Mock 1	Mock 1|Even2	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Even2	mock-4|Even2	TAC	phylogeny_aware	0.22202887743046096	Mock 1	Mock 1|Even2	TAC	Phylo-aware	multiple_v4_reference	True
+mock-4	Staggered1	mock-4|Staggered1	TAC	phylogeny_agnostic	0.5938544419817918	Mock 1	Mock 1|Staggered1	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Staggered1	mock-4|Staggered1	TAC	phylogeny_aware	0.2842004982767327	Mock 1	Mock 1|Staggered1	TAC	Phylo-aware	multiple_v4_reference	True
+mock-4	Staggered2	mock-4|Staggered2	TAC	phylogeny_agnostic	0.5899364649057056	Mock 1	Mock 1|Staggered2	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-4	Staggered2	mock-4|Staggered2	TAC	phylogeny_aware	0.2809868717554486	Mock 1	Mock 1|Staggered2	TAC	Phylo-aware	multiple_v4_reference	True
+mock-5	Even1	mock-5|Even1	zOTU	phylogeny_agnostic	0.5227249368172693	Mock 2	Mock 2|Even1	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Even1	mock-5|Even1	zOTU	phylogeny_aware	0.21189977911266536	Mock 2	Mock 2|Even1	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-5	Even2	mock-5|Even2	zOTU	phylogeny_agnostic	0.522463788453693	Mock 2	Mock 2|Even2	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Even2	mock-5|Even2	zOTU	phylogeny_aware	0.2127269527191483	Mock 2	Mock 2|Even2	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-5	Staggered1	mock-5|Staggered1	zOTU	phylogeny_agnostic	0.512852279119938	Mock 2	Mock 2|Staggered1	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Staggered1	mock-5|Staggered1	zOTU	phylogeny_aware	0.2529180417059804	Mock 2	Mock 2|Staggered1	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-5	Staggered2	mock-5|Staggered2	zOTU	phylogeny_agnostic	0.5101790119722313	Mock 2	Mock 2|Staggered2	UNOISE3	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Staggered2	mock-5|Staggered2	zOTU	phylogeny_aware	0.251461171487043	Mock 2	Mock 2|Staggered2	UNOISE3	Phylo-aware	multiple_v4_reference	True
+mock-5	Even1	mock-5|Even1	TIC	phylogeny_agnostic	0.5111184769444664	Mock 2	Mock 2|Even1	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Even1	mock-5|Even1	TIC	phylogeny_aware	0.21131971414895245	Mock 2	Mock 2|Even1	TIC	Phylo-aware	multiple_v4_reference	True
+mock-5	Even2	mock-5|Even2	TIC	phylogeny_agnostic	0.5105210456051954	Mock 2	Mock 2|Even2	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Even2	mock-5|Even2	TIC	phylogeny_aware	0.2121600113754766	Mock 2	Mock 2|Even2	TIC	Phylo-aware	multiple_v4_reference	True
+mock-5	Staggered1	mock-5|Staggered1	TIC	phylogeny_agnostic	0.5030860946061223	Mock 2	Mock 2|Staggered1	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Staggered1	mock-5|Staggered1	TIC	phylogeny_aware	0.252419708447377	Mock 2	Mock 2|Staggered1	TIC	Phylo-aware	multiple_v4_reference	True
+mock-5	Staggered2	mock-5|Staggered2	TIC	phylogeny_agnostic	0.5003177826860832	Mock 2	Mock 2|Staggered2	TIC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Staggered2	mock-5|Staggered2	TIC	phylogeny_aware	0.250962309719914	Mock 2	Mock 2|Staggered2	TIC	Phylo-aware	multiple_v4_reference	True
+mock-5	Even1	mock-5|Even1	TAC	phylogeny_agnostic	0.5111184769444664	Mock 2	Mock 2|Even1	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Even1	mock-5|Even1	TAC	phylogeny_aware	0.21131971414895245	Mock 2	Mock 2|Even1	TAC	Phylo-aware	multiple_v4_reference	True
+mock-5	Even2	mock-5|Even2	TAC	phylogeny_agnostic	0.5105210456051953	Mock 2	Mock 2|Even2	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Even2	mock-5|Even2	TAC	phylogeny_aware	0.21216001137547666	Mock 2	Mock 2|Even2	TAC	Phylo-aware	multiple_v4_reference	True
+mock-5	Staggered1	mock-5|Staggered1	TAC	phylogeny_agnostic	0.5030860946061223	Mock 2	Mock 2|Staggered1	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Staggered1	mock-5|Staggered1	TAC	phylogeny_aware	0.252419708447377	Mock 2	Mock 2|Staggered1	TAC	Phylo-aware	multiple_v4_reference	True
+mock-5	Staggered2	mock-5|Staggered2	TAC	phylogeny_agnostic	0.5003177826860832	Mock 2	Mock 2|Staggered2	TAC	Phylo-agnostic	multiple_v4_reference	True
+mock-5	Staggered2	mock-5|Staggered2	TAC	phylogeny_aware	0.250962309719914	Mock 2	Mock 2|Staggered2	TAC	Phylo-aware	multiple_v4_reference	True
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	phylogeny_agnostic	0.47551609865549005	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	phylogeny_aware	0.10972528155394369	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	phylogeny_agnostic	0.4753678751919646	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	phylogeny_aware	0.10892643382141513	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	phylogeny_agnostic	0.3081314860359255	ZIEL I	ZIEL I|SRR13005984	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	phylogeny_aware	0.09241487616452197	ZIEL I	ZIEL I|SRR13005984	TIC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	phylogeny_agnostic	0.31124987647907093	ZIEL I	ZIEL I|SRR13005985	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	phylogeny_aware	0.09439255110695315	ZIEL I	ZIEL I|SRR13005985	TIC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	phylogeny_agnostic	0.3081314860359255	ZIEL I	ZIEL I|SRR13005984	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	phylogeny_aware	0.09410454677076817	ZIEL I	ZIEL I|SRR13005984	TAC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	phylogeny_agnostic	0.3112498764790708	ZIEL I	ZIEL I|SRR13005985	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	phylogeny_aware	0.0960952427885815	ZIEL I	ZIEL I|SRR13005985	TAC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	zOTU	phylogeny_agnostic	0.33208822093778473	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	zOTU	phylogeny_aware	0.08595819730138969	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	zOTU	phylogeny_agnostic	0.33618461026412993	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	zOTU	phylogeny_aware	0.08924406612197273	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	zOTU	phylogeny_agnostic	0.33988694587067786	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	zOTU	phylogeny_aware	0.09111804398249783	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	phylogeny_agnostic	0.27933473276789267	ZIEL II	ZIEL II|SRR13005964	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	phylogeny_aware	0.0845735844026202	ZIEL II	ZIEL II|SRR13005964	TIC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	phylogeny_agnostic	0.2900685475818728	ZIEL II	ZIEL II|SRR13005965	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	phylogeny_aware	0.08791341420393887	ZIEL II	ZIEL II|SRR13005965	TIC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	phylogeny_agnostic	0.29418474879135365	ZIEL II	ZIEL II|SRR13005966	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	phylogeny_aware	0.08977680606734588	ZIEL II	ZIEL II|SRR13005966	TIC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	phylogeny_agnostic	0.32952898119425433	ZIEL II	ZIEL II|SRR13005964	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	phylogeny_aware	0.08494401078942597	ZIEL II	ZIEL II|SRR13005964	TAC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	phylogeny_agnostic	0.338181253960069	ZIEL II	ZIEL II|SRR13005965	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	phylogeny_aware	0.08830346899830943	ZIEL II	ZIEL II|SRR13005965	TAC	Phylo-aware	single_v4_reference	False
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	phylogeny_agnostic	0.3437015009313095	ZIEL II	ZIEL II|SRR13005966	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	phylogeny_aware	0.09018472977411947	ZIEL II	ZIEL II|SRR13005966	TAC	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	phylogeny_agnostic	0.49929775088565026	ZYMO	ZYMO|SRR13006004	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	phylogeny_aware	0.5204709250272451	ZYMO	ZYMO|SRR13006004	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	phylogeny_agnostic	0.46834174376266136	ZYMO	ZYMO|SRR13006002	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	phylogeny_aware	0.4579344844998377	ZYMO	ZYMO|SRR13006002	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	phylogeny_agnostic	0.5119597963012597	ZYMO	ZYMO|SRR13006003	UNOISE3	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	phylogeny_aware	0.5254396403171144	ZYMO	ZYMO|SRR13006003	UNOISE3	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	phylogeny_agnostic	0.34092224536653964	ZYMO	ZYMO|SRR13006004	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	phylogeny_aware	0.5200448970999664	ZYMO	ZYMO|SRR13006004	TIC	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	phylogeny_agnostic	0.3109651288970459	ZYMO	ZYMO|SRR13006002	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	phylogeny_aware	0.45741990136838084	ZYMO	ZYMO|SRR13006002	TIC	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	phylogeny_agnostic	0.3551958063702138	ZYMO	ZYMO|SRR13006003	TIC	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	phylogeny_aware	0.5250166733570582	ZYMO	ZYMO|SRR13006003	TIC	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	phylogeny_agnostic	0.34092224536653964	ZYMO	ZYMO|SRR13006004	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	phylogeny_aware	0.5200448970999664	ZYMO	ZYMO|SRR13006004	TAC	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	phylogeny_agnostic	0.3109651288970459	ZYMO	ZYMO|SRR13006002	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	phylogeny_aware	0.45741990136838084	ZYMO	ZYMO|SRR13006002	TAC	Phylo-aware	single_v4_reference	False
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	phylogeny_agnostic	0.35519580637021386	ZYMO	ZYMO|SRR13006003	TAC	Phylo-agnostic	single_v4_reference	False
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	phylogeny_aware	0.5250166733570582	ZYMO	ZYMO|SRR13006003	TAC	Phylo-aware	single_v4_reference	False

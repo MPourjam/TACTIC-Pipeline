@@ -1,0 +1,361 @@
+community_id	sample_id	sample_key	method	metric	metric_label	value	value_percent
+mock-12	Mock 3	mock-12|Mock 3	ASV	mapped_fraction	Mapped Read Fraction	0.9987604736514093	99.87604736514093
+mock-12	Mock 3	mock-12|Mock 3	zOTU	mapped_fraction	Mapped Read Fraction	0.9996021173788696	99.96021173788697
+mock-12	Mock 3	mock-12|Mock 3	OTU	mapped_fraction	Mapped Read Fraction	0.9996265172735762	99.96265172735762
+mock-12	Mock 3	mock-12|Mock 3	TIC	mapped_fraction	Mapped Read Fraction	0.9996168019747286	99.96168019747286
+mock-12	Mock 3	mock-12|Mock 3	TAC	mapped_fraction	Mapped Read Fraction	0.9996168019747286	99.96168019747286
+mock-13	Mock 4	mock-13|Mock 4	ASV	mapped_fraction	Mapped Read Fraction	0.9925750082426642	99.25750082426642
+mock-13	Mock 4	mock-13|Mock 4	zOTU	mapped_fraction	Mapped Read Fraction	0.9939544700738733	99.39544700738733
+mock-13	Mock 4	mock-13|Mock 4	OTU	mapped_fraction	Mapped Read Fraction	0.9939694552910494	99.39694552910494
+mock-13	Mock 4	mock-13|Mock 4	TIC	mapped_fraction	Mapped Read Fraction	0.9939544700738733	99.39544700738733
+mock-13	Mock 4	mock-13|Mock 4	TAC	mapped_fraction	Mapped Read Fraction	0.9939544700738733	99.39544700738733
+mock-14	Mock 5	mock-14|Mock 5	ASV	mapped_fraction	Mapped Read Fraction	0.9861183536223552	98.61183536223552
+mock-14	Mock 5	mock-14|Mock 5	zOTU	mapped_fraction	Mapped Read Fraction	0.9880032887432564	98.80032887432564
+mock-14	Mock 5	mock-14|Mock 5	OTU	mapped_fraction	Mapped Read Fraction	0.9880625858995675	98.80625858995676
+mock-14	Mock 5	mock-14|Mock 5	TIC	mapped_fraction	Mapped Read Fraction	0.9880032887432563	98.80032887432563
+mock-14	Mock 5	mock-14|Mock 5	TAC	mapped_fraction	Mapped Read Fraction	0.9880032887432563	98.80032887432563
+mock-15	Mock 6	mock-15|Mock 6	ASV	mapped_fraction	Mapped Read Fraction	0.9968396573313988	99.68396573313989
+mock-15	Mock 6	mock-15|Mock 6	zOTU	mapped_fraction	Mapped Read Fraction	0.9956280513513021	99.5628051351302
+mock-15	Mock 6	mock-15|Mock 6	OTU	mapped_fraction	Mapped Read Fraction	0.9956951598809679	99.5695159880968
+mock-15	Mock 6	mock-15|Mock 6	TIC	mapped_fraction	Mapped Read Fraction	0.9956738789052715	99.56738789052714
+mock-15	Mock 6	mock-15|Mock 6	TAC	mapped_fraction	Mapped Read Fraction	0.9956738789052715	99.56738789052714
+mock-16	Mock 7	mock-16|Mock 7	ASV	mapped_fraction	Mapped Read Fraction	0.9775307046479479	97.75307046479479
+mock-16	Mock 7	mock-16|Mock 7	zOTU	mapped_fraction	Mapped Read Fraction	0.9822487050061421	98.22487050061422
+mock-16	Mock 7	mock-16|Mock 7	OTU	mapped_fraction	Mapped Read Fraction	0.9823545914689509	98.23545914689508
+mock-16	Mock 7	mock-16|Mock 7	TIC	mapped_fraction	Mapped Read Fraction	0.9822487050061424	98.22487050061423
+mock-16	Mock 7	mock-16|Mock 7	TAC	mapped_fraction	Mapped Read Fraction	0.9822487050061423	98.22487050061423
+mock-18	Mock 8	mock-18|Mock 8	ASV	mapped_fraction	Mapped Read Fraction	0.9999640135668852	99.99640135668852
+mock-18	Mock 8	mock-18|Mock 8	zOTU	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-18	Mock 8	mock-18|Mock 8	OTU	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-18	Mock 8	mock-18|Mock 8	TIC	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-18	Mock 8	mock-18|Mock 8	TAC	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-19	Mock 9	mock-19|Mock 9	ASV	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-19	Mock 9	mock-19|Mock 9	zOTU	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-19	Mock 9	mock-19|Mock 9	OTU	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-19	Mock 9	mock-19|Mock 9	TIC	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-19	Mock 9	mock-19|Mock 9	TAC	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-20	Mock 10	mock-20|Mock 10	ASV	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-20	Mock 10	mock-20|Mock 10	zOTU	mapped_fraction	Mapped Read Fraction	0.9515133388167464	95.15133388167463
+mock-20	Mock 10	mock-20|Mock 10	OTU	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-20	Mock 10	mock-20|Mock 10	TIC	mapped_fraction	Mapped Read Fraction	0.9560246919734473	95.60246919734473
+mock-20	Mock 10	mock-20|Mock 10	TAC	mapped_fraction	Mapped Read Fraction	0.9515133388167464	95.15133388167463
+mock-21	Mock 11	mock-21|Mock 11	ASV	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-21	Mock 11	mock-21|Mock 11	zOTU	mapped_fraction	Mapped Read Fraction	0.9410767909077304	94.10767909077305
+mock-21	Mock 11	mock-21|Mock 11	OTU	mapped_fraction	Mapped Read Fraction	1.0	100.0
+mock-21	Mock 11	mock-21|Mock 11	TIC	mapped_fraction	Mapped Read Fraction	0.9509840238971609	95.09840238971609
+mock-21	Mock 11	mock-21|Mock 11	TAC	mapped_fraction	Mapped Read Fraction	0.9562489655335487	95.62489655335486
+mock-22	Mock 12	mock-22|Mock 12	ASV	mapped_fraction	Mapped Read Fraction	0.9999048691951433	99.99048691951432
+mock-22	Mock 12	mock-22|Mock 12	zOTU	mapped_fraction	Mapped Read Fraction	0.999957493384908	99.9957493384908
+mock-22	Mock 12	mock-22|Mock 12	OTU	mapped_fraction	Mapped Read Fraction	0.999957493384908	99.9957493384908
+mock-22	Mock 12	mock-22|Mock 12	TIC	mapped_fraction	Mapped Read Fraction	0.999957493384908	99.9957493384908
+mock-22	Mock 12	mock-22|Mock 12	TAC	mapped_fraction	Mapped Read Fraction	0.999957493384908	99.9957493384908
+mock-23	Mock 13	mock-23|Mock 13	ASV	mapped_fraction	Mapped Read Fraction	0.9995823389021481	99.95823389021481
+mock-23	Mock 13	mock-23|Mock 13	zOTU	mapped_fraction	Mapped Read Fraction	0.9996665517706476	99.96665517706475
+mock-23	Mock 13	mock-23|Mock 13	OTU	mapped_fraction	Mapped Read Fraction	0.999857586160373	99.9857586160373
+mock-23	Mock 13	mock-23|Mock 13	TIC	mapped_fraction	Mapped Read Fraction	0.9997677102222489	99.97677102222488
+mock-23	Mock 13	mock-23|Mock 13	TAC	mapped_fraction	Mapped Read Fraction	0.9997677102222489	99.97677102222488
+mock-4	Even1	mock-4|Even1	ASV	mapped_fraction	Mapped Read Fraction	0.9935722276841716	99.35722276841716
+mock-4	Even2	mock-4|Even2	ASV	mapped_fraction	Mapped Read Fraction	0.9975524500282048	99.75524500282049
+mock-4	Staggered1	mock-4|Staggered1	ASV	mapped_fraction	Mapped Read Fraction	0.9162552291826296	91.62552291826296
+mock-4	Staggered2	mock-4|Staggered2	ASV	mapped_fraction	Mapped Read Fraction	0.9231696773146331	92.31696773146331
+mock-4	Even1	mock-4|Even1	zOTU	mapped_fraction	Mapped Read Fraction	0.9991654958961413	99.91654958961414
+mock-4	Even2	mock-4|Even2	zOTU	mapped_fraction	Mapped Read Fraction	0.9989793970234794	99.89793970234794
+mock-4	Staggered1	mock-4|Staggered1	zOTU	mapped_fraction	Mapped Read Fraction	0.9944166607968825	99.44166607968825
+mock-4	Staggered2	mock-4|Staggered2	zOTU	mapped_fraction	Mapped Read Fraction	0.9938129411417269	99.38129411417269
+mock-4	Even1	mock-4|Even1	OTU	mapped_fraction	Mapped Read Fraction	0.999955963432034	99.9955963432034
+mock-4	Even2	mock-4|Even2	OTU	mapped_fraction	Mapped Read Fraction	0.9999446535311047	99.99446535311047
+mock-4	Staggered1	mock-4|Staggered1	OTU	mapped_fraction	Mapped Read Fraction	0.9998791191712285	99.98791191712286
+mock-4	Staggered2	mock-4|Staggered2	OTU	mapped_fraction	Mapped Read Fraction	0.9998839562045778	99.98839562045778
+mock-4	Even1	mock-4|Even1	TIC	mapped_fraction	Mapped Read Fraction	0.9965704346111459	99.6570434611146
+mock-4	Even2	mock-4|Even2	TIC	mapped_fraction	Mapped Read Fraction	0.9962690894686977	99.62690894686978
+mock-4	Staggered1	mock-4|Staggered1	TIC	mapped_fraction	Mapped Read Fraction	0.9636198570903092	96.36198570903092
+mock-4	Staggered2	mock-4|Staggered2	TIC	mapped_fraction	Mapped Read Fraction	0.9628124292450513	96.28124292450512
+mock-4	Even1	mock-4|Even1	TAC	mapped_fraction	Mapped Read Fraction	0.9991654958961413	99.91654958961414
+mock-4	Even2	mock-4|Even2	TAC	mapped_fraction	Mapped Read Fraction	0.9989793970234794	99.89793970234794
+mock-4	Staggered1	mock-4|Staggered1	TAC	mapped_fraction	Mapped Read Fraction	0.9944166607968824	99.44166607968825
+mock-4	Staggered2	mock-4|Staggered2	TAC	mapped_fraction	Mapped Read Fraction	0.9938129411417269	99.38129411417269
+mock-5	Even1	mock-5|Even1	ASV	mapped_fraction	Mapped Read Fraction	0.9898004212805525	98.98004212805525
+mock-5	Even2	mock-5|Even2	ASV	mapped_fraction	Mapped Read Fraction	0.9946659206708937	99.46659206708937
+mock-5	Staggered1	mock-5|Staggered1	ASV	mapped_fraction	Mapped Read Fraction	0.9867591071613162	98.67591071613163
+mock-5	Staggered2	mock-5|Staggered2	ASV	mapped_fraction	Mapped Read Fraction	0.9907678591678176	99.07678591678176
+mock-5	Even1	mock-5|Even1	zOTU	mapped_fraction	Mapped Read Fraction	0.9999824147013097	99.99824147013096
+mock-5	Even2	mock-5|Even2	zOTU	mapped_fraction	Mapped Read Fraction	0.9999795265756859	99.99795265756859
+mock-5	Staggered1	mock-5|Staggered1	zOTU	mapped_fraction	Mapped Read Fraction	0.9999368698439464	99.99368698439464
+mock-5	Staggered2	mock-5|Staggered2	zOTU	mapped_fraction	Mapped Read Fraction	0.9999462910621614	99.99462910621614
+mock-5	Even1	mock-5|Even1	OTU	mapped_fraction	Mapped Read Fraction	0.9999824152073287	99.99824152073286
+mock-5	Even2	mock-5|Even2	OTU	mapped_fraction	Mapped Read Fraction	0.9999795267852644	99.99795267852643
+mock-5	Staggered1	mock-5|Staggered1	OTU	mapped_fraction	Mapped Read Fraction	0.9999368698010923	99.99368698010923
+mock-5	Staggered2	mock-5|Staggered2	OTU	mapped_fraction	Mapped Read Fraction	0.9999462911176353	99.99462911176353
+mock-5	Even1	mock-5|Even1	TIC	mapped_fraction	Mapped Read Fraction	0.9999824147013097	99.99824147013096
+mock-5	Even2	mock-5|Even2	TIC	mapped_fraction	Mapped Read Fraction	0.9999795265756859	99.99795265756859
+mock-5	Staggered1	mock-5|Staggered1	TIC	mapped_fraction	Mapped Read Fraction	0.9999368698439464	99.99368698439464
+mock-5	Staggered2	mock-5|Staggered2	TIC	mapped_fraction	Mapped Read Fraction	0.9999462910621614	99.99462910621614
+mock-5	Even1	mock-5|Even1	TAC	mapped_fraction	Mapped Read Fraction	0.9999824147013097	99.99824147013096
+mock-5	Even2	mock-5|Even2	TAC	mapped_fraction	Mapped Read Fraction	0.9999795265756859	99.99795265756859
+mock-5	Staggered1	mock-5|Staggered1	TAC	mapped_fraction	Mapped Read Fraction	0.9999368698439464	99.99368698439464
+mock-5	Staggered2	mock-5|Staggered2	TAC	mapped_fraction	Mapped Read Fraction	0.9999462910621614	99.99462910621614
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	mapped_fraction	Mapped Read Fraction	0.7046673819742494	70.46673819742495
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	mapped_fraction	Mapped Read Fraction	0.7102791014295442	71.02791014295443
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	mapped_fraction	Mapped Read Fraction	0.7158024139472511	71.5802413947251
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	mapped_fraction	Mapped Read Fraction	0.7152164212405181	71.52164212405181
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	mapped_fraction	Mapped Read Fraction	0.870715350223547	87.0715350223547
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	mapped_fraction	Mapped Read Fraction	0.8656789682716766	86.56789682716766
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	mapped_fraction	Mapped Read Fraction	0.8707346148115036	87.07346148115036
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	mapped_fraction	Mapped Read Fraction	0.8656849620705044	86.56849620705044
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	mapped_fraction	Mapped Read Fraction	0.8707346148115036	87.07346148115036
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	mapped_fraction	Mapped Read Fraction	0.8656849620705044	86.56849620705044
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	mapped_fraction	Mapped Read Fraction	0.6437691139673647	64.37691139673647
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	mapped_fraction	Mapped Read Fraction	0.7145418884841693	71.45418884841693
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	mapped_fraction	Mapped Read Fraction	0.6242577875216958	62.42577875216958
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	mapped_fraction	Mapped Read Fraction	0.6489856334349153	64.89856334349153
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	mapped_fraction	Mapped Read Fraction	0.7167765509571851	71.6776550957185
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	mapped_fraction	Mapped Read Fraction	0.628346153846154	62.8346153846154
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	mapped_fraction	Mapped Read Fraction	0.8443306688957387	84.43306688957387
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	mapped_fraction	Mapped Read Fraction	0.9078957820319327	90.78957820319327
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	mapped_fraction	Mapped Read Fraction	0.8449423076923078	84.49423076923078
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	mapped_fraction	Mapped Read Fraction	0.8442316064431867	84.42316064431867
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	mapped_fraction	Mapped Read Fraction	0.9078957820319327	90.78957820319327
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	mapped_fraction	Mapped Read Fraction	0.8448269230769232	84.48269230769232
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	mapped_fraction	Mapped Read Fraction	0.8442316064431867	84.42316064431867
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	mapped_fraction	Mapped Read Fraction	0.9078957820319327	90.78957820319327
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	mapped_fraction	Mapped Read Fraction	0.8448269230769232	84.48269230769232
+mock-12	Mock 3	mock-12|Mock 3	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0012173672183365522	0.12173672183365522
+mock-12	Mock 3	mock-12|Mock 3	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	1.4684595858943968e-05	0.0014684595858943969
+mock-12	Mock 3	mock-12|Mock 3	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-12	Mock 3	mock-12|Mock 3	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-12	Mock 3	mock-12|Mock 3	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-13	Mock 4	mock-13|Mock 4	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-13	Mock 4	mock-13|Mock 4	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-13	Mock 4	mock-13|Mock 4	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-13	Mock 4	mock-13|Mock 4	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-13	Mock 4	mock-13|Mock 4	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-14	Mock 5	mock-14|Mock 5	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-14	Mock 5	mock-14|Mock 5	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-14	Mock 5	mock-14|Mock 5	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-14	Mock 5	mock-14|Mock 5	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-14	Mock 5	mock-14|Mock 5	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-15	Mock 6	mock-15|Mock 6	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-15	Mock 6	mock-15|Mock 6	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	4.582755396958272e-05	0.004582755396958272
+mock-15	Mock 6	mock-15|Mock 6	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-15	Mock 6	mock-15|Mock 6	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-15	Mock 6	mock-15|Mock 6	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-16	Mock 7	mock-16|Mock 7	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.004398966118697148	0.43989661186971485
+mock-16	Mock 7	mock-16|Mock 7	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-16	Mock 7	mock-16|Mock 7	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-16	Mock 7	mock-16|Mock 7	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-16	Mock 7	mock-16|Mock 7	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-20	Mock 10	mock-20|Mock 10	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-20	Mock 10	mock-20|Mock 10	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0456452564326243	4.56452564326243
+mock-20	Mock 10	mock-20|Mock 10	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-20	Mock 10	mock-20|Mock 10	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.041133903275923395	4.11339032759234
+mock-20	Mock 10	mock-20|Mock 10	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0456452564326243	4.56452564326243
+mock-21	Mock 11	mock-21|Mock 11	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-21	Mock 11	mock-21|Mock 11	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0552424789362919	5.52424789362919
+mock-21	Mock 11	mock-21|Mock 11	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-21	Mock 11	mock-21|Mock 11	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0453352459468614	4.53352459468614
+mock-21	Mock 11	mock-21|Mock 11	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0400703043104736	4.00703043104736
+mock-22	Mock 12	mock-22|Mock 12	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-22	Mock 12	mock-22|Mock 12	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-22	Mock 12	mock-22|Mock 12	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-22	Mock 12	mock-22|Mock 12	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-22	Mock 12	mock-22|Mock 12	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-23	Mock 13	mock-23|Mock 13	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0001301800824473	0.01301800824473
+mock-23	Mock 13	mock-23|Mock 13	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0001011584516013	0.01011584516013
+mock-23	Mock 13	mock-23|Mock 13	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-23	Mock 13	mock-23|Mock 13	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-23	Mock 13	mock-23|Mock 13	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Even1	mock-4|Even1	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.006344147992450895	0.6344147992450896
+mock-4	Even2	mock-4|Even2	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.00239090464940075	0.239090464940075
+mock-4	Staggered1	mock-4|Staggered1	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.012316492053280836	1.2316492053280836
+mock-4	Staggered2	mock-4|Staggered2	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.014968215110327242	1.4968215110327243
+mock-4	Even1	mock-4|Even1	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.00012147844549843134	0.012147844549843134
+mock-4	Even2	mock-4|Even2	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.00016593719723143472	0.016593719723143472
+mock-4	Staggered1	mock-4|Staggered1	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0014009219475161973	0.14009219475161974
+mock-4	Staggered2	mock-4|Staggered2	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.001464319817292154	0.1464319817292154
+mock-4	Even1	mock-4|Even1	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Even2	mock-4|Even2	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Staggered1	mock-4|Staggered1	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Staggered2	mock-4|Staggered2	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Even1	mock-4|Even1	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Even2	mock-4|Even2	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Staggered1	mock-4|Staggered1	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Staggered2	mock-4|Staggered2	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-4	Even1	mock-4|Even1	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.00012147844549840354	0.012147844549840353
+mock-4	Even2	mock-4|Even2	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.00016593719723150083	0.016593719723150085
+mock-4	Staggered1	mock-4|Staggered1	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0014009219475162001	0.14009219475162002
+mock-4	Staggered2	mock-4|Staggered2	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0014643198172920998	0.14643198172921
+mock-5	Even1	mock-5|Even1	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.010199578719447506	1.0199578719447506
+mock-5	Even2	mock-5|Even2	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0053120766447789	0.53120766447789
+mock-5	Staggered1	mock-5|Staggered1	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.013201040640523725	1.3201040640523725
+mock-5	Staggered2	mock-5|Staggered2	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.009195970860688265	0.9195970860688265
+mock-5	Even1	mock-5|Even1	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Even2	mock-5|Even2	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered1	mock-5|Staggered1	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered2	mock-5|Staggered2	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Even1	mock-5|Even1	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Even2	mock-5|Even2	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered1	mock-5|Staggered1	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered2	mock-5|Staggered2	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Even1	mock-5|Even1	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Even2	mock-5|Even2	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered1	mock-5|Staggered1	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered2	mock-5|Staggered2	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Even1	mock-5|Even1	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Even2	mock-5|Even2	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered1	mock-5|Staggered1	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-5	Staggered2	mock-5|Staggered2	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.1608905579399138	16.08905579399138
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.15357385976854981	15.357385976854982
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.1549322008642525	15.49322008642525
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.15046854082998629	15.046854082998628
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.1912145255458841	19.121452554588412
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.18402913981507418	18.402913981507417
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.2131177491550194	21.311774915501942
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.19535045711797988	19.535045711797988
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.1911192310747477	19.11192310747477
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.2165961538461538	21.65961538461538
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0001044841097083	0.01044841097083
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0001153846153846	0.01153846153846
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0001044841097083	0.01044841097083
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0	0.0
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	0.0001153846153846	0.01153846153846
+mock-12	Mock 3	mock-12|Mock 3	ASV	no_hit_fraction	No-Hit Read Fraction	2.2159130254137665e-05	0.0022159130254137665
+mock-12	Mock 3	mock-12|Mock 3	zOTU	no_hit_fraction	No-Hit Read Fraction	0.00038319802527146516	0.038319802527146514
+mock-12	Mock 3	mock-12|Mock 3	OTU	no_hit_fraction	No-Hit Read Fraction	0.0003734827264238363	0.03734827264238363
+mock-12	Mock 3	mock-12|Mock 3	TIC	no_hit_fraction	No-Hit Read Fraction	0.0003831980252714713	0.03831980252714713
+mock-12	Mock 3	mock-12|Mock 3	TAC	no_hit_fraction	No-Hit Read Fraction	0.0003831980252714713	0.03831980252714713
+mock-13	Mock 4	mock-13|Mock 4	ASV	no_hit_fraction	No-Hit Read Fraction	0.007424991757335811	0.742499175733581
+mock-13	Mock 4	mock-13|Mock 4	zOTU	no_hit_fraction	No-Hit Read Fraction	0.006045529926126687	0.6045529926126687
+mock-13	Mock 4	mock-13|Mock 4	OTU	no_hit_fraction	No-Hit Read Fraction	0.006030544708950599	0.6030544708950599
+mock-13	Mock 4	mock-13|Mock 4	TIC	no_hit_fraction	No-Hit Read Fraction	0.006045529926126728	0.6045529926126728
+mock-13	Mock 4	mock-13|Mock 4	TAC	no_hit_fraction	No-Hit Read Fraction	0.006045529926126728	0.6045529926126728
+mock-14	Mock 5	mock-14|Mock 5	ASV	no_hit_fraction	No-Hit Read Fraction	0.01388164637764477	1.388164637764477
+mock-14	Mock 5	mock-14|Mock 5	zOTU	no_hit_fraction	No-Hit Read Fraction	0.011996711256743602	1.1996711256743602
+mock-14	Mock 5	mock-14|Mock 5	OTU	no_hit_fraction	No-Hit Read Fraction	0.011937414100432423	1.1937414100432424
+mock-14	Mock 5	mock-14|Mock 5	TIC	no_hit_fraction	No-Hit Read Fraction	0.011996711256743703	1.1996711256743704
+mock-14	Mock 5	mock-14|Mock 5	TAC	no_hit_fraction	No-Hit Read Fraction	0.011996711256743701	1.1996711256743702
+mock-15	Mock 6	mock-15|Mock 6	ASV	no_hit_fraction	No-Hit Read Fraction	0.0031603426686012074	0.31603426686012076
+mock-15	Mock 6	mock-15|Mock 6	zOTU	no_hit_fraction	No-Hit Read Fraction	0.004326121094728399	0.4326121094728399
+mock-15	Mock 6	mock-15|Mock 6	OTU	no_hit_fraction	No-Hit Read Fraction	0.004304840119032125	0.4304840119032125
+mock-15	Mock 6	mock-15|Mock 6	TIC	no_hit_fraction	No-Hit Read Fraction	0.0043261210947285	0.43261210947285
+mock-15	Mock 6	mock-15|Mock 6	TAC	no_hit_fraction	No-Hit Read Fraction	0.0043261210947285	0.43261210947285
+mock-16	Mock 7	mock-16|Mock 7	ASV	no_hit_fraction	No-Hit Read Fraction	0.018070329233354936	1.8070329233354936
+mock-16	Mock 7	mock-16|Mock 7	zOTU	no_hit_fraction	No-Hit Read Fraction	0.01775129499385787	1.775129499385787
+mock-16	Mock 7	mock-16|Mock 7	OTU	no_hit_fraction	No-Hit Read Fraction	0.017645408531049095	1.7645408531049096
+mock-16	Mock 7	mock-16|Mock 7	TIC	no_hit_fraction	No-Hit Read Fraction	0.017751294993857674	1.7751294993857674
+mock-16	Mock 7	mock-16|Mock 7	TAC	no_hit_fraction	No-Hit Read Fraction	0.01775129499385777	1.7751294993857771
+mock-18	Mock 8	mock-18|Mock 8	ASV	no_hit_fraction	No-Hit Read Fraction	3.598643311471574e-05	0.003598643311471574
+mock-18	Mock 8	mock-18|Mock 8	zOTU	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	OTU	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	TIC	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-18	Mock 8	mock-18|Mock 8	TAC	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	ASV	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	zOTU	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	OTU	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	TIC	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-19	Mock 9	mock-19|Mock 9	TAC	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-20	Mock 10	mock-20|Mock 10	ASV	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-20	Mock 10	mock-20|Mock 10	zOTU	no_hit_fraction	No-Hit Read Fraction	0.0028414047506293005	0.28414047506293005
+mock-20	Mock 10	mock-20|Mock 10	OTU	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-20	Mock 10	mock-20|Mock 10	TIC	no_hit_fraction	No-Hit Read Fraction	0.0028414047506293005	0.28414047506293005
+mock-20	Mock 10	mock-20|Mock 10	TAC	no_hit_fraction	No-Hit Read Fraction	0.0028414047506293005	0.28414047506293005
+mock-21	Mock 11	mock-21|Mock 11	ASV	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-21	Mock 11	mock-21|Mock 11	zOTU	no_hit_fraction	No-Hit Read Fraction	0.003680730155977696	0.3680730155977696
+mock-21	Mock 11	mock-21|Mock 11	OTU	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-21	Mock 11	mock-21|Mock 11	TIC	no_hit_fraction	No-Hit Read Fraction	0.003680730155977703	0.3680730155977703
+mock-21	Mock 11	mock-21|Mock 11	TAC	no_hit_fraction	No-Hit Read Fraction	0.003680730155977703	0.3680730155977703
+mock-22	Mock 12	mock-22|Mock 12	ASV	no_hit_fraction	No-Hit Read Fraction	9.51308048566779e-05	0.00951308048566779
+mock-22	Mock 12	mock-22|Mock 12	zOTU	no_hit_fraction	No-Hit Read Fraction	4.2506615091973695e-05	0.004250661509197369
+mock-22	Mock 12	mock-22|Mock 12	OTU	no_hit_fraction	No-Hit Read Fraction	4.250661509197369e-05	0.0042506615091973685
+mock-22	Mock 12	mock-22|Mock 12	TIC	no_hit_fraction	No-Hit Read Fraction	4.250661509197368e-05	0.0042506615091973685
+mock-22	Mock 12	mock-22|Mock 12	TAC	no_hit_fraction	No-Hit Read Fraction	4.250661509197368e-05	0.0042506615091973685
+mock-23	Mock 13	mock-23|Mock 13	ASV	no_hit_fraction	No-Hit Read Fraction	0.0002874810154045831	0.02874810154045831
+mock-23	Mock 13	mock-23|Mock 13	zOTU	no_hit_fraction	No-Hit Read Fraction	0.00023228977775110077	0.023228977775110078
+mock-23	Mock 13	mock-23|Mock 13	OTU	no_hit_fraction	No-Hit Read Fraction	0.000142413839627	0.014241383962700001
+mock-23	Mock 13	mock-23|Mock 13	TIC	no_hit_fraction	No-Hit Read Fraction	0.00023228977775110072	0.02322897777511007
+mock-23	Mock 13	mock-23|Mock 13	TAC	no_hit_fraction	No-Hit Read Fraction	0.00023228977775110072	0.02322897777511007
+mock-4	Even1	mock-4|Even1	ASV	no_hit_fraction	No-Hit Read Fraction	8.362432337751836e-05	0.008362432337751836
+mock-4	Even2	mock-4|Even2	ASV	no_hit_fraction	No-Hit Read Fraction	5.664532239449188e-05	0.005664532239449188
+mock-4	Staggered1	mock-4|Staggered1	ASV	no_hit_fraction	No-Hit Read Fraction	0.07142827876408961	7.142827876408961
+mock-4	Staggered2	mock-4|Staggered2	ASV	no_hit_fraction	No-Hit Read Fraction	0.06186210757503974	6.186210757503973
+mock-4	Even1	mock-4|Even1	zOTU	no_hit_fraction	No-Hit Read Fraction	0.0007130256583602367	0.07130256583602367
+mock-4	Even2	mock-4|Even2	zOTU	no_hit_fraction	No-Hit Read Fraction	0.0008546657792891456	0.08546657792891456
+mock-4	Staggered1	mock-4|Staggered1	zOTU	no_hit_fraction	No-Hit Read Fraction	0.0041824172556013395	0.41824172556013395
+mock-4	Staggered2	mock-4|Staggered2	zOTU	no_hit_fraction	No-Hit Read Fraction	0.004722739040980977	0.4722739040980977
+mock-4	Even1	mock-4|Even1	OTU	no_hit_fraction	No-Hit Read Fraction	4.4036567966039e-05	0.0044036567966039
+mock-4	Even2	mock-4|Even2	OTU	no_hit_fraction	No-Hit Read Fraction	5.534646889528445e-05	0.0055346468895284455
+mock-4	Staggered1	mock-4|Staggered1	OTU	no_hit_fraction	No-Hit Read Fraction	0.00012088082877152109	0.01208808287715211
+mock-4	Staggered2	mock-4|Staggered2	OTU	no_hit_fraction	No-Hit Read Fraction	0.00011604379542219575	0.011604379542219575
+mock-4	Even1	mock-4|Even1	TIC	no_hit_fraction	No-Hit Read Fraction	0.003429565388854087	0.34295653888540867
+mock-4	Even2	mock-4|Even2	TIC	no_hit_fraction	No-Hit Read Fraction	0.0037309105313022197	0.37309105313022195
+mock-4	Staggered1	mock-4|Staggered1	TIC	no_hit_fraction	No-Hit Read Fraction	0.036380142909690785	3.6380142909690787
+mock-4	Staggered2	mock-4|Staggered2	TIC	no_hit_fraction	No-Hit Read Fraction	0.037187570754948676	3.718757075494868
+mock-4	Even1	mock-4|Even1	TAC	no_hit_fraction	No-Hit Read Fraction	0.0007130256583602367	0.07130256583602367
+mock-4	Even2	mock-4|Even2	TAC	no_hit_fraction	No-Hit Read Fraction	0.0008546657792891457	0.08546657792891457
+mock-4	Staggered1	mock-4|Staggered1	TAC	no_hit_fraction	No-Hit Read Fraction	0.004182417255601385	0.41824172556013844
+mock-4	Staggered2	mock-4|Staggered2	TAC	no_hit_fraction	No-Hit Read Fraction	0.004722739040980977	0.4722739040980977
+mock-5	Even1	mock-5|Even1	ASV	no_hit_fraction	No-Hit Read Fraction	0.0	0.0
+mock-5	Even2	mock-5|Even2	ASV	no_hit_fraction	No-Hit Read Fraction	2.2002684327488038e-05	0.002200268432748804
+mock-5	Staggered1	mock-5|Staggered1	ASV	no_hit_fraction	No-Hit Read Fraction	3.985219816007336e-05	0.003985219816007336
+mock-5	Staggered2	mock-5|Staggered2	ASV	no_hit_fraction	No-Hit Read Fraction	3.6169971494151576e-05	0.0036169971494151576
+mock-5	Even1	mock-5|Even1	zOTU	no_hit_fraction	No-Hit Read Fraction	1.7585298690294908e-05	0.0017585298690294907
+mock-5	Even2	mock-5|Even2	zOTU	no_hit_fraction	No-Hit Read Fraction	2.0473424314081215e-05	0.0020473424314081216
+mock-5	Staggered1	mock-5|Staggered1	zOTU	no_hit_fraction	No-Hit Read Fraction	6.313015605367285e-05	0.006313015605367285
+mock-5	Staggered2	mock-5|Staggered2	zOTU	no_hit_fraction	No-Hit Read Fraction	5.3708937838618066e-05	0.005370893783861807
+mock-5	Even1	mock-5|Even1	OTU	no_hit_fraction	No-Hit Read Fraction	1.758479267129785e-05	0.001758479267129785
+mock-5	Even2	mock-5|Even2	OTU	no_hit_fraction	No-Hit Read Fraction	2.047321473567503e-05	0.002047321473567503
+mock-5	Staggered1	mock-5|Staggered1	OTU	no_hit_fraction	No-Hit Read Fraction	6.313019890764391e-05	0.006313019890764391
+mock-5	Staggered2	mock-5|Staggered2	OTU	no_hit_fraction	No-Hit Read Fraction	5.3708882364636815e-05	0.005370888236463682
+mock-5	Even1	mock-5|Even1	TIC	no_hit_fraction	No-Hit Read Fraction	1.7585298690294905e-05	0.0017585298690294905
+mock-5	Even2	mock-5|Even2	TIC	no_hit_fraction	No-Hit Read Fraction	2.0473424314081215e-05	0.0020473424314081216
+mock-5	Staggered1	mock-5|Staggered1	TIC	no_hit_fraction	No-Hit Read Fraction	6.313015605367283e-05	0.006313015605367283
+mock-5	Staggered2	mock-5|Staggered2	TIC	no_hit_fraction	No-Hit Read Fraction	5.370893783861805e-05	0.005370893783861805
+mock-5	Even1	mock-5|Even1	TAC	no_hit_fraction	No-Hit Read Fraction	1.7585298690294905e-05	0.0017585298690294905
+mock-5	Even2	mock-5|Even2	TAC	no_hit_fraction	No-Hit Read Fraction	2.0473424314081215e-05	0.0020473424314081216
+mock-5	Staggered1	mock-5|Staggered1	TAC	no_hit_fraction	No-Hit Read Fraction	6.313015605367285e-05	0.006313015605367285
+mock-5	Staggered2	mock-5|Staggered2	TAC	no_hit_fraction	No-Hit Read Fraction	5.370893783861805e-05	0.005370893783861805
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	no_hit_fraction	No-Hit Read Fraction	0.1344420600858368	13.44420600858368
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	no_hit_fraction	No-Hit Read Fraction	0.13614703880190598	13.614703880190598
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	no_hit_fraction	No-Hit Read Fraction	0.12926538518849642	12.926538518849643
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	no_hit_fraction	No-Hit Read Fraction	0.13431503792949562	13.431503792949561
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	no_hit_fraction	No-Hit Read Fraction	0.129284649776453	12.928464977645298
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	no_hit_fraction	No-Hit Read Fraction	0.1343210317283234	13.43210317283234
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	no_hit_fraction	No-Hit Read Fraction	0.1292653851884964	12.92653851884964
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	no_hit_fraction	No-Hit Read Fraction	0.13431503792949562	13.431503792949561
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	no_hit_fraction	No-Hit Read Fraction	0.1292653851884964	12.92653851884964
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	no_hit_fraction	No-Hit Read Fraction	0.13431503792949562	13.431503792949561
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	no_hit_fraction	No-Hit Read Fraction	0.1650163604867512	16.50163604867512
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	no_hit_fraction	No-Hit Read Fraction	0.10142897170075649	10.14289717007565
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	no_hit_fraction	No-Hit Read Fraction	0.16262446332328478	16.26244633232848
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	no_hit_fraction	No-Hit Read Fraction	0.1556639094471048	15.566390944710479
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	no_hit_fraction	No-Hit Read Fraction	0.09210421796806728	9.210421796806727
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	no_hit_fraction	No-Hit Read Fraction	0.1550576923076922	15.50576923076922
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	no_hit_fraction	No-Hit Read Fraction	0.1556693311042613	15.56693311042613
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	no_hit_fraction	No-Hit Read Fraction	0.0921042179680673	9.21042179680673
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	no_hit_fraction	No-Hit Read Fraction	0.1550576923076922	15.50576923076922
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	no_hit_fraction	No-Hit Read Fraction	0.1556639094471049	15.56639094471049
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	no_hit_fraction	No-Hit Read Fraction	0.0921042179680673	9.21042179680673
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	no_hit_fraction	No-Hit Read Fraction	0.1550576923076922	15.50576923076922
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	no_hit_fraction	No-Hit Read Fraction	0.1556639094471049	15.56639094471049
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	no_hit_fraction	No-Hit Read Fraction	0.0921042179680673	9.21042179680673
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	no_hit_fraction	No-Hit Read Fraction	0.1550576923076922	15.50576923076922

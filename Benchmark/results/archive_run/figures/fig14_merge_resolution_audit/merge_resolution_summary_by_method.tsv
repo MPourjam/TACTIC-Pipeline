@@ -1,0 +1,4 @@
+method	total_pair_weight	weight_v4_low_resolution_specific	fraction_v4_low_resolution_specific	weight_high_similarity_full16s	fraction_high_similarity_full16s	weight_not_explained_by_v4_threshold	fraction_not_explained_by_v4_threshold	weight_missing_similarity_data	fraction_missing_similarity_data	v4_explained_weight	usable_pair_weight	fraction_v4_explained_total	fraction_v4_explained_usable	fraction_v4_specific_usable
+OTU	30.0	13.0	0.43333333333333335	17.0	0.5666666666666667	0.0	0.0	0.0	0.0	30.0	30.0	1.0	1.0	0.43333333333333335
+TIC	22.0	16.0	0.7272727272727273	6.0	0.2727272727272727	0.0	0.0	0.0	0.0	22.0	22.0	1.0	1.0	0.7272727272727273
+TAC	9.0	7.0	0.7777777777777778	2.0	0.2222222222222222	0.0	0.0	0.0	0.0	9.0	9.0	1.0	1.0	0.7777777777777778

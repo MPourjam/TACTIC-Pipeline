@@ -1,0 +1,28 @@
+community_id	original_sample_id	selected_sample_id	profile	selected
+mock-12	Extreme.1	Mock 3	other	True
+mock-13	mock-13	Mock 4	other	True
+mock-14	mock-14	Mock 5	other	True
+mock-15	mock-15	Mock 6	other	True
+mock-16	mock-16	Mock 7	other	True
+mock-18	mock-18	Mock 8	other	True
+mock-19	mock-19	Mock 9	other	True
+mock-20	mock-20	Mock 10	other	True
+mock-21	mock-21	Mock 11	other	True
+mock-22	mock-22	Mock 12	other	True
+mock-23	mock-23	Mock 13	other	True
+mock-4	HMPMockV1.1.Even1	Even1	even	True
+mock-4	HMPMockV1.1.Even2	Even2	even	True
+mock-4	HMPMockV1.2.Staggered1	Staggered1	staggered	True
+mock-4	HMPMockV1.2.Staggered2	Staggered2	staggered	True
+mock-5	HMPMockV1.1.Even1	Even1	even	True
+mock-5	HMPMockV1.1.Even2	Even2	even	True
+mock-5	HMPMockV1.2.Staggered1	Staggered1	staggered	True
+mock-5	HMPMockV1.2.Staggered2	Staggered2	staggered	True
+mock-ZIEL_1	SRR13005984	SRR13005984	other	True
+mock-ZIEL_1	SRR13005985	SRR13005985	other	True
+mock-ZIEL_2	SRR13005964	SRR13005964	other	True
+mock-ZIEL_2	SRR13005965	SRR13005965	other	True
+mock-ZIEL_2	SRR13005966	SRR13005966	other	True
+mock-ZYMO	SRR13006004	SRR13006004	other	True
+mock-ZYMO	SRR13006002	SRR13006002	other	True
+mock-ZYMO	SRR13006003	SRR13006003	other	True

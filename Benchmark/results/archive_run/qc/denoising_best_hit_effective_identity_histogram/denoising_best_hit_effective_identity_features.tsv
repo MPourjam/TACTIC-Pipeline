@@ -1,0 +1,1002 @@
+community_id	method	method_label	inferred_feature	best_target	best_pident	best_qcov_exact_percent	best_effective_identity	accepted_in_strict_mapping
+mock-12	ASV	DADA2	ASV_1	Bacteroides_ovatus	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_2	Bacteroides_vulgatus	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_3	Bacteroides_ovatus__Copy1	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_4	Bacteroides_vulgatus__Copy4	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_5	Bacteroides_vulgatus__Copy3	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_6	Bacteroides_cellulosilyticus_DSM_14838	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_7	Clostridium_xylanovorans	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_8	Parabacteroides_distasonis_JCM_13400	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_9	Parabacteroides_distasonis_JCM_13401	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_10	Parabacteroides_merdae	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_11	Bacteroides_uniformis	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_12	Clostridium_cocleatum	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_13	Coprococcus_comes_ATCC_27758	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_14	Bacteroides_ovatus	99.605	100.0	99.605	False
+mock-12	ASV	DADA2	ASV_15	Bacteroides_thetaiotaomicron__Copy1	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_16	Bacteroides_ovatus	99.605	100.0	99.605	False
+mock-12	ASV	DADA2	ASV_17	Bacteroides_fragilis	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_18	Roseburia_inulinivorans_DSM_16841	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_19	Clostridium_celatum_JCM_1394	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_20	Bacteroides_massiliensis	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_21	Paraprevotella_clara_DSM_19731	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_22	Roseburia_intestinalis_DSM_14610	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_23					False
+mock-12	ASV	DADA2	ASV_24	Eubacterium_rectale_DSM_17629	99.605	100.0	99.605	False
+mock-12	ASV	DADA2	ASV_25	Prevotella_copri_DSM_18205	100.0	100.0	100.0	True
+mock-12	ASV	DADA2	ASV_26	Bacteroides_eggerthii_BEI_HM-210	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu2	Bacteroides_vulgatus	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu1	Bacteroides_ovatus	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu5	Bacteroides_vulgatus__Copy3	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu3	Bacteroides_ovatus__Copy1	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu4	Bacteroides_vulgatus__Copy4	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu7	Clostridium_xylanovorans	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu6	Bacteroides_cellulosilyticus_DSM_14838	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu12	Clostridium_cocleatum	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu10	Parabacteroides_merdae	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu13	Coprococcus_comes_ATCC_27758	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu8	Parabacteroides_distasonis_JCM_13400	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu11	Bacteroides_uniformis	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu9	Parabacteroides_distasonis_JCM_13401	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu14	Bacteroides_thetaiotaomicron__Copy1	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu15	Roseburia_inulinivorans_DSM_16841	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu16	Clostridium_celatum_JCM_1394	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu17	Bacteroides_fragilis	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu18					False
+mock-12	zOTU	UNOISE3	Zotu19					False
+mock-12	zOTU	UNOISE3	Zotu20	Bacteroides_massiliensis	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu21	Paraprevotella_clara_DSM_19731	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu22	Roseburia_intestinalis_DSM_14610	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu23	Clostridium_phytofermentans_ATCC_700394	92.913	100.0	92.913	False
+mock-12	zOTU	UNOISE3	Zotu24					False
+mock-12	zOTU	UNOISE3	Zotu25					False
+mock-12	zOTU	UNOISE3	Zotu26					False
+mock-12	zOTU	UNOISE3	Zotu27	Eubacterium_rectale_DSM_17629	99.605	100.0	99.605	False
+mock-12	zOTU	UNOISE3	Zotu28	Eubacterium_rectale_DSM_17629	100.0	100.0	100.0	True
+mock-12	zOTU	UNOISE3	Zotu29					False
+mock-12	zOTU	UNOISE3	Zotu31					False
+mock-12	zOTU	UNOISE3	Zotu30					False
+mock-13	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_2	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_3	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_4	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_5	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_7	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_8	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_9	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_10	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_11	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_12	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_13	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_14	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_15	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_16	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_17	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_18	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_19	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_20	Porphyromonas_gingivalis_ATCC_33277	90.385	20.55335968379447	18.57715415019763	False
+mock-13	ASV	DADA2	ASV_21					False
+mock-13	ASV	DADA2	ASV_22	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_23	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_24	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-13	ASV	DADA2	ASV_25					False
+mock-13	ASV	DADA2	ASV_26					False
+mock-13	ASV	DADA2	ASV_27	Bacteroides_vulgatus_ATCC_8482__Copy3	94.466	100.0	94.466	False
+mock-13	ASV	DADA2	ASV_28					False
+mock-13	ASV	DADA2	ASV_29					False
+mock-13	ASV	DADA2	ASV_30					False
+mock-13	ASV	DADA2	ASV_31					False
+mock-13	ASV	DADA2	ASV_32					False
+mock-13	ASV	DADA2	ASV_33					False
+mock-13	ASV	DADA2	ASV_34					False
+mock-13	ASV	DADA2	ASV_35					False
+mock-13	ASV	DADA2	ASV_36					False
+mock-13	ASV	DADA2	ASV_37					False
+mock-13	ASV	DADA2	ASV_38					False
+mock-13	ASV	DADA2	ASV_39					False
+mock-13	zOTU	UNOISE3	Zotu5	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu16	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu2	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu17	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu4	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu13	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu3	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu18	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu20	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu21	Porphyromonas_gingivalis_ATCC_33277	90.385	20.55335968379447	18.57715415019763	False
+mock-13	zOTU	UNOISE3	Zotu19	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu8	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu22	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu14	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu23					False
+mock-13	zOTU	UNOISE3	Zotu12	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu15	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu10	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu9	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu7	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu11	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu24					False
+mock-13	zOTU	UNOISE3	Zotu25					False
+mock-13	zOTU	UNOISE3	Zotu26	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-13	zOTU	UNOISE3	Zotu27	Bacteroides_vulgatus_ATCC_8482__Copy3	94.466	100.0	94.466	False
+mock-13	zOTU	UNOISE3	Zotu28					False
+mock-13	zOTU	UNOISE3	Zotu29					False
+mock-13	zOTU	UNOISE3	Zotu30					False
+mock-13	zOTU	UNOISE3	Zotu31					False
+mock-14	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_2	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_3	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_4	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_5	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_6	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_7	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_8	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_9	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_10	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_11	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_12	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_13	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_14	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_15	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_16	Porphyromonas_gingivalis_ATCC_33277	90.385	20.55335968379447	18.57715415019763	False
+mock-14	ASV	DADA2	ASV_17	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_18	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_19	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_20	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_21					False
+mock-14	ASV	DADA2	ASV_22					False
+mock-14	ASV	DADA2	ASV_23	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_24	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_25	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-14	ASV	DADA2	ASV_26	Bacteroides_vulgatus_ATCC_8482__Copy3	94.466	100.0	94.466	False
+mock-14	ASV	DADA2	ASV_27					False
+mock-14	ASV	DADA2	ASV_28	Bacteroides_vulgatus_ATCC_8482__Copy3	92.126	100.0	92.126	False
+mock-14	ASV	DADA2	ASV_29					False
+mock-14	ASV	DADA2	ASV_30					False
+mock-14	ASV	DADA2	ASV_31					False
+mock-14	ASV	DADA2	ASV_32					False
+mock-14	ASV	DADA2	ASV_33	Bacteroides_vulgatus_ATCC_8482__Copy3	91.304	100.0	91.304	False
+mock-14	ASV	DADA2	ASV_34					False
+mock-14	ASV	DADA2	ASV_35					False
+mock-14	ASV	DADA2	ASV_36					False
+mock-14	ASV	DADA2	ASV_37					False
+mock-14	ASV	DADA2	ASV_38					False
+mock-14	ASV	DADA2	ASV_39					False
+mock-14	ASV	DADA2	ASV_40					False
+mock-14	ASV	DADA2	ASV_41					False
+mock-14	ASV	DADA2	ASV_42					False
+mock-14	ASV	DADA2	ASV_43					False
+mock-14	ASV	DADA2	ASV_44					False
+mock-14	ASV	DADA2	ASV_45					False
+mock-14	ASV	DADA2	ASV_46					False
+mock-14	zOTU	UNOISE3	Zotu2	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu7	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu5	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu18	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu3	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu17	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu16	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu6	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu11	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu14	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu15	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu20	Porphyromonas_gingivalis_ATCC_33277	90.385	20.55335968379447	18.57715415019763	False
+mock-14	zOTU	UNOISE3	Zotu19	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu12	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu13	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu4	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu23	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu22					False
+mock-14	zOTU	UNOISE3	Zotu8	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu21	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu9	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu10	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu24					False
+mock-14	zOTU	UNOISE3	Zotu25	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-14	zOTU	UNOISE3	Zotu26					False
+mock-14	zOTU	UNOISE3	Zotu29	Bacteroides_vulgatus_ATCC_8482__Copy3	92.126	100.0	92.126	False
+mock-14	zOTU	UNOISE3	Zotu27					False
+mock-14	zOTU	UNOISE3	Zotu28	Bacteroides_vulgatus_ATCC_8482__Copy3	94.466	100.0	94.466	False
+mock-14	zOTU	UNOISE3	Zotu30					False
+mock-14	zOTU	UNOISE3	Zotu31					False
+mock-14	zOTU	UNOISE3	Zotu32					False
+mock-14	zOTU	UNOISE3	Zotu33	Bacteroides_vulgatus_ATCC_8482__Copy3	91.304	100.0	91.304	False
+mock-14	zOTU	UNOISE3	Zotu34					False
+mock-14	zOTU	UNOISE3	Zotu35					False
+mock-14	zOTU	UNOISE3	Zotu36					False
+mock-14	zOTU	UNOISE3	Zotu37					False
+mock-14	zOTU	UNOISE3	Zotu38					False
+mock-14	zOTU	UNOISE3	Zotu39					False
+mock-15	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_3	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_4	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_5	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_7	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_8	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_9	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_10	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_11	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_12	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_13	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_14	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_15	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_16	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_17	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_18	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_19	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_20	Porphyromonas_gingivalis_ATCC_33277	90.385	20.55335968379447	18.57715415019763	False
+mock-15	ASV	DADA2	ASV_21	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_22	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_23	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-15	ASV	DADA2	ASV_24					False
+mock-15	ASV	DADA2	ASV_25					False
+mock-15	ASV	DADA2	ASV_26	Bacteroides_vulgatus_ATCC_8482__Copy3	94.466	100.0	94.466	False
+mock-15	ASV	DADA2	ASV_27					False
+mock-15	ASV	DADA2	ASV_28					False
+mock-15	ASV	DADA2	ASV_29					False
+mock-15	ASV	DADA2	ASV_30					False
+mock-15	ASV	DADA2	ASV_31					False
+mock-15	ASV	DADA2	ASV_32					False
+mock-15	zOTU	UNOISE3	Zotu6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu12	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu18	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu19	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu20	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu21	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu22	Porphyromonas_gingivalis_ATCC_33277	90.385	20.55335968379447	18.57715415019763	False
+mock-15	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu17	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu4	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu7	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu3	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu5	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu9	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu10	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu8	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu16	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu13	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu14	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu15	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu23					False
+mock-15	zOTU	UNOISE3	Zotu11	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu24					False
+mock-15	zOTU	UNOISE3	Zotu25	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-15	zOTU	UNOISE3	Zotu26					False
+mock-15	zOTU	UNOISE3	Zotu27	Bacteroides_vulgatus_ATCC_8482__Copy3	92.126	100.0	92.126	False
+mock-15	zOTU	UNOISE3	Zotu28	Bacteroides_vulgatus_ATCC_8482__Copy3	94.466	100.0	94.466	False
+mock-15	zOTU	UNOISE3	Zotu29					False
+mock-15	zOTU	UNOISE3	Zotu31					False
+mock-15	zOTU	UNOISE3	Zotu30	Propionibacterium_acnes_DSM16379	98.814	100.0	98.814	False
+mock-15	zOTU	UNOISE3	Zotu32					False
+mock-15	zOTU	UNOISE3	Zotu34					False
+mock-15	zOTU	UNOISE3	Zotu33					False
+mock-15	zOTU	UNOISE3	Zotu35					False
+mock-16	ASV	DADA2	ASV_1	Shewanella_baltica_OS185	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_2	Akkermansia_muciniphila_ATCC_BAA-835	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_3	Desulfovibrio_piger_ATCC_29098	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_4	Sulfurihydrogenibium_yellowstonense_SS-5	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_5	Bacteroides_thetaiotaomicron_VPI-5482	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_6	Sulfitobacter_sp._NAS-14.1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_7	Salinispora_arenicola_CNS-205	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_8	Erwinia_chrysanthemi	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_9	Methanococcus_maripaludis_C5	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_10	Desulfovibrio_desulfuricans_ATCC_27774	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_11	Deinococcus_radiodurans_R1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_12	Persephonella_marina_EX-H1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_13	Enterococcus_faecalis_V583v	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_14	Thermoanaerobacter_pseudethanolicus_ATCC_33223	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_15	Bordetella_bronchiseptica_RB50	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_16	Nostoc_sp._PCC_7120	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_17	Clostridium_thermocellum_ATCC_27405	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_18	Methanococcus_maripaludis_S2	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_19	Caldicellulosiruptor_saccharolyticus_DSM_8903	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_20	Bacteroides_vulgatus_ATCC_8482__Copy2	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_21	Ruegeria_pomeroyi_DSS-3	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_22	Chloroflexus_aurantiacus_J-10-fl	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_23	Hydrogenobaculum_sp._Y04AAS1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_24	Thermus_thermophilus_HB8	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_25	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_26	Treponema_denticola_ATCC_35405	90.157	100.0	90.157	False
+mock-16	ASV	DADA2	ASV_27	Rhodopirellula_baltica_SH_1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_28	Thermotoga_neapolitana_DSM_4359	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_29	Leptothrix_cholodnii_SP-6	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_30	Herpetosiphon_aurantiacus_ATCC_23779	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_31	Thermoanaerobacter_pseudethanolicus_ATCC_33223__Copy3	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_32	Fusobacterium_nucleatum__Copy1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_33	Chloroflexus_aurantiacus_J-10-fl__Copy2	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_34	Zymomonas_mobilis_ZM4	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_35	Anaerocellum_thermophilum	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_36	Methanocaldococcus_jannaschii_DSM_2661__Copy1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_37	Pelodictyon_phaeoclathratiforme_BU-1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_38	Treponema_denticola_ATCC_35405	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_39	Pyrobaculum_calidifontis_JCM_11548	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_40	Chlorobium_phaeobacteroides_DSM_266	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_41	Nitrosomonas_europaea_ATCC_19718	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_42	Chlorobium_phaeovibrioides_DSM_265	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_43	Erwinia_chrysanthemi__Copy1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_44	Gemmatimonas_aurantiaca_T-27	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_45	Sulfolobus_tokodaii_str_7	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_46	Acidobacterium_capsulatum_ATCC_51196	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_47	Chlorobium_limicola_DSM_245	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_48	Dictyoglomus_turgidum_DSM_6724	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_49	Chlorobaculum_tepidum_TLS	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_50	Treponema_vincentii_ATCC_35580	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_51	Thermotoga_petrophila_RKU-1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_52	Bacteroides_vulgatus_ATCC_8482__Copy1	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_53	Fusobacterium_nucleatum__Copy3	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_54	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_55	Fusobacterium_nucleatum__Copy5	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_56	Pyrobaculum_aerophilum_IM2	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_57	Burkholderia_xenovorans_LB400	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_58	Sulfurihydrogenibium_yellowstonense_SS-5	99.605	100.0	99.605	False
+mock-16	ASV	DADA2	ASV_59	Archaeoglobus_fulgidus_DSM_4304	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_60					False
+mock-16	ASV	DADA2	ASV_61	Thermoanaerobacter_pseudethanolicus_ATCC_33223	99.605	100.0	99.605	False
+mock-16	ASV	DADA2	ASV_62	Persephonella_marina_EX-H1	99.605	100.0	99.605	False
+mock-16	ASV	DADA2	ASV_63	Chloroflexus_aurantiacus_J-10-fl	99.605	100.0	99.605	False
+mock-16	ASV	DADA2	ASV_64	Thermus_thermophilus_HB8	99.605	100.0	99.605	False
+mock-16	ASV	DADA2	ASV_65	Burkholderia_xenovorans_LB400	90.514	100.0	90.514	False
+mock-16	ASV	DADA2	ASV_66	Herpetosiphon_aurantiacus_ATCC_23779	99.605	100.0	99.605	False
+mock-16	ASV	DADA2	ASV_67					False
+mock-16	ASV	DADA2	ASV_68					False
+mock-16	ASV	DADA2	ASV_69					False
+mock-16	ASV	DADA2	ASV_70					False
+mock-16	ASV	DADA2	ASV_71					False
+mock-16	ASV	DADA2	ASV_72					False
+mock-16	ASV	DADA2	ASV_73	Nanoarchaeum_equitans_Kin4-M	100.0	100.0	100.0	True
+mock-16	ASV	DADA2	ASV_74					False
+mock-16	ASV	DADA2	ASV_75	Sulfitobacter_sp._NAS-14.1	90.514	100.0	90.514	False
+mock-16	ASV	DADA2	ASV_76	Enterococcus_faecalis_V583v	91.304	100.0	91.304	False
+mock-16	ASV	DADA2	ASV_77					False
+mock-16	ASV	DADA2	ASV_78					False
+mock-16	ASV	DADA2	ASV_79	Persephonella_marina_EX-H1	94.862	100.0	94.862	False
+mock-16	ASV	DADA2	ASV_80	Pyrococcus_horikoshii_OT3	99.606	100.0	99.606	False
+mock-16	ASV	DADA2	ASV_81	Burkholderia_xenovorans_LB400	94.094	100.0	94.094	False
+mock-16	ASV	DADA2	ASV_82	Zymomonas_mobilis_ZM4	90.196	100.0	90.196	False
+mock-16	ASV	DADA2	ASV_83					False
+mock-16	ASV	DADA2	ASV_84					False
+mock-16	ASV	DADA2	ASV_85	Ruegeria_pomeroyi_DSS-3	93.281	100.0	93.281	False
+mock-16	ASV	DADA2	ASV_86	Enterococcus_faecalis_V583v	92.885	100.0	92.885	False
+mock-16	ASV	DADA2	ASV_87	Erwinia_chrysanthemi	95.257	100.0	95.257	False
+mock-16	ASV	DADA2	ASV_88					False
+mock-16	ASV	DADA2	ASV_89					False
+mock-16	ASV	DADA2	ASV_90					False
+mock-16	ASV	DADA2	ASV_91					False
+mock-16	ASV	DADA2	ASV_92	Salinispora_arenicola_CNS-205	90.476	99.60474308300395	90.11838735177865	False
+mock-16	ASV	DADA2	ASV_93	Ignicoccus_hospitalis_KIN4/I__Copy1	99.605	100.0	99.605	False
+mock-16	ASV	DADA2	ASV_94					False
+mock-16	zOTU	UNOISE3	Zotu13	Desulfovibrio_desulfuricans_ATCC_27774	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu2	Akkermansia_muciniphila_ATCC_BAA-835	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu17	Bordetella_bronchiseptica_RB50	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu4	Sulfurihydrogenibium_yellowstonense_SS-5	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu3	Desulfovibrio_piger_ATCC_29098	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu1	Shewanella_baltica_OS185	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu10	Persephonella_marina_EX-H1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu15	Thermotoga_neapolitana_DSM_4359	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu20	Methanococcus_maripaludis_S2	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu8	Erwinia_chrysanthemi	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu7	Salinispora_arenicola_CNS-205	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu19	Chloroflexus_aurantiacus_J-10-fl	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu16	Clostridium_thermocellum_ATCC_27405	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu5	Sulfitobacter_sp._NAS-14.1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu14	Enterococcus_faecalis_V583v	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu9	Methanococcus_maripaludis_C5	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu21	Porphyromonas_gingivalis_ATCC_33277	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu23	Bacteroides_vulgatus_ATCC_8482__Copy2	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu11	Deinococcus_radiodurans_R1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu24	Ruegeria_pomeroyi_DSS-3	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu6	Bacteroides_thetaiotaomicron_VPI-5482	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu25	Hydrogenobaculum_sp._Y04AAS1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu22	Caldicellulosiruptor_saccharolyticus_DSM_8903	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu28	Leptothrix_cholodnii_SP-6	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu12	Thermoanaerobacter_pseudethanolicus_ATCC_33223	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu30	Rhodopirellula_baltica_SH_1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu18	Nostoc_sp._PCC_7120	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu40	Thermotoga_petrophila_RKU-1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu35	Methanocaldococcus_jannaschii_DSM_2661__Copy1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu32	Chloroflexus_aurantiacus_J-10-fl__Copy2	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu36	Zymomonas_mobilis_ZM4	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu41	Pyrococcus_horikoshii_OT3	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu27	Treponema_denticola_ATCC_35405	90.157	100.0	90.157	False
+mock-16	zOTU	UNOISE3	Zotu33	Thermoanaerobacter_pseudethanolicus_ATCC_33223__Copy3	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu29	Pyrobaculum_calidifontis_JCM_11548	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu34	Fusobacterium_nucleatum__Copy1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu44	Chlorobium_phaeobacteroides_DSM_266	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu43	Sulfolobus_tokodaii_str_7	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu37	Anaerocellum_thermophilum	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu38	Treponema_denticola_ATCC_35405	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu47	Chlorobium_phaeovibrioides_DSM_265	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu26	Thermus_thermophilus_HB8	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu53	Chlorobaculum_tepidum_TLS	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu46	Erwinia_chrysanthemi__Copy1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu51	Dictyoglomus_turgidum_DSM_6724	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu31	Herpetosiphon_aurantiacus_ATCC_23779	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu39	Pelodictyon_phaeoclathratiforme_BU-1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu42	Gemmatimonas_aurantiaca_T-27	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu59	Archaeoglobus_fulgidus_DSM_4304	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu45	Nitrosomonas_europaea_ATCC_19718	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu52	Chlorobium_limicola_DSM_245	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu50	Treponema_vincentii_ATCC_35580	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu57	Fusobacterium_nucleatum__Copy5	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu56	Fusobacterium_nucleatum__Copy3	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu48	Acidobacterium_capsulatum_ATCC_51196	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu54	Bacteroides_vulgatus_ATCC_8482__Copy1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu60	Ignicoccus_hospitalis_KIN4/I__Copy1	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu55	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu58	Burkholderia_xenovorans_LB400	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu63					False
+mock-16	zOTU	UNOISE3	Zotu49	Pyrobaculum_aerophilum_IM2	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu61					False
+mock-16	zOTU	UNOISE3	Zotu64					False
+mock-16	zOTU	UNOISE3	Zotu62	Burkholderia_xenovorans_LB400	90.514	100.0	90.514	False
+mock-16	zOTU	UNOISE3	Zotu65					False
+mock-16	zOTU	UNOISE3	Zotu67					False
+mock-16	zOTU	UNOISE3	Zotu66					False
+mock-16	zOTU	UNOISE3	Zotu68	Nanoarchaeum_equitans_Kin4-M	100.0	100.0	100.0	True
+mock-16	zOTU	UNOISE3	Zotu69					False
+mock-16	zOTU	UNOISE3	Zotu70					False
+mock-16	zOTU	UNOISE3	Zotu79	Persephonella_marina_EX-H1	94.862	100.0	94.862	False
+mock-16	zOTU	UNOISE3	Zotu71					False
+mock-16	zOTU	UNOISE3	Zotu72					False
+mock-16	zOTU	UNOISE3	Zotu73	Sulfitobacter_sp._NAS-14.1	90.514	100.0	90.514	False
+mock-16	zOTU	UNOISE3	Zotu74					False
+mock-16	zOTU	UNOISE3	Zotu75	Enterococcus_faecalis_V583v	91.304	100.0	91.304	False
+mock-16	zOTU	UNOISE3	Zotu76					False
+mock-16	zOTU	UNOISE3	Zotu77					False
+mock-16	zOTU	UNOISE3	Zotu78	Burkholderia_xenovorans_LB400	94.094	100.0	94.094	False
+mock-16	zOTU	UNOISE3	Zotu80	Zymomonas_mobilis_ZM4	90.196	100.0	90.196	False
+mock-18	ASV	DADA2	ASV_1	Nitrosomonas_europaea_ATCC-19178	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_2	Pseudomonas_putida_KT2440	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_3	Desulfovibrio_vulgaris_Hildenborough	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_4	Bacteroides_vulgatus_ATCC-8482	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_5	Clostridium_acetobutylicum_ATCC-824	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_6	Escherichia_coli_DH5a	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_7	Bacillus_subtilis_ATCC-6051	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_8	Deinococcus_grandis_DSM-3963	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_9	Nitrobacter_winogradskyi_ATCC-14123	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_10	Desulfitobacterium_hafniense_DCB-2	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_11	Anaerolinea_thermophila_UNI-1	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_12	Gemmatimonas_aurantiaca_T-27	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_13	Treponema_bryantii_ATCC-33254	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_14	Chloroflexus_aurantiacus_J-10-fl	100.0	100.0	100.0	True
+mock-18	ASV	DADA2	ASV_15	Bacillus_subtilis_ATCC-6051	91.7	100.0	91.7	False
+mock-18	ASV	DADA2	ASV_16	Desulfovibrio_vulgaris_Hildenborough	90.4	98.81422924901186	89.32806324110672	False
+mock-18	zOTU	UNOISE3	Zotu8	Nitrobacter_winogradskyi_ATCC-14123	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu9	Bacillus_subtilis_ATCC-6051	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu3	Pseudomonas_putida_KT2440	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu2	Desulfovibrio_vulgaris_Hildenborough	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu12	Desulfitobacterium_hafniense_DCB-2	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu14	Chloroflexus_aurantiacus_J-10-fl	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu5	Anaerolinea_thermophila_UNI-1	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu1	Nitrosomonas_europaea_ATCC-19178	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu4	Bacteroides_vulgatus_ATCC-8482	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu7	Clostridium_acetobutylicum_ATCC-824	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu10	Deinococcus_grandis_DSM-3963	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu13	Treponema_bryantii_ATCC-33254	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu11	Gemmatimonas_aurantiaca_T-27	100.0	100.0	100.0	True
+mock-18	zOTU	UNOISE3	Zotu6	Escherichia_coli_DH5a	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_1	Nitrosomonas_europaea_ATCC-19178	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_2	Pseudomonas_putida_KT2440	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_3	Clostridium_acetobutylicum_ATCC-824	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_4	Desulfovibrio_vulgaris_Hildenborough	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_5	Deinococcus_grandis_DSM-3963	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_6	Bacteroides_vulgatus_ATCC-8482	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_7	Bacillus_subtilis_ATCC-6051	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_8	Desulfitobacterium_hafniense_DCB-2	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_9	Escherichia_coli_DH5a	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_10	Nitrobacter_winogradskyi_ATCC-14123	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_11	Chloroflexus_aurantiacus_J-10-fl	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_12	Gemmatimonas_aurantiaca_T-27	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_13	Anaerolinea_thermophila_UNI-1	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_14	Treponema_bryantii_ATCC-33254	100.0	100.0	100.0	True
+mock-19	ASV	DADA2	ASV_15	Microlunatus_phosphovorus_NM-1	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu5	Deinococcus_grandis_DSM-3963	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu14	Treponema_bryantii_ATCC-33254	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu2	Pseudomonas_putida_KT2440	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu6	Chloroflexus_aurantiacus_J-10-fl	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu13	Anaerolinea_thermophila_UNI-1	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu11	Nitrobacter_winogradskyi_ATCC-14123	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu8	Bacillus_subtilis_ATCC-6051	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu9	Escherichia_coli_DH5a	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu10	Desulfitobacterium_hafniense_DCB-2	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu3	Desulfovibrio_vulgaris_Hildenborough	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu7	Bacteroides_vulgatus_ATCC-8482	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu12	Gemmatimonas_aurantiaca_T-27	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu15	Microlunatus_phosphovorus_NM-1	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu1	Nitrosomonas_europaea_ATCC-19178	100.0	100.0	100.0	True
+mock-19	zOTU	UNOISE3	Zotu4	Clostridium_acetobutylicum_ATCC-824	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_3	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_4	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_5	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_7	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_8	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_9	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_10	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_11	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_12	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_13	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_14	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_15	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_16	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_17	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_18	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_19	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_20	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-20	ASV	DADA2	ASV_21	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu6	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu8	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu17	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu3	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu18	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu7	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu20	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu19	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu12	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu5	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu22	Bacillus_cereus_ATCC_10987	98.419	100.0	98.419	False
+mock-20	zOTU	UNOISE3	Zotu4	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu21	Staphylococcus_aureus_ATCC_BAA-1718	98.419	100.0	98.419	False
+mock-20	zOTU	UNOISE3	Zotu9	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu15	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu10	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu26	Staphylococcus_aureus_ATCC_BAA-1718	97.233	100.0	97.233	False
+mock-20	zOTU	UNOISE3	Zotu11	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu14	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu24	Streptococcus_agalactiae_ATCC_BAA-611	97.222	100.0	97.222	False
+mock-20	zOTU	UNOISE3	Zotu13	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu23	Streptococcus_pneumoniae_ATCC_BAA-334	99.206	100.0	99.206	False
+mock-20	zOTU	UNOISE3	Zotu16	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-20	zOTU	UNOISE3	Zotu28	Listeria_monocytogenes_ATCC_BAA-679	98.024	100.0	98.024	False
+mock-20	zOTU	UNOISE3	Zotu27	Streptococcus_agalactiae_ATCC_BAA-611	94.841	100.0	94.841	False
+mock-20	zOTU	UNOISE3	Zotu25	Streptococcus_pneumoniae_ATCC_BAA-334	98.016	100.0	98.016	False
+mock-20	zOTU	UNOISE3	Zotu29	Streptococcus_pneumoniae_ATCC_BAA-334	98.016	100.0	98.016	False
+mock-21	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_2	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_3	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_5	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_7	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_8	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_9	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_10	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_11	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_12	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_13	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-21	ASV	DADA2	ASV_14	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu3	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu2	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu5	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu13	Streptococcus_mutans_ATCC_700610	98.413	100.0	98.413	False
+mock-21	zOTU	UNOISE3	Zotu12	Staphylococcus_aureus_ATCC_BAA-1718	98.024	100.0	98.024	False
+mock-21	zOTU	UNOISE3	Zotu6	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu15	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu14	Bacillus_cereus_ATCC_10987	98.814	100.0	98.814	False
+mock-21	zOTU	UNOISE3	Zotu16	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu8	Staphylococcus_aureus_ATCC_BAA-1718	98.419	100.0	98.419	False
+mock-21	zOTU	UNOISE3	Zotu7	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu17	Staphylococcus_aureus_ATCC_BAA-1718	98.024	100.0	98.024	False
+mock-21	zOTU	UNOISE3	Zotu11	Streptococcus_agalactiae_ATCC_BAA-611	98.413	100.0	98.413	False
+mock-21	zOTU	UNOISE3	Zotu19	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu10	Staphylococcus_aureus_ATCC_BAA-1718	98.814	100.0	98.814	False
+mock-21	zOTU	UNOISE3	Zotu30	Streptococcus_agalactiae_ATCC_BAA-611	94.048	100.0	94.048	False
+mock-21	zOTU	UNOISE3	Zotu20	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu21	Clostridium_beijerinckii_ATCC_51743	97.628	100.0	97.628	False
+mock-21	zOTU	UNOISE3	Zotu18	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu9	Bacillus_cereus_ATCC_10987	98.419	100.0	98.419	False
+mock-21	zOTU	UNOISE3	Zotu22	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu23	Escherichia_coli_ATCC_700926	96.047	100.0	96.047	False
+mock-21	zOTU	UNOISE3	Zotu24	Acinetobacter_baumannii_ATCC_17978	96.047	100.0	96.047	False
+mock-21	zOTU	UNOISE3	Zotu25	Listeria_monocytogenes_ATCC_BAA-679	98.419	100.0	98.419	False
+mock-21	zOTU	UNOISE3	Zotu26	Lactobacillus_gasseri_DSM_20243	98.814	100.0	98.814	False
+mock-21	zOTU	UNOISE3	Zotu27	Listeria_monocytogenes_ATCC_BAA-679	99.209	100.0	99.209	False
+mock-21	zOTU	UNOISE3	Zotu28	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-21	zOTU	UNOISE3	Zotu29	Lactobacillus_gasseri_DSM_20243	98.024	100.0	98.024	False
+mock-21	zOTU	UNOISE3	Zotu31	Lactobacillus_gasseri_DSM_20243	96.838	100.0	96.838	False
+mock-22	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_2	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_3	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_4	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_5	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_6	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_7	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_8	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_9	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_10	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_11	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_12	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_13	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_14	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_15	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_16	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_17	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_18	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_19	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_20	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_21	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_22	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-22	ASV	DADA2	ASV_23					False
+mock-22	ASV	DADA2	ASV_24	Deinococcus_radiodurans_DSM_20539_	93.6	98.81422924901186	92.4901185770751	False
+mock-22	ASV	DADA2	ASV_25	Rhodobacter_sphaeroides_ATCC_17023	90.98	100.0	90.98	False
+mock-22	ASV	DADA2	ASV_26					False
+mock-22	ASV	DADA2	ASV_27					False
+mock-22	zOTU	UNOISE3	Zotu2	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu17	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu18	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu5	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu19	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu21	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu20	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu4	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu13	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu8	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu3	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu7	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu11	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu9	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu14	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu6	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu10	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu12	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu16	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu15	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-22	zOTU	UNOISE3	Zotu22					False
+mock-23	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_2	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_3	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_5	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_6	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_7	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_8	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_9	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_10	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_11	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_12	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_13	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_14	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_15	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_16	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_17	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_18	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_19					False
+mock-23	ASV	DADA2	ASV_20	Streptococcus_pneumoniae_ATCC_BAA-334	99.603	100.0	99.603	False
+mock-23	ASV	DADA2	ASV_21	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-23	ASV	DADA2	ASV_22	Streptococcus_pneumoniae_ATCC_BAA-334	95.635	100.0	95.635	False
+mock-23	ASV	DADA2	ASV_23					False
+mock-23	ASV	DADA2	ASV_24					False
+mock-23	ASV	DADA2	ASV_25	Streptococcus_pneumoniae_ATCC_BAA-334	96.825	100.0	96.825	False
+mock-23	zOTU	UNOISE3	Zotu12	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu11	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu9	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu3	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu2	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu7	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu10	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu8	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu6	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu5	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu13	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu14	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu16	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu15	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu17	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu18					False
+mock-23	zOTU	UNOISE3	Zotu19	Streptococcus_pneumoniae_ATCC_BAA-334	99.603	100.0	99.603	False
+mock-23	zOTU	UNOISE3	Zotu20	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu21	Streptococcus_pneumoniae_ATCC_BAA-334	95.635	100.0	95.635	False
+mock-23	zOTU	UNOISE3	Zotu22	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu24	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-23	zOTU	UNOISE3	Zotu23	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_3	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_4	Staphylococcus_aureus_ATCC_BAA-1718	100.0	99.60474308300395	99.60474308300395	False
+mock-4	ASV	DADA2	ASV_5	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_7	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_8	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_9	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_10	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_11	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_12	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_13	Methanobrevibacter_smithii_ATCC_35061	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_14	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_15	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_16	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_17	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_18	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_19	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_20	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_21	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_22	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_23	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_24	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_25	Methanobrevibacter_smithii_ATCC_35061	99.606	100.0	99.606	False
+mock-4	ASV	DADA2	ASV_26	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_27	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_28	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_29	Methanobrevibacter_smithii_ATCC_35061	99.213	100.0	99.213	False
+mock-4	ASV	DADA2	ASV_30	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_31	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_32	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_33	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_34	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_35	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_36	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_37	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_38	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_39	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_40	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_41	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-4	ASV	DADA2	ASV_42	Staphylococcus_aureus_ATCC_BAA-1718	94.862	100.0	94.862	False
+mock-4	ASV	DADA2	ASV_43	Methanobrevibacter_smithii_ATCC_35061	99.213	100.0	99.213	False
+mock-4	ASV	DADA2	ASV_44	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-4	ASV	DADA2	ASV_45	Staphylococcus_aureus_ATCC_BAA-1718	98.324	70.7509881422925	69.56520158102767	False
+mock-4	ASV	DADA2	ASV_46					False
+mock-4	ASV	DADA2	ASV_47					False
+mock-4	ASV	DADA2	ASV_48	Staphylococcus_aureus_ATCC_BAA-1718	96.04	79.84189723320159	76.68015810276681	False
+mock-4	ASV	DADA2	ASV_49	Staphylococcus_aureus_ATCC_BAA-1718	98.049	81.02766798418972	79.44681818181819	False
+mock-4	ASV	DADA2	ASV_50	Streptococcus_mutans_ATCC_700610	94.444	100.0	94.444	False
+mock-4	zOTU	UNOISE3	Zotu10	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu6	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu20	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu19	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu21	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu7	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu13	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu17	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu9	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu5	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu8	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu15	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu16	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu12	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu14	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu18	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu11	Methanobrevibacter_smithii_ATCC_35061	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu3	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu23	Streptococcus_mutans_ATCC_700610	96.016	99.60317460317461	95.63498412698414	False
+mock-4	zOTU	UNOISE3	Zotu25	Streptococcus_mutans_ATCC_700610	95.219	99.60317460317461	94.84114682539682	False
+mock-4	zOTU	UNOISE3	Zotu24	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-4	zOTU	UNOISE3	Zotu38	Staphylococcus_aureus_ATCC_BAA-1718	94.841	99.60474308300395	94.46613438735177	False
+mock-4	zOTU	UNOISE3	Zotu22	Methanobrevibacter_smithii_ATCC_35061	99.213	100.0	99.213	False
+mock-4	zOTU	UNOISE3	Zotu35	Streptococcus_mutans_ATCC_700610	96.813	99.60317460317461	96.42882142857144	False
+mock-4	zOTU	UNOISE3	Zotu26	Streptococcus_mutans_ATCC_700610	97.61	99.60317460317461	97.22265873015873	False
+mock-4	zOTU	UNOISE3	Zotu27	Staphylococcus_aureus_ATCC_BAA-1718	94.862	100.0	94.862	False
+mock-4	zOTU	UNOISE3	Zotu39	Streptococcus_mutans_ATCC_700610	96.813	99.60317460317461	96.42882142857144	False
+mock-4	zOTU	UNOISE3	Zotu34	Escherichia_coli_ATCC_700926	98.016	99.60474308300395	97.62858498023716	False
+mock-4	zOTU	UNOISE3	Zotu36	Escherichia_coli_ATCC_700926	95.652	99.60474308300395	95.27392885375494	False
+mock-4	zOTU	UNOISE3	Zotu37	Methanobrevibacter_smithii_ATCC_35061	98.031	100.0	98.031	False
+mock-4	zOTU	UNOISE3	Zotu29	Methanobrevibacter_smithii_ATCC_35061	98.031	100.0	98.031	False
+mock-4	zOTU	UNOISE3	Zotu31	Staphylococcus_aureus_ATCC_BAA-1718	94.466	100.0	94.466	False
+mock-4	zOTU	UNOISE3	Zotu30					False
+mock-4	zOTU	UNOISE3	Zotu28					False
+mock-4	zOTU	UNOISE3	Zotu33	Methanobrevibacter_smithii_ATCC_35061	97.638	100.0	97.638	False
+mock-4	zOTU	UNOISE3	Zotu32	Methanobrevibacter_smithii_ATCC_35061	98.031	100.0	98.031	False
+mock-5	ASV	DADA2	ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_3	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_5	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_6	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_7	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_8	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_9	Methanobrevibacter_smithii_ATCC_35061	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_10	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_11	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_12	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_13	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_14	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_15	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_16	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_17	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_18	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_19	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_20	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_21	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_22	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_23	Clostridium_beijerinckii_ATCC_51743__Copy3	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_24	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_25	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_26	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_27	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_28	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_29	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_30	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_31	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_32	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_33	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_34	Staphylococcus_aureus_ATCC_BAA-1718	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_35	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_36	Streptococcus_mutans_ATCC_700610	99.603	100.0	99.603	False
+mock-5	ASV	DADA2	ASV_37	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_38	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_39	Rhodobacter_sphaeroides_ATCC_17023	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_40	Streptococcus_mutans_ATCC_700610	99.603	100.0	99.603	False
+mock-5	ASV	DADA2	ASV_41	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_42	Acinetobacter_baumannii_ATCC_17978	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_43	Streptococcus_mutans_ATCC_700610	99.603	100.0	99.603	False
+mock-5	ASV	DADA2	ASV_44	Streptococcus_mutans_ATCC_700610	99.603	100.0	99.603	False
+mock-5	ASV	DADA2	ASV_45	Deinococcus_radiodurans_DSM_20539_	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_46					False
+mock-5	ASV	DADA2	ASV_47	Deinococcus_radiodurans_DSM_20539_	99.605	100.0	99.605	False
+mock-5	ASV	DADA2	ASV_48	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-5	ASV	DADA2	ASV_49	Escherichia_coli_ATCC_700926	98.814	100.0	98.814	False
+mock-5	ASV	DADA2	ASV_50					False
+mock-5	ASV	DADA2	ASV_51					False
+mock-5	zOTU	UNOISE3	Zotu1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu3	Streptococcus_mutans_ATCC_700610	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu5	Methanobrevibacter_smithii_ATCC_35061	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu7	Escherichia_coli_ATCC_700926	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu8	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu11	Bacillus_cereus_ATCC_10987	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu9	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu12	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu2	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu13	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu15	Helicobacter_pylori_ATCC_700392	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu16	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu6	Deinococcus_radiodurans_DSM_20539_	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu10	Bacteroides_vulgatus_ATCC_8482	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu21	Lactobacillus_gasseri_DSM_20243	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu17	Enterococcus_faecalis_ATCC_47077	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu14	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu23					False
+mock-5	zOTU	UNOISE3	Zotu24					False
+mock-5	zOTU	UNOISE3	Zotu18	Actinomyces_odontolyticus_ATCC_17982	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu19	Bacteroides_vulgatus_ATCC_8482__Copy3	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu20	Bacteroides_vulgatus_ATCC_8482__Copy4	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu22	Propionibacterium_acnes_DSM16379	100.0	100.0	100.0	True
+mock-5	zOTU	UNOISE3	Zotu25					False
+mock-ZIEL_1	ASV	DADA2	ASV_1	Staphylococcus_warneri	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_2	Bacillus_subtilis	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_3	Enterococcus_hirae	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_4	Enterorhabdus_mucosicola	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_5	Pseudomonas_sp	99.194	98.02371541501977	97.23364426877471	False
+mock-ZIEL_1	ASV	DADA2	ASV_6	Parabacteroides_goldsteinii	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_7					False
+mock-ZIEL_1	ASV	DADA2	ASV_8	Bacteroides_sartorii	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_9	Bacteroides_sartorii	99.605	100.0	99.605	False
+mock-ZIEL_1	ASV	DADA2	ASV_10	Clostridium_ramosum	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_11	Flavonifractor_plautii	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_12	Acetatifactor_muris	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_13	Cellulosimicrobium_cellulans	99.605	100.0	99.605	False
+mock-ZIEL_1	ASV	DADA2	ASV_14	Staphylococcus_warneri	99.605	100.0	99.605	False
+mock-ZIEL_1	ASV	DADA2	ASV_15	Actinomyces_bowdenii	100.0	100.0	100.0	True
+mock-ZIEL_1	ASV	DADA2	ASV_16	Bacillus_subtilis	99.605	100.0	99.605	False
+mock-ZIEL_1	ASV	DADA2	ASV_17	Bacteroides_sartorii	99.209	100.0	99.209	False
+mock-ZIEL_1	ASV	DADA2	ASV_18	Parabacteroides_goldsteinii	99.605	100.0	99.605	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu3	Enterococcus_hirae	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu7					False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu18	Parabacteroides_goldsteinii	99.605	100.0	99.605	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu17	Bacteroides_sartorii	99.209	100.0	99.209	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu2	Bacillus_subtilis	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu12	Clostridium_ramosum	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu1	Staphylococcus_warneri	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu13	Cellulosimicrobium_cellulans	99.605	100.0	99.605	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu4	Enterorhabdus_mucosicola	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu5	Pseudomonas_sp	99.194	98.02371541501977	97.23364426877471	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu10	Actinomyces_bowdenii	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu11	Acetatifactor_muris	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu9	Bacteroides_sartorii	99.605	100.0	99.605	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu14	Flavonifractor_plautii	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu8	Bacteroides_sartorii	100.0	100.0	100.0	True
+mock-ZIEL_1	zOTU	UNOISE3	Zotu15	Staphylococcus_warneri	99.605	100.0	99.605	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu16	Bacillus_subtilis	99.605	100.0	99.605	False
+mock-ZIEL_1	zOTU	UNOISE3	Zotu6	Parabacteroides_goldsteinii	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_1	Escherichia_coli_LF82	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_2	Collinsella_aerofaciens	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_3	Klebsiella_pneumoniae	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_4	Listeria_welshimeri	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_5	Atopobium_parvulum	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_6	Citrobacter_freundii	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_7	Staphylococcus_epidermidis	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_8	Bifidobacterium_longum	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_9	Ruminococcus_gnavus	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_10	Clostridium_ramosum	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_11	Staphylococcus_epidermidis	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_12	Bacteroides_vulgatus	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_13	Oscillibacter_valericigenes	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_14	Eggerthella_lenta	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_15	Akkermansia_muciniphila	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_16	Pseudomonas_aeruginosa	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_17	Prevotella_copri	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_18	Enterobacter_cloacae	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_19	Klebsiella_pneumoniae	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_20	Prevotella_copri	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_21	Microbacterium_flavum	100.0	100.0	100.0	True
+mock-ZIEL_2	ASV	DADA2	ASV_22	Prevotella_copri	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_23	Bacteroides_vulgatus	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_24	Bacteroides_vulgatus	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_25	Collinsella_aerofaciens	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_26	Escherichia_coli_LF82	99.605	100.0	99.605	False
+mock-ZIEL_2	ASV	DADA2	ASV_27					False
+mock-ZIEL_2	ASV	DADA2	ASV_28					False
+mock-ZIEL_2	ASV	DADA2	ASV_29	Pseudomonas_aeruginosa	96.386	98.02371541501977	94.48113833992095	False
+mock-ZIEL_2	ASV	DADA2	ASV_30					False
+mock-ZIEL_2	ASV	DADA2	ASV_31					False
+mock-ZIEL_2	ASV	DADA2	ASV_32					False
+mock-ZIEL_2	ASV	DADA2	ASV_33					False
+mock-ZIEL_2	ASV	DADA2	ASV_34					False
+mock-ZIEL_2	ASV	DADA2	ASV_35					False
+mock-ZIEL_2	ASV	DADA2	ASV_36	Collinsella_aerofaciens	90.157	100.0	90.157	False
+mock-ZIEL_2	ASV	DADA2	ASV_37					False
+mock-ZIEL_2	ASV	DADA2	ASV_38	Ruminococcus_gnavus	92.095	100.0	92.095	False
+mock-ZIEL_2	ASV	DADA2	ASV_39					False
+mock-ZIEL_2	ASV	DADA2	ASV_40					False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu3	Klebsiella_pneumoniae	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu17	Prevotella_copri	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu18	Enterobacter_cloacae	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu19	Klebsiella_pneumoniae	99.605	100.0	99.605	False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu16	Pseudomonas_aeruginosa	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu20	Prevotella_copri	99.605	100.0	99.605	False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu2	Collinsella_aerofaciens	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu15	Oscillibacter_valericigenes	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu6	Citrobacter_freundii	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu8	Staphylococcus_epidermidis	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu1	Escherichia_coli_LF82	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu4	Listeria_welshimeri	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu22	Prevotella_copri	99.605	100.0	99.605	False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu5	Bifidobacterium_longum	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu10	Clostridium_ramosum	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu21	Microbacterium_flavum	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu24	Bacteroides_vulgatus	99.605	100.0	99.605	False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu7	Atopobium_parvulum	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu12	Staphylococcus_epidermidis	99.605	100.0	99.605	False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu23	Bacteroides_vulgatus	99.605	100.0	99.605	False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu11	Eggerthella_lenta	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu9	Ruminococcus_gnavus	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu13	Akkermansia_muciniphila	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu14	Bacteroides_vulgatus	100.0	100.0	100.0	True
+mock-ZIEL_2	zOTU	UNOISE3	Zotu25					False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu26	Pseudomonas_aeruginosa	96.386	98.02371541501977	94.48113833992095	False
+mock-ZIEL_2	zOTU	UNOISE3	Zotu27					False
+mock-ZYMO	ASV	DADA2	ASV_1	Bacillus_subtilis_ATCC_6051	99.605	100.0	99.605	False
+mock-ZYMO	ASV	DADA2	ASV_2					False
+mock-ZYMO	ASV	DADA2	ASV_3	Staphylococcus_aureus_ATCC_12600	100.0	100.0	100.0	True
+mock-ZYMO	ASV	DADA2	ASV_4	Listeria_monocytogenes_ATCC_19115	100.0	100.0	100.0	True
+mock-ZYMO	ASV	DADA2	ASV_5	Escherichia_coli_ATCC_11775	100.0	100.0	100.0	True
+mock-ZYMO	ASV	DADA2	ASV_6	Salmonella_enterica_LT2	100.0	100.0	100.0	True
+mock-ZYMO	ASV	DADA2	ASV_7	Enterococcus_faecalis_ATCC_19433	100.0	100.0	100.0	True
+mock-ZYMO	ASV	DADA2	ASV_8	Pseudomonas_aeruginosa_strain_ATCC_10145	100.0	100.0	100.0	True
+mock-ZYMO	ASV	DADA2	ASV_9	Salmonella_enterica_LT2	99.605	100.0	99.605	False
+mock-ZYMO	ASV	DADA2	ASV_10	Lactobacillus_fermentum_ATCC_14931	98.419	100.0	98.419	False
+mock-ZYMO	ASV	DADA2	ASV_11					False
+mock-ZYMO	ASV	DADA2	ASV_12	Pseudomonas_aeruginosa_strain_ATCC_10145	94.466	100.0	94.466	False
+mock-ZYMO	ASV	DADA2	ASV_13					False
+mock-ZYMO	ASV	DADA2	ASV_14					False
+mock-ZYMO	ASV	DADA2	ASV_15					False
+mock-ZYMO	ASV	DADA2	ASV_16					False
+mock-ZYMO	zOTU	UNOISE3	Zotu7	Enterococcus_faecalis_ATCC_19433	100.0	100.0	100.0	True
+mock-ZYMO	zOTU	UNOISE3	Zotu4	Listeria_monocytogenes_ATCC_19115	100.0	100.0	100.0	True
+mock-ZYMO	zOTU	UNOISE3	Zotu2	Staphylococcus_aureus_ATCC_12600	100.0	100.0	100.0	True
+mock-ZYMO	zOTU	UNOISE3	Zotu3					False
+mock-ZYMO	zOTU	UNOISE3	Zotu6	Salmonella_enterica_LT2	100.0	100.0	100.0	True
+mock-ZYMO	zOTU	UNOISE3	Zotu5	Escherichia_coli_ATCC_11775	100.0	100.0	100.0	True
+mock-ZYMO	zOTU	UNOISE3	Zotu1	Bacillus_subtilis_ATCC_6051	99.605	100.0	99.605	False
+mock-ZYMO	zOTU	UNOISE3	Zotu9	Salmonella_enterica_LT2	99.605	100.0	99.605	False
+mock-ZYMO	zOTU	UNOISE3	Zotu8	Pseudomonas_aeruginosa_strain_ATCC_10145	100.0	100.0	100.0	True
+mock-ZYMO	zOTU	UNOISE3	Zotu11					False
+mock-ZYMO	zOTU	UNOISE3	Zotu10	Lactobacillus_fermentum_ATCC_14931	98.419	100.0	98.419	False

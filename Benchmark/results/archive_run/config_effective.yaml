@@ -1,0 +1,677 @@
+paths:
+  root: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605
+  outdir: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP
+discovery:
+  exclude_community_name_patterns:
+  - mock-HC227
+  expected_sequences_filename: expected-sequences.v4.fasta
+  expected_sequences_fallback_to_full: true
+normalization:
+  tss_total: 10000.0
+  renormalize_after_mapping: false
+mapping:
+  min_effective_pident: 100
+  min_effective_pident_tic_tac: 98.7
+  min_effective_pident_clustering: 97.0
+  blast_record_min_raw_pident: 90.0
+  min_query_coverage: 100
+  seed: 1
+  assignment_mode: one_to_one
+  soft_species_score_field: bitscore
+  soft_species_min_relative_score: 0.0
+  skip_community_on_samplemap_failure: true
+  sample_match_mode: substring
+  keep_one_sample_per_community: false
+  store_unmapped_mass: true
+  target_level_by_method:
+    asv: tip
+    zotu: tip
+    otu: species
+    tic: species
+    tac: species
+    default: species
+tree:
+  build_full_tree: true
+  build_centroid_tree: true
+  mafft_exe: /usr/bin/mafft
+  fasttree_exe: /home/adminuser/miniforge3/envs/qiime2-2024.10/bin/FastTree
+  blastn_exe: blastn
+  makeblastdb_exe: makeblastdb
+distances:
+  methods:
+  - zOTU
+  - ASV
+  - TIC
+  - TAC
+  - OTU
+  metrics:
+  - jaccard
+  - weighted_jaccard
+  - braycurtis
+  - unifrac
+  - gunifrac_a0.0
+  - gunifrac_a0.5
+  - gunifrac_a1.0
+  - aitchison
+  penalize_unmapped: true
+  unmapped_penalty_lambda: 1.0
+  penalize_mapping_mismatch: false
+  mapping_mismatch_lambda: 1.0
+  penalize_coverage_deficit: false
+  coverage_deficit_lambda: 1.0
+  penalty_transform: exp
+  penalty_exp_k: 1.5
+  phylo_mapping_mode: augmented_mismatch
+  augmented_mismatch_beta: 1.0
+  augmented_mismatch_eps: 1.0e-08
+  augmented_mismatch_include_unmapped: true
+  aitchison_pseudocount: 1.0e-06
+figures:
+  fig01: true
+  fig02: true
+  fig03_by_sample: true
+  fig03_by_metric: true
+  fig04: true
+  fig05: true
+  fig06: true
+  fig07: true
+  fig08: true
+  fig09: true
+  fig10: true
+  fig11: true
+  fig12: true
+  fig13: true
+  fig14: true
+  fig15: true
+  fig16: true
+  fig17: true
+  fig18: true
+  fig19: true
+  fig20: true
+  fig21: true
+  fig22: true
+  fig23: true
+  fig24: true
+  fig25: true
+  fig26: true
+  grid_rows: 6
+  grid_cols: 5
+  box_violin_dot_size: 32
+  fig03_by_metric_grid_rows: 7
+  fig03_by_metric_grid_cols: 4
+  fig01_title: Feature Counts by Sample
+  fig01_title_with_expected_features: Feature Counts by Sample (with Expected Features)
+  fig02_title: Distance Heatmaps
+  fig03_by_sample_title: Distances by Sample Accross Analysis Methods
+  fig03_by_metric_title: Distances by Metric Accross Samples
+  fig04_title: Species Richness Recovery
+  fig05_title: Precision-Recall (Species Presence)
+  fig06_title: Rank-Abundance Curves (Species)
+  fig07_title: Alpha Diversity Error Plots
+  fig08_title: Beta-Diversity Concordance
+  fig09_title: Split/Merge Diagnostics
+  fig10_title: Species Confusion Heatmaps
+  fig11_title: Distance Distribution Plots
+  fig11_metrics:
+  - jaccard
+  - weighted_jaccard
+  - braycurtis
+  - gunifrac_a0.0
+  - gunifrac_a0.5
+  - gunifrac_a1.0
+  fig11_panel_title_by_metric: {}
+  fig11_combined_2x2_title: null
+  fig11_combined_3x2_title: null
+  fig12_title: Unmapped-Feature Diagnostics
+  fig13_title: Capture of Denoising Split Events by Clustering Methods
+  fig14_title: 'Merge Resolution Audit: V4 vs Full-Length 16S'
+  fig15_title: Read-Weighted Mapping Outcomes
+  fig16_title: Distance Deviator Species Plots by Community
+  fig17_title: Distance Dot-Dash Plot
+  fig18_title: Aitchison Distance by Method
+  fig19_title: PCoA of Sample-Method-Metric Distance Contrasts
+  fig20_title: Multi-V4 Species Abundance Recovery
+  fig21_title: 'Figure 21: Metric-Family Distance Sensitivity'
+  fig22_title: 'Figure 22: Sensitivity By Method'
+  fig23_title: 'Figure 23: Sample x Method Sensitivity Heatmap'
+  fig24_title: 'Figure 24: Per-Sample Method x Metric PCoA'
+  fig25_title: 'Figure 25: Method x Metric Distance Profiles PCoA'
+  fig26_title: 'Figure 26: Pairwise Method x Metric Differences PCoA'
+  fig11_font_size: 14.0
+  fig12_font_size: 14.0
+  fig13_font_size: 14.0
+  fig14_font_size: 14.0
+  fig15_font_size: 14.0
+  fig16_font_size: 16.0
+  fig17_font_size: 14.0
+  fig18_font_size: 14.0
+  fig19_font_size: 14.0
+  fig20_font_size: 16.0
+  fig21_font_size: 14.0
+  fig22_font_size: 14.0
+  fig23_font_size: 14.0
+  fig24_font_size: 14.0
+  fig25_font_size: 14.0
+  fig26_font_size: 14.0
+  fig21_show_panel_a: true
+  fig21_show_panel_b: true
+  fig21_show_panel_c: true
+  fig21_show_panel_d: true
+  fig21_show_panel_e: true
+  fig21_show_panel_f: true
+  fig21_panel_a_title: Group-level mean contrast
+  fig21_panel_a_a_title: Analysis methods and distance metrices family contrast (Denoising
+    / TACTIC)
+  fig21_panel_a_b_title: Analysis methods and distance metrices family contrast (Denoising
+    / Clustering)
+  fig21_panel_b_title: Pair-group mean contrast distributions across samples
+  fig21_panel_c_title: Distance mean contrast
+  fig21_panel_c_a_title: Distance mean contrast ordered by distance method family
+  fig21_panel_c_b_title: Distance mean contrast ordered by analysis method
+  fig21_panel_d_title: Directional method-level sensitivity
+  fig21_panel_e_title: Mean contrast distributions
+  fig21_panel_f_title: Method-level distance to expected
+  fig21_panel_a_font_size: 16.0
+  fig21_panel_b_font_size: 16.0
+  fig21_panel_c_font_size: 24.0
+  fig21_panel_d_font_size: 18.0
+  fig21_panel_e_font_size: 18.0
+  fig21_panel_f_font_size: 18.0
+  fig21_panel_e_grid_label_font_size: null
+  fig21_panel_e_grid_tick_font_size: null
+  fig21_panel_e_grid_text_font_size: null
+  fig21_panel_e_grid_legend_font_size: null
+  fig21_panel_b_sample_v4_multiple_label: Multiple-V4 reference sequences
+  fig21_panel_b_sample_v4_single_label: Single-V4 reference sequence
+  fig21_panel_b_dot_size: 60.0
+  fig21_panel_b_dot_opacity: 0.75
+  fig21_panel_b_dot_jitter: 0.07
+  fig21_panel_d_dot_size: 75.0
+  fig21_panel_d_dot_opacity: 0.75
+  fig21_panel_d_dot_jitter: 0.07
+  fig21_panel_d_stats_show_annotations: true
+  fig21_panel_e_dot_size: 80.0
+  fig21_panel_e_dot_opacity: 0.95
+  fig21_panel_e_dot_jitter: 0.07
+  fig21_panel_f_dot_size: 75.0
+  fig21_panel_f_dot_opacity: 0.75
+  fig21_panel_f_dot_jitter: 0.07
+  fig21_panel_e_abs_density_label: Pairwise abs_difference density
+  fig21_panel_e_summary_density_label: Sample summary_abs_difference density
+  fig21_panel_e_show_summary_density: true
+  fig21_panel_e_mean_label: Mean
+  fig21_panel_e_sample_v4_multiple_label: Multiple-V4 reference sequences
+  fig21_panel_e_sample_v4_single_label: Single-V4 reference sequence
+  fig21_panel_a_x_axis_label: Method/metric groups
+  fig21_panel_a_y_axis_label: Method/metric groups
+  fig21_panel_b_x_axis_label: Method/metric contrast group
+  fig21_panel_b_y_axis_label: '{{}} absolute pairwise difference'
+  fig21_panel_c_x_axis_label: Metric | Analysis method
+  fig21_panel_c_y_axis_label: Metric | Analysis method
+  fig21_panel_d_x_axis_label: Analysis method
+  fig21_panel_d_y_axis_label: Mean agnostic distance - mean aware distance
+  fig21_panel_e_x_axis_label: Absolute difference
+  fig21_panel_e_y_axis_label: Method/metric groups
+  fig21_panel_f_x_axis_label: Metric family | analysis method
+  fig21_panel_f_y_axis_label: Mean distance to expected composition
+  fig21_panel_f_xtick_rotation: 45.0
+  fig21_panel_b_pair_groups_to_show:
+  - denoising_phylogeny_aware__vs__denoising_phylogeny_aware
+  - clustering_phylogeny_aware__vs__clustering_phylogeny_aware
+  - denoising_phylogeny_agnostic__vs__denoising_phylogeny_agnostic
+  - clustering_phylogeny_agnostic__vs__clustering_phylogeny_agnostic
+  - denoising_phylogeny_aware__vs__denoising_phylogeny_agnostic
+  - clustering_phylogeny_aware__vs__clustering_phylogeny_agnostic
+  - denoising_phylogeny_aware__vs__clustering_phylogeny_aware
+  - denoising_phylogeny_agnostic__vs__clustering_phylogeny_agnostic
+  fig21_panel_b_show_within_contrast_stats: true
+  fig21_panel_a_xtick_rotation: 45.0
+  fig21_panel_a_ytick_rotation: 0.0
+  fig21_panel_a_show_planned_comparison_annotations: true
+  fig21_show_panel_e_raincloud_grid: true
+  fig21_panel_b_xtick_rotation: 45.0
+  fig21_panel_b_ytick_rotation: 0.0
+  fig21_endpoint_matrix_gap_cells: 0
+  fig21_endpoint_matrix_xtick_rotation: 45.0
+  fig21_endpoint_matrix_ytick_rotation: 0.0
+  fig21_panel_c_a_xtick_rotation: 45.0
+  fig21_panel_c_a_ytick_rotation: 0.0
+  fig21_panel_c_b_xtick_rotation: 45.0
+  fig21_panel_c_b_ytick_rotation: 0.0
+  fig17_dot_size: 32.0
+  fig17_opacity: 1.0
+  fig17_show_upper_panel: false
+  fig17_method_view: methods
+  fig17_lower_panel_y: metrics
+  fig17_lower_panel: density
+  fig17_grid_mode: method_pipeline
+  fig17_lower_panel_height_ratio: 6.0
+  fig17_density_bandwidth: 0.05
+  fig17_density_points: 256
+  fig17_density_scale: 0.72
+  fig17_xtick_interval: 0.2
+  fig17_metric_title_pad: 28.0
+  fig17_metrics:
+  - jaccard
+  - weighted_jaccard
+  - braycurtis
+  - gunifrac_a0.0
+  - gunifrac_a1.0
+  fig17_stats_enabled: true
+  fig17_stats_alpha: 0.05
+  fig17_stats_pairwise_test: signed_rank_permutation
+  fig17_stats_multiple_test_correction: true
+  fig17_stats_family_aggregation: median
+  fig17_stats_annotation_mode: letters
+  fig17_stats_show_legend: true
+  fig14_show_missing_similarity_data_category: false
+  fig14_graph_min_effective_pident_denoising: 100.0
+  fig14_graph_min_effective_pident_tic_tac: 98.7
+  fig14_graph_min_effective_pident_otu: 97.0
+  fig14_edge_threshold_by_method:
+    asv: 100.0
+    zotu: 100.0
+    otu: 97.0
+    tic: 98.7
+    tac: 98.7
+  fig14_min_query_coverage: 100.0
+  fig14_min_query_coverage_by_method:
+    asv: 100.0
+    zotu: 100.0
+    otu: 100.0
+    tic: 100.0
+    tac: 100.0
+  fig16_species_driver_top_n: 15
+  fig16_methods:
+  - zOTU
+  - TIC
+  - TAC
+  fig16_species_driver_sample_aggregation: mean
+  fig16_species_driver_title_prefix: Distance Deviator Species Plot
+  fig16_species_driver_xlabel: Relative Abundance Deviation (Inferred - Expected)
+  fig16_species_driver_ylabel_template: Top {n} Species by |Rel. Abundance Deviation|
+  fig16_xtick_rotation: 0.0
+  fig16_ytick_rotation: 0.0
+  fig16_species_driver_xlim: auto
+  fig16_projection_abundance_mode: original_relative
+  fig07_plot_type: violin
+  fig07_target_level_by_method:
+    asv: tip
+    zotu: tip
+    otu: species
+    tic: species
+    tac: species
+    default: species
+  fig07_stats_model: paired_permutation
+  fig07_stats_pairwise_test: signed_rank_permutation
+  fig07_stats_glmm_emmeans_scale: response
+  fig07_stats_alpha: 0.05
+  fig07_stats_multiple_test_correction: true
+  fig07_stats_show_pairwise: true
+  fig07_include_richness_effective_variant: true
+  fig07_write_long_tsv: true
+  fig08_plot_type: violin
+  fig09_plot_type: violin
+  fig09_font_size: 14.0
+  fig09_layout_w_pad: 2.5
+  fig09_layout_left: 0.02
+  fig09_layout_bottom: 0.02
+  fig09_layout_right: 0.02
+  fig09_layout_top: 0.02
+  fig09_save_bbox_tight: false
+  fig09_save_pad_inches: 0.02
+  fig09_write_individual_panels: true
+  fig09_split_index_mode: graph
+  fig09_split_index_threshold_target_level: species
+  fig09_split_index_denominator: mapped_expected_features
+  fig09_one_to_one_denominator: mapped_inferred_features
+  fig09_merge_denominator: expected_present_features
+  fig09_graph_min_effective_pident_denoising: 100.0
+  fig09_graph_min_effective_pident_tic_tac: 98.7
+  fig09_graph_min_effective_pident_otu: 97.0
+  fig09_min_query_coverage: 100.0
+  fig09_no_hit_min_query_coverage: null
+  fig09_no_hit_min_effective_pident_by_method: {}
+  fig12_unmapped_best_hit_min_query_coverage: null
+  fig12_no_hit_min_effective_pident_by_method:
+    asv: 97.0
+    zotu: 97.0
+    otu: 97.0
+    tic: 97.0
+    tac: 97.0
+  fig15_no_hit_min_effective_pident_by_method:
+    asv: 97.0
+    zotu: 97.0
+    otu: 97.0
+    tic: 97.0
+    tac: 97.0
+  fig09_graph_target_level_asv: tip
+  fig09_graph_target_level_zotu: tip
+  fig09_graph_target_level_tic: species
+  fig09_graph_target_level_tac: species
+  fig09_graph_target_level_otu: species
+  fig09_graph_target_level_by_metric: {}
+  fig09_panel_target_level_by_metric:
+    a:
+      split_index: species
+      merge_deficit: species
+    b:
+      one_to_one_mapping_fraction: species
+    c:
+      no_hit_over_unmapped_fraction: species
+  fig09_graph_edge_threshold_by_metric:
+    merge_index:
+      asv: 100
+      zotu: 100
+      otu: 97.0
+      tic: 98.7
+      tac: 98.7
+    split_index:
+      asv: 100
+      zotu: 100
+      otu: 100
+      tic: 100
+      tac: 100
+    one_to_one_mapping_fraction:
+      asv: 100
+      zotu: 100
+      otu: 100
+      tic: 100
+      tac: 100
+  fig09_panel_c_enabled: true
+  fig09_panel_titles:
+    a: Split/Merge Index
+    b: 1-to-1 Mapping and Cluster Purity
+    c: Mapping outcome breakdown
+    d: Relative Richness Error
+  fig09_graph_labels_by_metric:
+    split_index:
+      title: Split Index
+      xlabel: Method
+      ylabel: Index
+    merge_deficit:
+      title: Merge Index
+      xlabel: Method
+      ylabel: Index
+    one_to_one_mapping_fraction:
+      title: One-to-One Mapping Fraction
+      xlabel: Method
+      ylabel: Fraction
+    no_hit_over_unmapped_fraction:
+      title: Mapping Outcome Breakdown
+      xlabel: Post-clustering outcome
+      ylabel: Original zOTU class
+    relative_richness_error:
+      title: Relative Richness Error
+      xlabel: Method
+      ylabel: Relative richness error (%)
+  fig09_panel_d_title: Relative Richness Error
+  fig09_panel_d_xlabel: Method
+  fig09_panel_d_ylabel: Relative richness error (%)
+  fig09_panel_d_methods:
+  - ASV
+  - zOTU
+  - TIC
+  - TAC
+  - OTU
+  fig09_panel_d_plot_type: boxplot
+  fig09_panel_d_font_size: null
+  fig09_panel_d_tick_size: null
+  fig09_panel_d_xtick_rotation: 45.0
+  fig09_panel_d_ytick_rotation: 0.0
+  fig09_panel_d_point_size: null
+  fig09_panel_d_point_opacity: 0.72
+  fig09_panel_d_point_jitter: 0.055
+  fig09_panel_d_show_zero_line: true
+  fig09_panel_d_show_reference_note: true
+  fig09_panel_d_reference_note: 0% = expected species richness
+  fig09_panel_d_show_excess_removed_annotation: true
+  fig09_panel_d_y_limits: []
+  fig09_transition_heatmap_title: null
+  fig09_transition_heatmap_xlabel: Post-clustering outcome
+  fig09_transition_heatmap_ylabel: Original zOTU class
+  fig09_transition_heatmap_note: ''
+  fig09_transition_heatmap_cmap: YlGnBu
+  fig09_transition_heatmap_show_counts: true
+  fig09_transition_heatmap_show_percentages: true
+  fig09_transition_heatmap_show_colorbar: true
+  fig09_transition_heatmap_x_tick_rotation: 45.0
+  fig09_transition_heatmap_row_label_rotation: 0.0
+  fig09_transition_heatmap_method_label_x_offset: 0.02
+  fig09_transition_heatmap_colorbar_pad: 0.1
+  fig09_transition_heatmap_tic_label: TIC
+  fig09_transition_heatmap_tac_label: TAC
+  fig09_transition_heatmap_no_match_label: 'No
+
+    match'
+  fig09_transition_heatmap_non_bacterial_label: 'Non
+
+    bacterial'
+  fig09_transition_heatmap_colorbar_label: Fraction of zOTUs
+  fig09_transition_heatmap_exact_identity: 100.0
+  fig09_transition_heatmap_near_exact_min_effective_pident: 98.7
+  fig09_homogeneity_enabled: true
+  fig09_homogeneity_title: Taxonomy Homogeneity across Cluster Match-status Groups
+  fig09_homogeneity_font_size: null
+  fig09_homogeneity_tick_size: null
+  fig09_homogeneity_figsize:
+  - 13.2
+  - 10.2
+  fig09_homogeneity_count_ylabel: Cluster count
+  fig09_homogeneity_effect_ylabel: Abundance effect
+  fig09_homogeneity_count_label: Count
+  fig09_homogeneity_effect_label: 'Abundance
+
+    effect'
+  fig09_homogeneity_count_legend_label: Absolute count
+  fig09_homogeneity_single_species_label: Single species
+  fig09_homogeneity_multi_species_label: Multi-species or unresolved
+  fig09_homogeneity_single_species_color: '#009E73'
+  fig09_homogeneity_multi_species_color: '#D55E00'
+  fig09_homogeneity_effect_hatch: '...'
+  fig09_homogeneity_effect_alpha: 0.78
+  fig09_homogeneity_effect_axis_max: 1.0
+  fig09_homogeneity_count_axis_padding: 1.25
+  fig09_homogeneity_show_value_labels: true
+  fig09_homogeneity_show_bar_type_labels: true
+  fig09_homogeneity_show_legends: true
+  fig09_homogeneity_pure_exact_title: Pure exact
+  fig09_homogeneity_pure_near_title: Pure near-exact
+  fig09_homogeneity_pure_no_match_title: Pure no match
+  fig09_homogeneity_exact_near_title: Exact + near-exact
+  fig09_homogeneity_save_bbox_tight: false
+  fig09_homogeneity_save_pad_inches: 0.02
+  fig11_plot_type: violin
+  fig18_plot_type: violin
+  fig19_point_size: 34.0
+  fig19_metrics:
+  - jaccard
+  - weighted_jaccard
+  - braycurtis
+  - gunifrac_a0.0
+  - gunifrac_a0.5
+  - gunifrac_a1.0
+  fig19_profile_distance: euclidean
+  fig19_standardize_profiles: true
+  fig19_show_umap: false
+  fig19_umap_n_neighbors: 25
+  fig19_umap_min_dist: 0.9
+  fig19_umap_random_state: 420
+  fig20_sample_aggregation: mean
+  fig20_methods:
+  - zOTU
+  - TIC
+  - TAC
+  fig21_plot_type: violin
+  fig21_violin_bw_method: 0.3
+  fig21_point_size: 42.0
+  fig21_metrics:
+  - jaccard
+  - weighted_jaccard
+  - braycurtis
+  - gunifrac_a0.0
+  - gunifrac_a0.5
+  - gunifrac_a1.0
+  fig21_agnostic_metrics:
+  - jaccard
+  - weighted_jaccard
+  - braycurtis
+  fig21_aware_metrics:
+  - gunifrac_a0.0
+  - gunifrac_a0.5
+  - gunifrac_a1.0
+  fig21_profile_distance: euclidean
+  fig21_standardize_profiles: true
+  fig21_show_pair_group_distance_contrast: true
+  fig21_pair_group_summary_stat: mean
+  fig21_panel_b_method_groups:
+    denoising:
+    - DADA2
+    - UNOISE3
+    clustering:
+    - TIC
+    - TAC
+    - OTU
+  fig21_panel_b_group_labels:
+    denoising_phylogeny_aware: Denoising | phylo-aware
+    denoising_phylogeny_agnostic: Denoising | phylo-agnostic
+    clustering_phylogeny_aware: Clustering | phylo-aware
+    clustering_phylogeny_agnostic: Clustering | phylo-agnostic
+  fig21_panel_d_methods:
+  - ASV
+  - zOTU
+  - TIC
+  - TAC
+  - OTU
+  fig21_panel_f_methods:
+  - ASV
+  - zOTU
+  - TIC
+  - TAC
+  - OTU
+  fig21_panel_f_summary_statistic: median
+  fig21_panel_f_stats_pairwise_test: mean_difference_permutation
+  fig21_panel_f_stats_alternative: greater
+  fig21_panel_f_stats_practical_difference_delta: 0.0099
+  fig21_panel_f_stats_bootstrap_resamples: 4000
+  fig21_panel_f_stats_ci_level: 0.95
+  fig21_panel_f_stats_show_annotations: true
+  fig21_panel_f_stats_show_non_significant_annotations: false
+  fig21_panel_f_stats_planned_comparisons:
+  - - UNOISE3
+    - TIC
+  - - UNOISE3
+    - TAC
+  - - UNOISE3
+    - OTU
+  - - DADA2
+    - TIC
+  - - DADA2
+    - TAC
+  - - DADA2
+    - OTU
+  - - UNOISE3
+    - DADA2
+  - - TIC
+    - TAC
+  - - TIC
+    - OTU
+  - - TAC
+    - OTU
+  fig21_show_sensitivity_by_method: true
+  fig21_show_sample_method_heatmap: true
+  fig21_show_per_sample_method_metric_pcoa: true
+  fig21_show_method_metric_profile_pcoa: true
+  fig21_show_pairwise_difference_pcoa: true
+  fig11_projection_mapping_mode: best_hit_aggregate
+  fig11_target_level_by_method:
+    asv: tip
+    zotu: tip
+    otu: species
+    tic: species
+    tac: species
+    default: species
+  fig11_min_effective_pident_by_method:
+    asv: 100
+    zotu: 100
+    otu: 97.0
+    tic: 98.7
+    tac: 98.7
+    default: 98.7
+  fig21_projection_mapping_mode: best_hit_aggregate
+  fig21_target_level_by_method:
+    asv: tip
+    zotu: tip
+    otu: species
+    tic: species
+    tac: species
+    default: species
+  fig21_min_effective_pident_by_method:
+    asv: 100.0
+    zotu: 100.0
+    otu: 97.0
+    tic: 98.7
+    tac: 98.7
+    default: 98.7
+  fig09_stats_enabled: true
+  fig09_stats_permutations: 4000
+  fig09_stats_seed: 1
+  fig09_stats_alpha: 0.05
+  fig09_stats_show_pairwise: true
+  fig09_stats_model: paired_permutation
+  fig09_stats_pairwise_test: mean_difference_permutation
+  fig09_stats_glmm_binomial_formula: cbind(success, failure) ~ method + (1|community_id)
+    + (1|sample_key)
+  fig09_stats_glmm_binomial_null_formula: cbind(success, failure) ~ 1 + (1|community_id)
+    + (1|sample_key)
+  fig09_stats_glmm_count_formula: count ~ method + offset(log_offset) + (1|community_id)
+    + (1|sample_key)
+  fig09_stats_glmm_count_null_formula: count ~ 1 + offset(log_offset) + (1|community_id)
+    + (1|sample_key)
+  fig09_stats_glmm_count_family: nbinom2
+  fig09_stats_glmm_emmeans_scale: link
+  fig09_stats_multiple_test_correction: true
+  fig10_top_n_species: 10
+  fig07_stats_permutations: 2000
+  fig07_stats_seed: 1
+  fig07_show_pvalue_label: false
+  fig06_grid_rows: 6
+  fig06_grid_cols: 5
+  fig11_stats_enabled: true
+  fig11_stats_permutations: 4000
+  fig11_stats_seed: 1
+  fig11_stats_alpha: 0.05
+  fig11_stats_show_pairwise: true
+  fig11_stats_model: paired_permutation
+  fig11_stats_pairwise_test: signed_rank_permutation
+  fig11_stats_multiple_test_correction: true
+  fig11_stats_glmm_emmeans_scale: link
+  fig21_stats_enabled: true
+  fig21_stats_permutations: 4000
+  fig21_stats_seed: 1
+  fig21_stats_alpha: 0.05
+  fig21_stats_show_pairwise: true
+  fig21_stats_pairwise_test: signed_rank_permutation
+  fig21_stats_multiple_test_correction: true
+  exclude_community_name_patterns: {}
+  exclude_community_name_patterns_fig01: []
+  exclude_community_name_patterns_fig02: []
+  exclude_community_name_patterns_fig03: []
+  exclude_community_name_patterns_fig04: []
+  exclude_community_name_patterns_fig05: []
+  exclude_community_name_patterns_fig06: []
+  exclude_community_name_patterns_fig07: []
+  exclude_community_name_patterns_fig08: []
+  exclude_community_name_patterns_fig09: null
+  exclude_community_name_patterns_fig10: []
+  exclude_community_name_patterns_fig11: []
+  exclude_community_name_patterns_fig12: []
+  exclude_community_name_patterns_fig13: []
+  exclude_community_name_patterns_fig14: []
+  exclude_community_name_patterns_fig15: []
+  exclude_community_name_patterns_fig16: []
+  exclude_community_name_patterns_fig17: []
+  exclude_community_name_patterns_fig18: []
+  exclude_community_name_patterns_fig19: []
+  exclude_community_name_patterns_fig20: []
+  exclude_community_name_patterns_fig21: null

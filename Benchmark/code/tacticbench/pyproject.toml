@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tacticbench"
+version = "0.2.0"
+description = "Benchmarking toolkit for comparing DADA2 vs TACTIC outputs on mock communities."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "TACTIC Paper" }]
+license = { text = "MIT" }
+
+dependencies = [
+  "pandas>=2.0",
+  "numpy>=1.24",
+  "pyyaml>=6.0",
+  "matplotlib>=3.7",
+  "seaborn>=0.13",
+  "biopython>=1.80"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "ruff>=0.3"
+]
+
+[project.scripts]
+tacticbench = "tacticbench.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

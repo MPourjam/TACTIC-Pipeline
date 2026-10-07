@@ -1,0 +1,25 @@
+transition_method	zotu_class	final_fate	count	row_total	row_fraction
+TIC	Exact match	Exact match	519	520	0.9980769230769231
+TIC	Exact match	Near-exact match	0	520	0.0
+TIC	Exact match	No hit	0	520	0.0
+TIC	Exact match	Unassigned	1	520	0.0019230769230769232
+TIC	Near-exact match	Exact match	39	48	0.8125
+TIC	Near-exact match	Near-exact match	9	48	0.1875
+TIC	Near-exact match	No hit	0	48	0.0
+TIC	Near-exact match	Unassigned	0	48	0.0
+TIC	No hit	Exact match	0	184	0.0
+TIC	No hit	Near-exact match	0	184	0.0
+TIC	No hit	No hit	184	184	1.0
+TIC	No hit	Unassigned	0	184	0.0
+TAC	Exact match	Exact match	520	520	1.0
+TAC	Exact match	Near-exact match	0	520	0.0
+TAC	Exact match	No hit	0	520	0.0
+TAC	Exact match	Unassigned	0	520	0.0
+TAC	Near-exact match	Exact match	37	48	0.7708333333333334
+TAC	Near-exact match	Near-exact match	11	48	0.22916666666666666
+TAC	Near-exact match	No hit	0	48	0.0
+TAC	Near-exact match	Unassigned	0	48	0.0
+TAC	No hit	Exact match	2	184	0.010869565217391304
+TAC	No hit	Near-exact match	15	184	0.08152173913043478
+TAC	No hit	No hit	167	184	0.907608695652174
+TAC	No hit	Unassigned	0	184	0.0

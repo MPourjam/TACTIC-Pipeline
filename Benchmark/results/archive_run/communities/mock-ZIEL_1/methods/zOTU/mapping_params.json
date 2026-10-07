@@ -1,0 +1,13 @@
+{
+  "assignment_mode": "one_to_one",
+  "blast_record_min_raw_pident": 90.0,
+  "exact_tie_policy": "shuffle_equal_score_candidates",
+  "method": "zOTU",
+  "min_effective_pident": 100.0,
+  "min_query_coverage": 100.0,
+  "seed": 1,
+  "soft_species_min_relative_score": 0.0,
+  "soft_species_score_field": "bitscore",
+  "target_level": "tip",
+  "version": 4
+}

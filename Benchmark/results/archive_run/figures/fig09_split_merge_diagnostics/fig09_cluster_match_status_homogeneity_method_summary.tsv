@@ -1,0 +1,9 @@
+mix_type	mix_label	method	clusters_in_group	single_species_clusters	multi_species_or_unresolved_clusters	single_species_fraction	single_species_present_sample_count	single_species_present_mean_abundance_fraction
+pure_exact	Pure exact	TIC	25	21	4	0.84	16	0.0894904835562777
+pure_exact	Pure exact	TAC	24	22	2	0.9166666666666666	16	0.09244071900085819
+pure_near	Pure near-exact	TIC	0	0	0		0	
+pure_near	Pure near-exact	TAC	0	0	0		0	
+pure_no_match	Pure no match	TIC	21	9	12	0.42857142857142855	5	0.003496449469577114
+pure_no_match	Pure no match	TAC	20	4	16	0.2	4	5.009250039665837e-05
+exact_near	Exact + near-exact	TIC	31	31	0	1.0	17	0.1347669282339865
+exact_near	Exact + near-exact	TAC	29	25	4	0.8620689655172413	12	0.15050760920623557

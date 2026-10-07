@@ -1,0 +1,13 @@
+community_id	total_pair_weight	weight_v4_low_resolution_specific	fraction_v4_low_resolution_specific	weight_high_similarity_full16s	fraction_high_similarity_full16s	weight_not_explained_by_v4_threshold	fraction_not_explained_by_v4_threshold	weight_missing_similarity_data	fraction_missing_similarity_data
+mock-12	6.0	6.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0
+mock-13	1.0	0.0	0.0	1.0	1.0	0.0	0.0	0.0	0.0
+mock-14	1.0	0.0	0.0	1.0	1.0	0.0	0.0	0.0	0.0
+mock-15	1.0	0.0	0.0	1.0	1.0	0.0	0.0	0.0	0.0
+mock-16	10.0	10.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0
+mock-20	1.0	0.0	0.0	1.0	1.0	0.0	0.0	0.0	0.0
+mock-21	1.0	0.0	0.0	1.0	1.0	0.0	0.0	0.0	0.0
+mock-22	1.0	0.0	0.0	1.0	1.0	0.0	0.0	0.0	0.0
+mock-23	1.0	0.0	0.0	1.0	1.0	0.0	0.0	0.0	0.0
+mock-4	4.0	0.0	0.0	4.0	1.0	0.0	0.0	0.0	0.0
+mock-5	4.0	0.0	0.0	4.0	1.0	0.0	0.0	0.0	0.0
+mock-ZIEL_2	30.0	20.0	0.6666666666666666	10.0	0.3333333333333333	0.0	0.0	0.0	0.0

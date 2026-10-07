@@ -1,0 +1,51 @@
+metric	label	stats_model	multiple_test_correction	method_a	method_b	estimate	std_error	statistic	p_raw	p_adj_bh	p_value_used	pairwise_test	significant_alpha
+observed_species	Observed Species	paired_permutation	True	ASV	zOTU	3.0		176.5	0.03398300849575212	0.03775889832861347	0.03775889832861347	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	ASV	OTU	7.0		273.5	0.0004997501249375312	0.001249375312343828	0.001249375312343828	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	ASV	TIC	6.5		235.0	0.0004997501249375312	0.001249375312343828	0.001249375312343828	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	ASV	TAC	6.5		236.5	0.0004997501249375312	0.001249375312343828	0.001249375312343828	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	zOTU	OTU	2.0		268.5	0.0009995002498750624	0.001999000499750125	0.001999000499750125	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	zOTU	TIC	1.0		195.0	0.006496751624187906	0.009281073748839866	0.009281073748839866	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	zOTU	TAC	2.5		188.0	0.0004997501249375312	0.001249375312343828	0.001249375312343828	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	OTU	TIC	-2.0		8.5	0.0029985007496251873	0.004997501249375313	0.004997501249375313	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	OTU	TAC	-2.5		11.5	0.027486256871564217	0.03435782108945527	0.03435782108945527	signed_rank_permutation	True
+observed_species	Observed Species	paired_permutation	True	TIC	TAC	2.0		10.0	0.11894052973513243	0.11894052973513243	0.11894052973513243	signed_rank_permutation	False
+shannon	Shannon	paired_permutation	True	ASV	zOTU	0.040843814421045455		369.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+shannon	Shannon	paired_permutation	True	ASV	OTU	0.06210329047706331		296.0	0.0074962518740629685	0.012493753123438282	0.012493753123438282	signed_rank_permutation	True
+shannon	Shannon	paired_permutation	True	ASV	TIC	0.17557211743239964		326.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+shannon	Shannon	paired_permutation	True	ASV	TAC	0.1755721174323992		312.0	0.0034982508745627187	0.008745627186406797	0.008745627186406797	signed_rank_permutation	True
+shannon	Shannon	paired_permutation	True	zOTU	OTU	0.013823377820933236		186.0	0.7916041979010495	0.7916041979010495	0.7916041979010495	signed_rank_permutation	False
+shannon	Shannon	paired_permutation	True	zOTU	TIC	0.019350397778216344		265.5	0.06696651674162919	0.0956664524880417	0.0956664524880417	signed_rank_permutation	False
+shannon	Shannon	paired_permutation	True	zOTU	TAC	0.015062766047715836		219.0	0.13493253373313344	0.1686656671664168	0.1686656671664168	signed_rank_permutation	False
+shannon	Shannon	paired_permutation	True	OTU	TIC	0.0007903683378696069		318.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+shannon	Shannon	paired_permutation	True	OTU	TAC	0.00012065346514367192		288.0	0.005997001499250375	0.01199400299850075	0.01199400299850075	signed_rank_permutation	True
+shannon	Shannon	paired_permutation	True	TIC	TAC	-1.1102230246251565e-16		85.0	0.4702648675662169	0.5225165195180188	0.5225165195180188	signed_rank_permutation	False
+effective_shannon	Effective Shannon	paired_permutation	True	ASV	zOTU	0.7304235856540835		365.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+effective_shannon	Effective Shannon	paired_permutation	True	ASV	OTU	0.9454459085457252		315.0	0.0029985007496251873	0.005997001499250375	0.005997001499250375	signed_rank_permutation	True
+effective_shannon	Effective Shannon	paired_permutation	True	ASV	TIC	1.2037300618367697		336.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+effective_shannon	Effective Shannon	paired_permutation	True	ASV	TAC	1.2037300618367697		319.0	0.001999000499750125	0.004997501249375312	0.004997501249375312	signed_rank_permutation	True
+effective_shannon	Effective Shannon	paired_permutation	True	zOTU	OTU	0.09129789620466111		215.0	0.3193403298350825	0.3548225887056472	0.3548225887056472	signed_rank_permutation	False
+effective_shannon	Effective Shannon	paired_permutation	True	zOTU	TIC	0.16076554581126423		301.0	0.010494752623688156	0.014992503748125937	0.014992503748125937	signed_rank_permutation	True
+effective_shannon	Effective Shannon	paired_permutation	True	zOTU	TAC	0.9649681024639563		235.0	0.05847076461769116	0.07308845577211395	0.07308845577211395	signed_rank_permutation	False
+effective_shannon	Effective Shannon	paired_permutation	True	OTU	TIC	0.007073691469751342		320.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+effective_shannon	Effective Shannon	paired_permutation	True	OTU	TAC	0.0018094260535868045		290.0	0.005997001499250375	0.009995002498750625	0.009995002498750625	signed_rank_permutation	True
+effective_shannon	Effective Shannon	paired_permutation	True	TIC	TAC	-4.440892098500626e-16		87.0	0.519240379810095	0.519240379810095	0.519240379810095	signed_rank_permutation	False
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	ASV	zOTU	0.011901547246110145		343.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	ASV	OTU	0.013433191571554981		309.0	0.0024987506246876563	0.004164584374479427	0.004164584374479427	signed_rank_permutation	True
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	ASV	TIC	0.01445430405542314		320.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	ASV	TAC	0.014618996575305077		314.0	0.0024987506246876563	0.004164584374479427	0.004164584374479427	signed_rank_permutation	True
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	zOTU	OTU	0.0002290641957363171		130.0	0.4097951024487756	0.5122438780609695	0.5122438780609695	signed_rank_permutation	False
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	zOTU	TIC	0.00023990857850064717		186.0	0.5397301349325337	0.5997001499250375	0.5997001499250375	signed_rank_permutation	False
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	zOTU	TAC	0.00023990857850053615		176.0	0.728135932033983	0.728135932033983	0.728135932033983	signed_rank_permutation	False
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	OTU	TIC	0.00012355843815536893		256.0	0.0004997501249375312	0.0016658337497917706	0.0016658337497917706	signed_rank_permutation	True
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	OTU	TAC	1.026645594559561e-05		218.0	0.001999000499750125	0.004164584374479427	0.004164584374479427	signed_rank_permutation	True
+simpson	Simpson (1 - sum p^2)	paired_permutation	True	TIC	TAC	-1.1102230246251565e-16		42.5	0.3473263368315842	0.4961804811879774	0.4961804811879774	signed_rank_permutation	False
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	ASV	zOTU	0.5110390854192635		319.0	0.001999000499750125	0.008329168748958855	0.008329168748958855	signed_rank_permutation	True
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	ASV	OTU	0.7868415482772884		288.0	0.017991004497751123	0.03331667499583542	0.03331667499583542	signed_rank_permutation	True
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	ASV	TIC	1.0074045371910927		296.0	0.00849575212393803	0.021239380309845075	0.021239380309845075	signed_rank_permutation	True
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	ASV	TAC	1.0074045371910962		288.0	0.01999000499750125	0.03331667499583542	0.03331667499583542	signed_rank_permutation	True
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	zOTU	OTU	0.006608903867500571		221.0	0.25987006496751625	0.2887445166305736	0.2887445166305736	signed_rank_permutation	False
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	zOTU	TIC	0.0066081883426436505		265.0	0.06996501749125437	0.09995002498750626	0.09995002498750626	signed_rank_permutation	False
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	zOTU	TAC	0.40441335096684305		242.0	0.08745627186406797	0.10932033983008496	0.10932033983008496	signed_rank_permutation	False
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	OTU	TIC	0.0012042460849430725		330.0	0.0004997501249375312	0.004997501249375312	0.004997501249375312	signed_rank_permutation	True
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	OTU	TAC	0.0006008708879541302		285.0	0.0024987506246876563	0.008329168748958855	0.008329168748958855	signed_rank_permutation	True
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	True	TIC	TAC	1.7763568394002505e-15		143.0	0.8840579710144928	0.8840579710144928	0.8840579710144928	signed_rank_permutation	False

@@ -1,0 +1,15 @@
+inferred_feature	target_species	best_tip	target_tip	effective_identity	pident	bitscore	evalue	length
+SOTU1001	Listeria_monocytogenes	Listeria_monocytogenes_ATCC_BAA-679	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	468.0	1.39e-135	253.0
+SOTU101	Bacillus_cereus	Bacillus_cereus_ATCC_10987	Bacillus_cereus_ATCC_10987	100.0	100.0	468.0	1.39e-135	253.0
+SOTU1202	Clostridium_beijerinckii	Clostridium_beijerinckii_ATCC_51743	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	468.0	1.39e-135	253.0
+SOTU1401	Pseudomonas_aeruginosa	Pseudomonas_aeruginosa_ATCC_47085	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	468.0	1.39e-135	253.0
+SOTU201	Escherichia_coli	Escherichia_coli_ATCC_700926	Escherichia_coli_ATCC_700926	100.0	100.0	468.0	1.39e-135	253.0
+SOTU301	Acinetobacter_baumannii	Acinetobacter_baumannii_ATCC_17978	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	468.0	1.39e-135	253.0
+SOTU401	Staphylococcus_aureus	Staphylococcus_aureus_ATCC_BAA-1718	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	468.0	1.39e-135	253.0
+SOTU503	Streptococcus_mutans	Streptococcus_mutans_ATCC_700610	Streptococcus_mutans_ATCC_700610	100.0	100.0	466.0	4.98e-135	252.0
+SOTU504	Streptococcus_pneumoniae	Streptococcus_pneumoniae_ATCC_BAA-334	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	466.0	4.98e-135	252.0
+SOTU506	Streptococcus_agalactiae	Streptococcus_agalactiae_ATCC_BAA-611	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	466.0	4.98e-135	252.0
+SOTU601	Neisseria_meningitidis	Neisseria_meningitidis_ATCC_BAA-335	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	468.0	1.39e-135	253.0
+SOTU701	Helicobacter_pylori	Helicobacter_pylori_ATCC_700392	Helicobacter_pylori_ATCC_700392	100.0	100.0	470.0	3.88e-136	254.0
+SOTU801	Lactobacillus_gasseri	Lactobacillus_gasseri_DSM_20243	Lactobacillus_gasseri_DSM_20243	100.0	100.0	468.0	1.39e-135	253.0
+SOTU901	Rhodobacter_sphaeroides	Rhodobacter_sphaeroides_ATCC_17023	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	468.0	1.39e-135	253.0

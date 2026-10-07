@@ -1,0 +1,5 @@
+panel_group	panel_title	metric	label	stats_model	pairwise_test	multiple_test_correction	n_blocks	friedman_q	friedman_p_perm	friedman_significant_alpha	alpha	n_permutations
+a	Split/Merge Index	split_index	Split Index	paired_permutation	signed_rank_permutation	True	27	59.384615384615415	0.00024993751562109475	True	0.05	4000
+a	Split/Merge Index	merge_deficit	Merge Index	paired_permutation	signed_rank_permutation	True	27	57.77593360995851	0.00024993751562109475	True	0.05	4000
+b	1-to-1 Mapping and Cluster Purity	one_to_one_mapping_fraction	1-to-1 Mapping Fraction	paired_permutation	signed_rank_permutation	True	27	59.384615384615415	0.00024993751562109475	True	0.05	4000
+d	Relative Richness Error	relative_richness_error	Relative Richness Error	paired_permutation	signed_rank_permutation	True	27	75.91928251121075	0.00024993751562109475	True	0.05	4000

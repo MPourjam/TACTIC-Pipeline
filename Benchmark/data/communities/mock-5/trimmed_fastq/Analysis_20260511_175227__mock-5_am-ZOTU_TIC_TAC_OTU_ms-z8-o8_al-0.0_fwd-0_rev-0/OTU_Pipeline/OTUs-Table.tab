@@ -1,0 +1,24 @@
+#OTU ID	mock-5-Staggered1	mock-5-Even2	mock-5-Even1	mock-5-Staggered2	Taxonomy
+OTU1	1052206.0	641641.0	610493.0	1364221.0	Bacteria;Bacillota;Bacilli;Staphylococcales;Staphylococcaceae;Staphylococcus;
+OTU3	110359.0	17076.0	16383.0	150205.0	Bacteria;Bacillota;Bacilli;Lactobacillales;Streptococcaceae;Streptococcus;
+OTU5	87850.0	6093.0	5486.0	112656.0	Archaea;Methanobacteriota;Methanobacteria;Methanobacteriales;Methanobacteriaceae;Methanobrevibacter;
+OTU4	82431.0	10018.0	11318.0	112345.0	Bacteria;Pseudomonadota;Alphaproteobacteria;Rhodobacterales;Paracoccaceae;Cereibacter;
+OTU7	55225.0	8792.0	8041.0	80099.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;Escherichia-Shigella;
+OTU9	20583.0	27932.0	26835.0	27413.0	Bacteria;Bacillota;Clostridia;Clostridiales;Clostridiaceae;Clostridium;
+OTU2	13271.0	227475.0	259519.0	18096.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Pseudomonadales;Moraxellaceae;Acinetobacter;
+OTU8	21953.0	33078.0	32981.0	30458.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Pseudomonadales;Pseudomonadaceae;Pseudomonas;
+OTU12	10686.0	17727.0	18912.0	15015.0	Bacteria;Bacillota;Bacilli;Lactobacillales;Streptococcaceae;Streptococcus;
+OTU11	12630.0	17788.0	17130.0	17570.0	Bacteria;Bacillota;Bacilli;Bacillales;Bacillaceae;Bacillus;
+OTU13	1574.0	29646.0	28273.0	2582.0	Bacteria;Bacillota;Bacilli;Lactobacillales;Listeriaceae;Listeria;
+OTU15	1543.0	24531.0	24878.0	1996.0	Bacteria;Campylobacterota;Campylobacteria;Campylobacterales;Helicobacteraceae;Helicobacter;
+OTU16	1446.0	21967.0	20690.0	1887.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Burkholderiales;Neisseriaceae;Neisseria;
+OTU6	627.0	84886.0	71065.0	795.0	Bacteria;Deinococcota;Deinococci;Deinococcales;Deinococcaceae;Deinococcus;
+OTU10	275.0	44874.0	42888.0	343.0	Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;
+OTU18	158.0	3613.0	2810.0	262.0	Bacteria;Bacillota;Bacilli;Lactobacillales;Lactobacillaceae;Lactobacillus;
+OTU20	106.0	12779.0	11987.0	137.0	Bacteria;Bacillota;Bacilli;Lactobacillales;Enterococcaceae;Enterococcus;
+OTU14	71.0	27717.0	29811.0	129.0	Bacteria;Bacillota;Bacilli;Lactobacillales;Streptococcaceae;Streptococcus;
+OTU21	53.0	15.0	5.0	61.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Lysobacterales;Lysobacteraceae;Stenotrophomonas;
+OTU22	40.0	5.0	8.0	43.0	Bacteria;Pseudomonadota;Alphaproteobacteria;Hyphomicrobiales;Devosiaceae;Devosia;
+OTU17	52.0	12165.0	11456.0	47.0	Bacteria;Actinomycetota;Actinobacteria;Actinomycetales;Actinomycetaceae;Schaalia;
+OTU19	7.0	128.0	103.0	5.0	Bacteria;Actinomycetota;Actinobacteria;Propionibacteriales;Propionibacteriaceae;Cutibacterium;
+OTU23	0.0	6.0	9.0	0.0	Bacteria;Bacillota;Clostridia;;;;

@@ -1,0 +1,31 @@
+endpoint_id	method	metric	method_label	metric_label	endpoint_group_id	endpoint_group_label	endpoint_label	endpoint_label_multiline
+ASV__jaccard	ASV	jaccard	DADA2	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	Jaccard | DADA2	Jaccard | DADA2
+ASV__weighted_jaccard	ASV	weighted_jaccard	DADA2	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	Weighted Jaccard | DADA2	Weighted Jaccard | DADA2
+ASV__braycurtis	ASV	braycurtis	DADA2	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	Bray-Curtis | DADA2	Bray-Curtis | DADA2
+ASV__gunifrac_a0.0	ASV	gunifrac_a0.0	DADA2	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	gUniFrac (α=0.0) | DADA2	gUniFrac (α=0.0) | DADA2
+ASV__gunifrac_a0.5	ASV	gunifrac_a0.5	DADA2	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	gUniFrac (α=0.5) | DADA2	gUniFrac (α=0.5) | DADA2
+ASV__gunifrac_a1.0	ASV	gunifrac_a1.0	DADA2	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	gUniFrac (α=1.0) | DADA2	gUniFrac (α=1.0) | DADA2
+zOTU__jaccard	zOTU	jaccard	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	Jaccard | UNOISE3	Jaccard | UNOISE3
+zOTU__weighted_jaccard	zOTU	weighted_jaccard	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	Weighted Jaccard | UNOISE3	Weighted Jaccard | UNOISE3
+zOTU__braycurtis	zOTU	braycurtis	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	Bray-Curtis | UNOISE3	Bray-Curtis | UNOISE3
+zOTU__gunifrac_a0.0	zOTU	gunifrac_a0.0	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	gUniFrac (α=0.0) | UNOISE3	gUniFrac (α=0.0) | UNOISE3
+zOTU__gunifrac_a0.5	zOTU	gunifrac_a0.5	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	gUniFrac (α=0.5) | UNOISE3	gUniFrac (α=0.5) | UNOISE3
+zOTU__gunifrac_a1.0	zOTU	gunifrac_a1.0	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	gUniFrac (α=1.0) | UNOISE3	gUniFrac (α=1.0) | UNOISE3
+OTU__jaccard	OTU	jaccard	UPARSE	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Jaccard | UPARSE	Jaccard | UPARSE
+OTU__weighted_jaccard	OTU	weighted_jaccard	UPARSE	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Weighted Jaccard | UPARSE	Weighted Jaccard | UPARSE
+OTU__braycurtis	OTU	braycurtis	UPARSE	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Bray-Curtis | UPARSE	Bray-Curtis | UPARSE
+OTU__gunifrac_a0.0	OTU	gunifrac_a0.0	UPARSE	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=0.0) | UPARSE	gUniFrac (α=0.0) | UPARSE
+OTU__gunifrac_a0.5	OTU	gunifrac_a0.5	UPARSE	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=0.5) | UPARSE	gUniFrac (α=0.5) | UPARSE
+OTU__gunifrac_a1.0	OTU	gunifrac_a1.0	UPARSE	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=1.0) | UPARSE	gUniFrac (α=1.0) | UPARSE
+TIC__jaccard	TIC	jaccard	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Jaccard | TIC	Jaccard | TIC
+TIC__weighted_jaccard	TIC	weighted_jaccard	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Weighted Jaccard | TIC	Weighted Jaccard | TIC
+TIC__braycurtis	TIC	braycurtis	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Bray-Curtis | TIC	Bray-Curtis | TIC
+TIC__gunifrac_a0.0	TIC	gunifrac_a0.0	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=0.0) | TIC	gUniFrac (α=0.0) | TIC
+TIC__gunifrac_a0.5	TIC	gunifrac_a0.5	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=0.5) | TIC	gUniFrac (α=0.5) | TIC
+TIC__gunifrac_a1.0	TIC	gunifrac_a1.0	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=1.0) | TIC	gUniFrac (α=1.0) | TIC
+TAC__jaccard	TAC	jaccard	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Jaccard | TAC	Jaccard | TAC
+TAC__weighted_jaccard	TAC	weighted_jaccard	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Weighted Jaccard | TAC	Weighted Jaccard | TAC
+TAC__braycurtis	TAC	braycurtis	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	Bray-Curtis | TAC	Bray-Curtis | TAC
+TAC__gunifrac_a0.0	TAC	gunifrac_a0.0	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=0.0) | TAC	gUniFrac (α=0.0) | TAC
+TAC__gunifrac_a0.5	TAC	gunifrac_a0.5	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=0.5) | TAC	gUniFrac (α=0.5) | TAC
+TAC__gunifrac_a1.0	TAC	gunifrac_a1.0	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	gUniFrac (α=1.0) | TAC	gUniFrac (α=1.0) | TAC

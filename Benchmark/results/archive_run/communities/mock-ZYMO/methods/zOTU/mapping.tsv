@@ -1,0 +1,7 @@
+inferred_feature	target_tip	effective_identity	pident	bitscore	evalue	length
+Zotu2	Staphylococcus_aureus_ATCC_12600	100.0	100.0	468.0	4.87e-136	253.0
+Zotu4	Listeria_monocytogenes_ATCC_19115	100.0	100.0	468.0	4.87e-136	253.0
+Zotu5	Escherichia_coli_ATCC_11775	100.0	100.0	468.0	4.87e-136	253.0
+Zotu6	Salmonella_enterica_LT2	100.0	100.0	468.0	4.87e-136	253.0
+Zotu7	Enterococcus_faecalis_ATCC_19433	100.0	100.0	468.0	4.87e-136	253.0
+Zotu8	Pseudomonas_aeruginosa_strain_ATCC_10145	100.0	100.0	468.0	4.87e-136	253.0

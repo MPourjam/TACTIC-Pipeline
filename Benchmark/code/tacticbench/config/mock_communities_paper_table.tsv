@@ -1,0 +1,17 @@
+Mock ID	Dataset name	Original mock community	Citation	Primer pair	Samples	Expected species	Composition	V4 reference class
+ZIEL I	mock-ZIEL_1	ZIEL I reference community	Abellan-Schneyder et al. 2021; doi:10.1128/mSphere.01202-20	515F-806R	2	13	Not applicable	Single V4
+ZIEL II	mock-ZIEL_2	ZIEL II reference community	Abellan-Schneyder et al. 2021; doi:10.1128/mSphere.01202-20	515F-806R	3	19	Not applicable	Single V4
+ZYMO	mock-ZYMO	ZYMO reference community	Abellan-Schneyder et al. 2021; doi:10.1128/mSphere.01202-20	515F-806R	3	8	Not applicable	Single V4
+Mock 1	mock-4	Gevers/Bokulich 21-strain community, B4 run	Bokulich et al. 2013; doi:10.1038/nmeth.2276	515F-806R	4	21	2 even, 2 staggered	Multi-V4
+Mock 2	mock-5	Gevers/Bokulich 21-strain community, B5 run	Bokulich et al. 2015; doi:10.7287/peerj.preprints.934v2	515F-806R	4	21	2 even, 2 staggered	Multi-V4
+Mock 3	mock-12	DADA2 Extreme community	Callahan et al. 2016; doi:10.1038/nmeth.3869	515F-806R	1	26	Extreme	Multi-V4
+Mock 4	mock-13	Kozich 21-member HMP mock	Kozich et al. 2013; doi:10.1128/AEM.01043-13	515F-806R	1	21	Even	Multi-V4
+Mock 5	mock-14	Kozich 21-member HMP mock	Kozich et al. 2013; doi:10.1128/AEM.01043-13	515F-806R	1	21	Even	Multi-V4
+Mock 6	mock-15	Kozich 21-member HMP mock	Kozich et al. 2013; doi:10.1128/AEM.01043-13	515F-806R	1	21	Even	Multi-V4
+Mock 7	mock-16	Schirmer balanced community	Schirmer et al. 2015; doi:10.1093/nar/gku1341	515F-806R	1	56	Balanced	Multi-V4
+Mock 8	mock-18	Tourlousse cloned-16S community	Tourlousse et al. 2017; doi:10.1093/nar/gkw984	515F-806R	1	15	Synthetic cloned 16S	Single V4
+Mock 9	mock-19	Tourlousse cloned-16S community	Tourlousse et al. 2017; doi:10.1093/nar/gkw984	515F-806R	1	15	Synthetic cloned 16S; spike-ins removed	Single V4
+Mock 10	mock-20	HMP HM-276D	Gohl et al. 2016; doi:10.1038/nbt.3601	515F-806R	1	20	Even	Multi-V4
+Mock 11	mock-21	HMP HM-277D	Gohl et al. 2016; doi:10.1038/nbt.3601	515F-806R	1	20	Staggered	Multi-V4
+Mock 12	mock-22	HMP HM-276D	Gohl et al. 2016; doi:10.1038/nbt.3601	515F-806R	1	20	Even	Multi-V4
+Mock 13	mock-23	HMP HM-277D	Gohl et al. 2016; doi:10.1038/nbt.3601	515F-806R	1	20	Staggered	Multi-V4

@@ -1,0 +1,4 @@
+metric	label	stats_model	pairwise_test	multiple_test_correction	n_blocks	friedman_q	friedman_p_perm	friedman_significant_alpha	alpha	n_permutations
+mapped_fraction	Mapped Read Fraction	paired_permutation	signed_rank_permutation	True	24	47.00497512437812	0.00024993751562109475	True	0.05	4000
+unmapped_with_best_hit_fraction	Unmapped with Best Hit Fraction	paired_permutation	signed_rank_permutation	True	24	42.40549828178691	0.00024993751562109475	True	0.05	4000
+no_hit_fraction	No-Hit Read Fraction	paired_permutation	signed_rank_permutation	True	24	12.762836185819072	0.009747563109222694	True	0.05	4000

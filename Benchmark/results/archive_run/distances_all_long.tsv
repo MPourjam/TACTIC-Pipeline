@@ -1,0 +1,1081 @@
+community_id	sample_id	method	metric	distance
+mock-12	Mock 3	zOTU	jaccard	0.5116279069767442
+mock-12	Mock 3	zOTU	weighted_jaccard	0.5535661474095175
+mock-12	Mock 3	zOTU	braycurtis	0.38271100086472076
+mock-12	Mock 3	zOTU	aitchison	39.01429901235579
+mock-12	Mock 3	zOTU	unifrac	0.6228932659003108
+mock-12	Mock 3	zOTU	gunifrac_a0.0	0.45232025265459114
+mock-12	Mock 3	zOTU	gunifrac_a0.5	0.04002200562111827
+mock-12	Mock 3	zOTU	gunifrac_a1.0	0.02180211346920671
+mock-12	Mock 3	ASV	jaccard	0.4054054054054054
+mock-12	Mock 3	ASV	weighted_jaccard	0.5813116192427161
+mock-12	Mock 3	ASV	braycurtis	0.4097528584342227
+mock-12	Mock 3	ASV	aitchison	39.733858274464104
+mock-12	Mock 3	ASV	unifrac	0.2909400277773606
+mock-12	Mock 3	ASV	gunifrac_a0.0	0.17023394878237763
+mock-12	Mock 3	ASV	gunifrac_a0.5	0.047373577789735416
+mock-12	Mock 3	ASV	gunifrac_a1.0	0.038819772374506976
+mock-12	Mock 3	TIC	jaccard	0.48484848484848486
+mock-12	Mock 3	TIC	weighted_jaccard	0.10650565340469087
+mock-12	Mock 3	TIC	braycurtis	0.05624820248140633
+mock-12	Mock 3	TIC	aitchison	31.700873577450235
+mock-12	Mock 3	TIC	unifrac	0.591349576217335
+mock-12	Mock 3	TIC	gunifrac_a0.0	0.419798671290906
+mock-12	Mock 3	TIC	gunifrac_a0.5	0.031613010471664586
+mock-12	Mock 3	TIC	gunifrac_a1.0	0.014894799539651058
+mock-12	Mock 3	TAC	jaccard	0.48484848484848486
+mock-12	Mock 3	TAC	weighted_jaccard	0.10650565340469087
+mock-12	Mock 3	TAC	braycurtis	0.05624820248140633
+mock-12	Mock 3	TAC	aitchison	31.700873577450235
+mock-12	Mock 3	TAC	unifrac	0.5909405890343468
+mock-12	Mock 3	TAC	gunifrac_a0.0	0.41938656697900656
+mock-12	Mock 3	TAC	gunifrac_a0.5	0.03288152498377263
+mock-12	Mock 3	TAC	gunifrac_a1.0	0.014961967473638718
+mock-12	Mock 3	OTU	jaccard	0.5625
+mock-12	Mock 3	OTU	weighted_jaccard	0.107722542189989
+mock-12	Mock 3	OTU	braycurtis	0.05692745624875735
+mock-12	Mock 3	OTU	aitchison	36.25854935617474
+mock-12	Mock 3	OTU	unifrac	0.5873220088586028
+mock-12	Mock 3	OTU	gunifrac_a0.0	0.4157508027601292
+mock-12	Mock 3	OTU	gunifrac_a0.5	0.03182348886946247
+mock-12	Mock 3	OTU	gunifrac_a1.0	0.014923117598419548
+mock-13	Mock 4	zOTU	jaccard	0.33333333333333337
+mock-13	Mock 4	zOTU	weighted_jaccard	0.49849221872239546
+mock-13	Mock 4	zOTU	braycurtis	0.3319944291585607
+mock-13	Mock 4	zOTU	aitchison	33.18573090425166
+mock-13	Mock 4	zOTU	unifrac	0.5604914348018175
+mock-13	Mock 4	zOTU	gunifrac_a0.0	0.3893630426052051
+mock-13	Mock 4	zOTU	gunifrac_a0.5	0.13572849972800077
+mock-13	Mock 4	zOTU	gunifrac_a1.0	0.16144989104266286
+mock-13	Mock 4	ASV	jaccard	0.46341463414634143
+mock-13	Mock 4	ASV	weighted_jaccard	0.5721827494619218
+mock-13	Mock 4	ASV	braycurtis	0.40073948486495226
+mock-13	Mock 4	ASV	aitchison	33.75530863158421
+mock-13	Mock 4	ASV	unifrac	0.6173531028435252
+mock-13	Mock 4	ASV	gunifrac_a0.0	0.4465009136556571
+mock-13	Mock 4	ASV	gunifrac_a0.5	0.18921662345221066
+mock-13	Mock 4	ASV	gunifrac_a1.0	0.22232134650130211
+mock-13	Mock 4	TIC	jaccard	0.2857142857142857
+mock-13	Mock 4	TIC	weighted_jaccard	0.4506594206809901
+mock-13	Mock 4	TIC	braycurtis	0.2908717596999045
+mock-13	Mock 4	TIC	aitchison	27.506341636764365
+mock-13	Mock 4	TIC	unifrac	0.43956767357403775
+mock-13	Mock 4	TIC	gunifrac_a0.0	0.2816960826368102
+mock-13	Mock 4	TIC	gunifrac_a0.5	0.12725602521631837
+mock-13	Mock 4	TIC	gunifrac_a1.0	0.1597936719674929
+mock-13	Mock 4	TAC	jaccard	0.2857142857142857
+mock-13	Mock 4	TAC	weighted_jaccard	0.4506594206809901
+mock-13	Mock 4	TAC	braycurtis	0.2908717596999045
+mock-13	Mock 4	TAC	aitchison	27.506341636764365
+mock-13	Mock 4	TAC	unifrac	0.4395676735740377
+mock-13	Mock 4	TAC	gunifrac_a0.0	0.2816960826368101
+mock-13	Mock 4	TAC	gunifrac_a0.5	0.12725602521631837
+mock-13	Mock 4	TAC	gunifrac_a1.0	0.15979367196749283
+mock-13	Mock 4	OTU	jaccard	0.2857142857142857
+mock-13	Mock 4	OTU	weighted_jaccard	0.45065434396828563
+mock-13	Mock 4	OTU	braycurtis	0.29086752992391063
+mock-13	Mock 4	OTU	aitchison	27.504682954451237
+mock-13	Mock 4	OTU	unifrac	0.4395676735740377
+mock-13	Mock 4	OTU	gunifrac_a0.0	0.2816960826368101
+mock-13	Mock 4	OTU	gunifrac_a0.5	0.12725905059953868
+mock-13	Mock 4	OTU	gunifrac_a1.0	0.15980309203174348
+mock-14	Mock 5	zOTU	jaccard	0.46341463414634143
+mock-14	Mock 5	zOTU	weighted_jaccard	0.5152665631452374
+mock-14	Mock 5	zOTU	braycurtis	0.34704314616687737
+mock-14	Mock 5	zOTU	aitchison	33.54672765851906
+mock-14	Mock 5	zOTU	unifrac	0.6386587515185551
+mock-14	Mock 5	zOTU	gunifrac_a0.0	0.46913935226084486
+mock-14	Mock 5	zOTU	gunifrac_a0.5	0.1492744303865898
+mock-14	Mock 5	zOTU	gunifrac_a1.0	0.15552934382376263
+mock-14	Mock 5	ASV	jaccard	0.5416666666666667
+mock-14	Mock 5	ASV	weighted_jaccard	0.5828416408820649
+mock-14	Mock 5	ASV	braycurtis	0.41127488479469304
+mock-14	Mock 5	ASV	aitchison	34.16123896894702
+mock-14	Mock 5	ASV	unifrac	0.7036431469220772
+mock-14	Mock 5	ASV	gunifrac_a0.0	0.54278507129532
+mock-14	Mock 5	ASV	gunifrac_a0.5	0.20631239832768752
+mock-14	Mock 5	ASV	gunifrac_a1.0	0.22305099371313072
+mock-14	Mock 5	TIC	jaccard	0.45945945945945943
+mock-14	Mock 5	TIC	weighted_jaccard	0.4681686824250677
+mock-14	Mock 5	TIC	braycurtis	0.30562678609171756
+mock-14	Mock 5	TIC	aitchison	27.92958486197003
+mock-14	Mock 5	TIC	unifrac	0.628060534042526
+mock-14	Mock 5	TIC	gunifrac_a0.0	0.4577902667186587
+mock-14	Mock 5	TIC	gunifrac_a0.5	0.14191162040707678
+mock-14	Mock 5	TIC	gunifrac_a1.0	0.1529200846689317
+mock-14	Mock 5	TAC	jaccard	0.45945945945945943
+mock-14	Mock 5	TAC	weighted_jaccard	0.4681686824250678
+mock-14	Mock 5	TAC	braycurtis	0.3056267860917176
+mock-14	Mock 5	TAC	aitchison	27.92958486197003
+mock-14	Mock 5	TAC	unifrac	0.6333667356206971
+mock-14	Mock 5	TAC	gunifrac_a0.0	0.4634504018957559
+mock-14	Mock 5	TAC	gunifrac_a0.5	0.15185660413614305
+mock-14	Mock 5	TAC	gunifrac_a1.0	0.15921844569063107
+mock-14	Mock 5	OTU	jaccard	0.4444444444444444
+mock-14	Mock 5	OTU	weighted_jaccard	0.4681466124680719
+mock-14	Mock 5	OTU	braycurtis	0.30560797546189084
+mock-14	Mock 5	OTU	aitchison	27.926205423049016
+mock-14	Mock 5	OTU	unifrac	0.5608043633219941
+mock-14	Mock 5	OTU	gunifrac_a0.0	0.3896651358785797
+mock-14	Mock 5	OTU	gunifrac_a0.5	0.13657396925355933
+mock-14	Mock 5	OTU	gunifrac_a1.0	0.15284445535128266
+mock-15	Mock 6	zOTU	jaccard	0.4054054054054054
+mock-15	Mock 6	zOTU	weighted_jaccard	0.5198589427374616
+mock-15	Mock 6	zOTU	braycurtis	0.3512225677321051
+mock-15	Mock 6	zOTU	aitchison	33.05611153056527
+mock-15	Mock 6	zOTU	unifrac	0.5934438902064448
+mock-15	Mock 6	zOTU	gunifrac_a0.0	0.4219127030016218
+mock-15	Mock 6	zOTU	gunifrac_a0.5	0.1538401455948512
+mock-15	Mock 6	zOTU	gunifrac_a1.0	0.20083457618800554
+mock-15	Mock 6	ASV	jaccard	0.3529411764705882
+mock-15	Mock 6	ASV	weighted_jaccard	0.5942956778065092
+mock-15	Mock 6	ASV	braycurtis	0.4227743120823286
+mock-15	Mock 6	ASV	aitchison	33.26118331368796
+mock-15	Mock 6	ASV	unifrac	0.5864820846235383
+mock-15	Mock 6	ASV	gunifrac_a0.0	0.41490955172459965
+mock-15	Mock 6	ASV	gunifrac_a0.5	0.20136657384782447
+mock-15	Mock 6	ASV	gunifrac_a1.0	0.26132435009258487
+mock-15	Mock 6	TIC	jaccard	0.375
+mock-15	Mock 6	TIC	weighted_jaccard	0.47107743375868705
+mock-15	Mock 6	TIC	braycurtis	0.3081107206866458
+mock-15	Mock 6	TIC	aitchison	27.337161367280206
+mock-15	Mock 6	TIC	unifrac	0.5790755058685415
+mock-15	Mock 6	TIC	gunifrac_a0.0	0.4075343258985073
+mock-15	Mock 6	TIC	gunifrac_a0.5	0.14940947948394204
+mock-15	Mock 6	TIC	gunifrac_a1.0	0.1994830613079779
+mock-15	Mock 6	TAC	jaccard	0.375
+mock-15	Mock 6	TAC	weighted_jaccard	0.47107743375868705
+mock-15	Mock 6	TAC	braycurtis	0.3081107206866459
+mock-15	Mock 6	TAC	aitchison	27.337161367280206
+mock-15	Mock 6	TAC	unifrac	0.5866944785695791
+mock-15	Mock 6	TAC	gunifrac_a0.0	0.415122186727028
+mock-15	Mock 6	TAC	gunifrac_a0.5	0.15482580701906212
+mock-15	Mock 6	TAC	gunifrac_a1.0	0.20177274377087603
+mock-15	Mock 6	OTU	jaccard	0.3548387096774194
+mock-15	Mock 6	OTU	weighted_jaccard	0.4710685509196678
+mock-15	Mock 6	OTU	braycurtis	0.30810312077956165
+mock-15	Mock 6	OTU	aitchison	27.333896057075126
+mock-15	Mock 6	OTU	unifrac	0.4908358334507568
+mock-15	Mock 6	OTU	gunifrac_a0.0	0.32523687238948307
+mock-15	Mock 6	OTU	gunifrac_a0.5	0.14629765559928928
+mock-15	Mock 6	OTU	gunifrac_a1.0	0.19946255642084915
+mock-16	Mock 7	zOTU	jaccard	0.31034482758620685
+mock-16	Mock 7	zOTU	weighted_jaccard	0.5223479231464558
+mock-16	Mock 7	zOTU	braycurtis	0.35349858828657643
+mock-16	Mock 7	zOTU	aitchison	50.308472040434694
+mock-16	Mock 7	zOTU	unifrac	0.3038933903231408
+mock-16	Mock 7	zOTU	gunifrac_a0.0	0.17917116093370886
+mock-16	Mock 7	zOTU	gunifrac_a0.5	0.1486653556550821
+mock-16	Mock 7	zOTU	gunifrac_a1.0	0.18999886658418594
+mock-16	Mock 7	ASV	jaccard	0.4368932038834952
+mock-16	Mock 7	ASV	weighted_jaccard	0.5467813126265736
+mock-16	Mock 7	ASV	braycurtis	0.3762553546671189
+mock-16	Mock 7	ASV	aitchison	55.557037292897675
+mock-16	Mock 7	ASV	unifrac	0.3940526030888335
+mock-16	Mock 7	ASV	gunifrac_a0.0	0.24537080345641574
+mock-16	Mock 7	ASV	gunifrac_a0.5	0.1642603434840924
+mock-16	Mock 7	ASV	gunifrac_a1.0	0.20993711170405321
+mock-16	Mock 7	TIC	jaccard	0.32894736842105265
+mock-16	Mock 7	TIC	weighted_jaccard	0.5289980798490523
+mock-16	Mock 7	TIC	braycurtis	0.35961753183487966
+mock-16	Mock 7	TIC	aitchison	45.93366861003209
+mock-16	Mock 7	TIC	unifrac	0.28741508234874824
+mock-16	Mock 7	TIC	gunifrac_a0.0	0.16782530278435878
+mock-16	Mock 7	TIC	gunifrac_a0.5	0.14481469659513055
+mock-16	Mock 7	TIC	gunifrac_a1.0	0.1893985010305631
+mock-16	Mock 7	TAC	jaccard	0.33333333333333337
+mock-16	Mock 7	TAC	weighted_jaccard	0.5220535090756195
+mock-16	Mock 7	TAC	braycurtis	0.3532289648383018
+mock-16	Mock 7	TAC	aitchison	48.89949537752377
+mock-16	Mock 7	TAC	unifrac	0.2876303065088603
+mock-16	Mock 7	TAC	gunifrac_a0.0	0.16797208430058438
+mock-16	Mock 7	TAC	gunifrac_a0.5	0.14487132108750841
+mock-16	Mock 7	TAC	gunifrac_a1.0	0.18940847338021422
+mock-16	Mock 7	OTU	jaccard	0.323943661971831
+mock-16	Mock 7	OTU	weighted_jaccard	0.5152949116910361
+mock-16	Mock 7	OTU	braycurtis	0.3470688662338608
+mock-16	Mock 7	OTU	aitchison	54.012364852739765
+mock-16	Mock 7	OTU	unifrac	0.2694605174206933
+mock-16	Mock 7	OTU	gunifrac_a0.0	0.1557089682918251
+mock-16	Mock 7	OTU	gunifrac_a0.5	0.1443670298420009
+mock-16	Mock 7	OTU	gunifrac_a1.0	0.18944088875413678
+mock-18	Mock 8	zOTU	jaccard	0.06666666666666665
+mock-18	Mock 8	zOTU	weighted_jaccard	0.2599758433571636
+mock-18	Mock 8	zOTU	braycurtis	0.14940932995939285
+mock-18	Mock 8	zOTU	aitchison	19.68439522084611
+mock-18	Mock 8	zOTU	unifrac	0.052035358806539485
+mock-18	Mock 8	zOTU	gunifrac_a0.0	0.026712681383507533
+mock-18	Mock 8	zOTU	gunifrac_a0.5	0.08369116011117292
+mock-18	Mock 8	zOTU	gunifrac_a1.0	0.1335002199698469
+mock-18	Mock 8	ASV	jaccard	0.17647058823529416
+mock-18	Mock 8	ASV	weighted_jaccard	0.316995839162745
+mock-18	Mock 8	ASV	braycurtis	0.18835119160076647
+mock-18	Mock 8	ASV	aitchison	23.977608753000784
+mock-18	Mock 8	ASV	unifrac	0.11410366312580907
+mock-18	Mock 8	ASV	gunifrac_a0.0	0.0605036771612442
+mock-18	Mock 8	ASV	gunifrac_a0.5	0.10651545110577343
+mock-18	Mock 8	ASV	gunifrac_a1.0	0.16983245787840892
+mock-18	Mock 8	TIC	jaccard	0.06666666666666665
+mock-18	Mock 8	TIC	weighted_jaccard	0.2599758433571636
+mock-18	Mock 8	TIC	braycurtis	0.14940932995939285
+mock-18	Mock 8	TIC	aitchison	19.68439522084611
+mock-18	Mock 8	TIC	unifrac	0.052035358806539485
+mock-18	Mock 8	TIC	gunifrac_a0.0	0.026712681383507533
+mock-18	Mock 8	TIC	gunifrac_a0.5	0.0836911601111729
+mock-18	Mock 8	TIC	gunifrac_a1.0	0.13350021996984687
+mock-18	Mock 8	TAC	jaccard	0.06666666666666665
+mock-18	Mock 8	TAC	weighted_jaccard	0.2599758433571636
+mock-18	Mock 8	TAC	braycurtis	0.14940932995939285
+mock-18	Mock 8	TAC	aitchison	19.68439522084611
+mock-18	Mock 8	TAC	unifrac	0.052035358806539485
+mock-18	Mock 8	TAC	gunifrac_a0.0	0.026712681383507533
+mock-18	Mock 8	TAC	gunifrac_a0.5	0.08369116011117293
+mock-18	Mock 8	TAC	gunifrac_a1.0	0.1335002199698469
+mock-18	Mock 8	OTU	jaccard	0.06666666666666665
+mock-18	Mock 8	OTU	weighted_jaccard	0.2599758433571637
+mock-18	Mock 8	OTU	braycurtis	0.1494093299593929
+mock-18	Mock 8	OTU	aitchison	19.68439522084611
+mock-18	Mock 8	OTU	unifrac	0.052035358806539485
+mock-18	Mock 8	OTU	gunifrac_a0.0	0.026712681383507533
+mock-18	Mock 8	OTU	gunifrac_a0.5	0.08369116011117292
+mock-18	Mock 8	OTU	gunifrac_a1.0	0.1335002199698469
+mock-19	Mock 9	zOTU	jaccard	0.0
+mock-19	Mock 9	zOTU	weighted_jaccard	0.18836033946050867
+mock-19	Mock 9	zOTU	braycurtis	0.10397229844505423
+mock-19	Mock 9	zOTU	aitchison	1.5953967477922184
+mock-19	Mock 9	zOTU	unifrac	5.871176721129998e-08
+mock-19	Mock 9	zOTU	gunifrac_a0.0	2.935588446741791e-08
+mock-19	Mock 9	zOTU	gunifrac_a0.5	0.05317921049203291
+mock-19	Mock 9	zOTU	gunifrac_a1.0	0.08818522825879628
+mock-19	Mock 9	ASV	jaccard	0.0
+mock-19	Mock 9	ASV	weighted_jaccard	0.2718857683385508
+mock-19	Mock 9	ASV	braycurtis	0.1573309005604066
+mock-19	Mock 9	ASV	aitchison	1.7756450693280292
+mock-19	Mock 9	ASV	unifrac	5.871176721129998e-08
+mock-19	Mock 9	ASV	gunifrac_a0.0	2.935588446741791e-08
+mock-19	Mock 9	ASV	gunifrac_a0.5	0.08107971570663547
+mock-19	Mock 9	ASV	gunifrac_a1.0	0.1358283881673249
+mock-19	Mock 9	TIC	jaccard	0.0
+mock-19	Mock 9	TIC	weighted_jaccard	0.18836033946050867
+mock-19	Mock 9	TIC	braycurtis	0.10397229844505428
+mock-19	Mock 9	TIC	aitchison	1.5953967477922184
+mock-19	Mock 9	TIC	unifrac	5.871176721129998e-08
+mock-19	Mock 9	TIC	gunifrac_a0.0	2.935588446741791e-08
+mock-19	Mock 9	TIC	gunifrac_a0.5	0.05317921049203291
+mock-19	Mock 9	TIC	gunifrac_a1.0	0.08818522825879627
+mock-19	Mock 9	TAC	jaccard	0.0
+mock-19	Mock 9	TAC	weighted_jaccard	0.18836033946050867
+mock-19	Mock 9	TAC	braycurtis	0.10397229844505428
+mock-19	Mock 9	TAC	aitchison	1.5953967477922184
+mock-19	Mock 9	TAC	unifrac	5.871176721129998e-08
+mock-19	Mock 9	TAC	gunifrac_a0.0	2.935588446741791e-08
+mock-19	Mock 9	TAC	gunifrac_a0.5	0.05317921049203291
+mock-19	Mock 9	TAC	gunifrac_a1.0	0.08818522825879628
+mock-19	Mock 9	OTU	jaccard	0.0
+mock-19	Mock 9	OTU	weighted_jaccard	0.18836033946050867
+mock-19	Mock 9	OTU	braycurtis	0.10397229844505423
+mock-19	Mock 9	OTU	aitchison	1.5953967477922184
+mock-19	Mock 9	OTU	unifrac	5.871176721129998e-08
+mock-19	Mock 9	OTU	gunifrac_a0.0	2.935588446741791e-08
+mock-19	Mock 9	OTU	gunifrac_a0.5	0.05317921049203291
+mock-19	Mock 9	OTU	gunifrac_a1.0	0.08818522825879628
+mock-20	Mock 10	zOTU	jaccard	0.375
+mock-20	Mock 10	zOTU	weighted_jaccard	0.5403643147009366
+mock-20	Mock 10	zOTU	braycurtis	0.37020492177828734
+mock-20	Mock 10	zOTU	aitchison	38.919872542691195
+mock-20	Mock 10	zOTU	unifrac	0.12501051275408057
+mock-20	Mock 10	zOTU	gunifrac_a0.0	0.06667264728918687
+mock-20	Mock 10	zOTU	gunifrac_a0.5	0.14848979288788977
+mock-20	Mock 10	zOTU	gunifrac_a1.0	0.16906459664278997
+mock-20	Mock 10	ASV	jaccard	0.08695652173913049
+mock-20	Mock 10	ASV	weighted_jaccard	0.5577583293335522
+mock-20	Mock 10	ASV	braycurtis	0.38673014424539326
+mock-20	Mock 10	ASV	aitchison	27.128328736362715
+mock-20	Mock 10	ASV	unifrac	0.042803939623036996
+mock-20	Mock 10	ASV	gunifrac_a0.0	0.021870031566890033
+mock-20	Mock 10	ASV	gunifrac_a0.5	0.1708205363776236
+mock-20	Mock 10	ASV	gunifrac_a1.0	0.2048525479848757
+mock-20	Mock 10	TIC	jaccard	0.3571428571428571
+mock-20	Mock 10	TIC	weighted_jaccard	0.4902046376506183
+mock-20	Mock 10	TIC	braycurtis	0.3246828344258617
+mock-20	Mock 10	TIC	aitchison	34.42709861192022
+mock-20	Mock 10	TIC	unifrac	0.12084824668732237
+mock-20	Mock 10	TIC	gunifrac_a0.0	0.06430999863331104
+mock-20	Mock 10	TIC	gunifrac_a0.5	0.14743989281324038
+mock-20	Mock 10	TIC	gunifrac_a1.0	0.16836308317931825
+mock-20	Mock 10	TAC	jaccard	0.3571428571428571
+mock-20	Mock 10	TAC	weighted_jaccard	0.49532896044523955
+mock-20	Mock 10	TAC	braycurtis	0.3291941875825627
+mock-20	Mock 10	TAC	aitchison	34.484890427811045
+mock-20	Mock 10	TAC	unifrac	0.12084824668732237
+mock-20	Mock 10	TAC	gunifrac_a0.0	0.06430999863331104
+mock-20	Mock 10	TAC	gunifrac_a0.5	0.1479431136366295
+mock-20	Mock 10	TAC	gunifrac_a1.0	0.16851544143216568
+mock-20	Mock 10	OTU	jaccard	0.09999999999999998
+mock-20	Mock 10	OTU	weighted_jaccard	0.4851807561870487
+mock-20	Mock 10	OTU	braycurtis	0.3202895382856374
+mock-20	Mock 10	OTU	aitchison	26.86651019579085
+mock-20	Mock 10	OTU	unifrac	0.043099076829360344
+mock-20	Mock 10	OTU	gunifrac_a0.0	0.022024148652109426
+mock-20	Mock 10	OTU	gunifrac_a0.5	0.13915945535342314
+mock-20	Mock 10	OTU	gunifrac_a1.0	0.16690221806296765
+mock-21	Mock 11	zOTU	jaccard	0.65
+mock-21	Mock 11	zOTU	weighted_jaccard	0.6184356105544903
+mock-21	Mock 11	zOTU	braycurtis	0.44763430157800976
+mock-21	Mock 11	zOTU	aitchison	45.73512662708166
+mock-21	Mock 11	zOTU	unifrac	0.4195375710848369
+mock-21	Mock 11	zOTU	gunifrac_a0.0	0.2654524165897504
+mock-21	Mock 11	zOTU	gunifrac_a0.5	0.138642984488086
+mock-21	Mock 11	zOTU	gunifrac_a1.0	0.1878431300615089
+mock-21	Mock 11	ASV	jaccard	0.3913043478260869
+mock-21	Mock 11	ASV	weighted_jaccard	0.6801887036038414
+mock-21	Mock 11	ASV	braycurtis	0.5153681480535487
+mock-21	Mock 11	ASV	aitchison	38.21416248600349
+mock-21	Mock 11	ASV	unifrac	0.3221928068965825
+mock-21	Mock 11	ASV	gunifrac_a0.0	0.19203208105254727
+mock-21	Mock 11	ASV	gunifrac_a0.5	0.15997633782647067
+mock-21	Mock 11	ASV	gunifrac_a1.0	0.26148897625671447
+mock-21	Mock 11	TIC	jaccard	0.5757575757575757
+mock-21	Mock 11	TIC	weighted_jaccard	0.6108319793561402
+mock-21	Mock 11	TIC	braycurtis	0.43971065434764917
+mock-21	Mock 11	TIC	aitchison	41.672449062461226
+mock-21	Mock 11	TIC	unifrac	0.4060746808556047
+mock-21	Mock 11	TIC	gunifrac_a0.0	0.2547639315206949
+mock-21	Mock 11	TIC	gunifrac_a0.5	0.13612597602592622
+mock-21	Mock 11	TIC	gunifrac_a1.0	0.18745449629139105
+mock-21	Mock 11	TAC	jaccard	0.5333333333333333
+mock-21	Mock 11	TAC	weighted_jaccard	0.6108319793561402
+mock-21	Mock 11	TAC	braycurtis	0.43971065434764917
+mock-21	Mock 11	TAC	aitchison	41.565996435753405
+mock-21	Mock 11	TAC	unifrac	0.4014628116806179
+mock-21	Mock 11	TAC	gunifrac_a0.0	0.25114386741461703
+mock-21	Mock 11	TAC	gunifrac_a0.5	0.14125040998601518
+mock-21	Mock 11	TAC	gunifrac_a1.0	0.19575407690796037
+mock-21	Mock 11	OTU	jaccard	0.30000000000000004
+mock-21	Mock 11	OTU	weighted_jaccard	0.5966294523238654
+mock-21	Mock 11	OTU	braycurtis	0.42514035463537003
+mock-21	Mock 11	OTU	aitchison	33.98436869609475
+mock-21	Mock 11	OTU	unifrac	0.32004390620232676
+mock-21	Mock 11	OTU	gunifrac_a0.0	0.190507303961047
+mock-21	Mock 11	OTU	gunifrac_a0.5	0.12108044398749002
+mock-21	Mock 11	OTU	gunifrac_a1.0	0.18432380063203008
+mock-22	Mock 12	zOTU	jaccard	0.125
+mock-22	Mock 12	zOTU	weighted_jaccard	0.37818262715841366
+mock-22	Mock 12	zOTU	braycurtis	0.2331844716250634
+mock-22	Mock 12	zOTU	aitchison	30.320247559589372
+mock-22	Mock 12	zOTU	unifrac	0.09468104759929086
+mock-22	Mock 12	zOTU	gunifrac_a0.0	0.04969301726621275
+mock-22	Mock 12	zOTU	gunifrac_a0.5	0.06143281309979464
+mock-22	Mock 12	zOTU	gunifrac_a1.0	0.08200150104755248
+mock-22	Mock 12	ASV	jaccard	0.2142857142857143
+mock-22	Mock 12	ASV	weighted_jaccard	0.38882807863866153
+mock-22	Mock 12	ASV	braycurtis	0.24133245712855173
+mock-22	Mock 12	ASV	aitchison	24.453836737529688
+mock-22	Mock 12	ASV	unifrac	0.2356612460279098
+mock-22	Mock 12	ASV	gunifrac_a0.0	0.13356916039924926
+mock-22	Mock 12	ASV	gunifrac_a0.5	0.07016361998819627
+mock-22	Mock 12	ASV	gunifrac_a1.0	0.09227717834702859
+mock-22	Mock 12	TIC	jaccard	0.09523809523809523
+mock-22	Mock 12	TIC	weighted_jaccard	0.3221562368644042
+mock-22	Mock 12	TIC	braycurtis	0.19200609969926571
+mock-22	Mock 12	TIC	aitchison	23.884688439089157
+mock-22	Mock 12	TIC	unifrac	0.09311535734630699
+mock-22	Mock 12	TIC	gunifrac_a0.0	0.04883114335470451
+mock-22	Mock 12	TIC	gunifrac_a0.5	0.06069553818010922
+mock-22	Mock 12	TIC	gunifrac_a1.0	0.08143783927124801
+mock-22	Mock 12	TAC	jaccard	0.09523809523809523
+mock-22	Mock 12	TAC	weighted_jaccard	0.3221562368644042
+mock-22	Mock 12	TAC	braycurtis	0.19200609969926571
+mock-22	Mock 12	TAC	aitchison	23.884688439089157
+mock-22	Mock 12	TAC	unifrac	0.09311535734630699
+mock-22	Mock 12	TAC	gunifrac_a0.0	0.04883114335470451
+mock-22	Mock 12	TAC	gunifrac_a0.5	0.06069553818010921
+mock-22	Mock 12	TAC	gunifrac_a1.0	0.081437839271248
+mock-22	Mock 12	OTU	jaccard	0.09523809523809523
+mock-22	Mock 12	OTU	weighted_jaccard	0.3221562368644044
+mock-22	Mock 12	OTU	braycurtis	0.19200609969926571
+mock-22	Mock 12	OTU	aitchison	23.884688439089157
+mock-22	Mock 12	OTU	unifrac	0.09311535734630699
+mock-22	Mock 12	OTU	gunifrac_a0.0	0.04883114335470451
+mock-22	Mock 12	OTU	gunifrac_a0.5	0.06069553818010921
+mock-22	Mock 12	OTU	gunifrac_a1.0	0.08143783927124801
+mock-23	Mock 13	zOTU	jaccard	0.1923076923076923
+mock-23	Mock 13	zOTU	weighted_jaccard	0.49446238378637364
+mock-23	Mock 13	zOTU	braycurtis	0.3284291129370311
+mock-23	Mock 13	zOTU	aitchison	32.00803986683789
+mock-23	Mock 13	zOTU	unifrac	0.32321725402434276
+mock-23	Mock 13	zOTU	gunifrac_a0.0	0.1927603649310422
+mock-23	Mock 13	zOTU	gunifrac_a0.5	0.07066895689828927
+mock-23	Mock 13	zOTU	gunifrac_a1.0	0.09754469178432933
+mock-23	Mock 13	ASV	jaccard	0.3448275862068966
+mock-23	Mock 13	ASV	weighted_jaccard	0.5168234080218292
+mock-23	Mock 13	ASV	braycurtis	0.348457095950066
+mock-23	Mock 13	ASV	aitchison	34.76399556719863
+mock-23	Mock 13	ASV	unifrac	0.39451567072745297
+mock-23	Mock 13	ASV	gunifrac_a0.0	0.24573000404570122
+mock-23	Mock 13	ASV	gunifrac_a0.5	0.07927759258882011
+mock-23	Mock 13	ASV	gunifrac_a1.0	0.10969745516168451
+mock-23	Mock 13	TIC	jaccard	0.13636363636363635
+mock-23	Mock 13	TIC	weighted_jaccard	0.4817561426194271
+mock-23	Mock 13	TIC	braycurtis	0.31731143865821476
+mock-23	Mock 13	TIC	aitchison	26.19877725234575
+mock-23	Mock 13	TIC	unifrac	0.32213126110303536
+mock-23	Mock 13	TIC	gunifrac_a0.0	0.19198835620169266
+mock-23	Mock 13	TIC	gunifrac_a0.5	0.0701342750151288
+mock-23	Mock 13	TIC	gunifrac_a1.0	0.0973683161797509
+mock-23	Mock 13	TAC	jaccard	0.13636363636363635
+mock-23	Mock 13	TAC	weighted_jaccard	0.4817561426194271
+mock-23	Mock 13	TAC	braycurtis	0.31731143865821476
+mock-23	Mock 13	TAC	aitchison	26.19877725234575
+mock-23	Mock 13	TAC	unifrac	0.32213126110303536
+mock-23	Mock 13	TAC	gunifrac_a0.0	0.19198835620169266
+mock-23	Mock 13	TAC	gunifrac_a0.5	0.0701342750151288
+mock-23	Mock 13	TAC	gunifrac_a1.0	0.09736831617975089
+mock-23	Mock 13	OTU	jaccard	0.1428571428571429
+mock-23	Mock 13	OTU	weighted_jaccard	0.4818720258232242
+mock-23	Mock 13	OTU	braycurtis	0.3174119929411915
+mock-23	Mock 13	OTU	aitchison	29.508540954484047
+mock-23	Mock 13	OTU	unifrac	0.31301010494640064
+mock-23	Mock 13	OTU	gunifrac_a0.0	0.18554355652287743
+mock-23	Mock 13	OTU	gunifrac_a0.5	0.06968478395140638
+mock-23	Mock 13	OTU	gunifrac_a1.0	0.09728660103346858
+mock-4	Even1	zOTU	jaccard	0.44999999999999996
+mock-4	Even1	zOTU	weighted_jaccard	0.7571833026237703
+mock-4	Even1	zOTU	braycurtis	0.6092477709885107
+mock-4	Even1	zOTU	aitchison	31.93543259672554
+mock-4	Even1	zOTU	unifrac	0.18543772222121221
+mock-4	Even1	zOTU	gunifrac_a0.0	0.10219419002152257
+mock-4	Even1	zOTU	gunifrac_a0.5	0.2160798665484894
+mock-4	Even1	zOTU	gunifrac_a1.0	0.23679627055816674
+mock-4	Even2	zOTU	jaccard	0.46341463414634143
+mock-4	Even2	zOTU	weighted_jaccard	0.7559975813211868
+mock-4	Even2	zOTU	braycurtis	0.6077139159617474
+mock-4	Even2	zOTU	aitchison	32.04328738604312
+mock-4	Even2	zOTU	unifrac	0.37448809413355116
+mock-4	Even2	zOTU	gunifrac_a0.0	0.2303816371827417
+mock-4	Even2	zOTU	gunifrac_a0.5	0.21746317136511437
+mock-4	Even2	zOTU	gunifrac_a1.0	0.24018444220637528
+mock-4	Staggered1	zOTU	jaccard	0.46341463414634143
+mock-4	Staggered1	zOTU	weighted_jaccard	0.7791985729578169
+mock-4	Staggered1	zOTU	braycurtis	0.6382680718564501
+mock-4	Staggered1	zOTU	aitchison	33.38021637877544
+mock-4	Staggered1	zOTU	unifrac	0.37448809413355116
+mock-4	Staggered1	zOTU	gunifrac_a0.0	0.2303816371827417
+mock-4	Staggered1	zOTU	gunifrac_a0.5	0.2718328113357134
+mock-4	Staggered1	zOTU	gunifrac_a1.0	0.37248465857998425
+mock-4	Staggered2	zOTU	jaccard	0.46341463414634143
+mock-4	Staggered2	zOTU	weighted_jaccard	0.7741878416105852
+mock-4	Staggered2	zOTU	braycurtis	0.6315713515419725
+mock-4	Staggered2	zOTU	aitchison	33.333516138795154
+mock-4	Staggered2	zOTU	unifrac	0.37448809413355116
+mock-4	Staggered2	zOTU	gunifrac_a0.0	0.2303816371827417
+mock-4	Staggered2	zOTU	gunifrac_a0.5	0.26774706961388767
+mock-4	Staggered2	zOTU	gunifrac_a1.0	0.3669681723157211
+mock-4	Even1	ASV	jaccard	0.32352941176470584
+mock-4	Even1	ASV	weighted_jaccard	0.7973173663896985
+mock-4	Even1	ASV	braycurtis	0.6629490973826175
+mock-4	Even1	ASV	aitchison	28.269038828108517
+mock-4	Even1	ASV	unifrac	0.04090302402582257
+mock-4	Even1	ASV	gunifrac_a0.0	0.020878509092426736
+mock-4	Even1	ASV	gunifrac_a0.5	0.26684918064949287
+mock-4	Even1	ASV	gunifrac_a1.0	0.27580979587816684
+mock-4	Even2	ASV	jaccard	0.2068965517241379
+mock-4	Even2	ASV	weighted_jaccard	0.7986349961991506
+mock-4	Even2	ASV	braycurtis	0.6647729821265381
+mock-4	Even2	ASV	aitchison	27.619141243912466
+mock-4	Even2	ASV	unifrac	0.28551723296369175
+mock-4	Even2	ASV	gunifrac_a0.0	0.1665325767358064
+mock-4	Even2	ASV	gunifrac_a0.5	0.2705522838784044
+mock-4	Even2	ASV	gunifrac_a1.0	0.282618858123256
+mock-4	Staggered1	ASV	jaccard	0.5238095238095238
+mock-4	Staggered1	ASV	weighted_jaccard	0.8101754180429835
+mock-4	Staggered1	ASV	braycurtis	0.6809200535346243
+mock-4	Staggered1	ASV	aitchison	37.48885298436033
+mock-4	Staggered1	ASV	unifrac	0.3512902980344167
+mock-4	Staggered1	ASV	gunifrac_a0.0	0.21306983128419169
+mock-4	Staggered1	ASV	gunifrac_a0.5	0.3140825529699212
+mock-4	Staggered1	ASV	gunifrac_a1.0	0.4188749581615411
+mock-4	Staggered2	ASV	jaccard	0.5555555555555556
+mock-4	Staggered2	ASV	weighted_jaccard	0.8069859096575632
+mock-4	Staggered2	ASV	braycurtis	0.6764261346032636
+mock-4	Staggered2	ASV	aitchison	37.39173281528819
+mock-4	Staggered2	ASV	unifrac	0.34361534078887523
+mock-4	Staggered2	ASV	gunifrac_a0.0	0.2074489997706975
+mock-4	Staggered2	ASV	gunifrac_a0.5	0.3113443127087176
+mock-4	Staggered2	ASV	gunifrac_a1.0	0.415324836908199
+mock-4	Even1	TIC	jaccard	0.3448275862068966
+mock-4	Even1	TIC	weighted_jaccard	0.7513569838160125
+mock-4	Even1	TIC	braycurtis	0.601738826932501
+mock-4	Even1	TIC	aitchison	33.00953628401971
+mock-4	Even1	TIC	unifrac	0.13565993611945137
+mock-4	Even1	TIC	gunifrac_a0.0	0.07276566048636036
+mock-4	Even1	TIC	gunifrac_a0.5	0.2150858920270929
+mock-4	Even1	TIC	gunifrac_a1.0	0.23636302924060493
+mock-4	Even2	TIC	jaccard	0.3666666666666667
+mock-4	Even2	TIC	weighted_jaccard	0.7494637719348849
+mock-4	Even2	TIC	braycurtis	0.5993139223919072
+mock-4	Even2	TIC	aitchison	33.05265663311502
+mock-4	Even2	TIC	unifrac	0.34539842101629276
+mock-4	Even2	TIC	gunifrac_a0.0	0.20875020633574162
+mock-4	Even2	TIC	gunifrac_a0.5	0.21648413516199874
+mock-4	Even2	TIC	gunifrac_a1.0	0.23977417092253092
+mock-4	Staggered1	TIC	jaccard	0.3666666666666667
+mock-4	Staggered1	TIC	weighted_jaccard	0.7972293253897971
+mock-4	Staggered1	TIC	braycurtis	0.6628273720160042
+mock-4	Staggered1	TIC	aitchison	35.97604758603022
+mock-4	Staggered1	TIC	unifrac	0.34539842101629276
+mock-4	Staggered1	TIC	gunifrac_a0.0	0.20875020633574162
+mock-4	Staggered1	TIC	gunifrac_a0.5	0.27034486022044774
+mock-4	Staggered1	TIC	gunifrac_a1.0	0.37209737160252865
+mock-4	Staggered2	TIC	jaccard	0.3666666666666667
+mock-4	Staggered2	TIC	weighted_jaccard	0.7925110026790543
+mock-4	Staggered2	TIC	braycurtis	0.656329792186428
+mock-4	Staggered2	TIC	aitchison	35.89624366465753
+mock-4	Staggered2	TIC	unifrac	0.34539842101629276
+mock-4	Staggered2	TIC	gunifrac_a0.0	0.20875020633574162
+mock-4	Staggered2	TIC	gunifrac_a0.5	0.26622274030396254
+mock-4	Staggered2	TIC	gunifrac_a1.0	0.36657421001742496
+mock-4	Even1	TAC	jaccard	0.3548387096774194
+mock-4	Even1	TAC	weighted_jaccard	0.7493307087432599
+mock-4	Even1	TAC	braycurtis	0.5991437656475055
+mock-4	Even1	TAC	aitchison	26.502900891052004
+mock-4	Even1	TAC	unifrac	0.13786152600525958
+mock-4	Even1	TAC	gunifrac_a0.0	0.07403398186038929
+mock-4	Even1	TAC	gunifrac_a0.5	0.21521477690839066
+mock-4	Even1	TAC	gunifrac_a1.0	0.2363668578089274
+mock-4	Even2	TAC	jaccard	0.375
+mock-4	Even2	TAC	weighted_jaccard	0.7473409295744167
+mock-4	Even2	TAC	braycurtis	0.5966036148371255
+mock-4	Even2	TAC	aitchison	26.610617967655816
+mock-4	Even2	TAC	unifrac	0.3466619631920437
+mock-4	Even2	TAC	gunifrac_a0.0	0.20967397802165866
+mock-4	Even2	TAC	gunifrac_a0.5	0.21663365637774254
+mock-4	Even2	TAC	gunifrac_a1.0	0.23977899789198184
+mock-4	Staggered1	TAC	jaccard	0.375
+mock-4	Staggered1	TAC	weighted_jaccard	0.7745327576359446
+mock-4	Staggered1	TAC	braycurtis	0.6320305683094307
+mock-4	Staggered1	TAC	aitchison	28.479380554283786
+mock-4	Staggered1	TAC	unifrac	0.3466619631920437
+mock-4	Staggered1	TAC	gunifrac_a0.0	0.20967397802165866
+mock-4	Staggered1	TAC	gunifrac_a0.5	0.27079997638812286
+mock-4	Staggered1	TAC	gunifrac_a1.0	0.3721275404204167
+mock-4	Staggered2	TAC	jaccard	0.375
+mock-4	Staggered2	TAC	weighted_jaccard	0.7694801144273644
+mock-4	Staggered2	TAC	braycurtis	0.6253292802897522
+mock-4	Staggered2	TAC	aitchison	28.420391933168837
+mock-4	Staggered2	TAC	unifrac	0.3466619631920437
+mock-4	Staggered2	TAC	gunifrac_a0.0	0.20967397802165866
+mock-4	Staggered2	TAC	gunifrac_a0.5	0.266681106769929
+mock-4	Staggered2	TAC	gunifrac_a1.0	0.36660553047475825
+mock-4	Even1	OTU	jaccard	0.13043478260869568
+mock-4	Even1	OTU	weighted_jaccard	0.7490105571972462
+mock-4	Even1	OTU	braycurtis	0.5987345149125645
+mock-4	Even1	OTU	aitchison	24.68498197333041
+mock-4	Even1	OTU	unifrac	0.061719735738110314
+mock-4	Even1	OTU	gunifrac_a0.0	0.03184252395079387
+mock-4	Even1	OTU	gunifrac_a0.5	0.21410865124167275
+mock-4	Even1	OTU	gunifrac_a1.0	0.2364405452901088
+mock-4	Even2	OTU	jaccard	0.16666666666666663
+mock-4	Even2	OTU	weighted_jaccard	0.7469403435343307
+mock-4	Even2	OTU	braycurtis	0.5960932024905511
+mock-4	Even2	OTU	aitchison	24.79581304382662
+mock-4	Even2	OTU	unifrac	0.30385114455892337
+mock-4	Even2	OTU	gunifrac_a0.0	0.17914179146729906
+mock-4	Even2	OTU	gunifrac_a0.5	0.21541872742456705
+mock-4	Even2	OTU	gunifrac_a1.0	0.23986689405979408
+mock-4	Staggered1	OTU	jaccard	0.16666666666666663
+mock-4	Staggered1	OTU	weighted_jaccard	0.7729796468921728
+mock-4	Staggered1	OTU	braycurtis	0.6299648126735233
+mock-4	Staggered1	OTU	aitchison	26.110375443480137
+mock-4	Staggered1	OTU	unifrac	0.30385114455892337
+mock-4	Staggered1	OTU	gunifrac_a0.0	0.17914179146729906
+mock-4	Staggered1	OTU	gunifrac_a0.5	0.2674947971017867
+mock-4	Staggered1	OTU	gunifrac_a1.0	0.37242831398473103
+mock-4	Staggered2	OTU	jaccard	0.16666666666666663
+mock-4	Staggered2	OTU	weighted_jaccard	0.7677534951887726
+mock-4	Staggered2	OTU	braycurtis	0.6230518749220453
+mock-4	Staggered2	OTU	aitchison	25.950592625546243
+mock-4	Staggered2	OTU	unifrac	0.30385114455892337
+mock-4	Staggered2	OTU	gunifrac_a0.0	0.17914179146729906
+mock-4	Staggered2	OTU	gunifrac_a0.5	0.2631872310456653
+mock-4	Staggered2	OTU	gunifrac_a1.0	0.36696900925194764
+mock-5	Even1	zOTU	jaccard	0.18518518518518523
+mock-5	Even1	zOTU	weighted_jaccard	0.7643752439686997
+mock-5	Even1	zOTU	braycurtis	0.618614381297923
+mock-5	Even1	zOTU	aitchison	29.940953194620107
+mock-5	Even1	zOTU	unifrac	0.32738963494312456
+mock-5	Even1	zOTU	gunifrac_a0.0	0.19573574442843533
+mock-5	Even1	zOTU	gunifrac_a0.5	0.20894456196101233
+mock-5	Even1	zOTU	gunifrac_a1.0	0.23101903094854853
+mock-5	Even2	zOTU	jaccard	0.18518518518518523
+mock-5	Even2	zOTU	weighted_jaccard	0.7640360310325001
+mock-5	Even2	zOTU	braycurtis	0.6181701491433935
+mock-5	Even2	zOTU	aitchison	29.980531607865576
+mock-5	Even2	zOTU	unifrac	0.32738963494312456
+mock-5	Even2	zOTU	gunifrac_a0.0	0.19573574442843533
+mock-5	Even2	zOTU	gunifrac_a0.5	0.2088181874608906
+mock-5	Even2	zOTU	gunifrac_a1.0	0.2336269262681189
+mock-5	Staggered1	zOTU	jaccard	0.15384615384615385
+mock-5	Staggered1	zOTU	weighted_jaccard	0.765120050187011
+mock-5	Staggered1	zOTU	braycurtis	0.6195906333266495
+mock-5	Staggered1	zOTU	aitchison	31.007040642552614
+mock-5	Staggered1	zOTU	unifrac	0.2946904773191408
+mock-5	Staggered1	zOTU	gunifrac_a0.0	0.1728076184409431
+mock-5	Staggered1	zOTU	gunifrac_a0.5	0.24057667958967954
+mock-5	Staggered1	zOTU	gunifrac_a1.0	0.3453698270873186
+mock-5	Staggered2	zOTU	jaccard	0.15384615384615385
+mock-5	Staggered2	zOTU	weighted_jaccard	0.761645050217783
+mock-5	Staggered2	zOTU	braycurtis	0.6150458318527571
+mock-5	Staggered2	zOTU	aitchison	30.990478579500746
+mock-5	Staggered2	zOTU	unifrac	0.2946904773191408
+mock-5	Staggered2	zOTU	gunifrac_a0.0	0.1728076184409431
+mock-5	Staggered2	zOTU	gunifrac_a0.5	0.23881629139217622
+mock-5	Staggered2	zOTU	gunifrac_a1.0	0.3427596046280098
+mock-5	Even1	ASV	jaccard	0.4390243902439024
+mock-5	Even1	ASV	weighted_jaccard	0.8451165743965366
+mock-5	Even1	ASV	braycurtis	0.7317765201755633
+mock-5	Even1	ASV	aitchison	29.039467367289525
+mock-5	Even1	ASV	unifrac	0.02829673101930853
+mock-5	Even1	ASV	gunifrac_a0.0	0.014351414568550717
+mock-5	Even1	ASV	gunifrac_a0.5	0.2906461369096179
+mock-5	Even1	ASV	gunifrac_a1.0	0.29421545665291365
+mock-5	Even2	ASV	jaccard	0.32352941176470584
+mock-5	Even2	ASV	weighted_jaccard	0.8478499546661874
+mock-5	Even2	ASV	braycurtis	0.7358850161052934
+mock-5	Even2	ASV	aitchison	28.556367804854112
+mock-5	Even2	ASV	unifrac	0.3128420006624888
+mock-5	Even2	ASV	gunifrac_a0.0	0.1854254318714259
+mock-5	Even2	ASV	gunifrac_a0.5	0.2983716767650793
+mock-5	Even2	ASV	gunifrac_a1.0	0.3053163111827352
+mock-5	Staggered1	ASV	jaccard	0.5128205128205128
+mock-5	Staggered1	ASV	weighted_jaccard	0.8216736517666741
+mock-5	Staggered1	ASV	braycurtis	0.6973226500439509
+mock-5	Staggered1	ASV	aitchison	39.80893018709871
+mock-5	Staggered1	ASV	unifrac	0.33542307588032005
+mock-5	Staggered1	ASV	gunifrac_a0.0	0.20150650355657823
+mock-5	Staggered1	ASV	gunifrac_a0.5	0.33406382873114393
+mock-5	Staggered1	ASV	gunifrac_a1.0	0.4312610544832373
+mock-5	Staggered2	ASV	jaccard	0.5365853658536586
+mock-5	Staggered2	ASV	weighted_jaccard	0.820330567875033
+mock-5	Staggered2	ASV	braycurtis	0.6953902046926416
+mock-5	Staggered2	ASV	aitchison	38.963511295108546
+mock-5	Staggered2	ASV	unifrac	0.3477614826212655
+mock-5	Staggered2	ASV	gunifrac_a0.0	0.21047898288498146
+mock-5	Staggered2	ASV	gunifrac_a0.5	0.3327380275765319
+mock-5	Staggered2	ASV	gunifrac_a1.0	0.42983934279337677
+mock-5	Even1	TIC	jaccard	0.16666666666666663
+mock-5	Even1	TIC	weighted_jaccard	0.757295588233194
+mock-5	Even1	TIC	braycurtis	0.6093931759335386
+mock-5	Even1	TIC	aitchison	24.164960818924452
+mock-5	Even1	TIC	unifrac	0.326521234360943
+mock-5	Even1	TIC	gunifrac_a0.0	0.19511525396395046
+mock-5	Even1	TIC	gunifrac_a0.5	0.20830959591168766
+mock-5	Even1	TIC	gunifrac_a1.0	0.23053429257121938
+mock-5	Even2	TIC	jaccard	0.16666666666666663
+mock-5	Even2	TIC	weighted_jaccard	0.75651438019837
+mock-5	Even2	TIC	braycurtis	0.6083820899505494
+mock-5	Even2	TIC	aitchison	24.190006136745637
+mock-5	Even2	TIC	unifrac	0.326521234360943
+mock-5	Even2	TIC	gunifrac_a0.0	0.19511525396395046
+mock-5	Even2	TIC	gunifrac_a0.5	0.20820523482385297
+mock-5	Even2	TIC	gunifrac_a1.0	0.23315954533862662
+mock-5	Staggered1	TIC	jaccard	0.13043478260869568
+mock-5	Staggered1	TIC	weighted_jaccard	0.7625701997425165
+mock-5	Staggered1	TIC	braycurtis	0.616253301467155
+mock-5	Staggered1	TIC	aitchison	25.801937025053437
+mock-5	Staggered1	TIC	unifrac	0.29376727711023026
+mock-5	Staggered1	TIC	gunifrac_a0.0	0.1721730413262089
+mock-5	Staggered1	TIC	gunifrac_a0.5	0.24007659830006886
+mock-5	Staggered1	TIC	gunifrac_a1.0	0.34500948571585327
+mock-5	Staggered2	TIC	jaccard	0.13043478260869568
+mock-5	Staggered2	TIC	weighted_jaccard	0.7589630295446395
+mock-5	Staggered2	TIC	braycurtis	0.6115555359049145
+mock-5	Staggered2	TIC	aitchison	25.782749439534637
+mock-5	Staggered2	TIC	unifrac	0.29376727711023026
+mock-5	Staggered2	TIC	gunifrac_a0.0	0.1721730413262089
+mock-5	Staggered2	TIC	gunifrac_a0.5	0.2383191080717907
+mock-5	Staggered2	TIC	gunifrac_a1.0	0.34239477976174243
+mock-5	Even1	TAC	jaccard	0.16666666666666663
+mock-5	Even1	TAC	weighted_jaccard	0.757295588233194
+mock-5	Even1	TAC	braycurtis	0.6093931759335386
+mock-5	Even1	TAC	aitchison	24.164960818924452
+mock-5	Even1	TAC	unifrac	0.32652123436094305
+mock-5	Even1	TAC	gunifrac_a0.0	0.1951152539639505
+mock-5	Even1	TAC	gunifrac_a0.5	0.20830959591168766
+mock-5	Even1	TAC	gunifrac_a1.0	0.23053429257121938
+mock-5	Even2	TAC	jaccard	0.16666666666666663
+mock-5	Even2	TAC	weighted_jaccard	0.75651438019837
+mock-5	Even2	TAC	braycurtis	0.6083820899505493
+mock-5	Even2	TAC	aitchison	24.190006136745637
+mock-5	Even2	TAC	unifrac	0.32652123436094305
+mock-5	Even2	TAC	gunifrac_a0.0	0.1951152539639505
+mock-5	Even2	TAC	gunifrac_a0.5	0.20820523482385297
+mock-5	Even2	TAC	gunifrac_a1.0	0.23315954533862662
+mock-5	Staggered1	TAC	jaccard	0.13043478260869568
+mock-5	Staggered1	TAC	weighted_jaccard	0.7625701997425165
+mock-5	Staggered1	TAC	braycurtis	0.6162533014671551
+mock-5	Staggered1	TAC	aitchison	25.801937025053437
+mock-5	Staggered1	TAC	unifrac	0.29376727711023026
+mock-5	Staggered1	TAC	gunifrac_a0.0	0.1721730413262089
+mock-5	Staggered1	TAC	gunifrac_a0.5	0.24007659830006886
+mock-5	Staggered1	TAC	gunifrac_a1.0	0.34500948571585327
+mock-5	Staggered2	TAC	jaccard	0.13043478260869568
+mock-5	Staggered2	TAC	weighted_jaccard	0.7589630295446395
+mock-5	Staggered2	TAC	braycurtis	0.6115555359049145
+mock-5	Staggered2	TAC	aitchison	25.782749439534637
+mock-5	Staggered2	TAC	unifrac	0.29376727711023026
+mock-5	Staggered2	TAC	gunifrac_a0.0	0.1721730413262089
+mock-5	Staggered2	TAC	gunifrac_a0.5	0.2383191080717907
+mock-5	Staggered2	TAC	gunifrac_a1.0	0.34239477976174254
+mock-5	Even1	OTU	jaccard	0.16666666666666663
+mock-5	Even1	OTU	weighted_jaccard	0.7572788738259886
+mock-5	Even1	OTU	braycurtis	0.6093715298438976
+mock-5	Even1	OTU	aitchison	24.164912727598963
+mock-5	Even1	OTU	unifrac	0.3271847226729917
+mock-5	Even1	OTU	gunifrac_a0.0	0.1955892722332141
+mock-5	Even1	OTU	gunifrac_a0.5	0.20851740542903335
+mock-5	Even1	OTU	gunifrac_a1.0	0.2305798632954136
+mock-5	Even2	OTU	jaccard	0.16666666666666663
+mock-5	Even2	OTU	weighted_jaccard	0.7565084347046904
+mock-5	Even2	OTU	braycurtis	0.6083743998094844
+mock-5	Even2	OTU	aitchison	24.18997619865619
+mock-5	Even2	OTU	unifrac	0.3271847226729917
+mock-5	Even2	OTU	gunifrac_a0.0	0.1955892722332141
+mock-5	Even2	OTU	gunifrac_a0.5	0.20841914905655803
+mock-5	Even2	OTU	gunifrac_a1.0	0.23320912504031457
+mock-5	Staggered1	OTU	jaccard	0.13043478260869568
+mock-5	Staggered1	OTU	weighted_jaccard	0.7625706439034516
+mock-5	Staggered1	OTU	braycurtis	0.616253881602558
+mock-5	Staggered1	OTU	aitchison	25.801932237241864
+mock-5	Staggered1	OTU	unifrac	0.2944968359560384
+mock-5	Staggered1	OTU	gunifrac_a0.0	0.1726744588721545
+mock-5	Staggered1	OTU	gunifrac_a0.5	0.24009610158038192
+mock-5	Staggered1	OTU	gunifrac_a1.0	0.34500968763798534
+mock-5	Staggered2	OTU	jaccard	0.13043478260869568
+mock-5	Staggered2	OTU	weighted_jaccard	0.7589623535180756
+mock-5	Staggered2	OTU	braycurtis	0.611554658047297
+mock-5	Staggered2	OTU	aitchison	25.782744377089866
+mock-5	Staggered2	OTU	unifrac	0.2944968359560384
+mock-5	Staggered2	OTU	gunifrac_a0.0	0.1726744588721545
+mock-5	Staggered2	OTU	gunifrac_a0.5	0.23833864998820378
+mock-5	Staggered2	OTU	gunifrac_a1.0	0.3423951209400685
+mock-ZIEL_1	SRR13005984	zOTU	jaccard	0.5238095238095238
+mock-ZIEL_1	SRR13005984	zOTU	weighted_jaccard	0.5363199393769154
+mock-ZIEL_1	SRR13005984	zOTU	braycurtis	0.3664188327800309
+mock-ZIEL_1	SRR13005984	zOTU	aitchison	39.324211016640156
+mock-ZIEL_1	SRR13005984	zOTU	unifrac	0.1475939279140807
+mock-ZIEL_1	SRR13005984	zOTU	gunifrac_a0.0	0.07967687546385613
+mock-ZIEL_1	SRR13005984	zOTU	gunifrac_a0.5	0.11647304924291357
+mock-ZIEL_1	SRR13005984	zOTU	gunifrac_a1.0	0.13302591995506158
+mock-ZIEL_1	SRR13005985	zOTU	jaccard	0.5238095238095238
+mock-ZIEL_1	SRR13005985	zOTU	weighted_jaccard	0.5360899458031779
+mock-ZIEL_1	SRR13005985	zOTU	braycurtis	0.36620415596319217
+mock-ZIEL_1	SRR13005985	zOTU	aitchison	39.30962346604691
+mock-ZIEL_1	SRR13005985	zOTU	unifrac	0.1475939279140807
+mock-ZIEL_1	SRR13005985	zOTU	gunifrac_a0.0	0.07967687546385613
+mock-ZIEL_1	SRR13005985	zOTU	gunifrac_a0.5	0.11717274622772528
+mock-ZIEL_1	SRR13005985	zOTU	gunifrac_a1.0	0.12992967977266418
+mock-ZIEL_1	SRR13005984	ASV	jaccard	0.5238095238095238
+mock-ZIEL_1	SRR13005984	ASV	weighted_jaccard	0.5300745735327207
+mock-ZIEL_1	SRR13005984	ASV	braycurtis	0.36061324199736217
+mock-ZIEL_1	SRR13005984	ASV	aitchison	39.32575345745198
+mock-ZIEL_1	SRR13005984	ASV	unifrac	0.1475939279140807
+mock-ZIEL_1	SRR13005984	ASV	gunifrac_a0.0	0.07967687546385613
+mock-ZIEL_1	SRR13005984	ASV	gunifrac_a0.5	0.12381616333992648
+mock-ZIEL_1	SRR13005984	ASV	gunifrac_a1.0	0.1418955765117791
+mock-ZIEL_1	SRR13005985	ASV	jaccard	0.5238095238095238
+mock-ZIEL_1	SRR13005985	ASV	weighted_jaccard	0.5357602595190635
+mock-ZIEL_1	SRR13005985	ASV	braycurtis	0.36589654324167603
+mock-ZIEL_1	SRR13005985	ASV	aitchison	39.308399548241404
+mock-ZIEL_1	SRR13005985	ASV	unifrac	0.1475939279140807
+mock-ZIEL_1	SRR13005985	ASV	gunifrac_a0.0	0.07967687546385613
+mock-ZIEL_1	SRR13005985	ASV	gunifrac_a0.5	0.12094552935729264
+mock-ZIEL_1	SRR13005985	ASV	gunifrac_a1.0	0.13501031163028812
+mock-ZIEL_1	SRR13005984	TIC	jaccard	0.2666666666666667
+mock-ZIEL_1	SRR13005984	TIC	weighted_jaccard	0.40433324803762594
+mock-ZIEL_1	SRR13005984	TIC	braycurtis	0.25339454340348394
+mock-ZIEL_1	SRR13005984	TIC	aitchison	34.59442030939723
+mock-ZIEL_1	SRR13005984	TIC	unifrac	0.07516970159019846
+mock-ZIEL_1	SRR13005984	TIC	gunifrac_a0.0	0.03905263838183548
+mock-ZIEL_1	SRR13005984	TIC	gunifrac_a0.5	0.10555808796542988
+mock-ZIEL_1	SRR13005984	TIC	gunifrac_a1.0	0.1326339021463007
+mock-ZIEL_1	SRR13005985	TIC	jaccard	0.2666666666666667
+mock-ZIEL_1	SRR13005985	TIC	weighted_jaccard	0.4095652040479679
+mock-ZIEL_1	SRR13005985	TIC	braycurtis	0.2575177587225781
+mock-ZIEL_1	SRR13005985	TIC	aitchison	34.60476597658515
+mock-ZIEL_1	SRR13005985	TIC	unifrac	0.07516970159019846
+mock-ZIEL_1	SRR13005985	TIC	gunifrac_a0.0	0.03905263838183548
+mock-ZIEL_1	SRR13005985	TIC	gunifrac_a0.5	0.10921876867463848
+mock-ZIEL_1	SRR13005985	TIC	gunifrac_a1.0	0.1349062462643856
+mock-ZIEL_1	SRR13005984	TAC	jaccard	0.2666666666666667
+mock-ZIEL_1	SRR13005984	TAC	weighted_jaccard	0.40433324803762594
+mock-ZIEL_1	SRR13005984	TAC	braycurtis	0.25339454340348394
+mock-ZIEL_1	SRR13005984	TAC	aitchison	34.59442030939723
+mock-ZIEL_1	SRR13005984	TAC	unifrac	0.0792531541922681
+mock-ZIEL_1	SRR13005984	TAC	gunifrac_a0.0	0.04126163443415145
+mock-ZIEL_1	SRR13005984	TAC	gunifrac_a0.5	0.10727509512811244
+mock-ZIEL_1	SRR13005984	TAC	gunifrac_a1.0	0.13377691075004078
+mock-ZIEL_1	SRR13005985	TAC	jaccard	0.2666666666666667
+mock-ZIEL_1	SRR13005985	TAC	weighted_jaccard	0.4095652040479678
+mock-ZIEL_1	SRR13005985	TAC	braycurtis	0.25751775872257804
+mock-ZIEL_1	SRR13005985	TAC	aitchison	34.60476597658515
+mock-ZIEL_1	SRR13005985	TAC	unifrac	0.0792531541922681
+mock-ZIEL_1	SRR13005985	TAC	gunifrac_a0.0	0.04126163443415145
+mock-ZIEL_1	SRR13005985	TAC	gunifrac_a0.5	0.11095459045982048
+mock-ZIEL_1	SRR13005985	TAC	gunifrac_a1.0	0.1360695034717727
+mock-ZIEL_1	SRR13005984	OTU	jaccard	0.2666666666666667
+mock-ZIEL_1	SRR13005984	OTU	weighted_jaccard	0.4042906845720533
+mock-ZIEL_1	SRR13005984	OTU	braycurtis	0.2533611107381599
+mock-ZIEL_1	SRR13005984	OTU	aitchison	34.5945225938315
+mock-ZIEL_1	SRR13005984	OTU	unifrac	0.07311696689097125
+mock-ZIEL_1	SRR13005984	OTU	gunifrac_a0.0	0.03794572147588891
+mock-ZIEL_1	SRR13005984	OTU	gunifrac_a0.5	0.1045896502168749
+mock-ZIEL_1	SRR13005984	OTU	gunifrac_a1.0	0.13190998848779842
+mock-ZIEL_1	SRR13005985	OTU	jaccard	0.2666666666666667
+mock-ZIEL_1	SRR13005985	OTU	weighted_jaccard	0.4095425072396729
+mock-ZIEL_1	SRR13005985	OTU	braycurtis	0.25749981316941023
+mock-ZIEL_1	SRR13005985	OTU	aitchison	34.60479269755097
+mock-ZIEL_1	SRR13005985	OTU	unifrac	0.07311696689097125
+mock-ZIEL_1	SRR13005985	OTU	gunifrac_a0.0	0.03794572147588891
+mock-ZIEL_1	SRR13005985	OTU	gunifrac_a0.5	0.10826742031066465
+mock-ZIEL_1	SRR13005985	OTU	gunifrac_a1.0	0.13420529158558295
+mock-ZIEL_2	SRR13005964	zOTU	jaccard	0.3076923076923077
+mock-ZIEL_2	SRR13005964	zOTU	weighted_jaccard	0.42152590453533345
+mock-ZIEL_2	SRR13005964	zOTU	braycurtis	0.26704645058571325
+mock-ZIEL_2	SRR13005964	zOTU	aitchison	20.225100997961547
+mock-ZIEL_2	SRR13005964	zOTU	unifrac	0.09985414227660488
+mock-ZIEL_2	SRR13005964	zOTU	gunifrac_a0.0	0.05255077754727854
+mock-ZIEL_2	SRR13005964	zOTU	gunifrac_a0.5	0.07848257438193035
+mock-ZIEL_2	SRR13005964	zOTU	gunifrac_a1.0	0.12684123997496036
+mock-ZIEL_2	SRR13005965	zOTU	jaccard	0.33333333333333337
+mock-ZIEL_2	SRR13005965	zOTU	weighted_jaccard	0.4141038626118946
+mock-ZIEL_2	SRR13005965	zOTU	braycurtis	0.2611166348471619
+mock-ZIEL_2	SRR13005965	zOTU	aitchison	20.23676648642308
+mock-ZIEL_2	SRR13005965	zOTU	unifrac	0.14110544841147205
+mock-ZIEL_2	SRR13005965	zOTU	gunifrac_a0.0	0.07590825864269155
+mock-ZIEL_2	SRR13005965	zOTU	gunifrac_a0.5	0.07513505940653262
+mock-ZIEL_2	SRR13005965	zOTU	gunifrac_a1.0	0.11668888031669414
+mock-ZIEL_2	SRR13005966	zOTU	jaccard	0.33333333333333337
+mock-ZIEL_2	SRR13005966	zOTU	weighted_jaccard	0.42028019799902383
+mock-ZIEL_2	SRR13005966	zOTU	braycurtis	0.2660473062796765
+mock-ZIEL_2	SRR13005966	zOTU	aitchison	20.25015594111638
+mock-ZIEL_2	SRR13005966	zOTU	unifrac	0.14110544841147205
+mock-ZIEL_2	SRR13005966	zOTU	gunifrac_a0.0	0.07590825864269155
+mock-ZIEL_2	SRR13005966	zOTU	gunifrac_a0.5	0.07670112014710982
+mock-ZIEL_2	SRR13005966	zOTU	gunifrac_a1.0	0.12074475315769222
+mock-ZIEL_2	SRR13005964	ASV	jaccard	0.3076923076923077
+mock-ZIEL_2	SRR13005964	ASV	weighted_jaccard	0.4069590602184343
+mock-ZIEL_2	SRR13005964	ASV	braycurtis	0.2554605158322144
+mock-ZIEL_2	SRR13005964	ASV	aitchison	20.293722328642488
+mock-ZIEL_2	SRR13005964	ASV	unifrac	0.0505015197327146
+mock-ZIEL_2	SRR13005964	ASV	gunifrac_a0.0	0.025904877712851885
+mock-ZIEL_2	SRR13005964	ASV	gunifrac_a0.5	0.06867788950438251
+mock-ZIEL_2	SRR13005964	ASV	gunifrac_a1.0	0.11007173834284827
+mock-ZIEL_2	SRR13005965	ASV	jaccard	0.33333333333333337
+mock-ZIEL_2	SRR13005965	ASV	weighted_jaccard	0.3863367088703057
+mock-ZIEL_2	SRR13005965	ASV	braycurtis	0.23941593701362499
+mock-ZIEL_2	SRR13005965	ASV	aitchison	20.335127786785108
+mock-ZIEL_2	SRR13005965	ASV	unifrac	0.12823070238620662
+mock-ZIEL_2	SRR13005965	ASV	gunifrac_a0.0	0.06850774961940037
+mock-ZIEL_2	SRR13005965	ASV	gunifrac_a0.5	0.05882611376765067
+mock-ZIEL_2	SRR13005965	ASV	gunifrac_a1.0	0.0887071993721686
+mock-ZIEL_2	SRR13005966	ASV	jaccard	0.5135135135135135
+mock-ZIEL_2	SRR13005966	ASV	weighted_jaccard	0.39803457189540103
+mock-ZIEL_2	SRR13005966	ASV	braycurtis	0.2484663931645169
+mock-ZIEL_2	SRR13005966	ASV	aitchison	20.314132246910013
+mock-ZIEL_2	SRR13005966	ASV	unifrac	0.526565536138489
+mock-ZIEL_2	SRR13005966	ASV	gunifrac_a0.0	0.3573728924179564
+mock-ZIEL_2	SRR13005966	ASV	gunifrac_a0.5	0.0724723817274844
+mock-ZIEL_2	SRR13005966	ASV	gunifrac_a1.0	0.09567156071606879
+mock-ZIEL_2	SRR13005964	TIC	jaccard	0.1428571428571429
+mock-ZIEL_2	SRR13005964	TIC	weighted_jaccard	0.3782127031019201
+mock-ZIEL_2	SRR13005964	TIC	braycurtis	0.2332073409535953
+mock-ZIEL_2	SRR13005964	TIC	aitchison	23.502975740436863
+mock-ZIEL_2	SRR13005964	TIC	unifrac	0.09442433407425989
+mock-ZIEL_2	SRR13005964	TIC	gunifrac_a0.0	0.0495516057235061
+mock-ZIEL_2	SRR13005964	TIC	gunifrac_a0.5	0.07756413636779086
+mock-ZIEL_2	SRR13005964	TIC	gunifrac_a1.0	0.12660501111656378
+mock-ZIEL_2	SRR13005965	TIC	jaccard	0.18181818181818177
+mock-ZIEL_2	SRR13005965	TIC	weighted_jaccard	0.37556443565547437
+mock-ZIEL_2	SRR13005965	TIC	braycurtis	0.23119688087290682
+mock-ZIEL_2	SRR13005965	TIC	aitchison	25.450909311015653
+mock-ZIEL_2	SRR13005965	TIC	unifrac	0.13616327054154312
+mock-ZIEL_2	SRR13005965	TIC	gunifrac_a0.0	0.07305536391114349
+mock-ZIEL_2	SRR13005965	TIC	gunifrac_a0.5	0.07423146494757327
+mock-ZIEL_2	SRR13005965	TIC	gunifrac_a1.0	0.11645341375310006
+mock-ZIEL_2	SRR13005966	TIC	jaccard	0.18181818181818177
+mock-ZIEL_2	SRR13005966	TIC	weighted_jaccard	0.38187053760356504
+mock-ZIEL_2	SRR13005966	TIC	braycurtis	0.23599504642726066
+mock-ZIEL_2	SRR13005966	TIC	aitchison	25.47797602742414
+mock-ZIEL_2	SRR13005966	TIC	unifrac	0.13616327054154312
+mock-ZIEL_2	SRR13005966	TIC	gunifrac_a0.0	0.07305536391114349
+mock-ZIEL_2	SRR13005966	TIC	gunifrac_a0.5	0.07577797640989183
+mock-ZIEL_2	SRR13005966	TIC	gunifrac_a1.0	0.12049707788100243
+mock-ZIEL_2	SRR13005964	TAC	jaccard	0.23809523809523814
+mock-ZIEL_2	SRR13005964	TAC	weighted_jaccard	0.4555403912984558
+mock-ZIEL_2	SRR13005964	TAC	braycurtis	0.29495131418906906
+mock-ZIEL_2	SRR13005964	TAC	aitchison	35.44469632957193
+mock-ZIEL_2	SRR13005964	TAC	unifrac	0.09442087146836155
+mock-ZIEL_2	SRR13005964	TAC	gunifrac_a0.0	0.04954969859536528
+mock-ZIEL_2	SRR13005964	TAC	gunifrac_a0.5	0.07801192647659523
+mock-ZIEL_2	SRR13005964	TAC	gunifrac_a1.0	0.1272704072963175
+mock-ZIEL_2	SRR13005965	TAC	jaccard	0.2727272727272727
+mock-ZIEL_2	SRR13005965	TAC	weighted_jaccard	0.4508150499873481
+mock-ZIEL_2	SRR13005965	TAC	braycurtis	0.291001439165586
+mock-ZIEL_2	SRR13005965	TAC	aitchison	36.943474372973085
+mock-ZIEL_2	SRR13005965	TAC	unifrac	0.13616011993856206
+mock-ZIEL_2	SRR13005965	TAC	gunifrac_a0.0	0.07305355003675196
+mock-ZIEL_2	SRR13005965	TAC	gunifrac_a0.5	0.07469146079226596
+mock-ZIEL_2	SRR13005965	TAC	gunifrac_a1.0	0.11716539616591057
+mock-ZIEL_2	SRR13005966	TAC	jaccard	0.2727272727272727
+mock-ZIEL_2	SRR13005966	TAC	weighted_jaccard	0.4598241830647213
+mock-ZIEL_2	SRR13005966	TAC	braycurtis	0.29855304700193463
+mock-ZIEL_2	SRR13005966	TAC	aitchison	36.9646216310545
+mock-ZIEL_2	SRR13005966	TAC	unifrac	0.13616011993856206
+mock-ZIEL_2	SRR13005966	TAC	gunifrac_a0.0	0.07305355003675196
+mock-ZIEL_2	SRR13005966	TAC	gunifrac_a0.5	0.07626010465167571
+mock-ZIEL_2	SRR13005966	TAC	gunifrac_a1.0	0.12124053463393088
+mock-ZIEL_2	SRR13005964	OTU	jaccard	0.23809523809523814
+mock-ZIEL_2	SRR13005964	OTU	weighted_jaccard	0.46384741413954067
+mock-ZIEL_2	SRR13005964	OTU	braycurtis	0.3019539975449258
+mock-ZIEL_2	SRR13005964	OTU	aitchison	35.51525322324885
+mock-ZIEL_2	SRR13005964	OTU	unifrac	0.09320278432976989
+mock-ZIEL_2	SRR13005964	OTU	gunifrac_a0.0	0.04887923244476185
+mock-ZIEL_2	SRR13005964	OTU	gunifrac_a0.5	0.07740606042992618
+mock-ZIEL_2	SRR13005964	OTU	gunifrac_a1.0	0.12671865649330696
+mock-ZIEL_2	SRR13005965	OTU	jaccard	0.2727272727272727
+mock-ZIEL_2	SRR13005965	OTU	weighted_jaccard	0.45916135780165435
+mock-ZIEL_2	SRR13005965	OTU	braycurtis	0.29799444615859305
+mock-ZIEL_2	SRR13005965	OTU	aitchison	37.01115988687431
+mock-ZIEL_2	SRR13005965	OTU	unifrac	0.13511884720009457
+mock-ZIEL_2	SRR13005965	OTU	gunifrac_a0.0	0.07245440118113106
+mock-ZIEL_2	SRR13005965	OTU	gunifrac_a0.5	0.0740740174296084
+mock-ZIEL_2	SRR13005965	OTU	gunifrac_a1.0	0.11658003079724184
+mock-ZIEL_2	SRR13005966	OTU	jaccard	0.2727272727272727
+mock-ZIEL_2	SRR13005966	OTU	weighted_jaccard	0.4680760323055062
+mock-ZIEL_2	SRR13005966	OTU	braycurtis	0.3055478223308619
+mock-ZIEL_2	SRR13005966	OTU	aitchison	37.03232681279354
+mock-ZIEL_2	SRR13005966	OTU	unifrac	0.13511884720009457
+mock-ZIEL_2	SRR13005966	OTU	gunifrac_a0.0	0.07245440118113106
+mock-ZIEL_2	SRR13005966	OTU	gunifrac_a0.5	0.07562691870204945
+mock-ZIEL_2	SRR13005966	OTU	gunifrac_a1.0	0.1206381884184885
+mock-ZYMO	SRR13006004	zOTU	jaccard	0.5384615384615384
+mock-ZYMO	SRR13006004	zOTU	weighted_jaccard	0.5653568339167883
+mock-ZYMO	SRR13006004	zOTU	braycurtis	0.39407488027862425
+mock-ZYMO	SRR13006004	zOTU	aitchison	36.22206410198851
+mock-ZYMO	SRR13006004	zOTU	unifrac	0.709342578953288
+mock-ZYMO	SRR13006004	zOTU	gunifrac_a0.0	0.5495978773190001
+mock-ZYMO	SRR13006004	zOTU	gunifrac_a0.5	0.5216791799851285
+mock-ZYMO	SRR13006004	zOTU	gunifrac_a1.0	0.4901357177776066
+mock-ZYMO	SRR13006002	zOTU	jaccard	0.5
+mock-ZYMO	SRR13006002	zOTU	weighted_jaccard	0.5375019967181215
+mock-ZYMO	SRR13006002	zOTU	braycurtis	0.3675232345698626
+mock-ZYMO	SRR13006002	zOTU	aitchison	36.11447254051683
+mock-ZYMO	SRR13006002	zOTU	unifrac	0.7116851258407844
+mock-ZYMO	SRR13006002	zOTU	gunifrac_a0.0	0.5524155158926085
+mock-ZYMO	SRR13006002	zOTU	gunifrac_a0.5	0.4515884840464453
+mock-ZYMO	SRR13006002	zOTU	gunifrac_a1.0	0.36979945356045946
+mock-ZYMO	SRR13006003	zOTU	jaccard	0.5384615384615384
+mock-ZYMO	SRR13006003	zOTU	weighted_jaccard	0.5844947735191637
+mock-ZYMO	SRR13006003	zOTU	braycurtis	0.41292307692307695
+mock-ZYMO	SRR13006003	zOTU	aitchison	36.24789435680134
+mock-ZYMO	SRR13006003	zOTU	unifrac	0.709342578953288
+mock-ZYMO	SRR13006003	zOTU	gunifrac_a0.0	0.5495978773190001
+mock-ZYMO	SRR13006003	zOTU	gunifrac_a0.5	0.5273667307999256
+mock-ZYMO	SRR13006003	zOTU	gunifrac_a1.0	0.4993543128324175
+mock-ZYMO	SRR13006004	ASV	jaccard	0.5
+mock-ZYMO	SRR13006004	ASV	weighted_jaccard	0.5693885121827159
+mock-ZYMO	SRR13006004	ASV	braycurtis	0.3980035928912082
+mock-ZYMO	SRR13006004	ASV	aitchison	36.228383178331065
+mock-ZYMO	SRR13006004	ASV	unifrac	0.6790978950177656
+mock-ZYMO	SRR13006004	ASV	gunifrac_a0.0	0.5141167482861262
+mock-ZYMO	SRR13006004	ASV	gunifrac_a0.5	0.5295445801388867
+mock-ZYMO	SRR13006004	ASV	gunifrac_a1.0	0.5034834559560001
+mock-ZYMO	SRR13006002	ASV	jaccard	0.4545454545454546
+mock-ZYMO	SRR13006002	ASV	weighted_jaccard	0.5330716509622992
+mock-ZYMO	SRR13006002	ASV	braycurtis	0.3633931073129728
+mock-ZYMO	SRR13006002	ASV	aitchison	36.11798317282558
+mock-ZYMO	SRR13006002	ASV	unifrac	0.6813662172979816
+mock-ZYMO	SRR13006002	ASV	gunifrac_a0.0	0.5167213416160102
+mock-ZYMO	SRR13006002	ASV	gunifrac_a0.5	0.46273743282659563
+mock-ZYMO	SRR13006002	ASV	gunifrac_a1.0	0.3867750540511524
+mock-ZYMO	SRR13006003	ASV	jaccard	0.6666666666666667
+mock-ZYMO	SRR13006003	ASV	weighted_jaccard	0.5917087447335413
+mock-ZYMO	SRR13006003	ASV	braycurtis	0.4201607746414543
+mock-ZYMO	SRR13006003	ASV	aitchison	36.25185841753541
+mock-ZYMO	SRR13006003	ASV	unifrac	0.8819235468884735
+mock-ZYMO	SRR13006003	ASV	gunifrac_a0.0	0.7887864416016844
+mock-ZYMO	SRR13006003	ASV	gunifrac_a0.5	0.5456071828217174
+mock-ZYMO	SRR13006003	ASV	gunifrac_a1.0	0.5114468461794383
+mock-ZYMO	SRR13006004	TIC	jaccard	0.36363636363636365
+mock-ZYMO	SRR13006004	TIC	weighted_jaccard	0.405118618000913
+mock-ZYMO	SRR13006004	TIC	braycurtis	0.2540117544623422
+mock-ZYMO	SRR13006004	TIC	aitchison	29.795317846158028
+mock-ZYMO	SRR13006004	TIC	unifrac	0.7086285487042173
+mock-ZYMO	SRR13006004	TIC	gunifrac_a0.0	0.5487410674853992
+mock-ZYMO	SRR13006004	TIC	gunifrac_a0.5	0.5213712789971708
+mock-ZYMO	SRR13006004	TIC	gunifrac_a1.0	0.4900223448173293
+mock-ZYMO	SRR13006002	TIC	jaccard	0.30000000000000004
+mock-ZYMO	SRR13006002	TIC	weighted_jaccard	0.3903721521212751
+mock-ZYMO	SRR13006002	TIC	braycurtis	0.2425232345698626
+mock-ZYMO	SRR13006002	TIC	aitchison	29.42059365797673
+mock-ZYMO	SRR13006002	TIC	unifrac	0.7109720863759095
+mock-ZYMO	SRR13006002	TIC	gunifrac_a0.0	0.5515567807814321
+mock-ZYMO	SRR13006002	TIC	gunifrac_a0.5	0.4511199092577516
+mock-ZYMO	SRR13006002	TIC	gunifrac_a1.0	0.36958301406595895
+mock-ZYMO	SRR13006003	TIC	jaccard	0.36363636363636365
+mock-ZYMO	SRR13006003	TIC	weighted_jaccard	0.4289318247050471
+mock-ZYMO	SRR13006003	TIC	braycurtis	0.27301923076923074
+mock-ZYMO	SRR13006003	TIC	aitchison	29.796331578011525
+mock-ZYMO	SRR13006003	TIC	unifrac	0.7086285487042173
+mock-ZYMO	SRR13006003	TIC	gunifrac_a0.0	0.5487410674853992
+mock-ZYMO	SRR13006003	TIC	gunifrac_a0.5	0.5270642427344702
+mock-ZYMO	SRR13006003	TIC	gunifrac_a1.0	0.4992447098513051
+mock-ZYMO	SRR13006004	TAC	jaccard	0.36363636363636365
+mock-ZYMO	SRR13006004	TAC	weighted_jaccard	0.405118618000913
+mock-ZYMO	SRR13006004	TAC	braycurtis	0.2540117544623422
+mock-ZYMO	SRR13006004	TAC	aitchison	29.795317846158028
+mock-ZYMO	SRR13006004	TAC	unifrac	0.7086285487042173
+mock-ZYMO	SRR13006004	TAC	gunifrac_a0.0	0.5487410674853992
+mock-ZYMO	SRR13006004	TAC	gunifrac_a0.5	0.5213712789971708
+mock-ZYMO	SRR13006004	TAC	gunifrac_a1.0	0.4900223448173293
+mock-ZYMO	SRR13006002	TAC	jaccard	0.30000000000000004
+mock-ZYMO	SRR13006002	TAC	weighted_jaccard	0.3903721521212751
+mock-ZYMO	SRR13006002	TAC	braycurtis	0.2425232345698626
+mock-ZYMO	SRR13006002	TAC	aitchison	29.42059365797673
+mock-ZYMO	SRR13006002	TAC	unifrac	0.7109720863759095
+mock-ZYMO	SRR13006002	TAC	gunifrac_a0.0	0.5515567807814321
+mock-ZYMO	SRR13006002	TAC	gunifrac_a0.5	0.4511199092577516
+mock-ZYMO	SRR13006002	TAC	gunifrac_a1.0	0.36958301406595895
+mock-ZYMO	SRR13006003	TAC	jaccard	0.36363636363636365
+mock-ZYMO	SRR13006003	TAC	weighted_jaccard	0.4289318247050472
+mock-ZYMO	SRR13006003	TAC	braycurtis	0.27301923076923074
+mock-ZYMO	SRR13006003	TAC	aitchison	29.796331578011525
+mock-ZYMO	SRR13006003	TAC	unifrac	0.7086285487042173
+mock-ZYMO	SRR13006003	TAC	gunifrac_a0.0	0.5487410674853992
+mock-ZYMO	SRR13006003	TAC	gunifrac_a0.5	0.5270642427344702
+mock-ZYMO	SRR13006003	TAC	gunifrac_a1.0	0.499244709851305
+mock-ZYMO	SRR13006004	OTU	jaccard	0.30000000000000004
+mock-ZYMO	SRR13006004	OTU	weighted_jaccard	0.405013584244013
+mock-ZYMO	SRR13006004	OTU	braycurtis	0.25392917472093063
+mock-ZYMO	SRR13006004	OTU	aitchison	29.794812514743914
+mock-ZYMO	SRR13006004	OTU	unifrac	0.7109720863759095
+mock-ZYMO	SRR13006004	OTU	gunifrac_a0.0	0.5515567807814321
+mock-ZYMO	SRR13006004	OTU	gunifrac_a0.5	0.5214292081368356
+mock-ZYMO	SRR13006004	OTU	gunifrac_a1.0	0.4900281276820759
+mock-ZYMO	SRR13006002	OTU	jaccard	0.30000000000000004
+mock-ZYMO	SRR13006002	OTU	weighted_jaccard	0.3903721521212751
+mock-ZYMO	SRR13006002	OTU	braycurtis	0.2425232345698626
+mock-ZYMO	SRR13006002	OTU	aitchison	29.42059365797673
+mock-ZYMO	SRR13006002	OTU	unifrac	0.7109720863759095
+mock-ZYMO	SRR13006002	OTU	gunifrac_a0.0	0.5515567807814321
+mock-ZYMO	SRR13006002	OTU	gunifrac_a0.5	0.4511199092577516
+mock-ZYMO	SRR13006002	OTU	gunifrac_a1.0	0.36958301406595895
+mock-ZYMO	SRR13006003	OTU	jaccard	0.30000000000000004
+mock-ZYMO	SRR13006003	OTU	weighted_jaccard	0.42878941245788704
+mock-ZYMO	SRR13006003	OTU	braycurtis	0.27290384615384616
+mock-ZYMO	SRR13006003	OTU	aitchison	29.79573872039442
+mock-ZYMO	SRR13006003	OTU	unifrac	0.7109720863759095
+mock-ZYMO	SRR13006003	OTU	gunifrac_a0.0	0.5515567807814321
+mock-ZYMO	SRR13006003	OTU	gunifrac_a0.5	0.5271160220525726
+mock-ZYMO	SRR13006003	OTU	gunifrac_a1.0	0.4992303253848922

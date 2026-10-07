@@ -1,0 +1,136 @@
+community_id	sample_id	method	expected_richness	recovered_richness
+mock-12	Mock 3	ASV	26	18
+mock-12	Mock 3	zOTU	26	17
+mock-12	Mock 3	OTU	26	14
+mock-12	Mock 3	TIC	26	17
+mock-12	Mock 3	TAC	26	17
+mock-13	Mock 4	ASV	21	19
+mock-13	Mock 4	zOTU	21	20
+mock-13	Mock 4	OTU	21	20
+mock-13	Mock 4	TIC	21	20
+mock-13	Mock 4	TAC	21	20
+mock-14	Mock 5	ASV	21	19
+mock-14	Mock 5	zOTU	21	20
+mock-14	Mock 5	OTU	21	20
+mock-14	Mock 5	TIC	21	20
+mock-14	Mock 5	TAC	21	20
+mock-15	Mock 6	ASV	21	19
+mock-15	Mock 6	zOTU	21	20
+mock-15	Mock 6	OTU	21	20
+mock-15	Mock 6	TIC	21	20
+mock-15	Mock 6	TAC	21	20
+mock-16	Mock 7	ASV	56	50
+mock-16	Mock 7	zOTU	56	52
+mock-16	Mock 7	OTU	56	48
+mock-16	Mock 7	TIC	56	51
+mock-16	Mock 7	TAC	56	50
+mock-18	Mock 8	ASV	15	14
+mock-18	Mock 8	zOTU	15	14
+mock-18	Mock 8	OTU	15	14
+mock-18	Mock 8	TIC	15	14
+mock-18	Mock 8	TAC	15	14
+mock-19	Mock 9	ASV	15	15
+mock-19	Mock 9	zOTU	15	15
+mock-19	Mock 9	OTU	15	15
+mock-19	Mock 9	TIC	15	15
+mock-19	Mock 9	TAC	15	15
+mock-20	Mock 10	ASV	20	18
+mock-20	Mock 10	zOTU	20	18
+mock-20	Mock 10	OTU	20	18
+mock-20	Mock 10	TIC	20	18
+mock-20	Mock 10	TAC	20	18
+mock-21	Mock 11	ASV	20	14
+mock-21	Mock 11	zOTU	20	14
+mock-21	Mock 11	OTU	20	14
+mock-21	Mock 11	TIC	20	14
+mock-21	Mock 11	TAC	20	14
+mock-22	Mock 12	ASV	20	19
+mock-22	Mock 12	zOTU	20	19
+mock-22	Mock 12	OTU	20	19
+mock-22	Mock 12	TIC	20	19
+mock-22	Mock 12	TAC	20	19
+mock-23	Mock 13	ASV	20	18
+mock-23	Mock 13	zOTU	20	19
+mock-23	Mock 13	OTU	20	18
+mock-23	Mock 13	TIC	20	19
+mock-23	Mock 13	TAC	20	19
+mock-4	Even1	ASV	21	20
+mock-4	Even2	ASV	21	20
+mock-4	Staggered1	ASV	21	19
+mock-4	Staggered2	ASV	21	19
+mock-4	Even1	zOTU	21	20
+mock-4	Even2	zOTU	21	20
+mock-4	Staggered1	zOTU	21	20
+mock-4	Staggered2	zOTU	21	20
+mock-4	Even1	OTU	21	20
+mock-4	Even2	OTU	21	20
+mock-4	Staggered1	OTU	21	20
+mock-4	Staggered2	OTU	21	20
+mock-4	Even1	TIC	21	19
+mock-4	Even2	TIC	21	19
+mock-4	Staggered1	TIC	21	19
+mock-4	Staggered2	TIC	21	19
+mock-4	Even1	TAC	21	20
+mock-4	Even2	TAC	21	20
+mock-4	Staggered1	TAC	21	20
+mock-4	Staggered2	TAC	21	20
+mock-5	Even1	ASV	21	20
+mock-5	Even2	ASV	21	20
+mock-5	Staggered1	ASV	21	18
+mock-5	Staggered2	ASV	21	18
+mock-5	Even1	zOTU	21	20
+mock-5	Even2	zOTU	21	20
+mock-5	Staggered1	zOTU	21	20
+mock-5	Staggered2	zOTU	21	20
+mock-5	Even1	OTU	21	20
+mock-5	Even2	OTU	21	20
+mock-5	Staggered1	OTU	21	20
+mock-5	Staggered2	OTU	21	20
+mock-5	Even1	TIC	21	20
+mock-5	Even2	TIC	21	20
+mock-5	Staggered1	TIC	21	20
+mock-5	Staggered2	TIC	21	20
+mock-5	Even1	TAC	21	20
+mock-5	Even2	TAC	21	20
+mock-5	Staggered1	TAC	21	20
+mock-5	Staggered2	TAC	21	20
+mock-ZIEL_1	SRR13005984	ASV	13	10
+mock-ZIEL_1	SRR13005985	ASV	13	10
+mock-ZIEL_1	SRR13005984	zOTU	13	10
+mock-ZIEL_1	SRR13005985	zOTU	13	10
+mock-ZIEL_1	SRR13005984	OTU	13	11
+mock-ZIEL_1	SRR13005985	OTU	13	11
+mock-ZIEL_1	SRR13005984	TIC	13	11
+mock-ZIEL_1	SRR13005985	TIC	13	11
+mock-ZIEL_1	SRR13005984	TAC	13	11
+mock-ZIEL_1	SRR13005985	TAC	13	11
+mock-ZIEL_2	SRR13005964	ASV	19	18
+mock-ZIEL_2	SRR13005965	ASV	19	18
+mock-ZIEL_2	SRR13005966	ASV	19	18
+mock-ZIEL_2	SRR13005964	zOTU	19	18
+mock-ZIEL_2	SRR13005965	zOTU	19	18
+mock-ZIEL_2	SRR13005966	zOTU	19	18
+mock-ZIEL_2	SRR13005964	OTU	19	16
+mock-ZIEL_2	SRR13005965	OTU	19	16
+mock-ZIEL_2	SRR13005966	OTU	19	16
+mock-ZIEL_2	SRR13005964	TIC	19	18
+mock-ZIEL_2	SRR13005965	TIC	19	18
+mock-ZIEL_2	SRR13005966	TIC	19	18
+mock-ZIEL_2	SRR13005964	TAC	19	16
+mock-ZIEL_2	SRR13005965	TAC	19	16
+mock-ZIEL_2	SRR13005966	TAC	19	16
+mock-ZYMO	SRR13006004	ASV	8	6
+mock-ZYMO	SRR13006002	ASV	8	6
+mock-ZYMO	SRR13006003	ASV	8	6
+mock-ZYMO	SRR13006004	zOTU	8	6
+mock-ZYMO	SRR13006002	zOTU	8	6
+mock-ZYMO	SRR13006003	zOTU	8	6
+mock-ZYMO	SRR13006004	OTU	8	7
+mock-ZYMO	SRR13006002	OTU	8	7
+mock-ZYMO	SRR13006003	OTU	8	7
+mock-ZYMO	SRR13006004	TIC	8	7
+mock-ZYMO	SRR13006002	TIC	8	7
+mock-ZYMO	SRR13006003	TIC	8	7
+mock-ZYMO	SRR13006004	TAC	8	7
+mock-ZYMO	SRR13006002	TAC	8	7
+mock-ZYMO	SRR13006003	TAC	8	7

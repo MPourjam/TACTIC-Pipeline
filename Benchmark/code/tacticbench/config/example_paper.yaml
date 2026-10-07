@@ -1,0 +1,1136 @@
+paths:
+  # Root directory that contains community folders, each with:
+  #   source/, dada2_results/, trimmed_fastq/Analysis_*/{ZOTU,OTU,TIC,TAC}_Pipeline/
+  # Legacy tactic_results/Analysis*am-* is still supported as fallback.
+  root: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605
+  outdir: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP
+
+
+discovery:
+  # Exclude communities by folder-name pattern.
+  # Supports shell-style wildcards and plain substring matches.
+  # Examples:
+  #   - mock-ZIEL_*
+  #   - ZYMO
+  exclude_community_name_patterns:
+    - mock-HC227
+    # - mock-4   # identical to mock-5
+    # - mock-5
+    # - mock-13
+    # - mock-14  # identical to mock-13
+    # - mock-15  # identical to mock-13  # Also problemtic: too high alpha diversity on TIC/TAC/OTU!!
+    # - mock-20  # Gohl et al. HM276D even → duplicate of mock-22
+    # - mock-21  # Gohl et al. HM277D staggered → duplicate of mock-23  # Also problematic
+    # - mock-18  # From Tourlousse et al. and contains synthetic cloned 16S rRNA genes
+    # - mock-19  # contains spike-in standards
+    # - mock-ZYMO
+  # Choose which expected reference FASTA to discover under source/.
+  # Use expected-sequences.v4.fasta to run TACTICBench in V4 expected-reference space.
+  expected_sequences_filename: expected-sequences.v4.fasta
+  # If a community lacks expected-sequences.v4.fasta, fall back to full 16S file.
+  expected_sequences_fallback_to_full: true
+
+
+normalization:
+  # TSS normalize every sample (column) to sum to this total
+  tss_total: 10000.0
+
+  # If true, after mapping we renormalize the mapped portion back to tss_total.
+  #   This means that we normalize to the sum of projected mapped abundances,
+  #   rather than the original TSS total.
+  # If false, mapped tables may sum to < tss_total (unmapped mass remains missing).
+  # Recommended: true (reflects the reality of working with mapped tables, where unmapped mass is effectively missing).
+  renormalize_after_mapping: false
+
+mapping:
+  # Minimum effective identity to accept a hit:
+  # effective_identity = pident * ((abs(qend - qstart) + 1) / qlen)
+  min_effective_pident: 100
+
+  # Optional dedicated threshold for TIC/TAC only.
+  # If null, TIC/TAC use min_effective_pident_clustering below.
+  min_effective_pident_tic_tac: 98.7
+
+  # Optional relaxed identity threshold for clustering methods
+  # (OTU always; TIC/TAC if min_effective_pident_tic_tac is null).
+  # If null, min_effective_pident is used.
+  min_effective_pident_clustering: 97.0
+
+  # Minimum RAW pident threshold used when writing blast_hits.tsv
+  # (implemented via BLAST -perc_identity lower bound).
+  # This only controls what gets recorded in blast_hits.tsv; final mapping still
+  # uses min_effective_pident/min_effective_pident_clustering filters.
+  # Accepts percent (95.0) or fraction (0.95). Set null to reuse mapping thresholds.
+  blast_record_min_raw_pident: 90.0
+
+  # Additional quality gate on query coverage.
+  # Accepts percent (90.0) or fraction (0.9).
+  min_query_coverage: 100  # It allows for 1 bp difference as the inferred could be 1 bp shorter
+
+  # Used for seeded tie-breaking in mapping
+  seed: 1
+
+  # Mapping assignment mode:
+  # - one_to_one: strict unique-target assignment (legacy behavior)
+  # - tie_aware_split: keep exact top ties and split each inferred feature equally
+  #   across tied targets (many-to-many mapping for tied-best hits)
+  # - soft_species: ASV/zOTU only; keep species candidates and distribute by weights
+  assignment_mode: one_to_one
+  # soft_species weighting field: bitscore | pident | length | uniform
+  soft_species_score_field: bitscore
+  # In soft_species mode, keep candidates with score >= max_score * threshold (0..1)
+  soft_species_min_relative_score: 0.0
+
+  # If any expected sample name can't be mapped to an inferred sample name, skip the community
+  skip_community_on_samplemap_failure: true
+
+  # expected sample name is a substring of inferred sample name
+  sample_match_mode: substring
+
+  # If true, keep representative samples per community:
+  # - one Even + one Staggered when both exist
+  # - otherwise one sample
+  # If false, keep all available samples/replicates in each non-excluded community.
+  keep_one_sample_per_community: false
+
+  # Write per-sample mapped/unmapped mass stats
+  store_unmapped_mass: true
+
+  # Global mapping target level by method (affects projection + distance tables,
+  # therefore also Figure 17).
+  # Values: tip | species
+  # Defaults (if omitted): ASV/zOTU=tip, OTU/TIC/TAC=species
+  target_level_by_method:
+    asv: tip
+    zotu: tip
+    otu: species
+    tic: species
+    tac: species
+    default: species
+
+tree:
+  # Build the full expected-tip tree (for ASV/zOTU UniFrac/gUniFrac)
+  build_full_tree: true
+
+  # Build the centroid species tree (for TIC/TAC/OTU UniFrac/gUniFrac)
+  build_centroid_tree: true
+
+  # Executables (absolute paths avoid PATH-dependent misses in batch runs)
+  mafft_exe: /usr/bin/mafft
+  fasttree_exe: /home/adminuser/miniforge3/envs/qiime2-2024.10/bin/FastTree
+  blastn_exe: blastn
+  makeblastdb_exe: makeblastdb
+
+distances:
+  # ---------------- Common (all modes) ----------------
+  # Methods to include in distance tables and Figure 02/03
+  methods:
+    - zOTU
+    - ASV
+    - TIC
+    - TAC
+    - OTU
+
+  # Distance metrics to compute (UniFrac/gUniFrac require trees; otherwise NaN)
+  metrics:
+    - jaccard
+    - weighted_jaccard
+    - braycurtis
+    - unifrac
+    - gunifrac_a0.0
+    - gunifrac_a0.5
+    - gunifrac_a1.0
+    - aitchison
+  # Zero-replacement pseudocount used for Aitchison distance.
+  aitchison_pseudocount: 1.0e-6
+
+  # Distances use projected mapped tables from the main module mapping/projection steps.
+  # Figure 11 can optionally override mapping behavior via:
+  #   figures.fig11.target_level_by_method
+  #   figures.fig11.min_effective_pident_by_method
+  # (or mapping.* fallback thresholds when method-specific values are not set)
+
+  # Phylogenetic mapping mode for UniFrac/gUniFrac
+  # - mapped_projection: use mapped expected-space abundances on expected trees
+  # - augmented_mismatch: add synthetic inferred-feature tips with branch length
+  #   beta*(1-pident/100)+eps and compute phylo distances on augmented tree
+  phylo_mapping_mode: augmented_mismatch
+
+  # ---------------- mapped_projection mode ----------------
+  # Unmapped handling in mapped_projection mode:
+  # additive post-hoc penalty by unmapped fraction from mapping_qc.tsv
+  #   final_distance = clip(base_distance + lambda * transformed(unmapped_fraction), 0, 1)
+  # Only applied to phylogenetic distances; non-phylo distances remain unaffected by unmapped fraction.
+  penalize_unmapped: true
+  unmapped_penalty_lambda: 1.0
+
+  # mapped_projection only (optional stress penalty):
+  # add extra penalty by abundance-weighted mapping mismatch from mapping.tsv pident
+  # mismatch = weighted_mean(1 - pident/100) over mapped inferred features
+  # Recommended baseline: false (avoid over-weighting; enable for sensitivity analysis)
+  penalize_mapping_mismatch: false
+  mapping_mismatch_lambda: 1.0
+
+  # mapped_projection only (optional stress penalty):
+  # add extra penalty by coverage deficit of expected-present targets in each sample
+  # coverage_deficit = 1 - (#expected-present targets with inferred abundance>0 / #expected-present targets)
+  # proxy for over-merging
+  # Recommended baseline: false (enable to emphasize over-merging effects)
+  penalize_coverage_deficit: false
+  coverage_deficit_lambda: 1.0
+
+  # mapped_projection only: penalty transform for proxy components before lambda scaling
+  # used only when one of the optional stress penalties above is enabled
+  # - linear:  f(x) = x
+  # - exp:     f(x) = 1 - exp(-k*x) (saturates; softer than linear near 1)
+  penalty_transform: exp
+  penalty_exp_k: 1.5
+
+  # ---------------- augmented_mismatch mode ----------------
+  augmented_mismatch_beta: 1.0
+  augmented_mismatch_eps: 1.0e-8
+  # Unmapped handling in augmented_mismatch mode
+  # If true, unmapped inferred features are included as synthetic tips
+  # Placement uses best BLAST hit when available (branch length from pident),
+  # otherwise falls back to unattached synthetic tips
+  augmented_mismatch_include_unmapped: true
+
+figures:
+  # Global default grid size (used by fig01 and as fallback for fig03-by-metric)
+  grid_rows: 6
+  grid_cols: 5
+  # Marker area (`s`) for jitter points overlaid on all box/violin plots (fig07/08/09/11).
+  box_violin_dot_size: 32
+
+  # Exclude communities from figure generation only.
+  # These communities still remain in manifest and can be used for distances.
+  # Supports shell-style wildcards and plain substring matches.
+  exclude_community_name_patterns: {}
+
+
+  fig01:
+    enabled: true
+    # Optional figure titles
+    title: "Feature Counts by Sample"
+    title_with_expected_features: "Feature Counts by Sample (with Expected Features)"
+    # Optional per-figure overrides (otherwise uses global grid_rows/grid_cols)
+    # grid_rows: 5
+    # grid_cols: 6
+    exclude_community_name_patterns: []
+
+  fig02:
+    enabled: true
+    # Optional title prefix (applied to all Figure 02 heatmaps)
+    title: "Distance Heatmaps"
+    exclude_community_name_patterns: []
+
+  fig03:
+    # If enabled:false, both by_sample and by_metric are disabled.
+    enabled: true
+    # Optional titles
+    title_by_sample: "Distances by Sample Accross Analysis Methods"
+    title_by_metric: "Distances by Metric Accross Samples"
+    by_sample: true
+    by_metric: true
+    # Optional per-figure overrides (otherwise uses global grid_rows/grid_cols)
+    # grid_rows: 5
+    # grid_cols: 6
+    # Optional dedicated grid size for by-metric pages
+    by_metric_grid_rows: 7
+    by_metric_grid_cols: 4
+    exclude_community_name_patterns: []
+  fig04:
+    enabled: true
+    title: "Species Richness Recovery"
+    exclude_community_name_patterns: []
+
+  fig05:
+    enabled: true
+    title: "Precision-Recall (Species Presence)"
+    exclude_community_name_patterns: []
+
+  fig06:
+    enabled: true
+    title: "Rank-Abundance Curves (Species)"
+    # Optional grid size for overview pages (fallback to global grid_rows/grid_cols)
+    grid_rows: 6
+    grid_cols: 5
+    exclude_community_name_patterns: []
+
+  fig07:
+    enabled: true
+    title: "Alpha Diversity Error Plots"
+    # Expected-composition level used per method in Figure 07:
+    # - denoising (ASV/zOTU): usually tip
+    # - clustering (OTU/TIC/TAC): usually species
+    # Keys: asv, zotu, otu, tic, tac, default
+    target_level_by_method:
+      asv: tip
+      zotu: tip
+      otu: species
+      tic: species
+      tac: species
+      default: species
+    # Plot style: boxplot | violin
+    plot_type: violin
+    # Non-parametric group-difference test on methods (per metric):
+    # permutation-based Kruskal-style test.
+    stats_permutations: 2000
+    stats_seed: 1
+    # Stats engine:
+    # - mixed_effect_glmmtmb: GLMM (Gaussian) with random effects for
+    #   community_id and sample_key, plus emmeans pairwise contrasts
+    # - paired_permutation: permutation-based Kruskal-style omnibus test
+    stats_model: paired_permutation
+    # Pairwise test used when stats_model=paired_permutation.
+    # - signed_rank_permutation
+    # - sign_test_exact  (recommended when many zeros/ties)
+    stats_pairwise_test: signed_rank_permutation
+    # emmeans scale for GLMM pairwise contrasts.
+    stats_glmm_emmeans_scale: response
+    # Pairwise significance settings for Figure 07 stats tables.
+    stats_alpha: 0.05
+    stats_multiple_test_correction: true
+    # Draw pairwise significance brackets (*, **, ***) on each panel.
+    stats_show_pairwise: true
+    # Show/hide omnibus-stat + p-value annotation on each subplot.
+    show_pvalue_label: false
+    # If true, write long-format calculations table:
+    # fig07_alpha_diversity_error/alpha_diversity_errors_long.tsv
+    write_long_tsv: true
+    # If true, also render the 3-metric companion panel:
+    # observed_species + effective_shannon + effective_simpson
+    include_richness_effective_variant: true
+    exclude_community_name_patterns: []
+
+  fig08:
+    enabled: true
+    title: "Beta-Diversity Concordance"
+    # Plot style: boxplot | violin
+    plot_type: violin
+    exclude_community_name_patterns: []
+
+  fig09:
+    enabled: true
+    title: "Split/Merge Diagnostics"
+    # Plot style: boxplot | violin
+    plot_type: violin
+    # Base font size for Figure 09 labels/ticks/titles.
+    font_size: 14.0
+    # Horizontal padding between subplot columns in Figure 09.
+    layout_w_pad: 2.5
+    # Outer margins for Figure 09 tight_layout: [left, bottom, right, top].
+    layout_left: 0.02
+    layout_bottom: 0.02
+    layout_right: 0.02
+    layout_top: 0.02
+    # Optional final SVG cropping.
+    save_bbox_tight: false
+    save_pad_inches: 0.02
+    # If true, write one SVG per panel beside the combined 4-panel Figure 09.
+    write_individual_panels: true
+    # Split-index source:
+    # - mapping: legacy split index from finalized mapping.tsv (one target per inferred feature)
+    # - threshold_hits: count splitting from all BLAST hits above method threshold
+    # - graph: graph-based split/merge from BLAST-hit bipartite edges
+    split_index_mode: graph
+    # Split-index denominator:
+    # - mapped_expected_features: average split burden per mapped expected target
+    # - mapped_inferred_features: average split burden per mapped inferred feature
+    split_index_denominator: mapped_expected_features
+    # Merge-index denominator (graph mode):
+    # - mapped_inferred_features: legacy behavior
+    # - expected_present_features: normalize by expected species in sample
+    merge_denominator: expected_present_features
+    # 1-to-1 Mapping Fraction denominator:
+    # - expected_present_features: normalize by expected targets present in sample
+    # - mapped_inferred_features: normalize by mapped inferred features
+    # - inferred_present_features: normalize by inferred present features
+    one_to_one_denominator: mapped_inferred_features
+    # Hit-quality gate for threshold_hits/graph modes.
+    # Accepts percent (90.0) or fraction (0.9).
+    min_query_coverage: 100.0
+    # Figure 09 no-hit/unmapped diagnostics: optional dedicated query-coverage
+    # gate for best-hit detection. Accepts percent (90.0) or fraction (0.9).
+    # If null, fallback is fig12.unmapped_best_hit_min_query_coverage, then
+    # fig09.min_query_coverage.
+    no_hit_min_query_coverage: null
+    # Figure 09 no-hit/unmapped diagnostics: optional method-specific effective
+    # identity thresholds to classify "has best hit" vs "no-hit".
+    # If empty, fallback uses fig12.no_hit_min_effective_pident_by_method.
+    # Keys: asv, zotu, otu, tic, tac, optional default.
+    # Accepts percent (98.7) or fraction (0.987).
+    no_hit_min_effective_pident_by_method: {}
+    # Example:
+    # no_hit_min_effective_pident_by_method:
+    #   asv: 97.0
+    #   zotu: 97.0
+    #   otu: 97.0
+    #   tic: 97.0
+    #   tac: 97.0
+    # Titles for Figure 09 panel rows:
+    # - a: split/merge
+    # - b: 1-to-1 + cluster purity (TIC/TAC)
+    # - c: mapping transition companion labels
+    # - d: richness error
+    panel_titles:
+      a: "Split/Merge Index"
+      b: "1-to-1 Mapping and Cluster Purity"
+      c: "Mapping outcome breakdown"
+      d: "Relative Richness Error"
+    # Panel-specific target-level knobs (compact form).
+    # Panel keys: a, b, c (aliases panel_a..panel_c also accepted).
+    # Supported forms:
+    # - panel: species|tip  -> applies to all metrics/methods in that panel
+    # - panel: {asv: tip, zotu: tip, default: species}
+    #   -> method map applied to all metrics in that panel
+    # - full per-metric form is still supported for backward compatibility
+    panel_target_level_by_metric:
+      a:
+        split_index: species
+        merge_deficit: species
+      b:
+        one_to_one_mapping_fraction: species
+      c:
+        no_hit_over_unmapped_fraction: species
+
+    # Optional per-graph text overrides for Figure 09 (2x2 layout).
+    # Keys are metric ids:
+    #   split_index | merge_deficit | one_to_one_mapping_fraction | relative_richness_error
+    # Each node accepts:
+    #   title, xlabel, ylabel
+    graph_labels_by_metric:
+      split_index:
+        title: "Split Index"
+        xlabel: "Method"
+        ylabel: "Index"
+      merge_deficit:
+        title: "Merge Index"
+        xlabel: "Method"
+        ylabel: "Index"
+      one_to_one_mapping_fraction:
+        title: "One-to-One Mapping Fraction"
+        xlabel: "Method"
+        ylabel: "Fraction"
+      no_hit_over_unmapped_fraction:
+        title: "Mapping Outcome Breakdown"
+        xlabel: "Post-clustering outcome"
+        ylabel: "Original zOTU class"
+      relative_richness_error:
+        title: "Relative Richness Error"
+        xlabel: "Method"
+        ylabel: "Relative richness error (%)"
+
+    # Active Figure 09 panel D. This panel compares inferred feature richness
+    # against the expected species richness per sample/method.
+    panel_d:
+      title: "Relative Richness Error"
+      xlabel: "Method"
+      ylabel: "Relative richness error (%)"
+      # Methods shown in panel D. Aliases such as DADA2, UNOISE3, and UPARSE are accepted.
+      methods: [ASV, zOTU, TIC, TAC, OTU] # [ASV, zOTU, TAC, TIC, OTU]
+      plot_type: boxplot
+      font_size: null
+      tick_size: null
+      xtick_rotation: 45.0
+      ytick_rotation: 0.0
+      point_size: null
+      point_opacity: 0.72
+      point_jitter: 0.055
+      show_zero_line: true
+      show_reference_note: true
+      reference_note: "0% = expected species richness"
+      show_excess_removed_annotation: true
+      # Optional fixed y-axis limits, for example [-100, 300]. Empty = automatic.
+      y_limits: []
+
+    # Replacement panel for no_hit_over_unmapped_fraction in the Figure 09
+    # 2x2 layout. The panel summarizes how original zOTU best-hit classes
+    # transition after TIC/TAC clustering.
+    transition_heatmap:
+      # If null, the title from graph_labels_by_metric.no_hit_over_unmapped_fraction is used.
+      title: null
+      xlabel: "Post-clustering outcome"
+      ylabel: "Original zOTU class"
+      note: ""
+      cmap: YlGnBu
+      show_counts: true
+      show_percentages: true
+      show_colorbar: true
+      x_tick_rotation: 45
+      row_label_rotation: 0
+      method_label_x_offset: 0.02
+      colorbar_pad: 0.10
+      tic_label: "TIC"
+      tac_label: "TAC"
+      no_match_label: "No\nmatch"
+      non_bacterial_label: "Non\nbacterial"
+      colorbar_label: "Fraction of zOTUs"
+      exact_identity: 100.0
+      # If null, uses fig09/fig12 zOTU no-match effective-identity threshold.
+      near_exact_min_effective_pident: 98.7
+
+    # Companion Figure 09 plot written as a separate SVG beside the main
+    # Figure 09. It summarizes whether TIC/TAC multi-zOTU clusters that are
+    # pure/mixed by match status are homogeneous by best-hit species.
+    homogeneity:
+      enabled: true
+      title: "Taxonomy Homogeneity across Cluster Match-status Groups"
+      # null uses fig09.font_size; tick_size null uses font_size - 2.
+      font_size: null
+      tick_size: null
+      figsize: [13.2, 10.2]
+      count_ylabel: "Cluster count"
+      effect_ylabel: "Abundance effect"
+      count_label: "Count"
+      effect_label: "Abundance\neffect"
+      count_legend_label: "Absolute count"
+      single_species_label: "Single species"
+      multi_species_label: "Multi-species or unresolved"
+      single_species_color: "#009E73"
+      multi_species_color: "#D55E00"
+      effect_hatch: "..."
+      effect_alpha: 0.78
+      # Fixed right y-axis limit. 1.0 = 100%.
+      effect_axis_max: 1.0
+      count_axis_padding: 1.25
+      show_value_labels: true
+      show_bar_type_labels: true
+      show_legends: true
+      panel_titles:
+        pure_exact: "Pure exact"
+        pure_near: "Pure near-exact"
+        pure_no_match: "Pure no match"
+        exact_near: "Exact + near-exact"
+      save_bbox_tight: false
+      save_pad_inches: 0.02
+
+    # Optional graph-mode edge-threshold overrides (compact form).
+    # You can provide:
+    # - global method map (applies to all metrics), or
+    # - per-metric maps (full form), or
+    # - default scalar/map fallback.
+    # Metric keys:
+    #   split_index | merge_deficit | one_to_one_mapping_fraction | no_hit_over_unmapped_fraction
+    # Method keys: asv | zotu | otu | tic | tac | default
+    # Values accept percent (98.7) or fraction (0.987).
+    graph_edge_threshold_by_metric:
+      merge_index:
+          asv: 100
+          zotu: 100
+          otu: 97.0
+          tic: 98.7
+          tac: 98.7
+      split_index:
+          asv: 100
+          zotu: 100
+          otu: 100
+          tic: 100
+          tac: 100
+      one_to_one_mapping_fraction:
+        asv: 100
+        zotu: 100
+        otu: 100
+        tic: 100
+        tac: 100
+    # Repeated-measures significance tests on methods (per panel metric):
+    # - Omnibus: Friedman permutation test
+    # - Pairwise: configurable test with optional multiple-test correction
+    stats:
+      enabled: true
+      permutations: 4000
+      seed: 1
+      alpha: 0.05
+      # Stats engine:
+      # - mixed_effect_glmmtmb: panel-specific GLMMs via glmmTMB + emmeans (recommended)
+      # - mixed_effect: fallback mixed models via glmmPQL
+      # - paired_permutation: legacy paired permutation workflow
+      model: paired_permutation
+      # Pairwise test:
+      # - signed_rank_permutation
+      # - sign_test_exact  (recommended when many zeros/ties)
+      # Used only when model=paired_permutation.
+      pairwise_test: mean_difference_permutation
+      # Custom GLMM (glmmTMB) model specifications:
+      # Binomial panels: unmapped_feature_fraction, one_to_one_mapping_fraction
+      glmm_binomial_formula: "cbind(success, failure) ~ method + (1|community_id) + (1|sample_key)"
+      glmm_binomial_null_formula: "cbind(success, failure) ~ 1 + (1|community_id) + (1|sample_key)"
+      # Count panels: split_index, merge_deficit
+      glmm_count_formula: "count ~ method + offset(log_offset) + (1|community_id) + (1|sample_key)"
+      glmm_count_null_formula: "count ~ 1 + offset(log_offset) + (1|community_id) + (1|sample_key)"
+      glmm_count_family: nbinom2   # nbinom2 | nbinom1 | poisson
+      glmm_emmeans_scale: link     # link | response
+      # If true, apply BH (FDR) correction to pairwise p-values per panel.
+      multiple_test_correction: true
+      # If true, annotate significant pairwise method differences on the panel.
+      show_pairwise: true
+    exclude_community_name_patterns: #[]
+      - mock-ZIEL_2  # Because of TIC outlier
+
+  fig10:
+    enabled: true
+    title: "Species Confusion Heatmaps"
+    # Use top-N expected species globally; all others are grouped as 'Other'.
+    top_n_species: 10
+    exclude_community_name_patterns: []
+
+  fig11:
+    enabled: true
+    title: "Distance Distribution Plots"
+    # Optional Figure 11-only metric selection.
+    # If omitted/empty, Figure 11 uses distances.metrics.
+    metrics:
+      - jaccard
+      - weighted_jaccard
+      - braycurtis
+      # - unifrac
+      - gunifrac_a0.0
+      - gunifrac_a0.5
+      - gunifrac_a1.0
+    # Optional per-metric title text override (used in single and combined panels).
+    # Keys use metric ids:
+    #   jaccard, weighted_jaccard, braycurtis, unifrac, gunifrac_a0.0, gunifrac_a0.5, gunifrac_a1.0
+    # panel_title_by_metric:
+    #   jaccard: "Jaccard Distance"
+    #   weighted_jaccard: "Weighted Jaccard Distance"
+    # Optional combined-figure suptitle overrides.
+    # combined_2x2_title: "Distance Distributions (Core Metrics)"
+    # combined_3x2_title: "Distance Distributions (All Metrics)"
+    # Dedicated font size for Figure 11 text.
+    font_size: 14.0
+    # Plot style: boxplot | violin
+    plot_type: violin
+    # Figure 11-only projection mapping mode:
+    # - standard: use module default mapping+projection behavior
+    # - best_hit_aggregate:
+    #     tip level -> best-hit projection with tie-splitting (unmapped excluded)
+    #     species level -> best-hit projection with tie-splitting across tied species
+    projection_mapping_mode: best_hit_aggregate
+    # Figure 11-only mapping target level by method (does not affect other figures).
+    # Values: tip | species
+    # Keys: asv, zotu, otu, tic, tac, default
+    target_level_by_method:
+      asv: tip
+      zotu: tip
+      otu: species
+      tic: species
+      tac: species
+      default: species
+    # Figure 11-only effective identity threshold by method (percent or fraction).
+    # Keys: asv, zotu, otu, tic, tac, default
+    min_effective_pident_by_method:
+      asv: 100
+      zotu: 100
+      otu: 97.0
+      tic: 98.7
+      tac: 98.7
+      default: 98.7
+    stats:
+      enabled: true
+      permutations: 4000
+      seed: 1
+      alpha: 0.05
+      # Stats engine:
+      # - mixed_effect_glmmtmb_auto: beta-GLMM where suitable, fallback to paired tests
+      # - mixed_effect_glmmtmb_beta: beta-GLMM for all metrics
+      # - paired_permutation: paired permutation/sign-test workflow
+      model: paired_permutation
+      # Pairwise test used when paired_permutation is selected.
+      # sign_test_exact: is recommended when many zeros/ties; otherwise, signed_rank_permutation is a more powerful choice.
+      # signed_rank_permutation: permutation-based Wilcoxon signed-rank test
+      pairwise_test: signed_rank_permutation
+      # If true, apply BH (FDR) correction to pairwise p-values per metric panel.
+      multiple_test_correction: true
+      # Scale for emmeans contrasts in GLMM mode.
+      glmm_emmeans_scale: link   # link | response
+      # If true, annotate significant pairwise method differences on each panel.
+      show_pairwise: true
+    exclude_community_name_patterns: []
+
+  fig12:
+    enabled: true
+    title: "Unmapped-Feature Diagnostics"
+    # Dedicated font size for Figure 12 text.
+    font_size: 14.0
+    # Dedicated query-coverage gate used for unmapped best-hit diagnostics.
+    # Accepts percent (90.0) or fraction (0.9); null falls back to fig09.min_query_coverage.
+    unmapped_best_hit_min_query_coverage: null
+    # Optional method-specific effective-identity cutoff used to classify
+    # unmapped features as "has best hit" vs "no-hit" in Figure 12.
+    # If set for a method, values below that cutoff are counted as no-hit.
+    # Accepts percent (98.7) or fraction (0.987).
+    # Keys: asv, zotu, otu, tic, tac, and optional default.
+    no_hit_min_effective_pident_by_method:
+      asv: 97.0
+      zotu: 97.0
+      otu: 97.0
+      tic: 97.0
+      tac: 97.0
+    # Example:
+    # no_hit_min_effective_pident_by_method:
+    #   asv: 100.0
+    #   zotu: 100.0
+    #   otu: 97.0
+    #   tic: 98.7
+    #   tac: 98.7
+    exclude_community_name_patterns: []
+
+  fig13:
+    enabled: true
+    title: "Capture of Denoising Split Events by Clustering Methods"
+    # Dedicated font size for Figure 13 text.
+    font_size: 14.0
+    exclude_community_name_patterns: []
+
+  fig14:
+    enabled: true
+    title: "Merge Resolution Audit: V4 vs Full-Length 16S"
+    # Dedicated font size for Figure 14 text.
+    font_size: 14.0
+    # Show/hide the "Missing similarity data" class in the left stacked panel.
+    # false keeps the plot cleaner when this class is zero.
+    show_missing_similarity_data_category: false
+    # Figure 14-specific edge thresholds (effective identity).
+    # Accepts percent (98.7) or fraction (0.987).
+    graph_min_effective_pident_denoising: 100.0
+    graph_min_effective_pident_tic_tac: 98.7
+    graph_min_effective_pident_otu: 97.0
+    # Optional explicit per-method overrides for Figure 14
+    # (takes precedence over the three defaults above).
+    edge_threshold_by_method:
+      asv: 100.0
+      zotu: 100.0
+      otu: 97.0
+      tic: 98.7
+      tac: 98.7
+    # Figure 14-specific query coverage gate.
+    # If null, falls back to fig09.min_query_coverage.
+    min_query_coverage: 100.0
+    # Optional per-method Figure 14 query-coverage overrides.
+    # Keys: asv, zotu, otu, tic, tac, default
+    # Values accept percent (100.0) or fraction (1.0).
+    min_query_coverage_by_method:
+      asv: 100.0
+      zotu: 100.0
+      otu: 100.0
+      tic: 100.0
+      tac: 100.0
+    exclude_community_name_patterns: []
+
+  fig15:
+    enabled: true
+    title: "Read-Weighted Mapping Outcomes"
+    # Dedicated font size for Figure 15 text.
+    font_size: 14.0
+    # Figure 15 writes two plots:
+    # - stacked composition bar plot
+    # - violin plot for mapped / unmapped_with_best_hit / no_hit read fractions
+    # Statistical testing for the violin plot reuses Figure 09 stats settings
+    # under `fig09.stats` (engine, permutations, alpha, pairwise correction).
+    # Optional method-specific effective-identity cutoffs for classifying no-hit
+    # in the read-weighted unmapped decomposition.
+    # Priority is:
+    #   fig12.no_hit_min_effective_pident_by_method
+    #   -> fig09.no_hit_min_effective_pident_by_method
+    #   -> this fig15 override (highest priority)
+    # Accepts percent (98.7) or fraction (0.987).
+    no_hit_min_effective_pident_by_method:
+      asv: 97.0
+      zotu: 97.0
+      otu: 97.0
+      tic: 97.0
+      tac: 97.0
+    exclude_community_name_patterns: []
+
+  fig16:
+    enabled: true
+    title: "Distance Deviator Species Plots by Community"
+    # Dedicated font size for Figure 16 text.
+    font_size: 16.0
+    # Methods to include in Figure 16 species and V4-copy driver plots.
+    # Accepted aliases: dada2/asv, unoise3/zotu, uparse/otu, tic, tac.
+    methods:
+      # - ASV
+      - zOTU
+      - TIC
+      - TAC
+      # - OTU
+    # Per-community species driver plots (one SVG per community):
+    # show top N species by max absolute projected-vs-expected deviation.
+    species_driver_top_n: 15
+    # How to aggregate sample-wise deviations inside each community.
+    # Options: mean, median
+    species_driver_sample_aggregation: mean
+    # Per-community driver-plot labels.
+    # Title is rendered as: "<title_prefix> - <community> (n_samples=<n>)"
+    species_driver_title_prefix: "Distance Deviator Species Plot"
+    species_driver_xlabel: "Relative Abundance Deviation (Inferred - Expected)"
+    # If projection_abundance_mode is set to raw, this label auto-switches to abundance deviation
+    # unless you override it here.
+    # Supports placeholders: {n} or {n_species}
+    species_driver_ylabel_template: "Top {n} Species by |Rel. Abundance Deviation|"
+    # Shared x/y tick-label rotation for both species and V4-copy driver plots.
+    xtick_rotation: 0.0
+    ytick_rotation: 0.0
+    # Figure 16 x-axis limit:
+    # - auto: use one shared x-limit from the largest plotted range across communities
+    # - unbound: use a local x-limit per community
+    # - numeric percent: fixed symmetric x-limit (20 => +/-0.20, 0.2 => +/-0.20)
+    species_driver_xlim: auto
+    # Abundance scale used for Figure 16 deviations:
+    # - relative: normalize projected and expected tables per sample before subtraction
+    # - raw: subtract raw projected abundances from raw expected abundances
+    # - original_relative: use mapped abundance from the original inferred table
+    #   divided by the original inferred sample total, and compare that to the
+    #   expected relative abundance
+    projection_abundance_mode: original_relative
+    exclude_community_name_patterns: []
+
+  fig17:
+    enabled: true
+    title: "Distance Dot-Dash Plot"
+    font_size: 14.0
+    # Figure 17 uses global projection/mapping level from:
+    # mapping.target_level_by_method
+    dot_size: 32.0
+    opacity: 1.0
+    show_upper_panel: false
+    method_view: methods
+    # method_pipeline => one panel per (method x metric)
+    # facet => one panel per selected facet with layered rows
+    grid_mode: method_pipeline
+    lower_panel_y: metrics
+    lower_panel: density
+    # Major x-axis tick interval.
+    x_tick_interval: 0.2
+    # Vertical space between metric labels (column titles) and panel body.
+    metric_title_pad: 28
+    lower_panel_height_ratio: 6
+    density_bandwidth: 0.05
+    density_points: 256
+    density_scale: 0.72
+    stats:
+      enabled: true
+      alpha: 0.05
+      pairwise_test: signed_rank_permutation
+      multiple_test_correction: true
+      family_aggregation: median
+      # letters | brackets
+      annotation_mode: letters
+      show_legend: true
+    metrics:
+      - jaccard
+      - weighted_jaccard
+      - braycurtis
+      # - unifrac
+      - gunifrac_a0.0
+      - gunifrac_a1.0
+    exclude_community_name_patterns: []
+
+  fig18:
+    enabled: true
+    title: "Aitchison Distance by Method"
+    font_size: 14.0
+    # Plot style: violin | boxplot
+    plot_type: violin
+    exclude_community_name_patterns: []
+
+  fig19:
+    enabled: true
+    title: "PCoA of Sample-Method-Metric Distance Contrasts"
+    font_size: 14.0
+    point_size: 34.0
+    # Distance between metric-contrast profiles.
+    # Currently supported: euclidean
+    profile_distance: euclidean
+    # Z-score contrast-profile columns before pairwise distance calculation.
+    standardize_profiles: true
+    # Show UMAP panel next to PCoA (same input contrast-distance matrix).
+    show_umap: false
+    umap_n_neighbors: 25
+    umap_min_dist: 0.9
+    umap_random_state: 420
+    # Distances to include in Figure 19 (Aitchison is always excluded here).
+    # If omitted/empty, falls back to distances.metrics without aitchison.
+    metrics:
+      - jaccard
+      - weighted_jaccard
+      - braycurtis
+      # - unifrac
+      - gunifrac_a0.0
+      - gunifrac_a0.5
+      - gunifrac_a1.0
+    exclude_community_name_patterns: []
+
+  fig20:
+    enabled: true
+    title: "Multi-V4 Species Abundance Recovery"
+    font_size: 16.0
+    # Methods to include in Figure 20 multi-strain species abundance bars.
+    # Accepted aliases: dada2/asv, unoise3/zotu, uparse/otu, tic, tac.
+    methods:
+      # - ASV
+      - zOTU
+      - TIC
+      - TAC
+      # - OTU
+    # Aggregate sample-wise relative abundances per component before plotting.
+    # Options: mean, median
+    sample_aggregation: mean
+    exclude_community_name_patterns: []
+
+  fig21:
+    enabled: true
+    title: "Figure 21: Metric-Family Distance Sensitivity"
+    font_size: 14.0
+    panel_a:
+      enabled: true
+      title: "Group-level mean contrast"
+      title_a: "Analysis methods and distance metrices family contrast (Denoising / TACTIC)"
+      title_b: "Analysis methods and distance metrices family contrast (Denoising / Clustering)"
+      x_axis_label: "Method/metric groups"
+      y_axis_label: "Method/metric groups"
+      font_size: 16.0
+      xtick_rotation: 45.0
+      ytick_rotation: 0.0
+      # If true, draw Panel B planned-significance comparisons as annotated lines in Panel A_b.
+      show_planned_comparison_annotations: true
+    panel_b:
+      enabled: true
+      title: "Pair-group mean contrast distributions across samples"
+      x_axis_label: "Method/metric contrast group"
+      # {{}} = {{fig21.pair_group_summary_stat}}
+      y_axis_label: "{{}} absolute pairwise difference"
+      font_size: 16.0
+      xtick_rotation: 45.0
+      ytick_rotation: 0.0
+      sample_v4_multiple_label: "Multiple-V4 reference sequences"
+      sample_v4_single_label: "Single-V4 reference sequence"
+      dot_size: 60.0
+      dot_opacity: 0.75
+      dot_jitter: 0.07
+      # If true, annotate significant paired tests among the four within-group contrast distributions.
+      show_within_contrast_stats: true
+      # Defines the method families used by the linked pair-group Panels A, B, and E.
+      # Accepted aliases: dada2/asv, unoise3/zotu, uparse/otu, tic, tac.
+      method_groups:
+        denoising:
+          - DADA2
+          - UNOISE3
+        clustering:
+          - TIC
+          - TAC
+          - OTU
+      # Display text used only in Panel B pair-group labels.
+      group_labels:
+        denoising_phylogeny_aware: "Denoising | phylo-aware"
+        denoising_phylogeny_agnostic: "Denoising | phylo-agnostic"
+        clustering_phylogeny_aware: "Clustering | phylo-aware"
+        clustering_phylogeny_agnostic: "Clustering | phylo-agnostic"
+      pair_groups_to_show:
+        - denoising_phylogeny_aware__vs__denoising_phylogeny_aware
+        - clustering_phylogeny_aware__vs__clustering_phylogeny_aware
+        - denoising_phylogeny_agnostic__vs__denoising_phylogeny_agnostic
+        - clustering_phylogeny_agnostic__vs__clustering_phylogeny_agnostic
+        - denoising_phylogeny_aware__vs__denoising_phylogeny_agnostic
+        - clustering_phylogeny_aware__vs__clustering_phylogeny_agnostic
+        - denoising_phylogeny_aware__vs__clustering_phylogeny_aware
+        - denoising_phylogeny_agnostic__vs__clustering_phylogeny_agnostic
+    panel_c:
+      enabled: true
+      title: "Distance mean contrast"
+      title_a: "Distance mean contrast ordered by distance method family"
+      title_b: "Distance mean contrast ordered by analysis method"
+      x_axis_label: "Metric | Analysis method"
+      y_axis_label: "Metric | Analysis method"
+      font_size: 24.0
+      endpoint_matrix_gap_cells: 0
+      endpoint_matrix_xtick_rotation: 45.0
+      endpoint_matrix_ytick_rotation: 0.0
+      a_xtick_rotation: 45
+      a_ytick_rotation: 0.0
+      b_xtick_rotation: 45
+      b_ytick_rotation: 0.0
+    panel_d:
+      enabled: true
+      title: "Directional method-level sensitivity"
+      x_axis_label: "Analysis method"
+      y_axis_label: "Mean agnostic distance - mean aware distance"
+      font_size: 18.0
+      dot_size: 75.0
+      dot_opacity: 0.75
+      dot_jitter: 0.07
+      # Empty means every method. Selected methods are plotted and tested separately.
+      methods:
+        - ASV
+        - zOTU
+        - TIC
+        - TAC
+        - OTU
+      # Summary line(s) over each distribution: median | mean | both
+      # Median is solid black; mean is dashed dark gray.
+      summary_statistic: median
+      stats:
+        # Uses the global fig21.stats test and BH-adjusted p-values.
+        show_annotations: true
+    panel_e:
+      enabled: true
+      title: "Mean contrast distributions"
+      x_axis_label: "Absolute difference"
+      y_axis_label: "Method/metric groups"
+      font_size: 18.0
+      abs_density_label: "Pairwise abs_difference density"
+      summary_density_label: "Sample summary_abs_difference density"
+      show_summary_density: true
+      mean_label: "Mean"
+      sample_v4_multiple_label: "Multiple-V4 reference sequences"
+      sample_v4_single_label: "Single-V4 reference sequence"
+      grid_label_font_size: null
+      grid_tick_font_size: null
+      grid_text_font_size: null
+      grid_legend_font_size: null
+      dot_size: 80
+      dot_opacity: 0.95
+      dot_jitter: 0.07
+    panel_f:
+      enabled: true
+      title: "Method-level distance to expected"
+      x_axis_label: "Metric family | analysis method"
+      y_axis_label: "Mean distance to expected composition"
+      # Rotation in degrees for the method-and-metric labels along the x-axis.
+      x_tick_rotation: 45.0
+      font_size: 18.0
+      dot_size: 75.0
+      dot_opacity: 0.75
+      dot_jitter: 0.07
+      # Methods are shown separately, not collapsed into denoising/clustering families.
+      methods:
+        - ASV
+        - zOTU
+        - TIC
+        - TAC
+        - OTU
+      stats:
+        # signed_rank_permutation | sign_test_exact | mean_difference_permutation
+        # The mean-difference test uses paired values and reports a bootstrap CI.
+        pairwise_test: mean_difference_permutation
+        # Tests method_a - method_b. "greater" here asks whether UNOISE3 has
+        # higher distance to expected composition than the hybrid method.
+        alternative: greater
+        # Minimum mean distance reduction required for a meaningful result.
+        # With method_a - method_b and alternative=greater, this tests whether
+        # UNOISE3 exceeds the comparison method by more than this value.
+        practical_difference_delta: 0.0099
+        bootstrap_resamples: 4000
+        ci_level: 0.95
+        show_annotations: true
+        # If false, draw brackets only for comparisons with adjusted p < alpha.
+        show_non_significant_annotations: false
+        # Empty tests all displayed method pairs. These are the directional,
+        # planned tests for phylogeny-agnostic distance deflation.
+        planned_comparisons:
+          - [UNOISE3, TIC]
+          - [UNOISE3, TAC]
+          - [UNOISE3, OTU]
+          - [DADA2, TIC]
+          - [DADA2, TAC]
+          - [DADA2, OTU]
+          - [UNOISE3, DADA2]
+          - [TIC, TAC]
+          - [TIC, OTU]
+          - [TAC, OTU]
+    point_size: 42.0
+    # Plot style for the per-method sensitivity panel: boxplot | violin
+    plot_type: violin
+    # Distances to include. If omitted/empty, falls back to distances.metrics.
+    metrics:
+      - jaccard
+      - weighted_jaccard
+      - braycurtis
+      # - unifrac
+      - gunifrac_a0.0
+      - gunifrac_a0.5
+      - gunifrac_a1.0
+    # Metric families used for sensitivity:
+    # sensitivity = mean(agnostic_metrics) - mean(aware_metrics)
+    agnostic_metrics:
+      - jaccard
+      - weighted_jaccard
+      - braycurtis
+    aware_metrics:
+      # - unifrac
+      - gunifrac_a0.0
+      - gunifrac_a0.5
+      - gunifrac_a1.0
+    # Output switches for the Figure 21 diagnostic suite.
+    show_pair_group_distance_contrast: true
+    show_panel_e_raincloud_grid: true
+    # For the main pair-group plot/test, summarize raw endpoint-pair differences once
+    # per sample per pair group before testing. Options: median, mean
+    pair_group_summary_stat: mean
+    # Figure 21 violin KDE smoothness. Null keeps the Matplotlib default.
+    # Larger numeric values smooth more; smaller values keep more local detail.
+    violin_bw_method: 0.3
+    show_sensitivity_by_method: true
+    show_sample_method_heatmap: true
+    # One SVG per sample; points are method x metric distances to expected composition.
+    # Point-to-point distances in the PCoA are absolute differences between those scalar values.
+    show_per_sample_method_metric_pcoa: true
+    show_method_metric_profile_pcoa: true
+    show_pairwise_difference_pcoa: true
+    # PCoA profile controls.
+    profile_distance: euclidean
+    standardize_profiles: true
+    # Figure 21-only projection/mapping mode. Use the same semantics as Figure 11.
+    projection_mapping_mode: best_hit_aggregate
+    target_level_by_method:
+      asv: tip
+      zotu: tip
+      otu: species
+      tic: species
+      tac: species
+      default: species
+    min_effective_pident_by_method:
+      asv: 100.0
+      zotu: 100.0
+      otu: 97.0
+      tic: 98.7
+      tac: 98.7
+      default: 98.7
+    stats:
+      enabled: true
+      permutations: 4000
+      seed: 1
+      alpha: 0.05
+      # Used by all Figure 21 tests unless a panel-specific stats block overrides it.
+      # signed_rank_permutation | sign_test_exact | mean_difference_permutation
+      pairwise_test: signed_rank_permutation
+      multiple_test_correction: true
+      show_pairwise: true
+    exclude_community_name_patterns:
+      # - mock-ZIEL_2  # Because of TIC outlier
+
+  fig22:
+    enabled: true
+    title: "Figure 22: Sensitivity By Method"
+    font_size: 14.0
+
+  fig23:
+    enabled: true
+    title: "Figure 23: Sample x Method Sensitivity Heatmap"
+    font_size: 14.0
+
+  fig24:
+    enabled: true
+    title: "Figure 24: Per-Sample Method x Metric PCoA"
+    font_size: 14.0
+
+  fig25:
+    enabled: true
+    title: "Figure 25: Method x Metric Distance Profiles PCoA"
+    font_size: 14.0
+
+  fig26:
+    enabled: true
+    title: "Figure 26: Pairwise Method x Metric Differences PCoA"
+    font_size: 14.0

@@ -1,0 +1,12 @@
+inferred_feature	target_species	best_tip	target_tip	effective_identity	pident	bitscore	evalue	length
+SOTU1001	Enterorhabdus_mucosicola	Enterorhabdus_mucosicola	Enterorhabdus_mucosicola	100.0	100.0	466.0	2.84e-135	252.0
+SOTU101	Enterococcus_hirae	Enterococcus_hirae	Enterococcus_hirae	100.0	100.0	468.0	7.92e-136	253.0
+SOTU1101	Staphylococcus_warneri	Staphylococcus_warneri	Staphylococcus_warneri	100.0	100.0	468.0	7.92e-136	253.0
+SOTU201	Bacillus_subtilis	Bacillus_subtilis	Bacillus_subtilis	100.0	100.0	468.0	7.92e-136	253.0
+SOTU301	Bacteroides_sartorii	Bacteroides_sartorii	Bacteroides_sartorii	99.605	99.605	462.0	3.68e-134	253.0
+SOTU401	Cellulosimicrobium_cellulans	Cellulosimicrobium_cellulans	Cellulosimicrobium_cellulans	99.605	99.605	464.0	1.0199999999999999e-134	253.0
+SOTU501	Actinomyces_bowdenii	Actinomyces_bowdenii	Actinomyces_bowdenii	100.0	100.0	468.0	7.92e-136	253.0
+SOTU601	Parabacteroides_goldsteinii	Parabacteroides_goldsteinii	Parabacteroides_goldsteinii	100.0	100.0	468.0	7.92e-136	253.0
+SOTU701	Acetatifactor_muris	Acetatifactor_muris	Acetatifactor_muris	100.0	100.0	468.0	7.92e-136	253.0
+SOTU801	Flavonifractor_plautii	Flavonifractor_plautii	Flavonifractor_plautii	100.0	100.0	468.0	7.92e-136	253.0
+SOTU901	Clostridium_ramosum	Clostridium_ramosum	Clostridium_ramosum	100.0	100.0	466.0	2.84e-135	252.0

@@ -1,0 +1,136 @@
+community_id	sample_id	sample_key	method	metric	distance
+mock-12	Mock 3	mock-12|Mock 3	zOTU	aitchison	39.01429901235579
+mock-12	Mock 3	mock-12|Mock 3	ASV	aitchison	39.7338582744641
+mock-12	Mock 3	mock-12|Mock 3	TIC	aitchison	31.700873577450235
+mock-12	Mock 3	mock-12|Mock 3	TAC	aitchison	31.700873577450235
+mock-12	Mock 3	mock-12|Mock 3	OTU	aitchison	36.25854935617474
+mock-13	Mock 4	mock-13|Mock 4	zOTU	aitchison	33.18573090425166
+mock-13	Mock 4	mock-13|Mock 4	ASV	aitchison	33.75530863158421
+mock-13	Mock 4	mock-13|Mock 4	TIC	aitchison	27.506341636764365
+mock-13	Mock 4	mock-13|Mock 4	TAC	aitchison	27.506341636764365
+mock-13	Mock 4	mock-13|Mock 4	OTU	aitchison	27.50468295445124
+mock-14	Mock 5	mock-14|Mock 5	zOTU	aitchison	33.54672765851906
+mock-14	Mock 5	mock-14|Mock 5	ASV	aitchison	34.16123896894702
+mock-14	Mock 5	mock-14|Mock 5	TIC	aitchison	27.92958486197003
+mock-14	Mock 5	mock-14|Mock 5	TAC	aitchison	27.92958486197003
+mock-14	Mock 5	mock-14|Mock 5	OTU	aitchison	27.926205423049016
+mock-15	Mock 6	mock-15|Mock 6	zOTU	aitchison	33.05611153056527
+mock-15	Mock 6	mock-15|Mock 6	ASV	aitchison	33.26118331368796
+mock-15	Mock 6	mock-15|Mock 6	TIC	aitchison	27.337161367280206
+mock-15	Mock 6	mock-15|Mock 6	TAC	aitchison	27.337161367280206
+mock-15	Mock 6	mock-15|Mock 6	OTU	aitchison	27.33389605707513
+mock-16	Mock 7	mock-16|Mock 7	zOTU	aitchison	50.30847204043469
+mock-16	Mock 7	mock-16|Mock 7	ASV	aitchison	55.55703729289768
+mock-16	Mock 7	mock-16|Mock 7	TIC	aitchison	45.93366861003209
+mock-16	Mock 7	mock-16|Mock 7	TAC	aitchison	48.89949537752377
+mock-16	Mock 7	mock-16|Mock 7	OTU	aitchison	54.012364852739765
+mock-18	Mock 8	mock-18|Mock 8	zOTU	aitchison	19.68439522084611
+mock-18	Mock 8	mock-18|Mock 8	ASV	aitchison	23.977608753000784
+mock-18	Mock 8	mock-18|Mock 8	TIC	aitchison	19.68439522084611
+mock-18	Mock 8	mock-18|Mock 8	TAC	aitchison	19.68439522084611
+mock-18	Mock 8	mock-18|Mock 8	OTU	aitchison	19.68439522084611
+mock-19	Mock 9	mock-19|Mock 9	zOTU	aitchison	1.5953967477922184
+mock-19	Mock 9	mock-19|Mock 9	ASV	aitchison	1.7756450693280292
+mock-19	Mock 9	mock-19|Mock 9	TIC	aitchison	1.5953967477922184
+mock-19	Mock 9	mock-19|Mock 9	TAC	aitchison	1.5953967477922184
+mock-19	Mock 9	mock-19|Mock 9	OTU	aitchison	1.5953967477922184
+mock-20	Mock 10	mock-20|Mock 10	zOTU	aitchison	38.9198725426912
+mock-20	Mock 10	mock-20|Mock 10	ASV	aitchison	27.128328736362715
+mock-20	Mock 10	mock-20|Mock 10	TIC	aitchison	34.42709861192022
+mock-20	Mock 10	mock-20|Mock 10	TAC	aitchison	34.484890427811045
+mock-20	Mock 10	mock-20|Mock 10	OTU	aitchison	26.86651019579085
+mock-21	Mock 11	mock-21|Mock 11	zOTU	aitchison	45.73512662708166
+mock-21	Mock 11	mock-21|Mock 11	ASV	aitchison	38.21416248600349
+mock-21	Mock 11	mock-21|Mock 11	TIC	aitchison	41.672449062461226
+mock-21	Mock 11	mock-21|Mock 11	TAC	aitchison	41.565996435753405
+mock-21	Mock 11	mock-21|Mock 11	OTU	aitchison	33.98436869609475
+mock-22	Mock 12	mock-22|Mock 12	zOTU	aitchison	30.32024755958937
+mock-22	Mock 12	mock-22|Mock 12	ASV	aitchison	24.453836737529688
+mock-22	Mock 12	mock-22|Mock 12	TIC	aitchison	23.88468843908916
+mock-22	Mock 12	mock-22|Mock 12	TAC	aitchison	23.88468843908916
+mock-22	Mock 12	mock-22|Mock 12	OTU	aitchison	23.88468843908916
+mock-23	Mock 13	mock-23|Mock 13	zOTU	aitchison	32.00803986683789
+mock-23	Mock 13	mock-23|Mock 13	ASV	aitchison	34.76399556719863
+mock-23	Mock 13	mock-23|Mock 13	TIC	aitchison	26.19877725234575
+mock-23	Mock 13	mock-23|Mock 13	TAC	aitchison	26.19877725234575
+mock-23	Mock 13	mock-23|Mock 13	OTU	aitchison	29.508540954484047
+mock-4	Even1	mock-4|Even1	zOTU	aitchison	31.93543259672554
+mock-4	Even2	mock-4|Even2	zOTU	aitchison	32.04328738604312
+mock-4	Staggered1	mock-4|Staggered1	zOTU	aitchison	33.38021637877544
+mock-4	Staggered2	mock-4|Staggered2	zOTU	aitchison	33.333516138795154
+mock-4	Even1	mock-4|Even1	ASV	aitchison	28.26903882810852
+mock-4	Even2	mock-4|Even2	ASV	aitchison	27.619141243912463
+mock-4	Staggered1	mock-4|Staggered1	ASV	aitchison	37.48885298436033
+mock-4	Staggered2	mock-4|Staggered2	ASV	aitchison	37.39173281528819
+mock-4	Even1	mock-4|Even1	TIC	aitchison	33.00953628401971
+mock-4	Even2	mock-4|Even2	TIC	aitchison	33.05265663311502
+mock-4	Staggered1	mock-4|Staggered1	TIC	aitchison	35.97604758603022
+mock-4	Staggered2	mock-4|Staggered2	TIC	aitchison	35.89624366465753
+mock-4	Even1	mock-4|Even1	TAC	aitchison	26.502900891052004
+mock-4	Even2	mock-4|Even2	TAC	aitchison	26.610617967655816
+mock-4	Staggered1	mock-4|Staggered1	TAC	aitchison	28.479380554283782
+mock-4	Staggered2	mock-4|Staggered2	TAC	aitchison	28.42039193316884
+mock-4	Even1	mock-4|Even1	OTU	aitchison	24.68498197333041
+mock-4	Even2	mock-4|Even2	OTU	aitchison	24.79581304382662
+mock-4	Staggered1	mock-4|Staggered1	OTU	aitchison	26.110375443480137
+mock-4	Staggered2	mock-4|Staggered2	OTU	aitchison	25.950592625546243
+mock-5	Even1	mock-5|Even1	zOTU	aitchison	29.940953194620107
+mock-5	Even2	mock-5|Even2	zOTU	aitchison	29.980531607865576
+mock-5	Staggered1	mock-5|Staggered1	zOTU	aitchison	31.007040642552614
+mock-5	Staggered2	mock-5|Staggered2	zOTU	aitchison	30.990478579500746
+mock-5	Even1	mock-5|Even1	ASV	aitchison	29.039467367289525
+mock-5	Even2	mock-5|Even2	ASV	aitchison	28.556367804854112
+mock-5	Staggered1	mock-5|Staggered1	ASV	aitchison	39.80893018709871
+mock-5	Staggered2	mock-5|Staggered2	ASV	aitchison	38.96351129510855
+mock-5	Even1	mock-5|Even1	TIC	aitchison	24.16496081892445
+mock-5	Even2	mock-5|Even2	TIC	aitchison	24.19000613674564
+mock-5	Staggered1	mock-5|Staggered1	TIC	aitchison	25.80193702505344
+mock-5	Staggered2	mock-5|Staggered2	TIC	aitchison	25.78274943953464
+mock-5	Even1	mock-5|Even1	TAC	aitchison	24.16496081892445
+mock-5	Even2	mock-5|Even2	TAC	aitchison	24.19000613674564
+mock-5	Staggered1	mock-5|Staggered1	TAC	aitchison	25.80193702505344
+mock-5	Staggered2	mock-5|Staggered2	TAC	aitchison	25.78274943953464
+mock-5	Even1	mock-5|Even1	OTU	aitchison	24.164912727598963
+mock-5	Even2	mock-5|Even2	OTU	aitchison	24.18997619865619
+mock-5	Staggered1	mock-5|Staggered1	OTU	aitchison	25.801932237241864
+mock-5	Staggered2	mock-5|Staggered2	OTU	aitchison	25.782744377089863
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	aitchison	39.32421101664016
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	aitchison	39.30962346604691
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	aitchison	39.32575345745198
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	aitchison	39.30839954824141
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	aitchison	34.59442030939723
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	aitchison	34.60476597658515
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	aitchison	34.59442030939723
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	aitchison	34.60476597658515
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	aitchison	34.5945225938315
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	aitchison	34.60479269755097
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	zOTU	aitchison	20.225100997961547
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	zOTU	aitchison	20.23676648642308
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	zOTU	aitchison	20.25015594111638
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ASV	aitchison	20.293722328642488
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ASV	aitchison	20.335127786785108
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ASV	aitchison	20.314132246910013
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	aitchison	23.502975740436863
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	aitchison	25.450909311015653
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	aitchison	25.47797602742414
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	aitchison	35.44469632957193
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	aitchison	36.943474372973085
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	aitchison	36.9646216310545
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	OTU	aitchison	35.51525322324885
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	OTU	aitchison	37.01115988687431
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	OTU	aitchison	37.03232681279354
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	aitchison	36.22206410198851
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	aitchison	36.11447254051683
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	aitchison	36.24789435680134
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	aitchison	36.228383178331065
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	aitchison	36.11798317282558
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	aitchison	36.25185841753541
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	aitchison	29.795317846158028
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	aitchison	29.42059365797673
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	aitchison	29.796331578011525
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	aitchison	29.795317846158028
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	aitchison	29.42059365797673
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	aitchison	29.796331578011525
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	aitchison	29.794812514743917
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	aitchison	29.42059365797673
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	aitchison	29.79573872039442

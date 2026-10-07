@@ -1,0 +1,6 @@
+metric	label	stats_model	pairwise_test	omnibus_stat	omnibus_df	omnibus_p	model_family	note	n_blocks	kruskal_h	p_value_perm	n_permutations
+observed_species	Observed Species	paired_permutation	signed_rank_permutation	20.43709028696634		0.0004997501249375312			27	20.43709028696634	0.0004997501249375312	2000
+shannon	Shannon	paired_permutation	signed_rank_permutation	2.1894545517282933		0.7181409295352323			27	2.1894545517282933	0.7181409295352323	2000
+effective_shannon	Effective Shannon	paired_permutation	signed_rank_permutation	2.21225847006091		0.6936531734132934			27	2.21225847006091	0.6936531734132934	2000
+simpson	Simpson (1 - sum p^2)	paired_permutation	signed_rank_permutation	1.1143949172548675		0.8970514742628686			27	1.1143949172548675	0.8970514742628686	2000
+effective_simpson	Effective Simpson (1 / sum p^2)	paired_permutation	signed_rank_permutation	0.45875111091963394		0.9815092453773113			27	0.45875111091963394	0.9815092453773113	2000

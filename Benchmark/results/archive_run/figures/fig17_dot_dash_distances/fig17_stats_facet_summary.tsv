@@ -1,0 +1,6 @@
+facet_axis	facet_value	row_axis	n_rows_present	n_blocks	friedman_q	friedman_p	stats_model	pairwise_test	multiple_test_correction	alpha	note
+metric	jaccard	method	5	27	50.68695652173916	0.00024993751562109475	paired_permutation	signed_rank_permutation	True	0.05	ok
+metric	weighted_jaccard	method	5	27	56.141176470588256	0.00024993751562109475	paired_permutation	signed_rank_permutation	True	0.05	ok
+metric	braycurtis	method	5	27	56.63654223968562	0.00024993751562109475	paired_permutation	signed_rank_permutation	True	0.05	ok
+metric	gunifrac_a0.0	method	5	27	34.42596348884381	0.00024993751562109475	paired_permutation	signed_rank_permutation	True	0.05	ok
+metric	gunifrac_a1.0	method	5	27	53.29182879377433	0.00024993751562109475	paired_permutation	signed_rank_permutation	True	0.05	ok

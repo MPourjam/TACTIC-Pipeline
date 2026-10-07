@@ -1,0 +1,56 @@
+event_id	community_id	community_display	sample_id	sample_key	sample_key_display	source_method	source_method_display	target_species	n_source_features
+1	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_ovatus	2
+2	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_vulgatus	3
+3	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Parabacteroides_distasonis	2
+4	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_ovatus	2
+5	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_vulgatus	3
+6	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Parabacteroides_distasonis	2
+7	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Bacteroides_vulgatus	3
+8	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Clostridium_beijerinckii	2
+9	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	zOTU	UNOISE3	Bacteroides_vulgatus	3
+10	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Bacteroides_vulgatus	3
+11	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Clostridium_beijerinckii	2
+12	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	zOTU	UNOISE3	Bacteroides_vulgatus	3
+13	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Bacteroides_vulgatus	3
+14	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Clostridium_beijerinckii	2
+15	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	zOTU	UNOISE3	Bacteroides_vulgatus	3
+16	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Bacteroides_vulgatus	3
+17	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Chloroflexus_aurantiacus	2
+18	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Erwinia_chrysanthemi	2
+19	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Fusobacterium_nucleatum	3
+20	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Methanococcus_maripaludis	2
+21	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Thermoanaerobacter_pseudethanolicus	2
+22	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Bacteroides_vulgatus	3
+23	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Chloroflexus_aurantiacus	2
+24	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Erwinia_chrysanthemi	2
+25	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Fusobacterium_nucleatum	3
+26	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Methanococcus_maripaludis	2
+27	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Thermoanaerobacter_pseudethanolicus	2
+28	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Bacteroides_vulgatus	3
+29	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Clostridium_beijerinckii	2
+30	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	zOTU	UNOISE3	Bacteroides_vulgatus	3
+31	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Bacteroides_vulgatus	3
+32	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Clostridium_beijerinckii	2
+33	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	zOTU	UNOISE3	Bacteroides_vulgatus	3
+34	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	ASV	DADA2	Clostridium_beijerinckii	2
+35	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	zOTU	UNOISE3	Bacteroides_vulgatus	3
+36	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Bacteroides_vulgatus	3
+37	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Clostridium_beijerinckii	2
+38	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Bacteroides_vulgatus	3
+39	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Clostridium_beijerinckii	2
+40	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2
+41	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2
+42	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3
+43	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3
+44	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3
+45	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3
+46	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Bacteroides_vulgatus	3
+47	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Clostridium_beijerinckii	2
+48	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Bacteroides_vulgatus	3
+49	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Clostridium_beijerinckii	2
+50	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2
+51	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2
+52	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3
+53	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3
+54	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3
+55	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3

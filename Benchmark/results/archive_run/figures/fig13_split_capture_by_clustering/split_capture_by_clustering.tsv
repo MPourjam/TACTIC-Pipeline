@@ -1,0 +1,166 @@
+event_id	community_id	community_display	sample_id	sample_key	sample_key_display	source_method	source_method_display	target_species	n_source_features	clustering_method	clustering_method_display	n_clustering_features	capture_status	capture_status_label
+1	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_ovatus	2	OTU	UPARSE	1	captured_as_one	Captured as one
+1	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_ovatus	2	TIC	TIC	1	captured_as_one	Captured as one
+1	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_ovatus	2	TAC	TAC	1	captured_as_one	Captured as one
+2	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+2	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+2	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+3	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Parabacteroides_distasonis	2	OTU	UPARSE	1	captured_as_one	Captured as one
+3	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Parabacteroides_distasonis	2	TIC	TIC	1	captured_as_one	Captured as one
+3	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	ASV	DADA2	Parabacteroides_distasonis	2	TAC	TAC	1	captured_as_one	Captured as one
+4	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_ovatus	2	OTU	UPARSE	1	captured_as_one	Captured as one
+4	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_ovatus	2	TIC	TIC	1	captured_as_one	Captured as one
+4	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_ovatus	2	TAC	TAC	1	captured_as_one	Captured as one
+5	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+5	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+5	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+6	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Parabacteroides_distasonis	2	OTU	UPARSE	1	captured_as_one	Captured as one
+6	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Parabacteroides_distasonis	2	TIC	TIC	1	captured_as_one	Captured as one
+6	mock-12	Mock 3	Mock 3	mock-12|Mock 3	Mock 3	zOTU	UNOISE3	Parabacteroides_distasonis	2	TAC	TAC	1	captured_as_one	Captured as one
+7	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+7	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+7	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+8	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+8	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+8	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+9	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+9	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+9	mock-13	Mock 4	Mock 4	mock-13|Mock 4	Mock 4	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+10	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+10	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+10	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+11	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+11	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+11	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+12	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+12	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+12	mock-14	Mock 5	Mock 5	mock-14|Mock 5	Mock 5	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+13	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+13	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+13	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+14	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+14	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+14	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+15	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+15	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+15	mock-15	Mock 6	Mock 6	mock-15|Mock 6	Mock 6	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+16	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+16	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+16	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+17	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Chloroflexus_aurantiacus	2	OTU	UPARSE	1	captured_as_one	Captured as one
+17	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Chloroflexus_aurantiacus	2	TIC	TIC	1	captured_as_one	Captured as one
+17	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Chloroflexus_aurantiacus	2	TAC	TAC	1	captured_as_one	Captured as one
+18	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Erwinia_chrysanthemi	2	OTU	UPARSE	1	captured_as_one	Captured as one
+18	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Erwinia_chrysanthemi	2	TIC	TIC	1	captured_as_one	Captured as one
+18	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Erwinia_chrysanthemi	2	TAC	TAC	1	captured_as_one	Captured as one
+19	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Fusobacterium_nucleatum	3	OTU	UPARSE	1	captured_as_one	Captured as one
+19	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Fusobacterium_nucleatum	3	TIC	TIC	1	captured_as_one	Captured as one
+19	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Fusobacterium_nucleatum	3	TAC	TAC	1	captured_as_one	Captured as one
+20	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Methanococcus_maripaludis	2	OTU	UPARSE	1	captured_as_one	Captured as one
+20	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Methanococcus_maripaludis	2	TIC	TIC	1	captured_as_one	Captured as one
+20	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Methanococcus_maripaludis	2	TAC	TAC	1	captured_as_one	Captured as one
+21	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Thermoanaerobacter_pseudethanolicus	2	OTU	UPARSE	1	captured_as_one	Captured as one
+21	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Thermoanaerobacter_pseudethanolicus	2	TIC	TIC	1	captured_as_one	Captured as one
+21	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	ASV	DADA2	Thermoanaerobacter_pseudethanolicus	2	TAC	TAC	1	captured_as_one	Captured as one
+22	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+22	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+22	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+23	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Chloroflexus_aurantiacus	2	OTU	UPARSE	1	captured_as_one	Captured as one
+23	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Chloroflexus_aurantiacus	2	TIC	TIC	1	captured_as_one	Captured as one
+23	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Chloroflexus_aurantiacus	2	TAC	TAC	1	captured_as_one	Captured as one
+24	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Erwinia_chrysanthemi	2	OTU	UPARSE	1	captured_as_one	Captured as one
+24	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Erwinia_chrysanthemi	2	TIC	TIC	1	captured_as_one	Captured as one
+24	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Erwinia_chrysanthemi	2	TAC	TAC	1	captured_as_one	Captured as one
+25	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Fusobacterium_nucleatum	3	OTU	UPARSE	1	captured_as_one	Captured as one
+25	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Fusobacterium_nucleatum	3	TIC	TIC	1	captured_as_one	Captured as one
+25	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Fusobacterium_nucleatum	3	TAC	TAC	1	captured_as_one	Captured as one
+26	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Methanococcus_maripaludis	2	OTU	UPARSE	1	captured_as_one	Captured as one
+26	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Methanococcus_maripaludis	2	TIC	TIC	1	captured_as_one	Captured as one
+26	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Methanococcus_maripaludis	2	TAC	TAC	1	captured_as_one	Captured as one
+27	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Thermoanaerobacter_pseudethanolicus	2	OTU	UPARSE	1	captured_as_one	Captured as one
+27	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Thermoanaerobacter_pseudethanolicus	2	TIC	TIC	1	captured_as_one	Captured as one
+27	mock-16	Mock 7	Mock 7	mock-16|Mock 7	Mock 7	zOTU	UNOISE3	Thermoanaerobacter_pseudethanolicus	2	TAC	TAC	1	captured_as_one	Captured as one
+28	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+28	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+28	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+29	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+29	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+29	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+30	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+30	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+30	mock-20	Mock 10	Mock 10	mock-20|Mock 10	Mock 10	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+31	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+31	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+31	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+32	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+32	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+32	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+33	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+33	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+33	mock-22	Mock 12	Mock 12	mock-22|Mock 12	Mock 12	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+34	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+34	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+34	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+35	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+35	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+35	mock-23	Mock 13	Mock 13	mock-23|Mock 13	Mock 13	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+36	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+36	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+36	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+37	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+37	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+37	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+38	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+38	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+38	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+39	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+39	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+39	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+40	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+40	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+40	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+41	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+41	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+41	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+42	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+42	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+42	mock-4	Mock 1	Even1	mock-4|Even1	Mock 1|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+43	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+43	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+43	mock-4	Mock 1	Even2	mock-4|Even2	Mock 1|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+44	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+44	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+44	mock-4	Mock 1	Staggered1	mock-4|Staggered1	Mock 1|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+45	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+45	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+45	mock-4	Mock 1	Staggered2	mock-4|Staggered2	Mock 1|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+46	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+46	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+46	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+47	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+47	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+47	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+48	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+48	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+48	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+49	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+49	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+49	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+50	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+50	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+50	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+51	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2	OTU	UPARSE	1	captured_as_one	Captured as one
+51	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2	TIC	TIC	1	captured_as_one	Captured as one
+51	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	ASV	DADA2	Clostridium_beijerinckii	2	TAC	TAC	1	captured_as_one	Captured as one
+52	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+52	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+52	mock-5	Mock 2	Even1	mock-5|Even1	Mock 2|Even1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+53	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+53	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+53	mock-5	Mock 2	Even2	mock-5|Even2	Mock 2|Even2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+54	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+54	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+54	mock-5	Mock 2	Staggered1	mock-5|Staggered1	Mock 2|Staggered1	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one
+55	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3	OTU	UPARSE	1	captured_as_one	Captured as one
+55	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TIC	TIC	1	captured_as_one	Captured as one
+55	mock-5	Mock 2	Staggered2	mock-5|Staggered2	Mock 2|Staggered2	zOTU	UNOISE3	Bacteroides_vulgatus	3	TAC	TAC	1	captured_as_one	Captured as one

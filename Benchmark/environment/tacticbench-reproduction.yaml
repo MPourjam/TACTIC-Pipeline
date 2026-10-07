@@ -1,0 +1,17 @@
+name: tacticbench-reproduction
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - pip
+  - setuptools>=68
+  - wheel
+  - numpy>=1.24
+  - pandas>=2.0
+  - pyyaml>=6.0
+  - matplotlib>=3.7
+  - biopython>=1.80
+  - mafft
+  - fasttree
+  - blast

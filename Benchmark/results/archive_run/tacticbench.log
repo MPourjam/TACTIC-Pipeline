@@ -1,0 +1,1201 @@
+2026-07-28 06:51:22,258 INFO Running tacticbench pipeline...
+2026-07-28 06:51:22,336 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/manifest.tsv
+2026-07-28 06:51:22,337 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/community_name_mapping.tsv
+2026-07-28 06:51:22,347 INFO [mock-12] selected expected samples: Extreme.1->Mock 3
+2026-07-28 06:51:22,389 INFO [mock-12] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,389 INFO [mock-12] expected FASTA had duplicate sequences; collapsed 26 records.
+2026-07-28 06:51:22,397 INFO [mock-12] wrote multi_v4_species_summary.tsv (5 multi-copy species).
+2026-07-28 06:51:22,411 INFO [mock-12] prepared expected.
+2026-07-28 06:51:22,415 INFO [mock-13] selected expected samples: mock-13->Mock 4
+2026-07-28 06:51:22,420 INFO [mock-13] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,420 INFO [mock-13] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 06:51:22,428 INFO [mock-13] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,439 INFO [mock-13] prepared expected.
+2026-07-28 06:51:22,444 INFO [mock-14] selected expected samples: mock-14->Mock 5
+2026-07-28 06:51:22,449 INFO [mock-14] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,449 INFO [mock-14] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 06:51:22,456 INFO [mock-14] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,467 INFO [mock-14] prepared expected.
+2026-07-28 06:51:22,472 INFO [mock-15] selected expected samples: mock-15->Mock 6
+2026-07-28 06:51:22,477 INFO [mock-15] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,477 INFO [mock-15] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 06:51:22,484 INFO [mock-15] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,496 INFO [mock-15] prepared expected.
+2026-07-28 06:51:22,500 INFO [mock-16] selected expected samples: mock-16->Mock 7
+2026-07-28 06:51:22,506 INFO [mock-16] expected FASTA had duplicate IDs; renamed 27 original IDs.
+2026-07-28 06:51:22,507 INFO [mock-16] expected FASTA had duplicate sequences; collapsed 57 records.
+2026-07-28 06:51:22,517 INFO [mock-16] wrote multi_v4_species_summary.tsv (10 multi-copy species).
+2026-07-28 06:51:22,540 INFO [mock-16] prepared expected.
+2026-07-28 06:51:22,545 INFO [mock-18] selected expected samples: mock-18->Mock 8
+2026-07-28 06:51:22,554 INFO [mock-18] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 06:51:22,563 INFO [mock-18] prepared expected.
+2026-07-28 06:51:22,567 INFO [mock-19] selected expected samples: mock-19->Mock 9
+2026-07-28 06:51:22,592 INFO [mock-19] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 06:51:22,600 INFO [mock-19] prepared expected.
+2026-07-28 06:51:22,605 INFO [mock-20] selected expected samples: mock-20->Mock 10
+2026-07-28 06:51:22,610 INFO [mock-20] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,610 INFO [mock-20] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 06:51:22,617 INFO [mock-20] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,628 INFO [mock-20] prepared expected.
+2026-07-28 06:51:22,633 INFO [mock-21] selected expected samples: mock-21->Mock 11
+2026-07-28 06:51:22,638 INFO [mock-21] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,638 INFO [mock-21] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 06:51:22,645 INFO [mock-21] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,656 INFO [mock-21] prepared expected.
+2026-07-28 06:51:22,661 INFO [mock-22] selected expected samples: mock-22->Mock 12
+2026-07-28 06:51:22,666 INFO [mock-22] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,666 INFO [mock-22] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 06:51:22,673 INFO [mock-22] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,684 INFO [mock-22] prepared expected.
+2026-07-28 06:51:22,688 INFO [mock-23] selected expected samples: mock-23->Mock 13
+2026-07-28 06:51:22,693 INFO [mock-23] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 06:51:22,694 INFO [mock-23] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 06:51:22,701 INFO [mock-23] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,712 INFO [mock-23] prepared expected.
+2026-07-28 06:51:22,718 INFO [mock-4] selected expected samples: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 06:51:22,723 INFO [mock-4] expected FASTA had duplicate IDs; renamed 13 original IDs.
+2026-07-28 06:51:22,723 INFO [mock-4] expected FASTA had duplicate sequences; collapsed 37 records.
+2026-07-28 06:51:22,730 INFO [mock-4] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,743 INFO [mock-4] prepared expected.
+2026-07-28 06:51:22,749 INFO [mock-5] selected expected samples: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 06:51:22,754 INFO [mock-5] expected FASTA had duplicate IDs; renamed 13 original IDs.
+2026-07-28 06:51:22,754 INFO [mock-5] expected FASTA had duplicate sequences; collapsed 37 records.
+2026-07-28 06:51:22,761 INFO [mock-5] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 06:51:22,775 INFO [mock-5] prepared expected.
+2026-07-28 06:51:22,779 INFO [mock-ZIEL_1] selected expected samples: SRR13005984->SRR13005984, SRR13005985->SRR13005985
+2026-07-28 06:51:22,788 INFO [mock-ZIEL_1] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 06:51:22,797 INFO [mock-ZIEL_1] prepared expected.
+2026-07-28 06:51:22,802 INFO [mock-ZIEL_2] selected expected samples: SRR13005964->SRR13005964, SRR13005965->SRR13005965, SRR13005966->SRR13005966
+2026-07-28 06:51:22,807 INFO [mock-ZIEL_2] expected FASTA had duplicate sequences; collapsed 1 records.
+2026-07-28 06:51:22,812 INFO [mock-ZIEL_2] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 06:51:22,823 INFO [mock-ZIEL_2] prepared expected.
+2026-07-28 06:51:22,828 INFO [mock-ZYMO] selected expected samples: SRR13006004->SRR13006004, SRR13006002->SRR13006002, SRR13006003->SRR13006003
+2026-07-28 06:51:22,837 INFO [mock-ZYMO] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 06:51:22,845 INFO [mock-ZYMO] prepared expected.
+2026-07-28 06:51:22,847 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_fasta_duplicate_ids.tsv
+2026-07-28 06:51:22,850 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_fasta_duplicate_sequences.tsv
+2026-07-28 06:51:22,851 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_sample_selection.tsv
+2026-07-28 06:51:22,853 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/multi_v4_species_summary_by_community.tsv
+2026-07-28 06:51:22,855 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/multi_v4_species_summary.tsv
+2026-07-28 06:51:22,863 INFO [mock-12] selected expected samples for method standardization: Extreme.1->Mock 3
+2026-07-28 06:51:22,905 INFO [mock-13] selected expected samples for method standardization: mock-13->Mock 4
+2026-07-28 06:51:22,963 INFO [mock-14] selected expected samples for method standardization: mock-14->Mock 5
+2026-07-28 06:51:23,009 INFO [mock-15] selected expected samples for method standardization: mock-15->Mock 6
+2026-07-28 06:51:23,064 INFO [mock-16] selected expected samples for method standardization: mock-16->Mock 7
+2026-07-28 06:51:23,122 INFO [mock-18] selected expected samples for method standardization: mock-18->Mock 8
+2026-07-28 06:51:23,191 INFO [mock-19] selected expected samples for method standardization: mock-19->Mock 9
+2026-07-28 06:51:23,248 INFO [mock-20] selected expected samples for method standardization: mock-20->Mock 10
+2026-07-28 06:51:23,288 INFO [mock-21] selected expected samples for method standardization: mock-21->Mock 11
+2026-07-28 06:51:23,343 INFO [mock-22] selected expected samples for method standardization: mock-22->Mock 12
+2026-07-28 06:51:23,394 INFO [mock-23] selected expected samples for method standardization: mock-23->Mock 13
+2026-07-28 06:51:23,454 INFO [mock-4] selected expected samples for method standardization: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 06:51:23,512 INFO [mock-5] selected expected samples for method standardization: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 06:51:23,592 INFO [mock-ZIEL_1] selected expected samples for method standardization: SRR13005984->SRR13005984, SRR13005985->SRR13005985
+2026-07-28 06:51:23,636 INFO [mock-ZIEL_2] selected expected samples for method standardization: SRR13005964->SRR13005964, SRR13005965->SRR13005965, SRR13005966->SRR13005966
+2026-07-28 06:51:23,701 INFO [mock-ZYMO] selected expected samples for method standardization: SRR13006004->SRR13006004, SRR13006002->SRR13006002, SRR13006003->SRR13006003
+2026-07-28 06:51:23,761 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/sample_name_mapping.tsv
+2026-07-28 06:51:23,761 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/skipped_communities.tsv
+2026-07-28 06:51:24,938 INFO [mock-12] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-12/expected/expected_tree_full.nwk
+2026-07-28 06:51:25,756 INFO [mock-13] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-13/expected/expected_tree_full.nwk
+2026-07-28 06:51:26,583 INFO [mock-14] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-14/expected/expected_tree_full.nwk
+2026-07-28 06:51:27,411 INFO [mock-15] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-15/expected/expected_tree_full.nwk
+2026-07-28 06:51:30,997 INFO [mock-16] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-16/expected/expected_tree_full.nwk
+2026-07-28 06:51:31,503 INFO [mock-18] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-18/expected/expected_tree_full.nwk
+2026-07-28 06:51:32,015 INFO [mock-19] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-19/expected/expected_tree_full.nwk
+2026-07-28 06:51:32,796 INFO [mock-20] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-20/expected/expected_tree_full.nwk
+2026-07-28 06:51:33,585 INFO [mock-21] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-21/expected/expected_tree_full.nwk
+2026-07-28 06:51:34,366 INFO [mock-22] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-22/expected/expected_tree_full.nwk
+2026-07-28 06:51:35,149 INFO [mock-23] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-23/expected/expected_tree_full.nwk
+2026-07-28 06:51:35,979 INFO [mock-4] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-4/expected/expected_tree_full.nwk
+2026-07-28 06:51:36,813 INFO [mock-5] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-5/expected/expected_tree_full.nwk
+2026-07-28 06:51:37,250 INFO [mock-ZIEL_1] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_1/expected/expected_tree_full.nwk
+2026-07-28 06:51:37,835 INFO [mock-ZIEL_2] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_2/expected/expected_tree_full.nwk
+2026-07-28 06:51:38,162 INFO [mock-ZYMO] built full tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZYMO/expected/expected_tree_full.nwk
+2026-07-28 06:51:38,613 INFO [mock-12] ASV: mapped 22/26
+2026-07-28 06:51:38,872 INFO [mock-12] zOTU: mapped 21/31
+2026-07-28 06:51:39,131 INFO [mock-12] TIC: mapped 17/24
+2026-07-28 06:51:39,384 INFO [mock-12] TAC: mapped 17/24
+2026-07-28 06:51:39,626 INFO [mock-12] OTU: mapped 14/20
+2026-07-28 06:51:40,040 INFO [mock-13] ASV: mapped 22/39
+2026-07-28 06:51:40,276 INFO [mock-13] zOTU: mapped 22/31
+2026-07-28 06:51:40,520 INFO [mock-13] TIC: mapped 20/27
+2026-07-28 06:51:40,757 INFO [mock-13] TAC: mapped 20/27
+2026-07-28 06:51:40,993 INFO [mock-13] OTU: mapped 20/27
+2026-07-28 06:51:41,400 INFO [mock-14] ASV: mapped 22/46
+2026-07-28 06:51:41,649 INFO [mock-14] zOTU: mapped 22/39
+2026-07-28 06:51:41,895 INFO [mock-14] TIC: mapped 20/36
+2026-07-28 06:51:42,137 INFO [mock-14] TAC: mapped 20/36
+2026-07-28 06:51:42,376 INFO [mock-14] OTU: mapped 20/35
+2026-07-28 06:51:42,772 INFO [mock-15] ASV: mapped 22/32
+2026-07-28 06:51:43,147 INFO [mock-15] zOTU: mapped 22/35
+2026-07-28 06:51:43,386 INFO [mock-15] TIC: mapped 20/31
+2026-07-28 06:51:43,621 INFO [mock-15] TAC: mapped 20/31
+2026-07-28 06:51:43,857 INFO [mock-15] OTU: mapped 20/30
+2026-07-28 06:51:44,334 INFO [mock-16] ASV: mapped 58/94
+2026-07-28 06:51:44,631 INFO [mock-16] zOTU: mapped 60/80
+2026-07-28 06:51:44,928 INFO [mock-16] TIC: mapped 51/71
+2026-07-28 06:51:45,220 INFO [mock-16] TAC: mapped 50/69
+2026-07-28 06:51:45,508 INFO [mock-16] OTU: mapped 48/63
+2026-07-28 06:51:45,873 INFO [mock-18] ASV: mapped 14/16
+2026-07-28 06:51:46,081 INFO [mock-18] zOTU: mapped 14/14
+2026-07-28 06:51:46,299 INFO [mock-18] TIC: mapped 14/14
+2026-07-28 06:51:46,512 INFO [mock-18] TAC: mapped 14/14
+2026-07-28 06:51:46,725 INFO [mock-18] OTU: mapped 14/14
+2026-07-28 06:51:47,094 INFO [mock-19] ASV: mapped 15/15
+2026-07-28 06:51:47,304 INFO [mock-19] zOTU: mapped 15/15
+2026-07-28 06:51:47,522 INFO [mock-19] TIC: mapped 15/15
+2026-07-28 06:51:47,735 INFO [mock-19] TAC: mapped 15/15
+2026-07-28 06:51:47,946 INFO [mock-19] OTU: mapped 15/15
+2026-07-28 06:51:48,347 INFO [mock-20] ASV: mapped 21/21
+2026-07-28 06:51:48,586 INFO [mock-20] zOTU: mapped 20/29
+2026-07-28 06:51:48,830 INFO [mock-20] TIC: mapped 18/26
+2026-07-28 06:51:49,067 INFO [mock-20] TAC: mapped 18/26
+2026-07-28 06:51:49,301 INFO [mock-20] OTU: mapped 18/18
+2026-07-28 06:51:49,673 INFO [mock-21] ASV: mapped 14/14
+2026-07-28 06:51:49,909 INFO [mock-21] zOTU: mapped 14/31
+2026-07-28 06:51:50,152 INFO [mock-21] TIC: mapped 14/27
+2026-07-28 06:51:50,388 INFO [mock-21] TAC: mapped 14/24
+2026-07-28 06:51:50,603 INFO [mock-21] OTU: mapped 14/14
+2026-07-28 06:51:50,998 INFO [mock-22] ASV: mapped 22/27
+2026-07-28 06:51:51,228 INFO [mock-22] zOTU: mapped 21/22
+2026-07-28 06:51:51,466 INFO [mock-22] TIC: mapped 19/20
+2026-07-28 06:51:51,698 INFO [mock-22] TAC: mapped 19/20
+2026-07-28 06:51:51,933 INFO [mock-22] OTU: mapped 19/20
+2026-07-28 06:51:52,332 INFO [mock-23] ASV: mapped 19/25
+2026-07-28 06:51:52,567 INFO [mock-23] zOTU: mapped 21/24
+2026-07-28 06:51:52,810 INFO [mock-23] TIC: mapped 19/21
+2026-07-28 06:51:53,045 INFO [mock-23] TAC: mapped 19/21
+2026-07-28 06:51:53,278 INFO [mock-23] OTU: mapped 18/19
+2026-07-28 06:51:53,697 INFO [mock-4] ASV: mapped 23/50
+2026-07-28 06:51:53,948 INFO [mock-4] zOTU: mapped 22/39
+2026-07-28 06:51:54,196 INFO [mock-4] TIC: mapped 20/34
+2026-07-28 06:51:54,440 INFO [mock-4] TAC: mapped 20/31
+2026-07-28 06:51:54,678 INFO [mock-4] OTU: mapped 20/23
+2026-07-28 06:51:55,098 INFO [mock-5] ASV: mapped 23/51
+2026-07-28 06:51:55,338 INFO [mock-5] zOTU: mapped 22/25
+2026-07-28 06:51:55,576 INFO [mock-5] TIC: mapped 20/23
+2026-07-28 06:51:55,811 INFO [mock-5] TAC: mapped 20/23
+2026-07-28 06:51:56,045 INFO [mock-5] OTU: mapped 20/23
+2026-07-28 06:51:56,427 INFO [mock-ZIEL_1] ASV: mapped 10/18
+2026-07-28 06:51:56,649 INFO [mock-ZIEL_1] zOTU: mapped 10/18
+2026-07-28 06:51:56,869 INFO [mock-ZIEL_1] TIC: mapped 11/13
+2026-07-28 06:51:57,087 INFO [mock-ZIEL_1] TAC: mapped 11/13
+2026-07-28 06:51:57,299 INFO [mock-ZIEL_1] OTU: mapped 11/13
+2026-07-28 06:51:57,700 INFO [mock-ZIEL_2] ASV: mapped 18/40
+2026-07-28 06:51:57,931 INFO [mock-ZIEL_2] zOTU: mapped 18/27
+2026-07-28 06:51:58,169 INFO [mock-ZIEL_2] TIC: mapped 18/21
+2026-07-28 06:51:58,398 INFO [mock-ZIEL_2] TAC: mapped 16/19
+2026-07-28 06:51:58,628 INFO [mock-ZIEL_2] OTU: mapped 16/19
+2026-07-28 06:51:58,995 INFO [mock-ZYMO] ASV: mapped 6/16
+2026-07-28 06:51:59,206 INFO [mock-ZYMO] zOTU: mapped 6/11
+2026-07-28 06:51:59,421 INFO [mock-ZYMO] TIC: mapped 7/10
+2026-07-28 06:51:59,633 INFO [mock-ZYMO] TAC: mapped 7/10
+2026-07-28 06:51:59,845 INFO [mock-ZYMO] OTU: mapped 7/9
+2026-07-28 06:52:00,725 INFO [mock-12] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-12/expected/centroid_species_tree.nwk
+2026-07-28 06:52:01,443 INFO [mock-13] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-13/expected/centroid_species_tree.nwk
+2026-07-28 06:52:02,164 INFO [mock-14] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-14/expected/centroid_species_tree.nwk
+2026-07-28 06:52:02,884 INFO [mock-15] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-15/expected/centroid_species_tree.nwk
+2026-07-28 06:52:05,537 INFO [mock-16] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-16/expected/centroid_species_tree.nwk
+2026-07-28 06:52:06,031 INFO [mock-18] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-18/expected/centroid_species_tree.nwk
+2026-07-28 06:52:06,521 INFO [mock-19] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-19/expected/centroid_species_tree.nwk
+2026-07-28 06:52:07,180 INFO [mock-20] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-20/expected/centroid_species_tree.nwk
+2026-07-28 06:52:07,862 INFO [mock-21] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-21/expected/centroid_species_tree.nwk
+2026-07-28 06:52:08,538 INFO [mock-22] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-22/expected/centroid_species_tree.nwk
+2026-07-28 06:52:09,218 INFO [mock-23] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-23/expected/centroid_species_tree.nwk
+2026-07-28 06:52:09,972 INFO [mock-4] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-4/expected/centroid_species_tree.nwk
+2026-07-28 06:52:10,720 INFO [mock-5] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-5/expected/centroid_species_tree.nwk
+2026-07-28 06:52:11,195 INFO [mock-ZIEL_1] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_1/expected/centroid_species_tree.nwk
+2026-07-28 06:52:11,814 INFO [mock-ZIEL_2] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_2/expected/centroid_species_tree.nwk
+2026-07-28 06:52:12,125 INFO [mock-ZYMO] built centroid species tree: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZYMO/expected/centroid_species_tree.nwk
+2026-07-28 06:52:12,270 INFO [mock-12] projected abundances
+2026-07-28 06:52:12,390 INFO [mock-13] projected abundances
+2026-07-28 06:52:12,510 INFO [mock-14] projected abundances
+2026-07-28 06:52:12,630 INFO [mock-15] projected abundances
+2026-07-28 06:52:12,850 INFO [mock-16] projected abundances
+2026-07-28 06:52:12,952 INFO [mock-18] projected abundances
+2026-07-28 06:52:13,049 INFO [mock-19] projected abundances
+2026-07-28 06:52:13,161 INFO [mock-20] projected abundances
+2026-07-28 06:52:13,258 INFO [mock-21] projected abundances
+2026-07-28 06:52:13,375 INFO [mock-22] projected abundances
+2026-07-28 06:52:13,467 INFO [mock-23] projected abundances
+2026-07-28 06:52:13,565 INFO [mock-4] projected abundances
+2026-07-28 06:52:13,663 INFO [mock-5] projected abundances
+2026-07-28 06:52:13,734 INFO [mock-ZIEL_1] projected abundances
+2026-07-28 06:52:13,822 INFO [mock-ZIEL_2] projected abundances
+2026-07-28 06:52:13,884 INFO [mock-ZYMO] projected abundances
+2026-07-28 06:52:14,988 INFO [mock-12] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-12/distances
+2026-07-28 06:52:16,029 INFO [mock-13] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-13/distances
+2026-07-28 06:52:17,097 INFO [mock-14] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-14/distances
+2026-07-28 06:52:18,121 INFO [mock-15] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-15/distances
+2026-07-28 06:52:19,315 INFO [mock-16] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-16/distances
+2026-07-28 06:52:19,485 INFO [mock-18] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-18/distances
+2026-07-28 06:52:19,634 INFO [mock-19] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-19/distances
+2026-07-28 06:52:19,863 INFO [mock-20] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-20/distances
+2026-07-28 06:52:20,088 INFO [mock-21] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-21/distances
+2026-07-28 06:52:21,096 INFO [mock-22] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-22/distances
+2026-07-28 06:52:22,015 INFO [mock-23] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-23/distances
+2026-07-28 06:52:23,155 INFO [mock-4] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-4/distances
+2026-07-28 06:52:24,261 INFO [mock-5] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-5/distances
+2026-07-28 06:52:25,291 INFO [mock-ZIEL_1] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_1/distances
+2026-07-28 06:52:26,388 INFO [mock-ZIEL_2] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_2/distances
+2026-07-28 06:52:27,414 INFO [mock-ZYMO] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZYMO/distances
+2026-07-28 06:52:27,431 INFO Wrote global distances TSVs
+2026-07-28 06:52:31,813 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig01_feature_counts/fig01_feature_counts_grid.svg
+2026-07-28 06:52:36,278 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig01_feature_counts/fig01_feature_counts_grid_with_expected_features.svg
+2026-07-28 06:52:40,118 INFO Wrote Figure 02 heatmaps to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig02_distance_heatmaps
+2026-07-28 06:53:16,879 INFO Wrote Figure 03 (by sample) to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig03_radar_by_sample
+2026-07-28 06:54:31,958 INFO Wrote Figure 03 (by metric) to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig03_radar_by_metric
+2026-07-28 06:54:32,525 INFO Wrote Figure 04 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig04_species_richness_recovery
+2026-07-28 06:54:33,125 INFO Wrote Figure 05 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig05_species_presence_precision_recall
+2026-07-28 06:55:04,468 INFO Wrote Figure 06 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig06_rank_abundance_species
+2026-07-28 06:55:23,603 INFO Wrote Figure 07 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig07_alpha_diversity_error
+2026-07-28 06:55:23,938 INFO Wrote Figure 08 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig08_beta_diversity_concordance
+2026-07-28 06:55:40,003 INFO Figure 09 schematic source not found: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/comparison_scripts/tacticbench/fig09_mapping_diagnostics_schematic.svg
+2026-07-28 06:56:30,396 INFO Wrote Figure 09 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig09_split_merge_diagnostics
+2026-07-28 06:56:32,628 INFO Wrote Figure 10 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig10_species_confusion_heatmaps
+2026-07-28 06:56:32,629 INFO Figure 11: using figure-specific overrides; recomputing temporary distances.
+2026-07-28 06:56:33,586 INFO [mock-12] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:33,960 INFO [mock-13] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:34,352 INFO [mock-14] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:34,731 INFO [mock-15] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:35,430 INFO [mock-16] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:35,715 INFO [mock-18] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:36,006 INFO [mock-19] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:36,351 INFO [mock-20] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:36,662 INFO [mock-21] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:37,008 INFO [mock-22] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:37,352 INFO [mock-23] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:37,737 INFO [mock-4] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:38,108 INFO [mock-5] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:38,379 INFO [mock-ZIEL_1] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:38,718 INFO [mock-ZIEL_2] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:38,953 INFO [mock-ZYMO] Figure 11 best-hit aggregate projection built
+2026-07-28 06:56:40,036 INFO [mock-12] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-12/distances
+2026-07-28 06:56:41,081 INFO [mock-13] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-13/distances
+2026-07-28 06:56:42,164 INFO [mock-14] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-14/distances
+2026-07-28 06:56:43,215 INFO [mock-15] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-15/distances
+2026-07-28 06:56:44,426 INFO [mock-16] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-16/distances
+2026-07-28 06:56:44,595 INFO [mock-18] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-18/distances
+2026-07-28 06:56:44,744 INFO [mock-19] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-19/distances
+2026-07-28 06:56:44,973 INFO [mock-20] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-20/distances
+2026-07-28 06:56:45,199 INFO [mock-21] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-21/distances
+2026-07-28 06:56:46,211 INFO [mock-22] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-22/distances
+2026-07-28 06:56:47,152 INFO [mock-23] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-23/distances
+2026-07-28 06:56:48,309 INFO [mock-4] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-4/distances
+2026-07-28 06:56:49,425 INFO [mock-5] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-5/distances
+2026-07-28 06:56:50,448 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-ZIEL_1/distances
+2026-07-28 06:56:51,532 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-ZIEL_2/distances
+2026-07-28 06:56:52,567 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig11_override_4saaxcl2/out/communities/mock-ZYMO/distances
+2026-07-28 06:56:52,583 INFO Wrote global distances TSVs
+2026-07-28 06:58:09,813 INFO Wrote Figure 11 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig11_distance_distributions
+2026-07-28 06:58:11,045 INFO Wrote Figure 12 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig12_unmapped_diagnostics
+2026-07-28 06:58:13,132 INFO Wrote Figure 13 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig13_split_capture_by_clustering (split events=55)
+2026-07-28 06:58:35,021 INFO Wrote Figure 14 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig14_merge_resolution_audit (communities=16, merge-pair events=78)
+2026-07-28 06:59:10,060 INFO Wrote Figure 15 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig15_read_weighted_mapping_outcomes
+2026-07-28 06:59:30,773 INFO Wrote Figure 16 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig16_species_abundance_drivers (communities=16, species_plots=16, v4_copy_plots=16)
+2026-07-28 07:00:38,334 INFO Figure 17 written to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig17_dot_dash_distances/distance_dot_dash.svg
+2026-07-28 07:00:38,617 INFO Wrote Figure 18 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig18_aitchison_distance_distributions
+2026-07-28 07:00:40,762 INFO Wrote Figure 19 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig19_metric_contrast_pcoa (points=810, groups=135, metrics=6, umap=off).
+2026-07-28 07:00:50,417 INFO Wrote Figure 20 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig20_multistrain_species_abundance (communities_considered=16, community_plots=11, grid=yes)
+2026-07-28 07:00:50,418 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-28 07:00:51,377 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:51,758 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:52,160 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:52,543 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:53,252 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:53,540 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:53,834 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:54,182 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:54,494 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:54,844 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:55,191 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:55,582 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:55,959 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:56,233 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:56,574 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:56,812 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-28 07:00:57,921 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-12/distances
+2026-07-28 07:00:58,975 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-13/distances
+2026-07-28 07:01:00,163 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-14/distances
+2026-07-28 07:01:01,210 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-15/distances
+2026-07-28 07:01:02,424 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-16/distances
+2026-07-28 07:01:02,594 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-18/distances
+2026-07-28 07:01:02,743 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-19/distances
+2026-07-28 07:01:02,971 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-20/distances
+2026-07-28 07:01:03,197 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-21/distances
+2026-07-28 07:01:04,200 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-22/distances
+2026-07-28 07:01:05,120 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-23/distances
+2026-07-28 07:01:06,266 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-4/distances
+2026-07-28 07:01:07,390 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-5/distances
+2026-07-28 07:01:08,417 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-ZIEL_1/distances
+2026-07-28 07:01:09,510 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-ZIEL_2/distances
+2026-07-28 07:01:10,507 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_faud3mjx/out/communities/mock-ZYMO/distances
+2026-07-28 07:01:10,524 INFO Wrote global distances TSVs
+2026-07-28 07:02:51,094 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-28 07:02:51,095 INFO Done.
+2026-07-28 07:29:03,121 INFO Running tacticbench pipeline...
+2026-07-28 07:29:03,210 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/manifest.tsv
+2026-07-28 07:29:03,211 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/community_name_mapping.tsv
+2026-07-28 07:29:03,221 INFO [mock-12] selected expected samples: Extreme.1->Mock 3
+2026-07-28 07:29:03,232 INFO [mock-12] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,232 INFO [mock-12] expected FASTA had duplicate sequences; collapsed 26 records.
+2026-07-28 07:29:03,240 INFO [mock-12] wrote multi_v4_species_summary.tsv (5 multi-copy species).
+2026-07-28 07:29:03,254 INFO [mock-12] prepared expected.
+2026-07-28 07:29:03,259 INFO [mock-13] selected expected samples: mock-13->Mock 4
+2026-07-28 07:29:03,264 INFO [mock-13] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,264 INFO [mock-13] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 07:29:03,272 INFO [mock-13] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,284 INFO [mock-13] prepared expected.
+2026-07-28 07:29:03,288 INFO [mock-14] selected expected samples: mock-14->Mock 5
+2026-07-28 07:29:03,293 INFO [mock-14] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,294 INFO [mock-14] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 07:29:03,301 INFO [mock-14] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,313 INFO [mock-14] prepared expected.
+2026-07-28 07:29:03,318 INFO [mock-15] selected expected samples: mock-15->Mock 6
+2026-07-28 07:29:03,323 INFO [mock-15] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,323 INFO [mock-15] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 07:29:03,331 INFO [mock-15] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,343 INFO [mock-15] prepared expected.
+2026-07-28 07:29:03,347 INFO [mock-16] selected expected samples: mock-16->Mock 7
+2026-07-28 07:29:03,354 INFO [mock-16] expected FASTA had duplicate IDs; renamed 27 original IDs.
+2026-07-28 07:29:03,354 INFO [mock-16] expected FASTA had duplicate sequences; collapsed 57 records.
+2026-07-28 07:29:03,365 INFO [mock-16] wrote multi_v4_species_summary.tsv (10 multi-copy species).
+2026-07-28 07:29:03,390 INFO [mock-16] prepared expected.
+2026-07-28 07:29:03,394 INFO [mock-18] selected expected samples: mock-18->Mock 8
+2026-07-28 07:29:03,404 INFO [mock-18] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 07:29:03,414 INFO [mock-18] prepared expected.
+2026-07-28 07:29:03,418 INFO [mock-19] selected expected samples: mock-19->Mock 9
+2026-07-28 07:29:03,428 INFO [mock-19] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 07:29:03,437 INFO [mock-19] prepared expected.
+2026-07-28 07:29:03,441 INFO [mock-20] selected expected samples: mock-20->Mock 10
+2026-07-28 07:29:03,446 INFO [mock-20] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,447 INFO [mock-20] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 07:29:03,454 INFO [mock-20] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,465 INFO [mock-20] prepared expected.
+2026-07-28 07:29:03,470 INFO [mock-21] selected expected samples: mock-21->Mock 11
+2026-07-28 07:29:03,475 INFO [mock-21] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,475 INFO [mock-21] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 07:29:03,482 INFO [mock-21] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,494 INFO [mock-21] prepared expected.
+2026-07-28 07:29:03,498 INFO [mock-22] selected expected samples: mock-22->Mock 12
+2026-07-28 07:29:03,503 INFO [mock-22] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,503 INFO [mock-22] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 07:29:03,511 INFO [mock-22] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,522 INFO [mock-22] prepared expected.
+2026-07-28 07:29:03,527 INFO [mock-23] selected expected samples: mock-23->Mock 13
+2026-07-28 07:29:03,532 INFO [mock-23] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 07:29:03,532 INFO [mock-23] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 07:29:03,540 INFO [mock-23] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,551 INFO [mock-23] prepared expected.
+2026-07-28 07:29:03,557 INFO [mock-4] selected expected samples: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 07:29:03,562 INFO [mock-4] expected FASTA had duplicate IDs; renamed 13 original IDs.
+2026-07-28 07:29:03,562 INFO [mock-4] expected FASTA had duplicate sequences; collapsed 37 records.
+2026-07-28 07:29:03,570 INFO [mock-4] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,583 INFO [mock-4] prepared expected.
+2026-07-28 07:29:03,588 INFO [mock-5] selected expected samples: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 07:29:03,594 INFO [mock-5] expected FASTA had duplicate IDs; renamed 13 original IDs.
+2026-07-28 07:29:03,594 INFO [mock-5] expected FASTA had duplicate sequences; collapsed 37 records.
+2026-07-28 07:29:03,602 INFO [mock-5] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 07:29:03,615 INFO [mock-5] prepared expected.
+2026-07-28 07:29:03,620 INFO [mock-ZIEL_1] selected expected samples: SRR13005984->SRR13005984, SRR13005985->SRR13005985
+2026-07-28 07:29:03,630 INFO [mock-ZIEL_1] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 07:29:03,639 INFO [mock-ZIEL_1] prepared expected.
+2026-07-28 07:29:03,644 INFO [mock-ZIEL_2] selected expected samples: SRR13005964->SRR13005964, SRR13005965->SRR13005965, SRR13005966->SRR13005966
+2026-07-28 07:29:03,648 INFO [mock-ZIEL_2] expected FASTA had duplicate sequences; collapsed 1 records.
+2026-07-28 07:29:03,654 INFO [mock-ZIEL_2] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 07:29:03,665 INFO [mock-ZIEL_2] prepared expected.
+2026-07-28 07:29:03,670 INFO [mock-ZYMO] selected expected samples: SRR13006004->SRR13006004, SRR13006002->SRR13006002, SRR13006003->SRR13006003
+2026-07-28 07:29:03,679 INFO [mock-ZYMO] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 07:29:03,687 INFO [mock-ZYMO] prepared expected.
+2026-07-28 07:29:03,690 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_fasta_duplicate_ids.tsv
+2026-07-28 07:29:03,693 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_fasta_duplicate_sequences.tsv
+2026-07-28 07:29:03,694 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_sample_selection.tsv
+2026-07-28 07:29:03,696 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/multi_v4_species_summary_by_community.tsv
+2026-07-28 07:29:03,698 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/multi_v4_species_summary.tsv
+2026-07-28 07:29:03,706 INFO [mock-12] selected expected samples for method standardization: Extreme.1->Mock 3
+2026-07-28 07:29:03,749 INFO [mock-13] selected expected samples for method standardization: mock-13->Mock 4
+2026-07-28 07:29:03,795 INFO [mock-14] selected expected samples for method standardization: mock-14->Mock 5
+2026-07-28 07:29:03,904 INFO [mock-15] selected expected samples for method standardization: mock-15->Mock 6
+2026-07-28 07:29:03,949 INFO [mock-16] selected expected samples for method standardization: mock-16->Mock 7
+2026-07-28 07:29:04,026 INFO [mock-18] selected expected samples for method standardization: mock-18->Mock 8
+2026-07-28 07:29:04,067 INFO [mock-19] selected expected samples for method standardization: mock-19->Mock 9
+2026-07-28 07:29:04,107 INFO [mock-20] selected expected samples for method standardization: mock-20->Mock 10
+2026-07-28 07:29:04,149 INFO [mock-21] selected expected samples for method standardization: mock-21->Mock 11
+2026-07-28 07:29:04,191 INFO [mock-22] selected expected samples for method standardization: mock-22->Mock 12
+2026-07-28 07:29:04,238 INFO [mock-23] selected expected samples for method standardization: mock-23->Mock 13
+2026-07-28 07:29:04,282 INFO [mock-4] selected expected samples for method standardization: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 07:29:04,342 INFO [mock-5] selected expected samples for method standardization: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 07:29:04,400 INFO [mock-ZIEL_1] selected expected samples for method standardization: SRR13005984->SRR13005984, SRR13005985->SRR13005985
+2026-07-28 07:29:04,444 INFO [mock-ZIEL_2] selected expected samples for method standardization: SRR13005964->SRR13005964, SRR13005965->SRR13005965, SRR13005966->SRR13005966
+2026-07-28 07:29:04,496 INFO [mock-ZYMO] selected expected samples for method standardization: SRR13006004->SRR13006004, SRR13006002->SRR13006002, SRR13006003->SRR13006003
+2026-07-28 07:29:04,540 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/sample_name_mapping.tsv
+2026-07-28 07:29:04,540 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/skipped_communities.tsv
+2026-07-28 07:29:05,167 INFO [mock-12] projected abundances
+2026-07-28 07:29:05,280 INFO [mock-13] projected abundances
+2026-07-28 07:29:05,391 INFO [mock-14] projected abundances
+2026-07-28 07:29:05,501 INFO [mock-15] projected abundances
+2026-07-28 07:29:05,688 INFO [mock-16] projected abundances
+2026-07-28 07:29:05,774 INFO [mock-18] projected abundances
+2026-07-28 07:29:05,861 INFO [mock-19] projected abundances
+2026-07-28 07:29:05,957 INFO [mock-20] projected abundances
+2026-07-28 07:29:06,037 INFO [mock-21] projected abundances
+2026-07-28 07:29:06,133 INFO [mock-22] projected abundances
+2026-07-28 07:29:06,235 INFO [mock-23] projected abundances
+2026-07-28 07:29:06,345 INFO [mock-4] projected abundances
+2026-07-28 07:29:06,456 INFO [mock-5] projected abundances
+2026-07-28 07:29:06,536 INFO [mock-ZIEL_1] projected abundances
+2026-07-28 07:29:06,627 INFO [mock-ZIEL_2] projected abundances
+2026-07-28 07:29:06,691 INFO [mock-ZYMO] projected abundances
+2026-07-28 07:29:07,908 INFO [mock-12] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-12/distances
+2026-07-28 07:29:09,056 INFO [mock-13] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-13/distances
+2026-07-28 07:29:10,237 INFO [mock-14] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-14/distances
+2026-07-28 07:29:11,379 INFO [mock-15] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-15/distances
+2026-07-28 07:29:12,680 INFO [mock-16] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-16/distances
+2026-07-28 07:29:12,854 INFO [mock-18] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-18/distances
+2026-07-28 07:29:13,006 INFO [mock-19] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-19/distances
+2026-07-28 07:29:13,245 INFO [mock-20] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-20/distances
+2026-07-28 07:29:13,480 INFO [mock-21] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-21/distances
+2026-07-28 07:29:14,572 INFO [mock-22] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-22/distances
+2026-07-28 07:29:15,593 INFO [mock-23] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-23/distances
+2026-07-28 07:29:16,852 INFO [mock-4] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-4/distances
+2026-07-28 07:29:18,068 INFO [mock-5] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-5/distances
+2026-07-28 07:29:19,185 INFO [mock-ZIEL_1] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_1/distances
+2026-07-28 07:29:20,365 INFO [mock-ZIEL_2] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_2/distances
+2026-07-28 07:29:21,463 INFO [mock-ZYMO] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZYMO/distances
+2026-07-28 07:29:21,479 INFO Wrote global distances TSVs
+2026-07-28 07:29:26,014 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig01_feature_counts/fig01_feature_counts_grid.svg
+2026-07-28 07:29:30,672 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig01_feature_counts/fig01_feature_counts_grid_with_expected_features.svg
+2026-07-28 07:29:34,600 INFO Wrote Figure 02 heatmaps to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig02_distance_heatmaps
+2026-07-28 07:30:12,780 INFO Wrote Figure 03 (by sample) to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig03_radar_by_sample
+2026-07-28 07:31:31,204 INFO Wrote Figure 03 (by metric) to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig03_radar_by_metric
+2026-07-28 07:31:31,786 INFO Wrote Figure 04 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig04_species_richness_recovery
+2026-07-28 07:31:32,407 INFO Wrote Figure 05 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig05_species_presence_precision_recall
+2026-07-28 07:32:04,939 INFO Wrote Figure 06 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig06_rank_abundance_species
+2026-07-28 07:32:24,716 INFO Wrote Figure 07 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig07_alpha_diversity_error
+2026-07-28 07:32:25,061 INFO Wrote Figure 08 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig08_beta_diversity_concordance
+2026-07-28 07:32:41,516 INFO Figure 09 schematic source not found: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/comparison_scripts/tacticbench/fig09_mapping_diagnostics_schematic.svg
+2026-07-28 07:33:34,192 INFO Wrote Figure 09 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig09_split_merge_diagnostics
+2026-07-28 07:33:36,493 INFO Wrote Figure 10 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig10_species_confusion_heatmaps
+2026-07-28 07:33:36,493 INFO Figure 11: using figure-specific overrides; recomputing temporary distances.
+2026-07-28 07:33:37,463 INFO [mock-12] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:37,844 INFO [mock-13] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:38,246 INFO [mock-14] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:38,631 INFO [mock-15] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:39,349 INFO [mock-16] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:39,640 INFO [mock-18] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:39,937 INFO [mock-19] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:40,291 INFO [mock-20] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:40,607 INFO [mock-21] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:40,961 INFO [mock-22] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:41,310 INFO [mock-23] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:41,708 INFO [mock-4] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:42,088 INFO [mock-5] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:42,370 INFO [mock-ZIEL_1] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:42,716 INFO [mock-ZIEL_2] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:42,957 INFO [mock-ZYMO] Figure 11 best-hit aggregate projection built
+2026-07-28 07:33:44,142 INFO [mock-12] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-12/distances
+2026-07-28 07:33:45,283 INFO [mock-13] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-13/distances
+2026-07-28 07:33:46,464 INFO [mock-14] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-14/distances
+2026-07-28 07:33:47,604 INFO [mock-15] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-15/distances
+2026-07-28 07:33:48,901 INFO [mock-16] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-16/distances
+2026-07-28 07:33:49,077 INFO [mock-18] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-18/distances
+2026-07-28 07:33:49,229 INFO [mock-19] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-19/distances
+2026-07-28 07:33:49,462 INFO [mock-20] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-20/distances
+2026-07-28 07:33:49,693 INFO [mock-21] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-21/distances
+2026-07-28 07:33:50,787 INFO [mock-22] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-22/distances
+2026-07-28 07:33:51,810 INFO [mock-23] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-23/distances
+2026-07-28 07:33:53,059 INFO [mock-4] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-4/distances
+2026-07-28 07:33:54,283 INFO [mock-5] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-5/distances
+2026-07-28 07:33:55,396 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-ZIEL_1/distances
+2026-07-28 07:33:56,580 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-ZIEL_2/distances
+2026-07-28 07:33:57,697 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig11_override_x4364lgx/out/communities/mock-ZYMO/distances
+2026-07-28 07:33:57,714 INFO Wrote global distances TSVs
+2026-07-28 07:35:18,720 INFO Wrote Figure 11 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig11_distance_distributions
+2026-07-28 07:35:19,986 INFO Wrote Figure 12 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig12_unmapped_diagnostics
+2026-07-28 07:35:22,132 INFO Wrote Figure 13 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig13_split_capture_by_clustering (split events=55)
+2026-07-28 07:35:44,661 INFO Wrote Figure 14 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig14_merge_resolution_audit (communities=16, merge-pair events=78)
+2026-07-28 07:36:21,385 INFO Wrote Figure 15 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig15_read_weighted_mapping_outcomes
+2026-07-28 07:36:42,715 INFO Wrote Figure 16 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig16_species_abundance_drivers (communities=16, species_plots=16, v4_copy_plots=16)
+2026-07-28 07:37:53,548 INFO Figure 17 written to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig17_dot_dash_distances/distance_dot_dash.svg
+2026-07-28 07:37:53,840 INFO Wrote Figure 18 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig18_aitchison_distance_distributions
+2026-07-28 07:37:56,048 INFO Wrote Figure 19 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig19_metric_contrast_pcoa (points=810, groups=135, metrics=6, umap=off).
+2026-07-28 07:38:06,049 INFO Wrote Figure 20 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig20_multistrain_species_abundance (communities_considered=16, community_plots=11, grid=yes)
+2026-07-28 07:38:06,050 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-28 07:38:07,027 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:07,411 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:07,816 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:08,205 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:08,927 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:09,222 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:09,525 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:09,881 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:10,203 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:10,563 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:10,922 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:11,320 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:11,706 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:11,986 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:12,335 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:12,581 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-28 07:38:13,766 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-12/distances
+2026-07-28 07:38:14,911 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-13/distances
+2026-07-28 07:38:16,219 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-14/distances
+2026-07-28 07:38:17,336 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-15/distances
+2026-07-28 07:38:18,635 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-16/distances
+2026-07-28 07:38:18,807 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-18/distances
+2026-07-28 07:38:18,959 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-19/distances
+2026-07-28 07:38:19,194 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-20/distances
+2026-07-28 07:38:19,429 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-21/distances
+2026-07-28 07:38:20,519 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-22/distances
+2026-07-28 07:38:21,550 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-23/distances
+2026-07-28 07:38:22,795 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-4/distances
+2026-07-28 07:38:23,998 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-5/distances
+2026-07-28 07:38:25,103 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-ZIEL_1/distances
+2026-07-28 07:38:26,279 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-ZIEL_2/distances
+2026-07-28 07:38:27,394 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override__o2m1ywv/out/communities/mock-ZYMO/distances
+2026-07-28 07:38:27,411 INFO Wrote global distances TSVs
+2026-07-28 07:40:12,380 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-28 07:40:12,382 INFO Done.
+2026-07-28 08:01:48,918 INFO Running tacticbench pipeline...
+2026-07-28 08:01:49,002 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/manifest.tsv
+2026-07-28 08:01:49,003 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/community_name_mapping.tsv
+2026-07-28 08:01:49,012 INFO [mock-12] selected expected samples: Extreme.1->Mock 3
+2026-07-28 08:01:49,023 INFO [mock-12] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,023 INFO [mock-12] expected FASTA had duplicate sequences; collapsed 26 records.
+2026-07-28 08:01:49,031 INFO [mock-12] wrote multi_v4_species_summary.tsv (5 multi-copy species).
+2026-07-28 08:01:49,046 INFO [mock-12] prepared expected.
+2026-07-28 08:01:49,050 INFO [mock-13] selected expected samples: mock-13->Mock 4
+2026-07-28 08:01:49,055 INFO [mock-13] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,056 INFO [mock-13] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 08:01:49,063 INFO [mock-13] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,075 INFO [mock-13] prepared expected.
+2026-07-28 08:01:49,079 INFO [mock-14] selected expected samples: mock-14->Mock 5
+2026-07-28 08:01:49,084 INFO [mock-14] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,084 INFO [mock-14] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 08:01:49,092 INFO [mock-14] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,104 INFO [mock-14] prepared expected.
+2026-07-28 08:01:49,108 INFO [mock-15] selected expected samples: mock-15->Mock 6
+2026-07-28 08:01:49,114 INFO [mock-15] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,114 INFO [mock-15] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 08:01:49,121 INFO [mock-15] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,133 INFO [mock-15] prepared expected.
+2026-07-28 08:01:49,137 INFO [mock-16] selected expected samples: mock-16->Mock 7
+2026-07-28 08:01:49,144 INFO [mock-16] expected FASTA had duplicate IDs; renamed 27 original IDs.
+2026-07-28 08:01:49,144 INFO [mock-16] expected FASTA had duplicate sequences; collapsed 57 records.
+2026-07-28 08:01:49,154 INFO [mock-16] wrote multi_v4_species_summary.tsv (10 multi-copy species).
+2026-07-28 08:01:49,178 INFO [mock-16] prepared expected.
+2026-07-28 08:01:49,182 INFO [mock-18] selected expected samples: mock-18->Mock 8
+2026-07-28 08:01:49,192 INFO [mock-18] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 08:01:49,201 INFO [mock-18] prepared expected.
+2026-07-28 08:01:49,206 INFO [mock-19] selected expected samples: mock-19->Mock 9
+2026-07-28 08:01:49,215 INFO [mock-19] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 08:01:49,225 INFO [mock-19] prepared expected.
+2026-07-28 08:01:49,229 INFO [mock-20] selected expected samples: mock-20->Mock 10
+2026-07-28 08:01:49,234 INFO [mock-20] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,234 INFO [mock-20] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 08:01:49,242 INFO [mock-20] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,253 INFO [mock-20] prepared expected.
+2026-07-28 08:01:49,257 INFO [mock-21] selected expected samples: mock-21->Mock 11
+2026-07-28 08:01:49,262 INFO [mock-21] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,263 INFO [mock-21] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 08:01:49,270 INFO [mock-21] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,282 INFO [mock-21] prepared expected.
+2026-07-28 08:01:49,287 INFO [mock-22] selected expected samples: mock-22->Mock 12
+2026-07-28 08:01:49,292 INFO [mock-22] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,292 INFO [mock-22] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 08:01:49,299 INFO [mock-22] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,311 INFO [mock-22] prepared expected.
+2026-07-28 08:01:49,315 INFO [mock-23] selected expected samples: mock-23->Mock 13
+2026-07-28 08:01:49,321 INFO [mock-23] expected FASTA had duplicate IDs; renamed 12 original IDs.
+2026-07-28 08:01:49,321 INFO [mock-23] expected FASTA had duplicate sequences; collapsed 36 records.
+2026-07-28 08:01:49,328 INFO [mock-23] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,339 INFO [mock-23] prepared expected.
+2026-07-28 08:01:49,345 INFO [mock-4] selected expected samples: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 08:01:49,351 INFO [mock-4] expected FASTA had duplicate IDs; renamed 13 original IDs.
+2026-07-28 08:01:49,351 INFO [mock-4] expected FASTA had duplicate sequences; collapsed 37 records.
+2026-07-28 08:01:49,359 INFO [mock-4] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,373 INFO [mock-4] prepared expected.
+2026-07-28 08:01:49,378 INFO [mock-5] selected expected samples: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 08:01:49,384 INFO [mock-5] expected FASTA had duplicate IDs; renamed 13 original IDs.
+2026-07-28 08:01:49,384 INFO [mock-5] expected FASTA had duplicate sequences; collapsed 37 records.
+2026-07-28 08:01:49,391 INFO [mock-5] wrote multi_v4_species_summary.tsv (3 multi-copy species).
+2026-07-28 08:01:49,404 INFO [mock-5] prepared expected.
+2026-07-28 08:01:49,409 INFO [mock-ZIEL_1] selected expected samples: SRR13005984->SRR13005984, SRR13005985->SRR13005985
+2026-07-28 08:01:49,419 INFO [mock-ZIEL_1] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 08:01:49,428 INFO [mock-ZIEL_1] prepared expected.
+2026-07-28 08:01:49,433 INFO [mock-ZIEL_2] selected expected samples: SRR13005964->SRR13005964, SRR13005965->SRR13005965, SRR13005966->SRR13005966
+2026-07-28 08:01:49,437 INFO [mock-ZIEL_2] expected FASTA had duplicate sequences; collapsed 1 records.
+2026-07-28 08:01:49,443 INFO [mock-ZIEL_2] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 08:01:49,454 INFO [mock-ZIEL_2] prepared expected.
+2026-07-28 08:01:49,459 INFO [mock-ZYMO] selected expected samples: SRR13006004->SRR13006004, SRR13006002->SRR13006002, SRR13006003->SRR13006003
+2026-07-28 08:01:49,468 INFO [mock-ZYMO] wrote multi_v4_species_summary.tsv (0 multi-copy species).
+2026-07-28 08:01:49,476 INFO [mock-ZYMO] prepared expected.
+2026-07-28 08:01:49,479 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_fasta_duplicate_ids.tsv
+2026-07-28 08:01:49,482 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_fasta_duplicate_sequences.tsv
+2026-07-28 08:01:49,483 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/expected_sample_selection.tsv
+2026-07-28 08:01:49,485 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/multi_v4_species_summary_by_community.tsv
+2026-07-28 08:01:49,487 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/multi_v4_species_summary.tsv
+2026-07-28 08:01:49,495 INFO [mock-12] selected expected samples for method standardization: Extreme.1->Mock 3
+2026-07-28 08:01:49,537 INFO [mock-13] selected expected samples for method standardization: mock-13->Mock 4
+2026-07-28 08:01:49,584 INFO [mock-14] selected expected samples for method standardization: mock-14->Mock 5
+2026-07-28 08:01:49,631 INFO [mock-15] selected expected samples for method standardization: mock-15->Mock 6
+2026-07-28 08:01:49,675 INFO [mock-16] selected expected samples for method standardization: mock-16->Mock 7
+2026-07-28 08:01:49,734 INFO [mock-18] selected expected samples for method standardization: mock-18->Mock 8
+2026-07-28 08:01:49,773 INFO [mock-19] selected expected samples for method standardization: mock-19->Mock 9
+2026-07-28 08:01:49,812 INFO [mock-20] selected expected samples for method standardization: mock-20->Mock 10
+2026-07-28 08:01:49,852 INFO [mock-21] selected expected samples for method standardization: mock-21->Mock 11
+2026-07-28 08:01:49,891 INFO [mock-22] selected expected samples for method standardization: mock-22->Mock 12
+2026-07-28 08:01:49,933 INFO [mock-23] selected expected samples for method standardization: mock-23->Mock 13
+2026-07-28 08:01:49,974 INFO [mock-4] selected expected samples for method standardization: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 08:01:50,033 INFO [mock-5] selected expected samples for method standardization: HMPMockV1.1.Even1->Even1, HMPMockV1.1.Even2->Even2, HMPMockV1.2.Staggered1->Staggered1, HMPMockV1.2.Staggered2->Staggered2
+2026-07-28 08:01:50,111 INFO [mock-ZIEL_1] selected expected samples for method standardization: SRR13005984->SRR13005984, SRR13005985->SRR13005985
+2026-07-28 08:01:50,157 INFO [mock-ZIEL_2] selected expected samples for method standardization: SRR13005964->SRR13005964, SRR13005965->SRR13005965, SRR13005966->SRR13005966
+2026-07-28 08:01:50,372 INFO [mock-ZYMO] selected expected samples for method standardization: SRR13006004->SRR13006004, SRR13006002->SRR13006002, SRR13006003->SRR13006003
+2026-07-28 08:01:50,424 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/sample_name_mapping.tsv
+2026-07-28 08:01:50,424 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/qc/skipped_communities.tsv
+2026-07-28 08:01:51,003 INFO [mock-12] projected abundances
+2026-07-28 08:01:51,112 INFO [mock-13] projected abundances
+2026-07-28 08:01:51,217 INFO [mock-14] projected abundances
+2026-07-28 08:01:51,319 INFO [mock-15] projected abundances
+2026-07-28 08:01:51,502 INFO [mock-16] projected abundances
+2026-07-28 08:01:51,582 INFO [mock-18] projected abundances
+2026-07-28 08:01:51,663 INFO [mock-19] projected abundances
+2026-07-28 08:01:51,761 INFO [mock-20] projected abundances
+2026-07-28 08:01:51,846 INFO [mock-21] projected abundances
+2026-07-28 08:01:51,944 INFO [mock-22] projected abundances
+2026-07-28 08:01:52,039 INFO [mock-23] projected abundances
+2026-07-28 08:01:52,140 INFO [mock-4] projected abundances
+2026-07-28 08:01:52,241 INFO [mock-5] projected abundances
+2026-07-28 08:01:52,325 INFO [mock-ZIEL_1] projected abundances
+2026-07-28 08:01:52,422 INFO [mock-ZIEL_2] projected abundances
+2026-07-28 08:01:52,489 INFO [mock-ZYMO] projected abundances
+2026-07-28 08:01:53,697 INFO [mock-12] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-12/distances
+2026-07-28 08:01:54,838 INFO [mock-13] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-13/distances
+2026-07-28 08:01:56,011 INFO [mock-14] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-14/distances
+2026-07-28 08:01:57,197 INFO [mock-15] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-15/distances
+2026-07-28 08:01:58,487 INFO [mock-16] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-16/distances
+2026-07-28 08:01:58,659 INFO [mock-18] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-18/distances
+2026-07-28 08:01:58,810 INFO [mock-19] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-19/distances
+2026-07-28 08:01:59,044 INFO [mock-20] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-20/distances
+2026-07-28 08:01:59,280 INFO [mock-21] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-21/distances
+2026-07-28 08:02:00,357 INFO [mock-22] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-22/distances
+2026-07-28 08:02:01,374 INFO [mock-23] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-23/distances
+2026-07-28 08:02:02,619 INFO [mock-4] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-4/distances
+2026-07-28 08:02:03,825 INFO [mock-5] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-5/distances
+2026-07-28 08:02:04,941 INFO [mock-ZIEL_1] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_1/distances
+2026-07-28 08:02:06,123 INFO [mock-ZIEL_2] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZIEL_2/distances
+2026-07-28 08:02:07,237 INFO [mock-ZYMO] wrote distances to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/communities/mock-ZYMO/distances
+2026-07-28 08:02:07,254 INFO Wrote global distances TSVs
+2026-07-28 08:02:11,687 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig01_feature_counts/fig01_feature_counts_grid.svg
+2026-07-28 08:02:16,219 INFO Wrote /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig01_feature_counts/fig01_feature_counts_grid_with_expected_features.svg
+2026-07-28 08:02:20,098 INFO Wrote Figure 02 heatmaps to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig02_distance_heatmaps
+2026-07-28 08:02:57,181 INFO Wrote Figure 03 (by sample) to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig03_radar_by_sample
+2026-07-28 08:04:13,187 INFO Wrote Figure 03 (by metric) to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig03_radar_by_metric
+2026-07-28 08:04:13,796 INFO Wrote Figure 04 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig04_species_richness_recovery
+2026-07-28 08:04:14,403 INFO Wrote Figure 05 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig05_species_presence_precision_recall
+2026-07-28 08:04:46,140 INFO Wrote Figure 06 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig06_rank_abundance_species
+2026-07-28 08:05:05,493 INFO Wrote Figure 07 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig07_alpha_diversity_error
+2026-07-28 08:05:05,835 INFO Wrote Figure 08 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig08_beta_diversity_concordance
+2026-07-28 08:05:22,130 INFO Figure 09 schematic source not found: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/comparison_scripts/tacticbench/fig09_mapping_diagnostics_schematic.svg
+2026-07-28 08:06:12,853 INFO Wrote Figure 09 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig09_split_merge_diagnostics
+2026-07-28 08:06:15,129 INFO Wrote Figure 10 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig10_species_confusion_heatmaps
+2026-07-28 08:06:15,129 INFO Figure 11: using figure-specific overrides; recomputing temporary distances.
+2026-07-28 08:06:16,096 INFO [mock-12] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:16,475 INFO [mock-13] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:16,874 INFO [mock-14] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:17,257 INFO [mock-15] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:17,966 INFO [mock-16] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:18,256 INFO [mock-18] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:18,551 INFO [mock-19] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:18,902 INFO [mock-20] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:19,216 INFO [mock-21] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:19,569 INFO [mock-22] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:19,917 INFO [mock-23] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:20,312 INFO [mock-4] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:20,692 INFO [mock-5] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:20,967 INFO [mock-ZIEL_1] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:21,311 INFO [mock-ZIEL_2] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:21,550 INFO [mock-ZYMO] Figure 11 best-hit aggregate projection built
+2026-07-28 08:06:22,733 INFO [mock-12] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-12/distances
+2026-07-28 08:06:23,865 INFO [mock-13] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-13/distances
+2026-07-28 08:06:25,037 INFO [mock-14] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-14/distances
+2026-07-28 08:06:26,174 INFO [mock-15] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-15/distances
+2026-07-28 08:06:27,470 INFO [mock-16] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-16/distances
+2026-07-28 08:06:27,641 INFO [mock-18] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-18/distances
+2026-07-28 08:06:27,791 INFO [mock-19] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-19/distances
+2026-07-28 08:06:28,022 INFO [mock-20] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-20/distances
+2026-07-28 08:06:28,251 INFO [mock-21] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-21/distances
+2026-07-28 08:06:29,340 INFO [mock-22] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-22/distances
+2026-07-28 08:06:30,367 INFO [mock-23] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-23/distances
+2026-07-28 08:06:31,619 INFO [mock-4] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-4/distances
+2026-07-28 08:06:32,827 INFO [mock-5] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-5/distances
+2026-07-28 08:06:33,936 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-ZIEL_1/distances
+2026-07-28 08:06:35,114 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-ZIEL_2/distances
+2026-07-28 08:06:36,233 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig11_override_vlf7p8nt/out/communities/mock-ZYMO/distances
+2026-07-28 08:06:36,249 INFO Wrote global distances TSVs
+2026-07-28 08:07:54,428 INFO Wrote Figure 11 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig11_distance_distributions
+2026-07-28 08:07:55,680 INFO Wrote Figure 12 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig12_unmapped_diagnostics
+2026-07-28 08:07:57,802 INFO Wrote Figure 13 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig13_split_capture_by_clustering (split events=55)
+2026-07-28 08:08:20,017 INFO Wrote Figure 14 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig14_merge_resolution_audit (communities=16, merge-pair events=78)
+2026-07-28 08:08:55,361 INFO Wrote Figure 15 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig15_read_weighted_mapping_outcomes
+2026-07-28 08:09:16,231 INFO Wrote Figure 16 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig16_species_abundance_drivers (communities=16, species_plots=16, v4_copy_plots=16)
+2026-07-28 08:10:24,370 INFO Figure 17 written to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig17_dot_dash_distances/distance_dot_dash.svg
+2026-07-28 08:10:24,658 INFO Wrote Figure 18 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig18_aitchison_distance_distributions
+2026-07-28 08:10:26,833 INFO Wrote Figure 19 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig19_metric_contrast_pcoa (points=810, groups=135, metrics=6, umap=off).
+2026-07-28 08:10:36,625 INFO Wrote Figure 20 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig20_multistrain_species_abundance (communities_considered=16, community_plots=11, grid=yes)
+2026-07-28 08:10:36,627 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-28 08:10:37,601 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:37,985 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:38,391 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:38,781 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:39,498 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:39,792 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:40,093 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:40,452 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:40,772 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:41,131 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:41,485 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:41,884 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:42,273 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:42,553 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:42,903 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:43,145 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-28 08:10:44,334 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-12/distances
+2026-07-28 08:10:45,479 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-13/distances
+2026-07-28 08:10:46,772 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-14/distances
+2026-07-28 08:10:47,911 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-15/distances
+2026-07-28 08:10:49,202 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-16/distances
+2026-07-28 08:10:49,374 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-18/distances
+2026-07-28 08:10:49,524 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-19/distances
+2026-07-28 08:10:49,757 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-20/distances
+2026-07-28 08:10:49,987 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-21/distances
+2026-07-28 08:10:51,071 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-22/distances
+2026-07-28 08:10:52,076 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-23/distances
+2026-07-28 08:10:53,311 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-4/distances
+2026-07-28 08:10:54,511 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-5/distances
+2026-07-28 08:10:55,621 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-ZIEL_1/distances
+2026-07-28 08:10:56,794 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-ZIEL_2/distances
+2026-07-28 08:10:57,901 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_qamcqw32/out/communities/mock-ZYMO/distances
+2026-07-28 08:10:57,918 INFO Wrote global distances TSVs
+2026-07-28 08:12:39,978 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-28 08:12:39,980 INFO Done.
+2026-07-28 08:43:30,230 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-28 08:43:31,313 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:31,738 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:32,179 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:32,599 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:33,371 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:33,692 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:34,014 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:34,397 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:34,740 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:35,120 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:35,497 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:35,928 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:36,338 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:36,637 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:37,010 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:37,272 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-28 08:43:38,031 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-12/distances
+2026-07-28 08:43:38,747 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-13/distances
+2026-07-28 08:43:39,573 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-14/distances
+2026-07-28 08:43:40,291 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-15/distances
+2026-07-28 08:43:41,204 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-16/distances
+2026-07-28 08:43:41,395 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-18/distances
+2026-07-28 08:43:41,563 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-19/distances
+2026-07-28 08:43:41,821 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-20/distances
+2026-07-28 08:43:42,078 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-21/distances
+2026-07-28 08:43:42,744 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-22/distances
+2026-07-28 08:43:43,331 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-23/distances
+2026-07-28 08:43:44,168 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-4/distances
+2026-07-28 08:43:44,970 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-5/distances
+2026-07-28 08:43:45,649 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-ZIEL_1/distances
+2026-07-28 08:43:46,401 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-ZIEL_2/distances
+2026-07-28 08:43:47,076 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_l0c1eq3x/out/communities/mock-ZYMO/distances
+2026-07-28 08:43:47,097 INFO Wrote global distances TSVs
+2026-07-28 08:45:41,182 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-28 09:20:39,327 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-28 09:20:40,310 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:40,688 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:41,085 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:41,474 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:42,182 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:42,471 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:42,765 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:43,112 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:43,424 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:43,771 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:44,118 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:44,507 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:44,879 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:45,153 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:45,492 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:45,727 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-28 09:20:46,990 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-12/distances
+2026-07-28 09:20:48,128 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-13/distances
+2026-07-28 09:20:49,300 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-14/distances
+2026-07-28 09:20:50,441 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-15/distances
+2026-07-28 09:20:51,732 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-16/distances
+2026-07-28 09:20:51,904 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-18/distances
+2026-07-28 09:20:52,053 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-19/distances
+2026-07-28 09:20:52,284 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-20/distances
+2026-07-28 09:20:52,512 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-21/distances
+2026-07-28 09:20:53,585 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-22/distances
+2026-07-28 09:20:54,584 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-23/distances
+2026-07-28 09:20:55,830 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-4/distances
+2026-07-28 09:20:57,030 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-5/distances
+2026-07-28 09:20:58,122 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-ZIEL_1/distances
+2026-07-28 09:20:59,290 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-ZIEL_2/distances
+2026-07-28 09:21:00,395 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override__rpd0ure/out/communities/mock-ZYMO/distances
+2026-07-28 09:21:00,412 INFO Wrote global distances TSVs
+2026-07-28 09:22:44,989 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-28 10:23:31,204 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-28 10:23:32,302 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:32,718 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:33,151 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:33,561 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:34,321 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:34,637 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:34,955 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:35,329 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:35,666 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:36,041 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:36,412 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:36,837 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:37,241 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:37,536 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:37,901 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:38,157 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-28 10:23:38,907 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-12/distances
+2026-07-28 10:23:39,608 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-13/distances
+2026-07-28 10:23:40,432 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-14/distances
+2026-07-28 10:23:41,136 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-15/distances
+2026-07-28 10:23:42,023 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-16/distances
+2026-07-28 10:23:42,209 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-18/distances
+2026-07-28 10:23:42,375 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-19/distances
+2026-07-28 10:23:42,627 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-20/distances
+2026-07-28 10:23:42,879 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-21/distances
+2026-07-28 10:23:43,522 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-22/distances
+2026-07-28 10:23:44,094 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-23/distances
+2026-07-28 10:23:44,917 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-4/distances
+2026-07-28 10:23:45,699 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-5/distances
+2026-07-28 10:23:46,373 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-ZIEL_1/distances
+2026-07-28 10:23:47,120 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-ZIEL_2/distances
+2026-07-28 10:23:47,796 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_9wi234m1/out/communities/mock-ZYMO/distances
+2026-07-28 10:23:47,816 INFO Wrote global distances TSVs
+2026-07-29 08:32:40,767 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:32:41,770 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:42,151 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:42,548 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:42,939 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:43,642 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:43,929 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:44,222 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:44,569 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:44,880 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:45,227 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:45,575 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:45,962 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:46,334 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:46,608 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:46,945 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:47,185 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:32:48,364 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-12/distances
+2026-07-29 08:32:49,574 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-13/distances
+2026-07-29 08:32:50,726 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-14/distances
+2026-07-29 08:32:51,853 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-15/distances
+2026-07-29 08:32:53,144 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-16/distances
+2026-07-29 08:32:53,318 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-18/distances
+2026-07-29 08:32:53,469 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-19/distances
+2026-07-29 08:32:53,701 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-20/distances
+2026-07-29 08:32:53,929 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-21/distances
+2026-07-29 08:32:55,009 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-22/distances
+2026-07-29 08:32:56,019 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-23/distances
+2026-07-29 08:32:57,258 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-4/distances
+2026-07-29 08:32:58,464 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-5/distances
+2026-07-29 08:32:59,557 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:33:00,723 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:33:01,834 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_pyw7g7j_/out/communities/mock-ZYMO/distances
+2026-07-29 08:33:01,850 INFO Wrote global distances TSVs
+2026-07-29 08:36:25,421 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:36:26,743 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:27,252 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:27,783 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:28,300 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:29,138 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:29,451 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:29,772 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:30,152 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:30,500 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:30,881 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:31,256 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:31,678 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:32,086 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:32,387 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:32,762 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:33,021 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:36:33,807 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-12/distances
+2026-07-29 08:36:34,550 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-13/distances
+2026-07-29 08:36:35,410 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-14/distances
+2026-07-29 08:36:36,136 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-15/distances
+2026-07-29 08:36:37,047 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-16/distances
+2026-07-29 08:36:37,238 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-18/distances
+2026-07-29 08:36:37,407 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-19/distances
+2026-07-29 08:36:37,666 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-20/distances
+2026-07-29 08:36:37,919 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-21/distances
+2026-07-29 08:36:38,593 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-22/distances
+2026-07-29 08:36:39,214 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-23/distances
+2026-07-29 08:36:40,064 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-4/distances
+2026-07-29 08:36:40,865 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-5/distances
+2026-07-29 08:36:41,564 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:36:42,338 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:36:43,039 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_hh62io_1/out/communities/mock-ZYMO/distances
+2026-07-29 08:36:43,059 INFO Wrote global distances TSVs
+2026-07-29 08:37:51,135 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:37:52,113 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:52,505 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:52,905 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:53,287 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:53,993 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:54,281 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:54,573 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:54,919 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:55,230 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:55,584 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:55,982 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:56,499 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:57,043 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:57,456 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:57,960 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:58,312 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:37:59,678 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-12/distances
+2026-07-29 08:38:00,800 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-13/distances
+2026-07-29 08:38:01,875 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-14/distances
+2026-07-29 08:38:02,934 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-15/distances
+2026-07-29 08:38:04,139 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-16/distances
+2026-07-29 08:38:04,311 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-18/distances
+2026-07-29 08:38:04,463 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-19/distances
+2026-07-29 08:38:04,695 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-20/distances
+2026-07-29 08:38:04,923 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-21/distances
+2026-07-29 08:38:05,925 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-22/distances
+2026-07-29 08:38:06,838 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-23/distances
+2026-07-29 08:38:07,993 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-4/distances
+2026-07-29 08:38:09,112 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-5/distances
+2026-07-29 08:38:10,132 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:38:11,218 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:38:12,226 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_eivwh7k6/out/communities/mock-ZYMO/distances
+2026-07-29 08:38:12,242 INFO Wrote global distances TSVs
+2026-07-29 08:38:41,834 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-29 08:40:02,544 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-29 08:42:21,924 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:42:22,991 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:23,396 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:23,790 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:24,166 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:24,872 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:25,157 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:25,448 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:25,790 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:26,097 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:26,446 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:26,786 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:27,167 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:27,536 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:27,806 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:28,140 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:28,372 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:42:29,552 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-12/distances
+2026-07-29 08:42:30,653 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-13/distances
+2026-07-29 08:42:31,815 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-14/distances
+2026-07-29 08:42:33,030 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-15/distances
+2026-07-29 08:42:34,312 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-16/distances
+2026-07-29 08:42:34,482 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-18/distances
+2026-07-29 08:42:34,634 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-19/distances
+2026-07-29 08:42:34,863 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-20/distances
+2026-07-29 08:42:35,101 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-21/distances
+2026-07-29 08:42:36,176 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-22/distances
+2026-07-29 08:42:37,186 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-23/distances
+2026-07-29 08:42:38,425 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-4/distances
+2026-07-29 08:42:39,619 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-5/distances
+2026-07-29 08:42:40,728 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:42:41,889 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:42:42,982 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_njy6uhx0/out/communities/mock-ZYMO/distances
+2026-07-29 08:42:42,999 INFO Wrote global distances TSVs
+2026-07-29 08:44:34,720 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-29 08:46:06,115 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:46:07,095 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:07,472 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:07,897 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:08,277 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:08,987 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:09,274 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:09,566 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:09,911 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:10,221 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:10,568 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:10,924 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:11,312 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:11,684 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:11,953 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:12,290 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:12,529 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:46:13,791 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-12/distances
+2026-07-29 08:46:14,926 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-13/distances
+2026-07-29 08:46:16,096 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-14/distances
+2026-07-29 08:46:17,224 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-15/distances
+2026-07-29 08:46:18,519 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-16/distances
+2026-07-29 08:46:18,694 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-18/distances
+2026-07-29 08:46:18,845 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-19/distances
+2026-07-29 08:46:19,075 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-20/distances
+2026-07-29 08:46:19,303 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-21/distances
+2026-07-29 08:46:20,380 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-22/distances
+2026-07-29 08:46:21,399 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-23/distances
+2026-07-29 08:46:22,637 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-4/distances
+2026-07-29 08:46:23,841 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-5/distances
+2026-07-29 08:46:24,938 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:46:26,117 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:46:27,217 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_rnbxe3km/out/communities/mock-ZYMO/distances
+2026-07-29 08:46:27,234 INFO Wrote global distances TSVs
+2026-07-29 08:48:18,641 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-29 08:50:43,922 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:50:44,997 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:45,420 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:45,850 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:46,260 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:47,026 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:47,336 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:47,652 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:48,028 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:48,363 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:48,739 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:49,116 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:49,533 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:49,936 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:50,228 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:50,593 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:50,848 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:50:51,587 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-12/distances
+2026-07-29 08:50:52,285 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-13/distances
+2026-07-29 08:50:53,125 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-14/distances
+2026-07-29 08:50:53,822 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-15/distances
+2026-07-29 08:50:54,697 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-16/distances
+2026-07-29 08:50:54,885 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-18/distances
+2026-07-29 08:50:55,050 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-19/distances
+2026-07-29 08:50:55,303 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-20/distances
+2026-07-29 08:50:55,555 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-21/distances
+2026-07-29 08:50:56,193 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-22/distances
+2026-07-29 08:50:56,773 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-23/distances
+2026-07-29 08:50:57,591 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-4/distances
+2026-07-29 08:50:58,382 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-5/distances
+2026-07-29 08:50:59,051 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:50:59,791 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:51:00,443 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_y8li_kxb/out/communities/mock-ZYMO/distances
+2026-07-29 08:51:00,463 INFO Wrote global distances TSVs
+2026-07-29 08:51:28,336 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:51:29,316 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:29,706 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:30,104 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:30,486 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:31,196 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:31,485 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:31,781 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:32,130 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:32,442 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:32,797 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:33,146 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:33,532 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:33,909 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:34,182 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:34,521 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:34,763 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:51:35,906 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-12/distances
+2026-07-29 08:51:37,076 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-13/distances
+2026-07-29 08:51:38,205 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-14/distances
+2026-07-29 08:51:39,286 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-15/distances
+2026-07-29 08:51:40,533 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-16/distances
+2026-07-29 08:51:40,705 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-18/distances
+2026-07-29 08:51:40,857 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-19/distances
+2026-07-29 08:51:41,091 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-20/distances
+2026-07-29 08:51:41,330 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-21/distances
+2026-07-29 08:51:42,376 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-22/distances
+2026-07-29 08:51:43,350 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-23/distances
+2026-07-29 08:51:44,554 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-4/distances
+2026-07-29 08:51:45,723 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-5/distances
+2026-07-29 08:51:46,785 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:51:48,362 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:51:50,040 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_e6ypyxvg/out/communities/mock-ZYMO/distances
+2026-07-29 08:51:50,057 INFO Wrote global distances TSVs
+2026-07-29 08:53:06,232 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-29 08:53:44,394 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-29 08:53:59,592 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:54:00,684 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:01,112 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:01,553 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:01,974 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:02,759 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:03,080 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:03,408 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:03,793 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:04,137 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:04,522 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:04,910 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:05,339 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:05,751 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:06,052 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:06,428 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:06,688 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:54:07,478 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-12/distances
+2026-07-29 08:54:08,219 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-13/distances
+2026-07-29 08:54:09,101 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-14/distances
+2026-07-29 08:54:09,831 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-15/distances
+2026-07-29 08:54:10,759 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-16/distances
+2026-07-29 08:54:10,951 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-18/distances
+2026-07-29 08:54:11,121 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-19/distances
+2026-07-29 08:54:11,379 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-20/distances
+2026-07-29 08:54:11,636 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-21/distances
+2026-07-29 08:54:12,318 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-22/distances
+2026-07-29 08:54:12,925 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-23/distances
+2026-07-29 08:54:13,795 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-4/distances
+2026-07-29 08:54:14,622 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-5/distances
+2026-07-29 08:54:15,330 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:54:16,110 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:54:16,812 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_b0okqpzv/out/communities/mock-ZYMO/distances
+2026-07-29 08:54:16,833 INFO Wrote global distances TSVs
+2026-07-29 08:56:06,895 INFO Figure 21: using figure-specific mapping/projection overrides; recomputing temporary distances.
+2026-07-29 08:56:07,918 INFO [mock-12] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:08,331 INFO [mock-13] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:08,727 INFO [mock-14] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:09,103 INFO [mock-15] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:09,803 INFO [mock-16] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:10,087 INFO [mock-18] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:10,377 INFO [mock-19] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:10,718 INFO [mock-20] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:11,026 INFO [mock-21] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:11,374 INFO [mock-22] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:11,714 INFO [mock-23] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:12,095 INFO [mock-4] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:12,462 INFO [mock-5] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:12,731 INFO [mock-ZIEL_1] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:13,064 INFO [mock-ZIEL_2] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:13,305 INFO [mock-ZYMO] Figure 21 best-hit aggregate projection built
+2026-07-29 08:56:14,486 INFO [mock-12] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-12/distances
+2026-07-29 08:56:15,513 INFO [mock-13] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-13/distances
+2026-07-29 08:56:16,584 INFO [mock-14] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-14/distances
+2026-07-29 08:56:17,616 INFO [mock-15] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-15/distances
+2026-07-29 08:56:18,820 INFO [mock-16] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-16/distances
+2026-07-29 08:56:18,999 INFO [mock-18] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-18/distances
+2026-07-29 08:56:19,149 INFO [mock-19] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-19/distances
+2026-07-29 08:56:19,379 INFO [mock-20] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-20/distances
+2026-07-29 08:56:19,606 INFO [mock-21] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-21/distances
+2026-07-29 08:56:20,599 INFO [mock-22] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-22/distances
+2026-07-29 08:56:21,531 INFO [mock-23] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-23/distances
+2026-07-29 08:56:22,349 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-07-29 08:56:22,675 INFO [mock-4] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-4/distances
+2026-07-29 08:56:23,795 INFO [mock-5] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-5/distances
+2026-07-29 08:56:24,830 INFO [mock-ZIEL_1] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-ZIEL_1/distances
+2026-07-29 08:56:25,943 INFO [mock-ZIEL_2] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-ZIEL_2/distances
+2026-07-29 08:56:26,968 INFO [mock-ZYMO] wrote distances to /tmp/tacticbench_fig21_override_ks9kw4kt/out/communities/mock-ZYMO/distances
+2026-07-29 08:56:26,984 INFO Wrote global distances TSVs
+2026-07-29 08:58:17,735 INFO Wrote metric-family diagnostics: fig21_pair_group_distance_contrast, fig22_sensitivity_by_method, fig23_sample_method_heatmap, fig24_per_sample_method_metric_pcoa, fig25_method_metric_profile_pcoa, fig26_pairwise_difference_pcoa
+2026-08-03 15:34:05,412 INFO Figure 09 schematic source not found: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/comparison_scripts/tacticbench/fig09_mapping_diagnostics_schematic.svg
+2026-08-03 15:35:44,994 INFO Wrote Figure 09 to /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/TACTICBENCH_RESULTS-TIC-Archaea-mock4-mock-5_SRP/figures/fig09_split_merge_diagnostics

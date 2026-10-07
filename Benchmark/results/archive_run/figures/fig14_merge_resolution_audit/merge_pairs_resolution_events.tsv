@@ -1,0 +1,79 @@
+community_id	sample_id	sample_key	method	inferred_feature	n_merged_species_for_feature	feature_merge_weight	pair_species_a	pair_species_b	pair_weight	threshold_effective_identity_percent	threshold_effective_identity_fraction	v4_similarity	full16s_similarity	merge_class
+mock-12	Mock 3	mock-12|Mock 3	OTU	OTU16	2	1.0	Eubacterium_rectale	Roseburia_intestinalis	1.0	97.0	0.97	0.984	0.686043	v4_low_resolution_specific
+mock-12	Mock 3	mock-12|Mock 3	OTU	OTU1	3	2.0	Bacteroides_fragilis	Bacteroides_ovatus	0.6666666666666666	97.0	0.97	0.972	0.883507	v4_low_resolution_specific
+mock-12	Mock 3	mock-12|Mock 3	OTU	OTU1	3	2.0	Bacteroides_fragilis	Bacteroides_thetaiotaomicron	0.6666666666666666	97.0	0.97	0.984	0.934319	v4_low_resolution_specific
+mock-12	Mock 3	mock-12|Mock 3	OTU	OTU1	3	2.0	Bacteroides_ovatus	Bacteroides_thetaiotaomicron	0.6666666666666666	97.0	0.97	0.972	0.903359	v4_low_resolution_specific
+mock-12	Mock 3	mock-12|Mock 3	OTU	OTU5	2	1.0	Parabacteroides_distasonis	Parabacteroides_sp	1.0	97.0	0.97	0.996	0.96629	v4_low_resolution_specific
+mock-12	Mock 3	mock-12|Mock 3	TIC	SOTU1302	2	1.0	Parabacteroides_distasonis	Parabacteroides_sp	1.0	98.7	0.987	0.996	0.96629	v4_low_resolution_specific
+mock-12	Mock 3	mock-12|Mock 3	TAC	OTU11	2	1.0	Parabacteroides_distasonis	Parabacteroides_sp	1.0	98.7	0.987	0.996	0.96629	v4_low_resolution_specific
+mock-13	Mock 4	mock-13|Mock 4	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-14	Mock 5	mock-14|Mock 5	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-15	Mock 6	mock-15|Mock 6	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-16	Mock 7	mock-16|Mock 7	OTU	OTU36	2	1.0	Chlorobium_limicola	Pelodictyon_phaeoclathratiforme	1.0	97.0	0.97	0.972	0.699406	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	OTU	OTU15	2	1.0	Thermotoga_neapolitana	Thermotoga_petrophila	1.0	97.0	0.97	0.996	0.945693	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	OTU	OTU28	2	1.0	Pyrobaculum_aerophilum	Pyrobaculum_calidifontis	1.0	97.0	0.97	0.996	0.67	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	OTU	OTU40	3	2.0	Chlorobium_limicola	Chlorobium_phaeobacteroides	0.6666666666666666	97.0	0.97	0.984	0.969	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	OTU	OTU40	3	2.0	Chlorobium_limicola	Chlorobium_phaeovibrioides	0.6666666666666666	97.0	0.97	0.98	0.94068	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	OTU	OTU40	3	2.0	Chlorobium_phaeobacteroides	Chlorobium_phaeovibrioides	0.6666666666666666	97.0	0.97	0.972	0.933913	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU9929	2	1.0	Pyrobaculum_aerophilum	Pyrobaculum_calidifontis	1.0	98.7	0.987	0.996	0.67	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU2001	2	1.0	Thermotoga_neapolitana	Thermotoga_petrophila	1.0	98.7	0.987	0.996	0.945693	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU9949	2	1.0	Pyrobaculum_aerophilum	Pyrobaculum_calidifontis	1.0	98.7	0.987	0.996	0.67	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU46	2	1.0	Thermotoga_neapolitana	Thermotoga_petrophila	1.0	98.7	0.987	0.996	0.945693	v4_low_resolution_specific
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU57	2	1.0	Pyrobaculum_aerophilum	Pyrobaculum_calidifontis	1.0	98.7	0.987	0.996	0.67	v4_low_resolution_specific
+mock-20	Mock 10	mock-20|Mock 10	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-21	Mock 11	mock-21|Mock 11	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-22	Mock 12	mock-22|Mock 12	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-23	Mock 13	mock-23|Mock 13	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-4	Even1	mock-4|Even1	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-4	Even2	mock-4|Even2	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-4	Staggered1	mock-4|Staggered1	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-4	Staggered2	mock-4|Staggered2	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-5	Even1	mock-5|Even1	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-5	Even2	mock-5|Even2	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-5	Staggered1	mock-5|Staggered1	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-5	Staggered2	mock-5|Staggered2	OTU	OTU1	2	1.0	Staphylococcus_aureus	Staphylococcus_epidermidis	1.0	97.0	0.97	0.98	0.972162	high_similarity_full16s
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	OTU	OTU3	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	97.0	0.97	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	OTU	OTU3	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	97.0	0.97	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	OTU	OTU3	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	97.0	0.97	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	OTU	OTU3	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	97.0	0.97	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	OTU	OTU3	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	97.0	0.97	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	OTU	OTU3	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	97.0	0.97	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	OTU	OTU3	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	97.0	0.97	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	OTU	OTU3	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	97.0	0.97	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	OTU	OTU3	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	97.0	0.97	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU1601	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU1601	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU1601	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU2001	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU2001	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU2001	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU901	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU901	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU901	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU1601	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU1601	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU1601	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU2001	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU2001	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU2001	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU901	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU901	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU901	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU1601	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU1601	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU1601	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU2001	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU2001	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU2001	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU901	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU901	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU901	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	OTU6	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	OTU6	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	OTU6	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	OTU6	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	OTU6	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	OTU6	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	OTU6	3	2.0	Citrobacter_freundii	Enterobacter_cloacae	0.6666666666666666	98.7	0.987	0.992	0.959696	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	OTU6	3	2.0	Citrobacter_freundii	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.957101	v4_low_resolution_specific
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	OTU6	3	2.0	Enterobacter_cloacae	Klebsiella_pneumoniae	0.6666666666666666	98.7	0.987	0.996	0.987354	high_similarity_full16s

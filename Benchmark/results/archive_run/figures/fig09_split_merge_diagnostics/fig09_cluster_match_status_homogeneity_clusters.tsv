@@ -1,0 +1,151 @@
+community_id	sample_id	sample_key	method	cluster_id	n_present_members	total_member_abundance_tss1000	original_community_abundance_tss1000	match_statuses	n_match_statuses	species_labels	known_species_labels	n_species_labels	n_known_species_labels	unknown_member_count	is_species_homogeneous_strict	mix_type	mix_label	taxonomy_status
+mock-12	Mock 3	mock-12|Mock 3	TIC	SOTU501	2	4781.828861524261	10000.0	Exact match	1	Bacteroides_ovatus	Bacteroides_ovatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-12	Mock 3	mock-12|Mock 3	TIC	SOTU1001	2	1.6852321914311885	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-12	Mock 3	mock-12|Mock 3	TIC	SOTU505	3	3798.562308138762	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-12	Mock 3	mock-12|Mock 3	TIC	SOTU1501	2	0.4055745522946429	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-12	Mock 3	mock-12|Mock 3	TIC	SOTU701	2	0.31466991126308497	10000.0	Exact match;Near-exact match	2	Eubacterium_rectale	Eubacterium_rectale	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-12	Mock 3	mock-12|Mock 3	TIC	SOTU1302	2	388.0299565755523	10000.0	Exact match	1	Parabacteroides_distasonis	Parabacteroides_distasonis	1	1	0	True	pure_exact	Pure exact	Single species
+mock-12	Mock 3	mock-12|Mock 3	TAC	OTU12	2	4781.828861524261	10000.0	Exact match	1	Bacteroides_ovatus	Bacteroides_ovatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-12	Mock 3	mock-12|Mock 3	TAC	OTU21	2	1.6852321914311885	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-12	Mock 3	mock-12|Mock 3	TAC	OTU15	3	3798.562308138762	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-12	Mock 3	mock-12|Mock 3	TAC	OTU20	2	0.4055745522946429	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-12	Mock 3	mock-12|Mock 3	TAC	OTU6	2	0.31466991126308497	10000.0	Exact match;Near-exact match	2	Eubacterium_rectale	Eubacterium_rectale	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-12	Mock 3	mock-12|Mock 3	TAC	OTU11	2	388.0299565755523	10000.0	Exact match	1	Parabacteroides_distasonis	Parabacteroides_distasonis	1	1	0	True	pure_exact	Pure exact	Single species
+mock-13	Mock 4	mock-13|Mock 4	TIC	SOTU1701	3	563.4956530478919	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-13	Mock 4	mock-13|Mock 4	TIC	SOTU2201	2	52.26393286094778	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-13	Mock 4	mock-13|Mock 4	TIC	SOTU1601	2	1.758882355897281	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-13	Mock 4	mock-13|Mock 4	TAC	OTU5	3	563.4956530478919	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-13	Mock 4	mock-13|Mock 4	TAC	OTU3	2	52.26393286094778	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-13	Mock 4	mock-13|Mock 4	TAC	OTU7	2	1.758882355897281	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-14	Mock 5	mock-14|Mock 5	TIC	SOTU1101	3	548.1038714749534	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-14	Mock 5	mock-14|Mock 5	TIC	SOTU101	2	96.02170090440438	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-14	Mock 5	mock-14|Mock 5	TAC	OTU19	3	548.1038714749534	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-14	Mock 5	mock-14|Mock 5	TAC	OTU8	2	96.02170090440438	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-15	Mock 6	mock-15|Mock 6	TIC	SOTU2401	3	476.97318171541696	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-15	Mock 6	mock-15|Mock 6	TIC	SOTU1001	2	35.165009745993146	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-15	Mock 6	mock-15|Mock 6	TIC	SOTU2601	2	1.9858606720152516	10000.0	Exact match;Near-exact match	2	Propionibacterium_acnes	Propionibacterium_acnes	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-15	Mock 6	mock-15|Mock 6	TAC	OTU5	3	476.97318171541696	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-15	Mock 6	mock-15|Mock 6	TAC	OTU2	2	35.165009745993146	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-15	Mock 6	mock-15|Mock 6	TAC	OTU7	2	1.9858606720152516	10000.0	Exact match;Near-exact match	2	Propionibacterium_acnes	Propionibacterium_acnes	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU2001	2	287.45846383847663	10000.0	Exact match	1	Thermotoga_neapolitana;Thermotoga_petrophila	Thermotoga_neapolitana;Thermotoga_petrophila	2	2	0	False	pure_exact	Pure exact	Multi-species or unresolved
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU4601	2	310.5065319081425	10000.0	Exact match	1	Chloroflexus_aurantiacus	Chloroflexus_aurantiacus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU301	3	255.22231457887636	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU201	3	164.4316140071519	10000.0	Exact match	1	Fusobacterium_nucleatum	Fusobacterium_nucleatum	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU4901	2	369.6256051577839	10000.0	Exact match	1	Erwinia_chrysanthemi	Erwinia_chrysanthemi	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU2801	2	1.6351669914289997	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-16	Mock 7	mock-16|Mock 7	TIC	SOTU401	2	1.3431728858166783	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU46	2	287.45846383847663	10000.0	Exact match	1	Thermotoga_neapolitana;Thermotoga_petrophila	Thermotoga_neapolitana;Thermotoga_petrophila	2	2	0	False	pure_exact	Pure exact	Multi-species or unresolved
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU61	2	310.5065319081425	10000.0	Exact match	1	Chloroflexus_aurantiacus	Chloroflexus_aurantiacus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU38	2	472.0376711328787	10000.0	Exact match	1	Methanococcus_maripaludis	Methanococcus_maripaludis	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU10	3	255.22231457887636	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU57	2	183.19710186117044	10000.0	Exact match	1	Pyrobaculum_aerophilum;Pyrobaculum_calidifontis	Pyrobaculum_aerophilum;Pyrobaculum_calidifontis	2	2	0	False	pure_exact	Pure exact	Multi-species or unresolved
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU67	3	164.4316140071519	10000.0	Exact match	1	Fusobacterium_nucleatum	Fusobacterium_nucleatum	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU11	2	369.6256051577839	10000.0	Exact match	1	Erwinia_chrysanthemi	Erwinia_chrysanthemi	1	1	0	True	pure_exact	Pure exact	Single species
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU29	2	1.6351669914289997	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-16	Mock 7	mock-16|Mock 7	TAC	OTU3	2	1.3431728858166783	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-20	Mock 10	mock-20|Mock 10	TIC	SOTU1102	2	243.76261808030708	10000.0	Exact match;Near-exact match	2	Streptococcus_pneumoniae	Streptococcus_pneumoniae	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-20	Mock 10	mock-20|Mock 10	TIC	SOTU601	3	644.9656455887607	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-20	Mock 10	mock-20|Mock 10	TAC	OTU14	3	644.9656455887607	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-21	Mock 11	mock-21|Mock 11	TIC	SOTU401	2	3910.953127832467	10000.0	Exact match;Near-exact match	2	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-21	Mock 11	mock-21|Mock 11	TIC	SOTU403	2	169.84953931760683	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-21	Mock 11	mock-21|Mock 11	TIC	SOTU1001	2	25.536543266313043	10000.0	Exact match;Near-exact match	2	Listeria_monocytogenes	Listeria_monocytogenes	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-21	Mock 11	mock-21|Mock 11	TIC	SOTU801	2	17.73371060160628	10000.0	Exact match;Near-exact match	2	Lactobacillus_gasseri	Lactobacillus_gasseri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-21	Mock 11	mock-21|Mock 11	TAC	OTU14	4	4004.5083033173855	10000.0	Exact match;Near-exact match;No hit	3	Bacillus_cereus;Staphylococcus_aureus	Bacillus_cereus;Staphylococcus_aureus	2	2	0	False	exact_near	Exact + near-exact	Multi-species or unresolved
+mock-21	Mock 11	mock-21|Mock 11	TAC	OTU8	2	25.536543266313043	10000.0	Exact match;Near-exact match	2	Listeria_monocytogenes	Listeria_monocytogenes	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-21	Mock 11	mock-21|Mock 11	TAC	OTU3	2	17.73371060160628	10000.0	Exact match;Near-exact match	2	Lactobacillus_gasseri	Lactobacillus_gasseri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-22	Mock 12	mock-22|Mock 12	TIC	SOTU1701	3	609.5094382396594	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-22	Mock 12	mock-22|Mock 12	TAC	OTU3	3	609.5094382396594	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-23	Mock 13	mock-23|Mock 13	TIC	SOTU601	3	2.8848891752963564	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-23	Mock 13	mock-23|Mock 13	TIC	SOTU101	2	1.9107707524690156	10000.0	Exact match;Near-exact match	2	Streptococcus_pneumoniae	Streptococcus_pneumoniae	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-23	Mock 13	mock-23|Mock 13	TAC	OTU7	3	2.8848891752963564	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-23	Mock 13	mock-23|Mock 13	TAC	OTU17	2	1.9107707524690156	10000.0	Exact match;Near-exact match	2	Streptococcus_pneumoniae	Streptococcus_pneumoniae	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-4	Even1	mock-4|Even1	TIC	SOTU2002	2	26.79568029690036	10000.0	Exact match;Near-exact match	2	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-4	Even1	mock-4|Even1	TIC	SOTU1601	3	349.8051063200482	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Even1	mock-4|Even1	TIC	SOTU502	3	2.5704134844595616	10000.0	No hit	1	Unknown / no best hit		1	0	3	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Even1	mock-4|Even1	TIC	SOTU902	2	0.369717008038704	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Even1	mock-4|Even1	TIC	SOTU2001	3	0.17605571811366838	10000.0	No hit	1	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Even2	mock-4|Even2	TIC	SOTU2002	2	28.316379785637693	10000.0	Exact match;Near-exact match	2	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-4	Even2	mock-4|Even2	TIC	SOTU1601	3	350.57355389301154	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Even2	mock-4|Even2	TIC	SOTU502	3	2.9975751757952938	10000.0	No hit	1	Unknown / no best hit		1	0	3	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Even2	mock-4|Even2	TIC	SOTU902	2	0.3746968969744117	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Even2	mock-4|Even2	TIC	SOTU2001	3	0.17842709379733873	10000.0	No hit	1	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Staggered1	mock-4|Staggered1	TIC	SOTU2002	2	318.6432188333999	10000.0	Exact match;Near-exact match	2	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-4	Staggered1	mock-4|Staggered1	TIC	SOTU1601	3	2.1131224906670427	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Staggered1	mock-4|Staggered1	TIC	SOTU502	3	18.814616546531738	10000.0	No hit	1	Unknown / no best hit		1	0	3	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Staggered1	mock-4|Staggered1	TIC	SOTU902	2	0.594804849224797	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Staggered1	mock-4|Staggered1	TIC	SOTU2001	3	1.2365679760199726	10000.0	No hit	1	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Staggered2	mock-4|Staggered2	TIC	SOTU2002	2	320.99367020072253	10000.0	Exact match;Near-exact match	2	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-4	Staggered2	mock-4|Staggered2	TIC	SOTU1601	3	1.9319177421418938	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Staggered2	mock-4|Staggered2	TIC	SOTU502	3	19.097683667542796	10000.0	No hit	1	Unknown / no best hit		1	0	3	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Staggered2	mock-4|Staggered2	TIC	SOTU902	2	0.6644812616284219	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Staggered2	mock-4|Staggered2	TIC	SOTU2001	3	1.378183357451542	10000.0	No hit	1	Methanobrevibacter_smithii	Methanobrevibacter_smithii	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Even1	mock-4|Even1	TAC	OTU23	3	349.8051063200482	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Even1	mock-4|Even1	TAC	OTU31	2	2.4647800535913604	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Even1	mock-4|Even1	TAC	OTU30	2	0.6514061570205738	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Even1	mock-4|Even1	TAC	OTU12	2	0.369717008038704	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Even2	mock-4|Even2	TAC	OTU23	3	350.57355389301154	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Even2	mock-4|Even2	TAC	OTU31	2	2.836990791377689	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Even2	mock-4|Even2	TAC	OTU30	2	0.9099781783664286	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Even2	mock-4|Even2	TAC	OTU12	2	0.3746968969744117	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Staggered1	mock-4|Staggered1	TAC	OTU23	3	2.1131224906670427	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Staggered1	mock-4|Staggered1	TAC	OTU31	2	18.251117215687195	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Staggered1	mock-4|Staggered1	TAC	OTU30	2	5.948048492247971	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Staggered1	mock-4|Staggered1	TAC	OTU12	2	0.594804849224797	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-4	Staggered2	mock-4|Staggered2	TAC	OTU23	3	1.9319177421418938	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-4	Staggered2	mock-4|Staggered2	TAC	OTU31	2	18.568559699949795	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Staggered2	mock-4|Staggered2	TAC	OTU30	2	6.829390744514337	10000.0	No hit	1	Unknown / no best hit		1	0	2	False	pure_no_match	Pure no match	Multi-species or unresolved
+mock-4	Staggered2	mock-4|Staggered2	TAC	OTU12	2	0.6644812616284219	10000.0	No hit	1	Staphylococcus_aureus	Staphylococcus_aureus	1	1	0	True	pure_no_match	Pure no match	Single species
+mock-5	Even1	mock-5|Even1	TIC	SOTU501	3	342.8413846024723	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-5	Even2	mock-5|Even2	TIC	SOTU501	3	353.4342988127777	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-5	Staggered1	mock-5|Staggered1	TIC	SOTU501	3	1.8667519263182832	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-5	Staggered2	mock-5|Staggered2	TIC	SOTU501	3	1.771362084485192	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-5	Even1	mock-5|Even1	TAC	OTU4	3	342.8413846024723	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-5	Even2	mock-5|Even2	TAC	OTU4	3	353.4342988127777	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-5	Staggered1	mock-5|Staggered1	TAC	OTU4	3	1.8667519263182832	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-5	Staggered2	mock-5|Staggered2	TAC	OTU4	3	1.771362084485192	10000.0	Exact match	1	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	pure_exact	Pure exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	SOTU1101	2	1593.2796900610938	10000.0	Exact match;Near-exact match	2	Staphylococcus_warneri	Staphylococcus_warneri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	SOTU201	2	1395.4701236775443	10000.0	Exact match;Near-exact match	2	Bacillus_subtilis	Bacillus_subtilis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	SOTU301	3	971.1667411712112	10000.0	Exact match;Near-exact match	2	Bacteroides_sartorii	Bacteroides_sartorii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	SOTU601	2	632.5435851586947	10000.0	Exact match;Near-exact match	2	Parabacteroides_goldsteinii	Parabacteroides_goldsteinii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	SOTU1101	2	1672.6907630522087	10000.0	Exact match;Near-exact match	2	Staphylococcus_warneri	Staphylococcus_warneri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	SOTU201	2	1383.5341365461848	10000.0	Exact match;Near-exact match	2	Bacillus_subtilis	Bacillus_subtilis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	SOTU301	3	950.2454261490404	10000.0	Exact match;Near-exact match	2	Bacteroides_sartorii	Bacteroides_sartorii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	SOTU601	2	690.5399375278894	10000.0	Exact match;Near-exact match	2	Parabacteroides_goldsteinii	Parabacteroides_goldsteinii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	OTU9	2	1593.2796900610938	10000.0	Exact match;Near-exact match	2	Staphylococcus_warneri	Staphylococcus_warneri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	OTU10	2	1395.4701236775443	10000.0	Exact match;Near-exact match	2	Bacillus_subtilis	Bacillus_subtilis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	OTU8	3	971.1667411712112	10000.0	Exact match;Near-exact match	2	Bacteroides_sartorii	Bacteroides_sartorii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	OTU1	2	632.5435851586947	10000.0	Exact match;Near-exact match	2	Parabacteroides_goldsteinii	Parabacteroides_goldsteinii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	OTU9	2	1672.6907630522087	10000.0	Exact match;Near-exact match	2	Staphylococcus_warneri	Staphylococcus_warneri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	OTU10	2	1383.5341365461848	10000.0	Exact match;Near-exact match	2	Bacillus_subtilis	Bacillus_subtilis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	OTU8	3	950.2454261490404	10000.0	Exact match;Near-exact match	2	Bacteroides_sartorii	Bacteroides_sartorii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	OTU1	2	690.5399375278894	10000.0	Exact match;Near-exact match	2	Parabacteroides_goldsteinii	Parabacteroides_goldsteinii	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU1901	2	791.8245101600552	10000.0	Exact match;Near-exact match	2	Staphylococcus_epidermidis	Staphylococcus_epidermidis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU1001	3	393.2063666219392	10000.0	Exact match;Near-exact match	2	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU1101	3	407.51421518114626	10000.0	Exact match;Near-exact match	2	Prevotella_copri	Prevotella_copri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TIC	SOTU1601	2	993.0981310836157	10000.0	Exact match	1	Enterobacter_cloacae;Klebsiella_pneumoniae	Enterobacter_cloacae;Klebsiella_pneumoniae	2	2	0	False	pure_exact	Pure exact	Multi-species or unresolved
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU1901	2	824.2686039662283	10000.0	Exact match;Near-exact match	2	Staphylococcus_epidermidis	Staphylococcus_epidermidis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU1001	3	400.9424700569409	10000.0	Exact match;Near-exact match	2	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU1101	3	381.1113292754762	10000.0	Exact match;Near-exact match	2	Prevotella_copri	Prevotella_copri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TIC	SOTU1601	2	1024.5434910661693	10000.0	Exact match	1	Enterobacter_cloacae;Klebsiella_pneumoniae	Enterobacter_cloacae;Klebsiella_pneumoniae	2	2	0	False	pure_exact	Pure exact	Multi-species or unresolved
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU1901	2	835.5908209098694	10000.0	Exact match;Near-exact match	2	Staphylococcus_epidermidis	Staphylococcus_epidermidis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU1001	3	394.28841078700384	10000.0	Exact match;Near-exact match	2	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU1101	3	414.12517258856633	10000.0	Exact match;Near-exact match	2	Prevotella_copri	Prevotella_copri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TIC	SOTU1601	2	1018.6657811489592	10000.0	Exact match	1	Enterobacter_cloacae;Klebsiella_pneumoniae	Enterobacter_cloacae;Klebsiella_pneumoniae	2	2	0	False	pure_exact	Pure exact	Multi-species or unresolved
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	OTU11	2	791.8245101600552	10000.0	Exact match;Near-exact match	2	Staphylococcus_epidermidis	Staphylococcus_epidermidis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	OTU1	3	393.2063666219392	10000.0	Exact match;Near-exact match	2	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	OTU10	3	407.51421518114626	10000.0	Exact match;Near-exact match	2	Prevotella_copri	Prevotella_copri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	TAC	OTU6	4	1680.4679333684235	10000.0	Exact match;Near-exact match	2	Citrobacter_freundii;Enterobacter_cloacae;Klebsiella_pneumoniae	Citrobacter_freundii;Enterobacter_cloacae;Klebsiella_pneumoniae	3	3	0	False	exact_near	Exact + near-exact	Multi-species or unresolved
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	OTU11	2	824.2686039662283	10000.0	Exact match;Near-exact match	2	Staphylococcus_epidermidis	Staphylococcus_epidermidis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	OTU1	3	400.9424700569409	10000.0	Exact match;Near-exact match	2	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	OTU10	3	381.1113292754762	10000.0	Exact match;Near-exact match	2	Prevotella_copri	Prevotella_copri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	TAC	OTU6	4	1692.5191439230316	10000.0	Exact match;Near-exact match	2	Citrobacter_freundii;Enterobacter_cloacae;Klebsiella_pneumoniae	Citrobacter_freundii;Enterobacter_cloacae;Klebsiella_pneumoniae	3	3	0	False	exact_near	Exact + near-exact	Multi-species or unresolved
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	OTU11	2	835.5908209098694	10000.0	Exact match;Near-exact match	2	Staphylococcus_epidermidis	Staphylococcus_epidermidis	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	OTU1	3	394.28841078700384	10000.0	Exact match;Near-exact match	2	Bacteroides_vulgatus	Bacteroides_vulgatus	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	OTU10	3	414.12517258856633	10000.0	Exact match;Near-exact match	2	Prevotella_copri	Prevotella_copri	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	TAC	OTU6	4	1714.1758568257685	10000.0	Exact match;Near-exact match	2	Citrobacter_freundii;Enterobacter_cloacae;Klebsiella_pneumoniae	Citrobacter_freundii;Enterobacter_cloacae;Klebsiella_pneumoniae	3	3	0	False	exact_near	Exact + near-exact	Multi-species or unresolved
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	SOTU401	2	1091.6848062690467	10000.0	Exact match;Near-exact match	2	Salmonella_enterica	Salmonella_enterica	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	SOTU401	2	1726.9044403844628	10000.0	Exact match;Near-exact match	2	Salmonella_enterica	Salmonella_enterica	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	SOTU401	2	1062.5	10000.0	Exact match;Near-exact match	2	Salmonella_enterica	Salmonella_enterica	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	OTU7	2	1091.6848062690467	10000.0	Exact match;Near-exact match	2	Salmonella_enterica	Salmonella_enterica	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	OTU7	2	1726.9044403844628	10000.0	Exact match;Near-exact match	2	Salmonella_enterica	Salmonella_enterica	1	1	0	True	exact_near	Exact + near-exact	Single species
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	OTU7	2	1062.5	10000.0	Exact match;Near-exact match	2	Salmonella_enterica	Salmonella_enterica	1	1	0	True	exact_near	Exact + near-exact	Single species

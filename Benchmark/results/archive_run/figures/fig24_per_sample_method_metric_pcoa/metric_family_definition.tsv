@@ -1,0 +1,3 @@
+metric_family	metrics	n_metrics
+phylogeny_agnostic	jaccard,weighted_jaccard,braycurtis	3
+phylogeny_aware	gunifrac_a0.0,gunifrac_a0.5,gunifrac_a1.0	3

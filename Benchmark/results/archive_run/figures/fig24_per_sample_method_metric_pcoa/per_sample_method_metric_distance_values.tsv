@@ -1,0 +1,811 @@
+method	metric	distance	community_id	sample_id	sample_key	community_label	sample_label	method_label	metric_label	point_id
+ASV	jaccard	0.4054054054054054	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5813116192427161	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.4097528584342227	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.1702339487823776	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.0473735777897354	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.0388197723745069	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.5116279069767442	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5535661474095175	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3827110008647207	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.4523202526545911	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0400220056211182	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0218021134692067	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.5625	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.107722542189989	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.0569274562487573	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.4157508027601292	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0318234888694624	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.0149231175984195	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.4848484848484848	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.1065056534046908	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.0562482024814063	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.419798671290906	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0316130104716645	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.014894799539651	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.4848484848484848	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.1065056534046908	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.0562482024814063	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.4193865669790065	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0328815249837726	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.0149619674736387	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.4634146341463414	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5721827494619218	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.4007394848649522	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.4465009136556571	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.1892166234522106	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2223213465013021	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.3333333333333333	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.4984922187223954	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3319944291585607	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.3893630426052051	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1357284997280007	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1614498910426628	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.2857142857142857	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4506543439682856	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.2908675299239106	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.2816960826368101	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.1272590505995386	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1598030920317434	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.2857142857142857	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4506594206809901	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2908717596999045	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2816960826368102	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1272560252163183	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1597936719674929	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.2857142857142857	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4506594206809901	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.2908717596999045	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2816960826368101	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1272560252163183	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1597936719674928	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5416666666666667	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5828416408820649	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.411274884794693	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.54278507129532	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.2063123983276875	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2230509937131307	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5152665631452374	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3470431461668773	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.4691393522608448	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1492744303865898	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1555293438237626	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.4444444444444444	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4681466124680719	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.3056079754618908	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.3896651358785797	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.1365739692535593	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1528444553512826	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.4594594594594594	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4681686824250677	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.3056267860917175	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.4577902667186587	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1419116204070767	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1529200846689317	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.4594594594594594	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4681686824250678	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.3056267860917176	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.4634504018957559	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.151856604136143	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.159218445690631	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.3529411764705882	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5942956778065092	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.4227743120823286	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.4149095517245996	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.2013665738478244	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2613243500925848	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.4054054054054054	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5198589427374616	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3512225677321051	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.4219127030016218	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1538401455948512	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2008345761880055	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.3548387096774194	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4710685509196678	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.3081031207795616	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.325236872389483	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.1462976555992892	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1994625564208491	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.375	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.471077433758687	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.3081107206866458	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.4075343258985073	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.149409479483942	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1994830613079779	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.471077433758687	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.3081107206866459	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.415122186727028	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1548258070190621	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.201772743770876	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.4368932038834952	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5467813126265736	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.3762553546671189	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.2453708034564157	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.1642603434840924	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2099371117040532	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.3103448275862068	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5223479231464558	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3534985882865764	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1791711609337088	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1486653556550821	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1899988665841859	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.323943661971831	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.5152949116910361	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.3470688662338608	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.1557089682918251	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.1443670298420009	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1894408887541367	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3289473684210526	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.5133259277837757	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.3452847785382759	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1678253027843587	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1448146965951305	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1893985010305631	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.3333333333333333	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.5148389893468208	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.3466553361243929	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1679720843005843	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1448713210875084	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1894084733802142	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.1764705882352941	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.316995839162745	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.1883511916007664	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.0605036771612442	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.1065154511057734	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.1698324578784089	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.0666666666666666	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.2599758433571636	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.1494093299593928	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0267126813835075	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0836911601111729	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1335002199698469	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.0666666666666666	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.2599758433571637	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.1494093299593929	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.0267126813835075	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0836911601111729	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1335002199698469	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.0666666666666666	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.2599758433571636	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.1494093299593928	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0267126813835075	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0836911601111729	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1335002199698468	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.0666666666666666	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.2599758433571636	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.1494093299593928	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0267126813835075	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0836911601111729	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1335002199698469	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.2718857683385508	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.1573309005604066	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.0810797157066354	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.1358283881673249	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.1883603394605086	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.1039722984450542	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0531792104920329	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0881852282587962	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.1883603394605086	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.1039722984450542	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0531792104920329	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.0881852282587962	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.1883603394605086	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.1039722984450542	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0531792104920329	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.0881852282587962	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.1883603394605086	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.1039722984450542	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0531792104920329	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.0881852282587962	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.0869565217391304	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5577583293335522	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.3867301442453932	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.02187003156689	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.1708205363776236	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2048525479848757	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.375	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5403643147009366	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3702049217782873	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0666726472891868	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1484897928878897	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1690645966427899	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.0999999999999999	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4851807561870487	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.3202895382856374	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.0220241486521094	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.1391594553534231	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1669022180629676	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3571428571428571	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4902046376506183	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.3246828344258617	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.064309998633311	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1474398928132403	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1683630831793182	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.3571428571428571	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4953289604452395	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.3291941875825627	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.064309998633311	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1479431136366295	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1685154414321656	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.3913043478260869	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.6801887036038414	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.5153681480535487	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.1920320810525472	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.1599763378264706	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2614889762567144	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.65	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.6184356105544903	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.4476343015780097	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2654524165897504	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.138642984488086	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1878431300615089	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.3	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.5966294523238654	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.42514035463537	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.190507303961047	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.12108044398749	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.18432380063203	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.5757575757575757	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.6108319793561402	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.4397106543476491	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2547639315206949	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1361259760259262	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.187454496291391	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.5333333333333333	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.6108319793561402	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.4397106543476491	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.251143867414617	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1412504099860151	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1957540769079603	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.2142857142857143	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.3888280786386615	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.2413324571285517	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.1335691603992492	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.0701636199881962	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.0922771783470285	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.125	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.3781826271584136	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2331844716250634	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0496930172662127	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0614328130997946	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0820015010475524	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.0952380952380952	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.3221562368644044	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.1920060996992657	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.0488311433547045	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0606955381801092	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.081437839271248	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.0952380952380952	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.3221562368644042	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.1920060996992657	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0488311433547045	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0606955381801092	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.081437839271248	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.0952380952380952	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.3221562368644042	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.1920060996992657	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0488311433547045	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0606955381801092	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.081437839271248	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.3448275862068966	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5168234080218292	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.348457095950066	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.2457300040457012	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.0792775925888201	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.1096974551616845	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.1923076923076923	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.4944623837863736	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3284291129370311	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1927603649310422	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0706689568982892	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0975446917843293	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1428571428571429	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4818720258232242	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.3174119929411915	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.1855435565228774	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0696847839514063	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.0972866010334685	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.1363636363636363	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4817561426194271	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.3173114386582147	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1919883562016926	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0701342750151288	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.0973683161797509	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.1363636363636363	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4817561426194271	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.3173114386582147	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1919883562016926	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0701342750151288	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.0973683161797508	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.3235294117647058	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.7973173663896985	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.6629490973826175	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.0208785090924267	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.2668491806494928	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2758097958781668	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.4499999999999999	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.7571833026237703	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6092477709885107	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1021941900215225	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2160798665484894	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2367962705581667	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1304347826086956	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7490105571972462	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.5987345149125645	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.0318425239507938	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.2141086512416727	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.2364405452901088	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3448275862068966	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.7513569838160125	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.601738826932501	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0727656604863603	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2150858920270929	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2363630292406049	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.3548387096774194	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.7493307087432599	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.5991437656475055	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0740339818603892	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2152147769083906	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2363668578089274	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.2068965517241379	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.7986349961991506	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.6647729821265381	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.1665325767358064	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.2705522838784044	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.282618858123256	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.7559975813211868	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6077139159617474	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2303816371827417	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2174631713651143	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2401844422063752	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1666666666666666	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7469403435343307	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.5960932024905511	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.179141791467299	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.215418727424567	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.239866894059794	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3666666666666667	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.7494637719348849	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.5993139223919072	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2087502063357416	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2164841351619987	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2397741709225309	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.7473409295744167	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.5966036148371255	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2096739780216586	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2166336563777425	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2397789978919818	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5238095238095238	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.8101754180429835	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.6809200535346243	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.2130698312841916	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.3140825529699212	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.4188749581615411	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.7791985729578169	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6382680718564501	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2303816371827417	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2718328113357134	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3724846585799842	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1666666666666666	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7729796468921728	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.6299648126735233	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.179141791467299	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.2674947971017867	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.372428313984731	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3666666666666667	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.7972293253897971	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.6628273720160042	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2087502063357416	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2703448602204477	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3720973716025286	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.7745327576359446	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.6320305683094307	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2096739780216586	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2707999763881228	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3721275404204167	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5555555555555556	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.8069859096575632	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.6764261346032636	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.2074489997706975	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.3113443127087176	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.415324836908199	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.7741878416105852	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6315713515419725	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2303816371827417	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2677470696138876	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3669681723157211	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1666666666666666	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7677534951887726	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.6230518749220453	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.179141791467299	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.2631872310456653	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.3669690092519476	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3666666666666667	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.7925110026790543	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.656329792186428	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2087502063357416	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2662227403039625	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3665742100174249	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.7694801144273644	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.6253292802897522	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2096739780216586	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.266681106769929	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3666055304747582	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.4390243902439024	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.8451165743965366	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.7317765201755633	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.0143514145685507	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.2906461369096179	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.2942154566529136	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.1851851851851852	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.7643752439686997	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.618614381297923	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1957357444284353	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2089445619610123	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2310190309485485	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1666666666666666	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7572788738259886	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.6093715298438976	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.1955892722332141	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.2085174054290333	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.2305798632954136	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.1666666666666666	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.757295588233194	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.6093931759335386	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1951152539639504	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2083095959116876	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2305342925712193	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.1666666666666666	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.757295588233194	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.6093931759335386	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1951152539639505	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2083095959116876	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2305342925712193	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.3235294117647058	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.8478499546661874	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.7358850161052934	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.1854254318714259	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.2983716767650793	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.3053163111827352	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.1851851851851852	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.7640360310325001	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6181701491433935	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1957357444284353	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2088181874608906	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2336269262681189	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1666666666666666	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7565084347046904	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.6083743998094844	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.1955892722332141	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.208419149056558	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.2332091250403145	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.1666666666666666	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.75651438019837	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.6083820899505494	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1951152539639504	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2082052348238529	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2331595453386266	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.1666666666666666	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.75651438019837	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.6083820899505493	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1951152539639505	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2082052348238529	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2331595453386266	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5128205128205128	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.8216736517666741	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.6973226500439509	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.2015065035565782	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.3340638287311439	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.4312610544832373	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.1538461538461538	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.765120050187011	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6195906333266495	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1728076184409431	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2405766795896795	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3453698270873186	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1304347826086956	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7625706439034516	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.616253881602558	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.1726744588721545	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.2400961015803819	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.3450096876379853	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.1304347826086956	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.7625701997425165	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.616253301467155	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2400765983000688	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3450094857158532	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.1304347826086956	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.7625701997425165	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.6162533014671551	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2400765983000688	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3450094857158532	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5365853658536586	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.820330567875033	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.6953902046926416	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.2104789828849814	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.3327380275765319	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.4298393427933767	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.1538461538461538	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.761645050217783	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6150458318527571	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1728076184409431	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2388162913921762	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3427596046280098	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.1304347826086956	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.7589623535180756	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.611554658047297	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.1726744588721545	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.2383386499882037	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.3423951209400685	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.1304347826086956	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.7589630295446395	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.6115555359049145	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2383191080717907	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3423947797617424	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.1304347826086956	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.7589630295446395	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.6115555359049145	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2383191080717907	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3423947797617425	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5238095238095238	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5300745735327207	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.3606132419973621	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.0796768754638561	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.1238161633399264	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.1418955765117791	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.5238095238095238	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5363199393769154	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3664188327800309	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0796768754638561	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1164730492429135	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1330259199550615	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4042906845720533	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.2533611107381599	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.0379457214758889	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.1045896502168749	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1319099884877984	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4043332480376259	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2533945434034839	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0390526383818354	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1055580879654298	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1326339021463007	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4043332480376259	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.2533945434034839	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0412616344341514	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1072750951281124	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1337769107500407	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5238095238095238	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5357602595190635	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.365896543241676	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.0796768754638561	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.1209455293572926	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.1350103116302881	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.5238095238095238	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5360899458031779	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3662041559631921	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0796768754638561	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1171727462277252	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1299296797726641	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4095425072396729	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.2574998131694102	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.0379457214758889	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.1082674203106646	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1342052915855829	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4095652040479679	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2575177587225781	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0390526383818354	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1092187686746384	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1349062462643856	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4095652040479678	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.257517758722578	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0412616344341514	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1109545904598204	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1360695034717727	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.3076923076923077	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.4069590602184343	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.2554605158322144	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.0259048777128518	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.0686778895043825	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.1100717383428482	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.3076923076923077	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.4215259045353334	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2670464505857132	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0525507775472785	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0784825743819303	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1268412399749603	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.2380952380952381	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4638474141395406	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.3019539975449258	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.0488792324447618	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0774060604299261	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1267186564933069	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.1904761904761904	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.398611687030908	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2489163207965796	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0495516057235061	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0775641363677908	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1266050111165637	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.2380952380952381	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4555403912984558	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.294951314189069	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0495496985953652	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0780119264765952	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1272704072963175	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.3333333333333333	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.3863367088703057	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.2394159370136249	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.0685077496194003	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.0588261137676506	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.0887071993721686	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.3333333333333333	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.4141038626118946	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2611166348471619	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0759082586426915	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0751350594065326	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1166888803166941	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.2727272727272727	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4591613578016543	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.297994446158593	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.072454401181131	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0740740174296084	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1165800307972418	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.2272727272727273	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.3960282003176359	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2469047151552551	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0730553639111434	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0742314649475732	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1164534137531	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.2727272727272727	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4508150499873481	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.291001439165586	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0730535500367519	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0746914607922659	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1171653961659105	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5135135135135135	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.398034571895401	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.2484663931645169	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.3573728924179564	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.0724723817274844	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.0956715607160687	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.3333333333333333	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.4202801979990238	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2660473062796765	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0759082586426915	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0767011201471098	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1207447531576922	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.2727272727272727	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.4680760323055062	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.3055478223308619	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.072454401181131	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.0756269187020494	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.1206381884184885	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.2272727272727273	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4029626528303203	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2523188662710133	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0730553639111434	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0757779764098918	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1204970778810024	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.2727272727272727	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4598241830647213	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.2985530470019346	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0730535500367519	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0762601046516757	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1212405346339308	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.4545454545454546	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5330716509622992	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.3633931073129728	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.5167213416160102	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.4627374328265956	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.3867750540511524	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.5	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5375019967181215	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3675232345698626	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.5524155158926085	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.4515884840464453	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3697994535604594	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.3	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.3903721521212751	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.2425232345698626	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.5515567807814321	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.4511199092577516	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.3695830140659589	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.3903721521212751	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2425232345698626	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.5515567807814321	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.4511199092577516	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3695830140659589	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.3	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.3903721521212751	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.2425232345698626	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.5515567807814321	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.4511199092577516	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3695830140659589	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.6666666666666667	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5917087447335413	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.4201607746414543	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.7887864416016844	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.5456071828217174	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.5114468461794383	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.5384615384615384	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5844947735191637	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.4129230769230769	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.5495978773190001	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.5273667307999256	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.4993543128324175	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.3	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.428789412457887	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.2729038461538461	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.5515567807814321	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.5271160220525726	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.4992303253848922	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.4289318247050471	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2730192307692307	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.5270642427344702	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.4992447098513051	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.4289318247050472	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.2730192307692307	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.5270642427344702	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.499244709851305	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0
+ASV	jaccard	0.5	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	DADA2	Jaccard	ASV__jaccard
+ASV	weighted_jaccard	0.5693885121827159	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	DADA2	Weighted Jaccard	ASV__weighted_jaccard
+ASV	braycurtis	0.3980035928912082	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	DADA2	Bray-Curtis	ASV__braycurtis
+ASV	gunifrac_a0.0	0.5141167482861262	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	DADA2	gUniFrac (α=0.0)	ASV__gunifrac_a0.0
+ASV	gunifrac_a0.5	0.5295445801388867	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	DADA2	gUniFrac (α=0.5)	ASV__gunifrac_a0.5
+ASV	gunifrac_a1.0	0.5034834559560001	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	DADA2	gUniFrac (α=1.0)	ASV__gunifrac_a1.0
+zOTU	jaccard	0.5384615384615384	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	Jaccard	zOTU__jaccard
+zOTU	weighted_jaccard	0.5653568339167883	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	Weighted Jaccard	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3940748802786242	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	Bray-Curtis	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.5495978773190001	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	gUniFrac (α=0.0)	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.5216791799851285	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	gUniFrac (α=0.5)	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.4901357177776066	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	gUniFrac (α=1.0)	zOTU__gunifrac_a1.0
+OTU	jaccard	0.3	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UPARSE	Jaccard	OTU__jaccard
+OTU	weighted_jaccard	0.405013584244013	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UPARSE	Weighted Jaccard	OTU__weighted_jaccard
+OTU	braycurtis	0.2539291747209306	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UPARSE	Bray-Curtis	OTU__braycurtis
+OTU	gunifrac_a0.0	0.5515567807814321	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UPARSE	gUniFrac (α=0.0)	OTU__gunifrac_a0.0
+OTU	gunifrac_a0.5	0.5214292081368356	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UPARSE	gUniFrac (α=0.5)	OTU__gunifrac_a0.5
+OTU	gunifrac_a1.0	0.4900281276820759	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UPARSE	gUniFrac (α=1.0)	OTU__gunifrac_a1.0
+TIC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	Jaccard	TIC__jaccard
+TIC	weighted_jaccard	0.405118618000913	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	Weighted Jaccard	TIC__weighted_jaccard
+TIC	braycurtis	0.2540117544623422	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	Bray-Curtis	TIC__braycurtis
+TIC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	gUniFrac (α=0.0)	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.5213712789971708	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	gUniFrac (α=0.5)	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.4900223448173293	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	gUniFrac (α=1.0)	TIC__gunifrac_a1.0
+TAC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	Jaccard	TAC__jaccard
+TAC	weighted_jaccard	0.405118618000913	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	Weighted Jaccard	TAC__weighted_jaccard
+TAC	braycurtis	0.2540117544623422	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	Bray-Curtis	TAC__braycurtis
+TAC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	gUniFrac (α=0.0)	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.5213712789971708	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	gUniFrac (α=0.5)	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.4900223448173293	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	gUniFrac (α=1.0)	TAC__gunifrac_a1.0

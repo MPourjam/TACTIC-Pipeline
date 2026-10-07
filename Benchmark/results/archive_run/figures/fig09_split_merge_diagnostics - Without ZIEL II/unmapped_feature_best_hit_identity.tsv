@@ -1,0 +1,1677 @@
+community_id	sample_id	sample_key	method	graph_target_level_plot	unmapped_feature	best_hit_effective_pident	best_hit_pident	best_hit_status	inferred_feature_fraction
+mock-12	Mock 3	mock-12|Mock 3	ASV	tip	ASV_16	99.605	99.605	hit_found	0.0003268471712485285
+mock-12	Mock 3	mock-12|Mock 3	ASV	tip	ASV_23			no_hit_detected	2.2159130254137523e-05
+mock-12	Mock 3	mock-12|Mock 3	ASV	tip	ASV_14	99.605	99.605	hit_found	0.0008780555363201994
+mock-12	Mock 3	mock-12|Mock 3	ASV	tip	ASV_24	99.605	99.605	hit_found	1.246451076795235e-05
+mock-12	Mock 3	mock-12|Mock 3	ASV	species	ASV_16	99.605	99.605	hit_found	0.0003268471712485285
+mock-12	Mock 3	mock-12|Mock 3	ASV	species	ASV_23			no_hit_detected	2.2159130254137523e-05
+mock-12	Mock 3	mock-12|Mock 3	ASV	species	ASV_14	99.605	99.605	hit_found	0.0008780555363201994
+mock-12	Mock 3	mock-12|Mock 3	ASV	species	ASV_24	99.605	99.605	hit_found	1.246451076795235e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu26			no_hit_detected	2.7271392309467363e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu19			no_hit_detected	6.782884753893164e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu30			no_hit_detected	2.6572125839993844e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu29			no_hit_detected	2.5173592901046795e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu31			no_hit_detected	1.3286062919996917e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu18			no_hit_detected	0.000141951093303125
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu27	99.605	99.605	hit_found	1.4684595858943967e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu24			no_hit_detected	2.5173592901046795e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu25			no_hit_detected	2.3075793492626225e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	tip	Zotu23	92.913	92.913	hit_found	3.286552406525554e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu26			no_hit_detected	2.7271392309467363e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu19			no_hit_detected	6.782884753893164e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu30			no_hit_detected	2.6572125839993844e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu29			no_hit_detected	2.5173592901046795e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu31			no_hit_detected	1.3286062919996917e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu18			no_hit_detected	0.000141951093303125
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu27	99.605	99.605	hit_found	1.4684595858943967e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu24			no_hit_detected	2.5173592901046795e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu25			no_hit_detected	2.3075793492626225e-05
+mock-12	Mock 3	mock-12|Mock 3	zOTU	species	Zotu23	92.913	92.913	hit_found	3.286552406525554e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	tip	OTU12			no_hit_detected	0.00018184552222886657
+mock-12	Mock 3	mock-12|Mock 3	OTU	tip	OTU20			no_hit_detected	3.986613371940536e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	tip	OTU17	92.913	92.913	hit_found	3.287207517214126e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	tip	OTU19			no_hit_detected	2.308039320597152e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	tip	OTU13			no_hit_detected	6.784236790846176e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	tip	OTU18			no_hit_detected	2.7976234189056396e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	species	OTU12			no_hit_detected	0.00018184552222886657
+mock-12	Mock 3	mock-12|Mock 3	OTU	species	OTU20			no_hit_detected	3.986613371940536e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	species	OTU17	92.913	92.913	hit_found	3.287207517214126e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	species	OTU19			no_hit_detected	2.308039320597152e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	species	OTU13			no_hit_detected	6.784236790846176e-05
+mock-12	Mock 3	mock-12|Mock 3	OTU	species	OTU18			no_hit_detected	2.7976234189056396e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	tip	SOTU1001			no_hit_detected	0.00016852321914311887
+mock-12	Mock 3	mock-12|Mock 3	TIC	tip	SOTU401			no_hit_detected	2.3075793492626228e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	tip	SOTU1002			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	tip	SOTU1501			no_hit_detected	4.055745522946429e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	tip	SOTU901			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	tip	SOTU1101			no_hit_detected	6.782884753893166e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	tip	SOTU801	92.913	92.913	hit_found	3.286552406525554e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	species	SOTU1001			no_hit_detected	0.00016852321914311887
+mock-12	Mock 3	mock-12|Mock 3	TIC	species	SOTU401			no_hit_detected	2.3075793492626228e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	species	SOTU1002			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	species	SOTU1501			no_hit_detected	4.055745522946429e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	species	SOTU901			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	species	SOTU1101			no_hit_detected	6.782884753893166e-05
+mock-12	Mock 3	mock-12|Mock 3	TIC	species	SOTU801	92.913	92.913	hit_found	3.286552406525554e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	tip	OTU20			no_hit_detected	4.055745522946429e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	tip	OTU23			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	tip	OTU9			no_hit_detected	6.782884753893166e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	tip	OTU8			no_hit_detected	2.3075793492626228e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	tip	OTU21			no_hit_detected	0.00016852321914311887
+mock-12	Mock 3	mock-12|Mock 3	TAC	tip	OTU22			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	tip	OTU7	92.913	92.913	hit_found	3.286552406525554e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	species	OTU20			no_hit_detected	4.055745522946429e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	species	OTU23			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	species	OTU9			no_hit_detected	6.782884753893166e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	species	OTU8			no_hit_detected	2.3075793492626228e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	species	OTU21			no_hit_detected	0.00016852321914311887
+mock-12	Mock 3	mock-12|Mock 3	TAC	species	OTU22			no_hit_detected	2.51735929010468e-05
+mock-12	Mock 3	mock-12|Mock 3	TAC	species	OTU7	92.913	92.913	hit_found	3.286552406525554e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_28			no_hit_detected	7.91295746785361e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_37			no_hit_detected	3.956478733926805e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_31			no_hit_detected	6.594131223211343e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_34			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_20			no_hit_detected	0.0041279261457303
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_27	94.466	94.466	hit_found	0.0001582591493570722
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_33			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_26			no_hit_detected	0.000250576986482031
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_38			no_hit_detected	3.956478733926805e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_25			no_hit_detected	0.00054071876030333
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_21			no_hit_detected	0.0017012858555885263
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_36			no_hit_detected	3.956478733926805e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_29			no_hit_detected	7.91295746785361e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_30			no_hit_detected	6.594131223211343e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_35			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_39			no_hit_detected	2.637652489284536e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	tip	ASV_32			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_28			no_hit_detected	7.91295746785361e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_37			no_hit_detected	3.956478733926805e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_31			no_hit_detected	6.594131223211343e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_34			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_20			no_hit_detected	0.0041279261457303
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_27	94.466	94.466	hit_found	0.0001582591493570722
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_33			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_26			no_hit_detected	0.000250576986482031
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_38			no_hit_detected	3.956478733926805e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_25			no_hit_detected	0.00054071876030333
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_21			no_hit_detected	0.0017012858555885263
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_36			no_hit_detected	3.956478733926805e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_29			no_hit_detected	7.91295746785361e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_30			no_hit_detected	6.594131223211343e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_35			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_39			no_hit_detected	2.637652489284536e-05
+mock-13	Mock 4	mock-13|Mock 4	ASV	species	ASV_32			no_hit_detected	5.275304978569073e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu30			no_hit_detected	4.0203025277652124e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu21			no_hit_detected	0.003598170762349865
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu29			no_hit_detected	6.53299160761847e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu31			no_hit_detected	4.522840343735864e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu28			no_hit_detected	7.035529423589123e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu27	94.466	94.466	hit_found	0.00011055831951354336
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu24			no_hit_detected	0.0003568018493391626
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu25			no_hit_detected	0.0001306598321523694
+mock-13	Mock 4	mock-13|Mock 4	zOTU	tip	Zotu23			no_hit_detected	0.0016282225237449113
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu30			no_hit_detected	4.0203025277652124e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu21			no_hit_detected	0.003598170762349865
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu29			no_hit_detected	6.53299160761847e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu31			no_hit_detected	4.522840343735864e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu28			no_hit_detected	7.035529423589123e-05
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu27	94.466	94.466	hit_found	0.00011055831951354336
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu24			no_hit_detected	0.0003568018493391626
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu25			no_hit_detected	0.0001306598321523694
+mock-13	Mock 4	mock-13|Mock 4	zOTU	species	Zotu23			no_hit_detected	0.0016282225237449113
+mock-13	Mock 4	mock-13|Mock 4	OTU	tip	OTU19			no_hit_detected	0.005211395719318348
+mock-13	Mock 4	mock-13|Mock 4	OTU	tip	OTU25			no_hit_detected	7.035635493775975e-05
+mock-13	Mock 4	mock-13|Mock 4	OTU	tip	OTU21			no_hit_detected	0.00035680722861292444
+mock-13	Mock 4	mock-13|Mock 4	OTU	tip	OTU24	94.466	94.466	hit_found	0.00011055998633076531
+mock-13	Mock 4	mock-13|Mock 4	OTU	tip	OTU22			no_hit_detected	0.00017589088734439935
+mock-13	Mock 4	mock-13|Mock 4	OTU	tip	OTU26			no_hit_detected	6.533090101363405e-05
+mock-13	Mock 4	mock-13|Mock 4	OTU	tip	OTU27			no_hit_detected	4.020363139300557e-05
+mock-13	Mock 4	mock-13|Mock 4	OTU	species	OTU19			no_hit_detected	0.005211395719318348
+mock-13	Mock 4	mock-13|Mock 4	OTU	species	OTU25			no_hit_detected	7.035635493775975e-05
+mock-13	Mock 4	mock-13|Mock 4	OTU	species	OTU21			no_hit_detected	0.00035680722861292444
+mock-13	Mock 4	mock-13|Mock 4	OTU	species	OTU24	94.466	94.466	hit_found	0.00011055998633076531
+mock-13	Mock 4	mock-13|Mock 4	OTU	species	OTU22			no_hit_detected	0.00017589088734439935
+mock-13	Mock 4	mock-13|Mock 4	OTU	species	OTU26			no_hit_detected	6.533090101363405e-05
+mock-13	Mock 4	mock-13|Mock 4	OTU	species	OTU27			no_hit_detected	4.020363139300557e-05
+mock-13	Mock 4	mock-13|Mock 4	TIC	tip	SOTU1001			no_hit_detected	6.532991607618473e-05
+mock-13	Mock 4	mock-13|Mock 4	TIC	tip	SOTU1702	94.466	94.466	hit_found	0.0001105583195135434
+mock-13	Mock 4	mock-13|Mock 4	TIC	tip	SOTU1601			no_hit_detected	0.00017588823558972817
+mock-13	Mock 4	mock-13|Mock 4	TIC	tip	SOTU601			no_hit_detected	4.020302527765214e-05
+mock-13	Mock 4	mock-13|Mock 4	TIC	tip	SOTU901			no_hit_detected	0.00035680184933916276
+mock-13	Mock 4	mock-13|Mock 4	TIC	tip	SOTU701			no_hit_detected	7.035529423589125e-05
+mock-13	Mock 4	mock-13|Mock 4	TIC	tip	SOTU2201			no_hit_detected	0.005226393286094778
+mock-13	Mock 4	mock-13|Mock 4	TIC	species	SOTU1001			no_hit_detected	6.532991607618473e-05
+mock-13	Mock 4	mock-13|Mock 4	TIC	species	SOTU1702	94.466	94.466	hit_found	0.0001105583195135434
+mock-13	Mock 4	mock-13|Mock 4	TIC	species	SOTU1601			no_hit_detected	0.00017588823558972817
+mock-13	Mock 4	mock-13|Mock 4	TIC	species	SOTU601			no_hit_detected	4.020302527765214e-05
+mock-13	Mock 4	mock-13|Mock 4	TIC	species	SOTU901			no_hit_detected	0.00035680184933916276
+mock-13	Mock 4	mock-13|Mock 4	TIC	species	SOTU701			no_hit_detected	7.035529423589125e-05
+mock-13	Mock 4	mock-13|Mock 4	TIC	species	SOTU2201			no_hit_detected	0.005226393286094778
+mock-13	Mock 4	mock-13|Mock 4	TAC	tip	OTU23			no_hit_detected	6.532991607618473e-05
+mock-13	Mock 4	mock-13|Mock 4	TAC	tip	OTU10			no_hit_detected	7.035529423589125e-05
+mock-13	Mock 4	mock-13|Mock 4	TAC	tip	OTU22			no_hit_detected	0.00035680184933916276
+mock-13	Mock 4	mock-13|Mock 4	TAC	tip	OTU27			no_hit_detected	4.020302527765214e-05
+mock-13	Mock 4	mock-13|Mock 4	TAC	tip	OTU4	94.466	94.466	hit_found	0.0001105583195135434
+mock-13	Mock 4	mock-13|Mock 4	TAC	tip	OTU7			no_hit_detected	0.00017588823558972817
+mock-13	Mock 4	mock-13|Mock 4	TAC	tip	OTU3			no_hit_detected	0.005226393286094778
+mock-13	Mock 4	mock-13|Mock 4	TAC	species	OTU23			no_hit_detected	6.532991607618473e-05
+mock-13	Mock 4	mock-13|Mock 4	TAC	species	OTU10			no_hit_detected	7.035529423589125e-05
+mock-13	Mock 4	mock-13|Mock 4	TAC	species	OTU22			no_hit_detected	0.00035680184933916276
+mock-13	Mock 4	mock-13|Mock 4	TAC	species	OTU27			no_hit_detected	4.020302527765214e-05
+mock-13	Mock 4	mock-13|Mock 4	TAC	species	OTU4	94.466	94.466	hit_found	0.0001105583195135434
+mock-13	Mock 4	mock-13|Mock 4	TAC	species	OTU7			no_hit_detected	0.00017588823558972817
+mock-13	Mock 4	mock-13|Mock 4	TAC	species	OTU3			no_hit_detected	0.005226393286094778
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_41			no_hit_detected	7.192562889971768e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_16			no_hit_detected	0.007012748817722473
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_45			no_hit_detected	5.3944221674788264e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_28	92.126	92.126	hit_found	0.00019779547947422366
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_37			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_31			no_hit_detected	0.00012586985057450595
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_34			no_hit_detected	0.00010788844334957655
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_46			no_hit_detected	3.596281444985883e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_27			no_hit_detected	0.00023375829392408245
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_22			no_hit_detected	0.0011867728768453418
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_33	91.304	91.304	hit_found	0.00010788844334957655
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_26	94.466	94.466	hit_found	0.00023375829392408245
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_38			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_21			no_hit_detected	0.0033445417438368722
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_40			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_42			no_hit_detected	7.192562889971768e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_36			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_29			no_hit_detected	0.00017981407224929418
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_43			no_hit_detected	7.192562889971768e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_44			no_hit_detected	5.3944221674788264e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_30			no_hit_detected	0.00014385125779943533
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_35			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_39			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	tip	ASV_32			no_hit_detected	0.00010788844334957655
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_41			no_hit_detected	7.192562889971768e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_16			no_hit_detected	0.007012748817722473
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_45			no_hit_detected	5.3944221674788264e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_28	92.126	92.126	hit_found	0.00019779547947422366
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_37			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_31			no_hit_detected	0.00012586985057450595
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_34			no_hit_detected	0.00010788844334957655
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_46			no_hit_detected	3.596281444985883e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_27			no_hit_detected	0.00023375829392408245
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_22			no_hit_detected	0.0011867728768453418
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_33	91.304	91.304	hit_found	0.00010788844334957655
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_26	94.466	94.466	hit_found	0.00023375829392408245
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_38			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_21			no_hit_detected	0.0033445417438368722
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_40			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_42			no_hit_detected	7.192562889971768e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_36			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_29			no_hit_detected	0.00017981407224929418
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_43			no_hit_detected	7.192562889971768e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_44			no_hit_detected	5.3944221674788264e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_30			no_hit_detected	0.00014385125779943533
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_35			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_39			no_hit_detected	8.990703612464709e-05
+mock-14	Mock 5	mock-14|Mock 5	ASV	species	ASV_32			no_hit_detected	0.00010788844334957655
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu26			no_hit_detected	0.00016803797658270764
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu22			no_hit_detected	0.003150712060925768
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu38			no_hit_detected	6.001356306525272e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu30			no_hit_detected	0.00014403255135660655
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu37			no_hit_detected	6.601491937177799e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu20			no_hit_detected	0.006451458029514668
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu29	92.126	92.126	hit_found	0.00018604204550228345
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu31			no_hit_detected	0.00019804475811533402
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu36			no_hit_detected	6.001356306525272e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu39			no_hit_detected	6.001356306525272e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu33	91.304	91.304	hit_found	9.602170090440435e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu28	94.466	94.466	hit_found	0.00018604204550228345
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu34			no_hit_detected	8.401898829135382e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu27			no_hit_detected	0.000132029838743556
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu32			no_hit_detected	9.602170090440435e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu24			no_hit_detected	0.0007861776761548107
+mock-14	Mock 5	mock-14|Mock 5	zOTU	tip	Zotu35			no_hit_detected	7.201627567830327e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu26			no_hit_detected	0.00016803797658270764
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu22			no_hit_detected	0.003150712060925768
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu38			no_hit_detected	6.001356306525272e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu30			no_hit_detected	0.00014403255135660655
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu37			no_hit_detected	6.601491937177799e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu20			no_hit_detected	0.006451458029514668
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu29	92.126	92.126	hit_found	0.00018604204550228345
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu31			no_hit_detected	0.00019804475811533402
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu36			no_hit_detected	6.001356306525272e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu39			no_hit_detected	6.001356306525272e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu33	91.304	91.304	hit_found	9.602170090440435e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu28	94.466	94.466	hit_found	0.00018604204550228345
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu34			no_hit_detected	8.401898829135382e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu27			no_hit_detected	0.000132029838743556
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu32			no_hit_detected	9.602170090440435e-05
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu24			no_hit_detected	0.0007861776761548107
+mock-14	Mock 5	mock-14|Mock 5	zOTU	species	Zotu35			no_hit_detected	7.201627567830327e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU32			no_hit_detected	6.0017164909164013e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU31			no_hit_detected	7.202059789099681e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU19			no_hit_detected	0.009590742952484408
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU25	94.466	94.466	hit_found	0.00018605321121840845
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU23			no_hit_detected	0.00016804806174565922
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU28			no_hit_detected	9.602746385466242e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU21			no_hit_detected	0.0007862248603100484
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU29	91.304	91.304	hit_found	9.602746385466242e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU35			no_hit_detected	6.0017164909164013e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU33			no_hit_detected	6.601888140008041e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU24			no_hit_detected	0.00028208067507307083
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU34			no_hit_detected	6.0017164909164013e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU30			no_hit_detected	8.402403087282961e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU26	92.126	92.126	hit_found	0.00018605321121840845
+mock-14	Mock 5	mock-14|Mock 5	OTU	tip	OTU27			no_hit_detected	0.00014404119578199362
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU32			no_hit_detected	6.0017164909164013e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU31			no_hit_detected	7.202059789099681e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU19			no_hit_detected	0.009590742952484408
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU25	94.466	94.466	hit_found	0.00018605321121840845
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU23			no_hit_detected	0.00016804806174565922
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU28			no_hit_detected	9.602746385466242e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU21			no_hit_detected	0.0007862248603100484
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU29	91.304	91.304	hit_found	9.602746385466242e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU35			no_hit_detected	6.0017164909164013e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU33			no_hit_detected	6.601888140008041e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU24			no_hit_detected	0.00028208067507307083
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU34			no_hit_detected	6.0017164909164013e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU30			no_hit_detected	8.402403087282961e-05
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU26	92.126	92.126	hit_found	0.00018605321121840845
+mock-14	Mock 5	mock-14|Mock 5	OTU	species	OTU27			no_hit_detected	0.00014404119578199362
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1001			no_hit_detected	6.001356306525274e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1104	91.304	91.304	hit_found	9.602170090440439e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1801			no_hit_detected	0.0001440325513566066
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU501			no_hit_detected	7.20162756783033e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1102	94.466	94.466	hit_found	0.0001860420455022835
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1601			no_hit_detected	6.001356306525274e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1202			no_hit_detected	0.00019804475811533408
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU3001			no_hit_detected	0.000786177676154811
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU2801			no_hit_detected	8.401898829135385e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU2001			no_hit_detected	0.0001680379765827077
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU101			no_hit_detected	0.00960217009044044
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU701			no_hit_detected	6.601491937177802e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU2601			no_hit_detected	9.602170090440439e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1103	92.126	92.126	hit_found	0.0001860420455022835
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU1201			no_hit_detected	0.00013202983874355606
+mock-14	Mock 5	mock-14|Mock 5	TIC	tip	SOTU801			no_hit_detected	6.001356306525274e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1001			no_hit_detected	6.001356306525274e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1104	91.304	91.304	hit_found	9.602170090440439e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1801			no_hit_detected	0.0001440325513566066
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU501			no_hit_detected	7.20162756783033e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1102	94.466	94.466	hit_found	0.0001860420455022835
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1601			no_hit_detected	6.001356306525274e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1202			no_hit_detected	0.00019804475811533408
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU3001			no_hit_detected	0.000786177676154811
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU2801			no_hit_detected	8.401898829135385e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU2001			no_hit_detected	0.0001680379765827077
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU101			no_hit_detected	0.00960217009044044
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU701			no_hit_detected	6.601491937177802e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU2601			no_hit_detected	9.602170090440439e-05
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1103	92.126	92.126	hit_found	0.0001860420455022835
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU1201			no_hit_detected	0.00013202983874355606
+mock-14	Mock 5	mock-14|Mock 5	TIC	species	SOTU801			no_hit_detected	6.001356306525274e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU36			no_hit_detected	8.401898829135383e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU12			no_hit_detected	6.001356306525273e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU16			no_hit_detected	7.201627567830329e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU11			no_hit_detected	6.001356306525273e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU17			no_hit_detected	9.602170090440436e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU10			no_hit_detected	6.6014919371778e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU9	92.126	92.126	hit_found	0.00018604204550228348
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU8			no_hit_detected	0.009602170090440438
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU6	91.304	91.304	hit_found	9.602170090440436e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU35			no_hit_detected	0.0007861776761548108
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU5			no_hit_detected	0.00014403255135660658
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU2			no_hit_detected	0.00013202983874355603
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU13			no_hit_detected	6.001356306525273e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU4			no_hit_detected	0.00019804475811533405
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU7	94.466	94.466	hit_found	0.00018604204550228348
+mock-14	Mock 5	mock-14|Mock 5	TAC	tip	OTU3			no_hit_detected	0.00016803797658270766
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU36			no_hit_detected	8.401898829135383e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU12			no_hit_detected	6.001356306525273e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU16			no_hit_detected	7.201627567830329e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU11			no_hit_detected	6.001356306525273e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU17			no_hit_detected	9.602170090440436e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU10			no_hit_detected	6.6014919371778e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU9	92.126	92.126	hit_found	0.00018604204550228348
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU8			no_hit_detected	0.009602170090440438
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU6	91.304	91.304	hit_found	9.602170090440436e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU35			no_hit_detected	0.0007861776761548108
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU5			no_hit_detected	0.00014403255135660658
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU2			no_hit_detected	0.00013202983874355603
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU13			no_hit_detected	6.001356306525273e-05
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU4			no_hit_detected	0.00019804475811533405
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU7	94.466	94.466	hit_found	0.00018604204550228348
+mock-14	Mock 5	mock-14|Mock 5	TAC	species	OTU3			no_hit_detected	0.00016803797658270766
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_28			no_hit_detected	4.969092246228459e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_31			no_hit_detected	1.9876368984913832e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_20			no_hit_detected	0.0018087495776271591
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_27			no_hit_detected	5.9629106954741505e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_26	94.466	94.466	hit_found	8.944366043211227e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_25			no_hit_detected	0.000367712826220906
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_29			no_hit_detected	2.981455347737075e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_30			no_hit_detected	2.981455347737075e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_24			no_hit_detected	0.0006857347299795274
+mock-15	Mock 6	mock-15|Mock 6	ASV	tip	ASV_32			no_hit_detected	1.9876368984913832e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_28			no_hit_detected	4.969092246228459e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_31			no_hit_detected	1.9876368984913832e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_20			no_hit_detected	0.0018087495776271591
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_27			no_hit_detected	5.9629106954741505e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_26	94.466	94.466	hit_found	8.944366043211227e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_25			no_hit_detected	0.000367712826220906
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_29			no_hit_detected	2.981455347737075e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_30			no_hit_detected	2.981455347737075e-05
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_24			no_hit_detected	0.0006857347299795274
+mock-15	Mock 6	mock-15|Mock 6	ASV	species	ASV_32			no_hit_detected	1.9876368984913832e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu26			no_hit_detected	6.110340529277696e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu22			no_hit_detected	0.0025144051277977723
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu30	98.814	98.814	hit_found	4.582755396958272e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu29			no_hit_detected	3.666204317566618e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu31			no_hit_detected	0.00014970334296730356
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu33			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu28	94.466	94.466	hit_found	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu34			no_hit_detected	5.8048235028138116e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu27	92.126	92.126	hit_found	9.776544846844316e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu32			no_hit_detected	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu24			no_hit_detected	0.00023524811037719132
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu35			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	tip	Zotu23			no_hit_detected	0.0010020958468015422
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu26			no_hit_detected	6.110340529277696e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu22			no_hit_detected	0.0025144051277977723
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu30	98.814	98.814	hit_found	4.582755396958272e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu29			no_hit_detected	3.666204317566618e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu31			no_hit_detected	0.00014970334296730356
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu33			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu28	94.466	94.466	hit_found	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu34			no_hit_detected	5.8048235028138116e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu27	92.126	92.126	hit_found	9.776544846844316e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu32			no_hit_detected	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu24			no_hit_detected	0.00023524811037719132
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu35			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	zOTU	species	Zotu23			no_hit_detected	0.0010020958468015422
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU20			no_hit_detected	0.003510476434895785
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU25	94.466	94.466	hit_found	5.193916396277488e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU23			no_hit_detected	6.110489877973516e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU28			no_hit_detected	9.47125931085895e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU21			no_hit_detected	0.0002352538603019804
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU29			no_hit_detected	3.360769432885433e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU24	92.126	92.126	hit_found	9.776783804757627e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU30			no_hit_detected	3.360769432885433e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU26			no_hit_detected	3.666293926784109e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	tip	OTU27			no_hit_detected	0.00014970700201035118
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU20			no_hit_detected	0.003510476434895785
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU25	94.466	94.466	hit_found	5.193916396277488e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU23			no_hit_detected	6.110489877973516e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU28			no_hit_detected	9.47125931085895e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU21			no_hit_detected	0.0002352538603019804
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU29			no_hit_detected	3.360769432885433e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU24	92.126	92.126	hit_found	9.776783804757627e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU30			no_hit_detected	3.360769432885433e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU26			no_hit_detected	3.666293926784109e-05
+mock-15	Mock 6	mock-15|Mock 6	OTU	species	OTU27			no_hit_detected	0.00014970700201035118
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU1001			no_hit_detected	0.0035165009745993145
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU2402	92.126	92.126	hit_found	9.776544846844316e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU1801			no_hit_detected	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU1601			no_hit_detected	0.00023524811037719132
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU2101			no_hit_detected	0.00014970334296730356
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU2403	94.466	94.466	hit_found	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU2501			no_hit_detected	6.110340529277696e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU101			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU1802			no_hit_detected	5.8048235028138116e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU201			no_hit_detected	3.666204317566618e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	tip	SOTU1701			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU1001			no_hit_detected	0.0035165009745993145
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU2402	92.126	92.126	hit_found	9.776544846844316e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU1801			no_hit_detected	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU1601			no_hit_detected	0.00023524811037719132
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU2101			no_hit_detected	0.00014970334296730356
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU2403	94.466	94.466	hit_found	5.193789449886041e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU2501			no_hit_detected	6.110340529277696e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU101			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU1802			no_hit_detected	5.8048235028138116e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU201			no_hit_detected	3.666204317566618e-05
+mock-15	Mock 6	mock-15|Mock 6	TIC	species	SOTU1701			no_hit_detected	3.360687291102733e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU12			no_hit_detected	3.666204317566619e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU31			no_hit_detected	3.360687291102734e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU10			no_hit_detected	3.360687291102734e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU9			no_hit_detected	0.0001497033429673036
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU8	92.126	92.126	hit_found	9.776544846844318e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU6	94.466	94.466	hit_found	5.193789449886043e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU2			no_hit_detected	0.0035165009745993154
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU13			no_hit_detected	5.804823502813813e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU27			no_hit_detected	0.00023524811037719138
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU4			no_hit_detected	6.110340529277697e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	tip	OTU3			no_hit_detected	5.193789449886043e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU12			no_hit_detected	3.666204317566619e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU31			no_hit_detected	3.360687291102734e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU10			no_hit_detected	3.360687291102734e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU9			no_hit_detected	0.0001497033429673036
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU8	92.126	92.126	hit_found	9.776544846844318e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU6	94.466	94.466	hit_found	5.193789449886043e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU2			no_hit_detected	0.0035165009745993154
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU13			no_hit_detected	5.804823502813813e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU27			no_hit_detected	0.00023524811037719138
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU4			no_hit_detected	6.110340529277697e-05
+mock-15	Mock 6	mock-15|Mock 6	TAC	species	OTU3			no_hit_detected	5.193789449886043e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_75	90.514	90.514	hit_found	4.518711986335415e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_85	93.281	93.281	hit_found	1.5815491952173948e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_67			no_hit_detected	0.00029145692311863426
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_64	99.605	99.605	hit_found	0.0005670983542850946
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_70			no_hit_detected	0.00013556135959006245
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_65	90.514	90.514	hit_found	0.00037957180685217485
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_79	94.862	94.862	hit_found	2.7112271918012494e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_71			no_hit_detected	0.00011748651164472079
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_76	91.304	91.304	hit_found	4.518711986335415e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_74			no_hit_detected	6.100261181552809e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_77			no_hit_detected	3.3890339897515606e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_82	90.196	90.196	hit_found	2.033420393850936e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_89			no_hit_detected	9.03742397267082e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_78			no_hit_detected	2.9371627911180198e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_80	99.606	99.606	hit_found	2.7112271918012494e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_91			no_hit_detected	6.77806797950312e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_69			no_hit_detected	0.00015137685154223638
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_86	92.885	92.885	hit_found	1.355613595900624e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_87	95.257	95.257	hit_found	1.355613595900624e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_93	99.605	99.605	hit_found	4.51871198633541e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_68			no_hit_detected	0.0002191575313372676
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_72			no_hit_detected	9.263359571987601e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_63	99.605	99.605	hit_found	0.0005942106262031071
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_90			no_hit_detected	9.03742397267082e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_60			no_hit_detected	0.0010799721647341643
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_66	99.605	99.605	hit_found	0.00034568146695465927
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_88			no_hit_detected	1.355613595900624e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_84			no_hit_detected	1.5815491952173948e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_94			no_hit_detected	4.51871198633541e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_81	94.094	94.094	hit_found	2.7112271918012494e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_62	99.605	99.605	hit_found	0.0007636623256906852
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_83			no_hit_detected	1.8074847945341648e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_58	99.605	99.605	hit_found	0.001296870340078264
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_26	90.157	90.157	hit_found	0.015187390986073327
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_92			no_hit_detected	6.77806797950312e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	tip	ASV_61	99.605	99.605	hit_found	0.0007998120215813684
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_75	90.514	90.514	hit_found	4.518711986335415e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_85	93.281	93.281	hit_found	1.5815491952173948e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_67			no_hit_detected	0.00029145692311863426
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_64	99.605	99.605	hit_found	0.0005670983542850946
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_70			no_hit_detected	0.00013556135959006245
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_65	90.514	90.514	hit_found	0.00037957180685217485
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_79	94.862	94.862	hit_found	2.7112271918012494e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_71			no_hit_detected	0.00011748651164472079
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_76	91.304	91.304	hit_found	4.518711986335415e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_74			no_hit_detected	6.100261181552809e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_77			no_hit_detected	3.3890339897515606e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_82	90.196	90.196	hit_found	2.033420393850936e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_89			no_hit_detected	9.03742397267082e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_78			no_hit_detected	2.9371627911180198e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_80	99.606	99.606	hit_found	2.7112271918012494e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_91			no_hit_detected	6.77806797950312e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_69			no_hit_detected	0.00015137685154223638
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_86	92.885	92.885	hit_found	1.355613595900624e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_87	95.257	95.257	hit_found	1.355613595900624e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_93	99.605	99.605	hit_found	4.51871198633541e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_68			no_hit_detected	0.0002191575313372676
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_72			no_hit_detected	9.263359571987601e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_63	99.605	99.605	hit_found	0.0005942106262031071
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_90			no_hit_detected	9.03742397267082e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_60			no_hit_detected	0.0010799721647341643
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_66	99.605	99.605	hit_found	0.00034568146695465927
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_88			no_hit_detected	1.355613595900624e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_84			no_hit_detected	1.5815491952173948e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_94			no_hit_detected	4.51871198633541e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_81	94.094	94.094	hit_found	2.7112271918012494e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_62	99.605	99.605	hit_found	0.0007636623256906852
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_83			no_hit_detected	1.8074847945341648e-05
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_58	99.605	99.605	hit_found	0.001296870340078264
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_26	90.157	90.157	hit_found	0.015187390986073327
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_92			no_hit_detected	6.77806797950312e-06
+mock-16	Mock 7	mock-16|Mock 7	ASV	species	ASV_61	99.605	99.605	hit_found	0.0007998120215813684
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu62	90.514	90.514	hit_found	0.0003971119836327571
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu66			no_hit_detected	0.00010317125064968688
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu69			no_hit_detected	9.149148642519402e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu80	90.196	90.196	hit_found	1.946627370748809e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu72			no_hit_detected	4.2825802156473804e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu79	94.862	94.862	hit_found	0.00012069089698642616
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu77			no_hit_detected	2.530615581973451e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu75	91.304	91.304	hit_found	3.6985920044227374e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu73	90.514	90.514	hit_found	4.671905689797141e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu70			no_hit_detected	5.839882112246427e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu64			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu61			no_hit_detected	0.0009849934495988974
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu65			no_hit_detected	0.0001070645053911845
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu67			no_hit_detected	0.00012653077909867262
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu27	90.157	90.157	hit_found	0.014952044834721605
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu71			no_hit_detected	4.477242952722261e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu74			no_hit_detected	3.6985920044227374e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu78	94.094	94.094	hit_found	3.1146037931980944e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu76			no_hit_detected	2.725278319048332e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	tip	Zotu63			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu62	90.514	90.514	hit_found	0.0003971119836327571
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu66			no_hit_detected	0.00010317125064968688
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu69			no_hit_detected	9.149148642519402e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu80	90.196	90.196	hit_found	1.946627370748809e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu72			no_hit_detected	4.2825802156473804e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu79	94.862	94.862	hit_found	0.00012069089698642616
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu77			no_hit_detected	2.530615581973451e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu75	91.304	91.304	hit_found	3.6985920044227374e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu73	90.514	90.514	hit_found	4.671905689797141e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu70			no_hit_detected	5.839882112246427e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu64			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu61			no_hit_detected	0.0009849934495988974
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu65			no_hit_detected	0.0001070645053911845
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu67			no_hit_detected	0.00012653077909867262
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu27	90.157	90.157	hit_found	0.014952044834721605
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu71			no_hit_detected	4.477242952722261e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu74			no_hit_detected	3.6985920044227374e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu78	94.094	94.094	hit_found	3.1146037931980944e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu76			no_hit_detected	2.725278319048332e-05
+mock-16	Mock 7	mock-16|Mock 7	zOTU	species	Zotu63			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU62	94.094	94.094	hit_found	3.117219128815184e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU50	90.514	90.514	hit_found	0.000397445438923936
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU57			no_hit_detected	5.84478586652847e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU54			no_hit_detected	0.00016365400426279718
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU60			no_hit_detected	2.727566737713285e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU58	90.514	90.514	hit_found	4.675828693222776e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU63	90.196	90.196	hit_found	1.9482619555094898e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU61			no_hit_detected	2.5327405421623373e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU53			no_hit_detected	0.00010325788364200297
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU59	91.304	91.304	hit_found	3.701697715468031e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU52			no_hit_detected	0.0002941875552819329
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU49			no_hit_detected	0.0010929749570408236
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU26	90.157	90.157	hit_found	0.01496460008026839
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU51			no_hit_detected	0.00024937753030521473
+mock-16	Mock 7	mock-16|Mock 7	OTU	tip	OTU56			no_hit_detected	0.0001344300749301548
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU62	94.094	94.094	hit_found	3.117219128815184e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU50	90.514	90.514	hit_found	0.000397445438923936
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU57			no_hit_detected	5.84478586652847e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU54			no_hit_detected	0.00016365400426279718
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU60			no_hit_detected	2.727566737713285e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU58	90.514	90.514	hit_found	4.675828693222776e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU63	90.196	90.196	hit_found	1.9482619555094898e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU61			no_hit_detected	2.5327405421623373e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU53			no_hit_detected	0.00010325788364200297
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU59	91.304	91.304	hit_found	3.701697715468031e-05
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU52			no_hit_detected	0.0002941875552819329
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU49			no_hit_detected	0.0010929749570408236
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU26	90.157	90.157	hit_found	0.01496460008026839
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU51			no_hit_detected	0.00024937753030521473
+mock-16	Mock 7	mock-16|Mock 7	OTU	species	OTU56			no_hit_detected	0.0001344300749301548
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU3801	90.196	90.196	hit_found	1.9466273707488084e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU2901			no_hit_detected	0.00024916830345584755
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU401			no_hit_detected	0.0001343172885816678
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU3301			no_hit_detected	5.839882112246425e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU3101	90.514	90.514	hit_found	4.671905689797139e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU1901			no_hit_detected	0.00024916830345584755
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU902			no_hit_detected	0.00010706450539118447
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU3201			no_hit_detected	0.00010317125064968684
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU1902			no_hit_detected	4.47724295272226e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU3001	94.094	94.094	hit_found	3.114603793198093e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU2101			no_hit_detected	2.725278319048331e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU2801			no_hit_detected	0.0001635166991428999
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU901			no_hit_detected	0.000984993449598897
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU4101	91.304	91.304	hit_found	3.698592004422736e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU1201			no_hit_detected	2.53061558197345e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU2201	90.157	90.157	hit_found	0.014952044834721599
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU1401	90.514	90.514	hit_found	0.0003971119836327569
+mock-16	Mock 7	mock-16|Mock 7	TIC	tip	SOTU4002	94.862	94.862	hit_found	0.00012069089698642612
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU3801	90.196	90.196	hit_found	1.9466273707488084e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU2901			no_hit_detected	0.00024916830345584755
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU401			no_hit_detected	0.0001343172885816678
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU3301			no_hit_detected	5.839882112246425e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU3101	90.514	90.514	hit_found	4.671905689797139e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU1901			no_hit_detected	0.00024916830345584755
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU902			no_hit_detected	0.00010706450539118447
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU3201			no_hit_detected	0.00010317125064968684
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU1902			no_hit_detected	4.47724295272226e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU3001	94.094	94.094	hit_found	3.114603793198093e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU2101			no_hit_detected	2.725278319048331e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU2801			no_hit_detected	0.0001635166991428999
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU901			no_hit_detected	0.000984993449598897
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU4101	91.304	91.304	hit_found	3.698592004422736e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU1201			no_hit_detected	2.53061558197345e-05
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU2201	90.157	90.157	hit_found	0.014952044834721599
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU1401	90.514	90.514	hit_found	0.0003971119836327569
+mock-16	Mock 7	mock-16|Mock 7	TIC	species	SOTU4002	94.862	94.862	hit_found	0.00012069089698642612
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU32	90.514	90.514	hit_found	0.0003971119836327571
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU69			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU20			no_hit_detected	2.530615581973451e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU19			no_hit_detected	5.839882112246427e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU25	91.304	91.304	hit_found	3.6985920044227374e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU23	90.196	90.196	hit_found	1.946627370748809e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU21	94.862	94.862	hit_found	0.00012069089698642616
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU29			no_hit_detected	0.00016351669914289996
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU33			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU24	94.094	94.094	hit_found	3.1146037931980944e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU34			no_hit_detected	0.00010317125064968688
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU30			no_hit_detected	0.0009849934495988974
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU68			no_hit_detected	4.477242952722261e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU22	90.514	90.514	hit_found	4.671905689797141e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU26			no_hit_detected	2.725278319048332e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU27			no_hit_detected	0.0001070645053911845
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU56	90.157	90.157	hit_found	0.014952044834721605
+mock-16	Mock 7	mock-16|Mock 7	TAC	tip	OTU3			no_hit_detected	0.00013431728858166785
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU32	90.514	90.514	hit_found	0.0003971119836327571
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU69			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU20			no_hit_detected	2.530615581973451e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU19			no_hit_detected	5.839882112246427e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU25	91.304	91.304	hit_found	3.6985920044227374e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU23	90.196	90.196	hit_found	1.946627370748809e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU21	94.862	94.862	hit_found	0.00012069089698642616
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU29			no_hit_detected	0.00016351669914289996
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU33			no_hit_detected	0.0002491683034558476
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU24	94.094	94.094	hit_found	3.1146037931980944e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU34			no_hit_detected	0.00010317125064968688
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU30			no_hit_detected	0.0009849934495988974
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU68			no_hit_detected	4.477242952722261e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU22	90.514	90.514	hit_found	4.671905689797141e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU26			no_hit_detected	2.725278319048332e-05
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU27			no_hit_detected	0.0001070645053911845
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU56	90.157	90.157	hit_found	0.014952044834721605
+mock-16	Mock 7	mock-16|Mock 7	TAC	species	OTU3			no_hit_detected	0.00013431728858166785
+mock-18	Mock 8	mock-18|Mock 8	ASV	tip	ASV_16			no_hit_detected	1.799321655735787e-05
+mock-18	Mock 8	mock-18|Mock 8	ASV	tip	ASV_15	91.7	91.7	hit_found	1.799321655735787e-05
+mock-18	Mock 8	mock-18|Mock 8	ASV	species	ASV_16			no_hit_detected	1.799321655735787e-05
+mock-18	Mock 8	mock-18|Mock 8	ASV	species	ASV_15	91.7	91.7	hit_found	1.799321655735787e-05
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu26	97.233	97.233	hit_found	0.004951687811038275
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu22	98.419	98.419	hit_found	0.009554431179016807
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu21	98.419	98.419	hit_found	0.01719797612223025
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu29	98.016	98.016	hit_found	0.0009637513189269127
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu28	98.024	98.024	hit_found	0.004170716914666467
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu27	94.841	94.841	hit_found	0.0028414047506293456
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu24	97.222	97.222	hit_found	0.0026835489311499375
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu25	98.016	98.016	hit_found	0.001611790998895009
+mock-20	Mock 10	mock-20|Mock 10	zOTU	tip	Zotu23	99.206	99.206	hit_found	0.004511353156700979
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu26	97.233	97.233	hit_found	0.004951687811038275
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu22	98.419	98.419	hit_found	0.009554431179016807
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu21	98.419	98.419	hit_found	0.01719797612223025
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu29	98.016	98.016	hit_found	0.0009637513189269127
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu28	98.024	98.024	hit_found	0.004170716914666467
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu27	94.841	94.841	hit_found	0.0028414047506293456
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu24	97.222	97.222	hit_found	0.0026835489311499375
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu25	98.016	98.016	hit_found	0.001611790998895009
+mock-20	Mock 10	mock-20|Mock 10	zOTU	species	Zotu23	99.206	99.206	hit_found	0.004511353156700979
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU702	97.233	97.233	hit_found	0.004951687811038275
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU1104	98.016	98.016	hit_found	0.0009637513189269127
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU1601	98.024	98.024	hit_found	0.004170716914666467
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU1902	98.419	98.419	hit_found	0.01719797612223025
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU701	98.419	98.419	hit_found	0.009554431179016807
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU1103	94.841	94.841	hit_found	0.0028414047506293456
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU201	98.016	98.016	hit_found	0.001611790998895009
+mock-20	Mock 10	mock-20|Mock 10	TIC	tip	SOTU1201	97.222	97.222	hit_found	0.0026835489311499375
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU702	97.233	97.233	hit_found	0.004951687811038275
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU1104	98.016	98.016	hit_found	0.0009637513189269127
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU1601	98.024	98.024	hit_found	0.004170716914666467
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU1902	98.419	98.419	hit_found	0.01719797612223025
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU701	98.419	98.419	hit_found	0.009554431179016807
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU1103	94.841	94.841	hit_found	0.0028414047506293456
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU201	98.016	98.016	hit_found	0.001611790998895009
+mock-20	Mock 10	mock-20|Mock 10	TIC	species	SOTU1201	97.222	97.222	hit_found	0.0026835489311499375
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU12	98.024	98.024	hit_found	0.004170716914666467
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU20	98.016	98.016	hit_found	0.006123144155595988
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU25	94.841	94.841	hit_found	0.0028414047506293456
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU23	98.016	98.016	hit_found	0.0009637513189269127
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU2	98.419	98.419	hit_found	0.009554431179016807
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU26	97.222	97.222	hit_found	0.0026835489311499375
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU4	98.419	98.419	hit_found	0.01719797612223025
+mock-20	Mock 10	mock-20|Mock 10	TAC	tip	OTU7	97.233	97.233	hit_found	0.004951687811038275
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU12	98.024	98.024	hit_found	0.004170716914666467
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU20	98.016	98.016	hit_found	0.006123144155595988
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU25	94.841	94.841	hit_found	0.0028414047506293456
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU23	98.016	98.016	hit_found	0.0009637513189269127
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU2	98.419	98.419	hit_found	0.009554431179016807
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU26	97.222	97.222	hit_found	0.0026835489311499375
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU4	98.419	98.419	hit_found	0.01719797612223025
+mock-20	Mock 10	mock-20|Mock 10	TAC	species	OTU7	97.233	97.233	hit_found	0.004951687811038275
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu12	98.024	98.024	hit_found	0.00421668229860416
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu26	98.814	98.814	hit_found	0.0001655146322816586
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu11	98.413	98.413	hit_found	0.006376254167421992
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu14	98.814	98.814	hit_found	0.004090575912103849
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu8	98.419	98.419	hit_found	0.012760389984000253
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu17	98.024	98.024	hit_found	0.00422456394776043
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu30	94.048	94.048	hit_found	0.0028531569945695443
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu9	98.419	98.419	hit_found	0.0051388352498876865
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu21	97.628	97.628	hit_found	0.002506364431693688
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu29	98.024	98.024	hit_found	0.00048078059853243687
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu31	96.838	96.838	hit_found	0.0001497513339691197
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu13	98.413	98.413	hit_found	0.009158476319585112
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu27	99.209	99.209	hit_found	0.0001733962814379281
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu24	96.047	96.047	hit_found	0.00028373936962570046
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu25	98.419	98.419	hit_found	0.00047289894937616744
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu23	96.047	96.047	hit_found	0.00039408245781347287
+mock-21	Mock 11	mock-21|Mock 11	zOTU	tip	Zotu10	98.814	98.814	hit_found	0.005477746163607273
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu12	98.024	98.024	hit_found	0.00421668229860416
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu26	98.814	98.814	hit_found	0.0001655146322816586
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu11	98.413	98.413	hit_found	0.006376254167421992
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu14	98.814	98.814	hit_found	0.004090575912103849
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu8	98.419	98.419	hit_found	0.012760389984000253
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu17	98.024	98.024	hit_found	0.00422456394776043
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu30	94.048	94.048	hit_found	0.0028531569945695443
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu9	98.419	98.419	hit_found	0.0051388352498876865
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu21	97.628	97.628	hit_found	0.002506364431693688
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu29	98.024	98.024	hit_found	0.00048078059853243687
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu31	96.838	96.838	hit_found	0.0001497513339691197
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu13	98.413	98.413	hit_found	0.009158476319585112
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu27	99.209	99.209	hit_found	0.0001733962814379281
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu24	96.047	96.047	hit_found	0.00028373936962570046
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu25	98.419	98.419	hit_found	0.00047289894937616744
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu23	96.047	96.047	hit_found	0.00039408245781347287
+mock-21	Mock 11	mock-21|Mock 11	zOTU	species	Zotu10	98.814	98.814	hit_found	0.005477746163607273
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU502	98.413	98.413	hit_found	0.009158476319585112
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU1002	98.419	98.419	hit_found	0.00047289894937616744
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU501	98.413	98.413	hit_found	0.006376254167421992
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU402	98.024	98.024	hit_found	0.00421668229860416
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU302	96.047	96.047	hit_found	0.00028373936962570046
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU803	96.838	96.838	hit_found	0.0001497513339691197
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU505	94.048	94.048	hit_found	0.0028531569945695443
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU1101	96.047	96.047	hit_found	0.00039408245781347287
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU802	98.024	98.024	hit_found	0.00048078059853243687
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU1201	97.628	97.628	hit_found	0.002506364431693688
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU1302	98.419	98.419	hit_found	0.0051388352498876865
+mock-21	Mock 11	mock-21|Mock 11	TIC	tip	SOTU403	98.419	98.419	hit_found	0.016984953931760683
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU502	98.413	98.413	hit_found	0.009158476319585112
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU1002	98.419	98.419	hit_found	0.00047289894937616744
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU501	98.413	98.413	hit_found	0.006376254167421992
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU402	98.024	98.024	hit_found	0.00421668229860416
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU302	96.047	96.047	hit_found	0.00028373936962570046
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU803	96.838	96.838	hit_found	0.0001497513339691197
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU505	94.048	94.048	hit_found	0.0028531569945695443
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU1101	96.047	96.047	hit_found	0.00039408245781347287
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU802	98.024	98.024	hit_found	0.00048078059853243687
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU1201	97.628	97.628	hit_found	0.002506364431693688
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU1302	98.419	98.419	hit_found	0.0051388352498876865
+mock-21	Mock 11	mock-21|Mock 11	TIC	species	SOTU403	98.419	98.419	hit_found	0.016984953931760683
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU12	96.838	96.838	hit_found	0.0001497513339691197
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU16	97.628	97.628	hit_found	0.002506364431693688
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU11	98.419	98.419	hit_found	0.00047289894937616744
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU15	98.024	98.024	hit_found	0.02107552984386453
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU21	98.413	98.413	hit_found	0.006376254167421992
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU6	96.047	96.047	hit_found	0.00039408245781347287
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU5	96.047	96.047	hit_found	0.00028373936962570046
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU24	94.048	94.048	hit_found	0.0028531569945695443
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU13	98.024	98.024	hit_found	0.00048078059853243687
+mock-21	Mock 11	mock-21|Mock 11	TAC	tip	OTU22	98.413	98.413	hit_found	0.009158476319585112
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU12	96.838	96.838	hit_found	0.0001497513339691197
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU16	97.628	97.628	hit_found	0.002506364431693688
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU11	98.419	98.419	hit_found	0.00047289894937616744
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU15	98.024	98.024	hit_found	0.02107552984386453
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU21	98.413	98.413	hit_found	0.006376254167421992
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU6	96.047	96.047	hit_found	0.00039408245781347287
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU5	96.047	96.047	hit_found	0.00028373936962570046
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU24	94.048	94.048	hit_found	0.0028531569945695443
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU13	98.024	98.024	hit_found	0.00048078059853243687
+mock-21	Mock 11	mock-21|Mock 11	TAC	species	OTU22	98.413	98.413	hit_found	0.009158476319585112
+mock-22	Mock 12	mock-22|Mock 12	ASV	tip	ASV_27			no_hit_detected	1.0013768932281878e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	tip	ASV_26			no_hit_detected	1.502065339842283e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	tip	ASV_25	90.98	90.98	hit_found	1.502065339842283e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	tip	ASV_23			no_hit_detected	3.004130679684566e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	tip	ASV_24			no_hit_detected	2.5034422330704714e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	species	ASV_27			no_hit_detected	1.0013768932281878e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	species	ASV_26			no_hit_detected	1.502065339842283e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	species	ASV_25	90.98	90.98	hit_found	1.502065339842283e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	species	ASV_23			no_hit_detected	3.004130679684566e-05
+mock-22	Mock 12	mock-22|Mock 12	ASV	species	ASV_24			no_hit_detected	2.5034422330704714e-05
+mock-22	Mock 12	mock-22|Mock 12	zOTU	tip	Zotu22			no_hit_detected	4.2506615091973695e-05
+mock-22	Mock 12	mock-22|Mock 12	zOTU	species	Zotu22			no_hit_detected	4.2506615091973695e-05
+mock-22	Mock 12	mock-22|Mock 12	OTU	tip	OTU20			no_hit_detected	4.250661509197369e-05
+mock-22	Mock 12	mock-22|Mock 12	OTU	species	OTU20			no_hit_detected	4.250661509197369e-05
+mock-22	Mock 12	mock-22|Mock 12	TIC	tip	SOTU1501			no_hit_detected	4.2506615091973675e-05
+mock-22	Mock 12	mock-22|Mock 12	TIC	species	SOTU1501			no_hit_detected	4.2506615091973675e-05
+mock-22	Mock 12	mock-22|Mock 12	TAC	tip	OTU2			no_hit_detected	4.2506615091973675e-05
+mock-22	Mock 12	mock-22|Mock 12	TAC	species	OTU2			no_hit_detected	4.2506615091973675e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	tip	ASV_20	99.603	99.603	hit_found	0.00013018008244738557
+mock-23	Mock 13	mock-23|Mock 13	ASV	tip	ASV_22	95.635	95.635	hit_found	7.593838142764158e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	tip	ASV_25	96.825	96.825	hit_found	2.169668040789759e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	tip	ASV_23			no_hit_detected	2.712085050987199e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	tip	ASV_19			no_hit_detected	0.00013560425254935995
+mock-23	Mock 13	mock-23|Mock 13	ASV	tip	ASV_24			no_hit_detected	2.712085050987199e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	species	ASV_20	99.603	99.603	hit_found	0.00013018008244738557
+mock-23	Mock 13	mock-23|Mock 13	ASV	species	ASV_22	95.635	95.635	hit_found	7.593838142764158e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	species	ASV_25	96.825	96.825	hit_found	2.169668040789759e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	species	ASV_23			no_hit_detected	2.712085050987199e-05
+mock-23	Mock 13	mock-23|Mock 13	ASV	species	ASV_19			no_hit_detected	0.00013560425254935995
+mock-23	Mock 13	mock-23|Mock 13	ASV	species	ASV_24			no_hit_detected	2.712085050987199e-05
+mock-23	Mock 13	mock-23|Mock 13	zOTU	tip	Zotu19	99.603	99.603	hit_found	0.00010115845160130084
+mock-23	Mock 13	mock-23|Mock 13	zOTU	tip	Zotu21	95.635	95.635	hit_found	8.991862364560073e-05
+mock-23	Mock 13	mock-23|Mock 13	zOTU	tip	Zotu18			no_hit_detected	0.00014237115410553448
+mock-23	Mock 13	mock-23|Mock 13	zOTU	species	Zotu19	99.603	99.603	hit_found	0.00010115845160130084
+mock-23	Mock 13	mock-23|Mock 13	zOTU	species	Zotu21	95.635	95.635	hit_found	8.991862364560073e-05
+mock-23	Mock 13	mock-23|Mock 13	zOTU	species	Zotu18			no_hit_detected	0.00014237115410553448
+mock-23	Mock 13	mock-23|Mock 13	OTU	tip	OTU17			no_hit_detected	0.00014241383962702563
+mock-23	Mock 13	mock-23|Mock 13	OTU	species	OTU17			no_hit_detected	0.00014241383962702563
+mock-23	Mock 13	mock-23|Mock 13	TIC	tip	SOTU501			no_hit_detected	0.00014237115410553445
+mock-23	Mock 13	mock-23|Mock 13	TIC	tip	SOTU103	95.635	95.635	hit_found	8.991862364560071e-05
+mock-23	Mock 13	mock-23|Mock 13	TIC	species	SOTU501			no_hit_detected	0.00014237115410553445
+mock-23	Mock 13	mock-23|Mock 13	TIC	species	SOTU103	95.635	95.635	hit_found	8.991862364560071e-05
+mock-23	Mock 13	mock-23|Mock 13	TAC	tip	OTU19			no_hit_detected	0.00014237115410553445
+mock-23	Mock 13	mock-23|Mock 13	TAC	tip	OTU21	95.635	95.635	hit_found	8.991862364560071e-05
+mock-23	Mock 13	mock-23|Mock 13	TAC	species	OTU19			no_hit_detected	0.00014237115410553445
+mock-23	Mock 13	mock-23|Mock 13	TAC	species	OTU21	95.635	95.635	hit_found	8.991862364560071e-05
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_41	99.605	99.605	hit_found	0.000257653320676679
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_45			no_hit_detected	4.520233696082087e-05
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_31	99.605	99.605	hit_found	0.0013786712773050367
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_22	99.605	99.605	hit_found	0.0014125730300256524
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_18	99.605	99.605	hit_found	0.0016521454159180032
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_40	99.605	99.605	hit_found	0.000311896125029664
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_42	94.862	94.862	hit_found	3.842198641669774e-05
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_29	99.213	99.213	hit_found	7.684397283339549e-05
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0007300177419172571
+mock-4	Even1	mock-4|Even1	ASV	tip	ASV_39	99.605	99.605	hit_found	0.0005243471087455221
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_41	99.605	99.605	hit_found	0.000257653320676679
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_45			no_hit_detected	4.520233696082087e-05
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_31	99.605	99.605	hit_found	0.0013786712773050367
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_22	99.605	99.605	hit_found	0.0014125730300256524
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_18	99.605	99.605	hit_found	0.0016521454159180032
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_40	99.605	99.605	hit_found	0.000311896125029664
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_42	94.862	94.862	hit_found	3.842198641669774e-05
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_29	99.213	99.213	hit_found	7.684397283339549e-05
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_24	99.605	99.605	hit_found	0.0007300177419172571
+mock-4	Even1	mock-4|Even1	ASV	species	ASV_39	99.605	99.605	hit_found	0.0005243471087455221
+mock-4	Even2	mock-4|Even2	ASV	tip	ASV_46			no_hit_detected	1.1801108832185869e-05
+mock-4	Even2	mock-4|Even2	ASV	tip	ASV_18	99.605	99.605	hit_found	0.0016568756800388962
+mock-4	Even2	mock-4|Even2	ASV	tip	ASV_42	94.862	94.862	hit_found	4.48442135623063e-05
+mock-4	Even2	mock-4|Even2	ASV	tip	ASV_29	99.213	99.213	hit_found	9.204864889104979e-05
+mock-4	Even2	mock-4|Even2	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0006419803204709113
+mock-4	Even2	mock-4|Even2	ASV	species	ASV_46			no_hit_detected	1.1801108832185869e-05
+mock-4	Even2	mock-4|Even2	ASV	species	ASV_18	99.605	99.605	hit_found	0.0016568756800388962
+mock-4	Even2	mock-4|Even2	ASV	species	ASV_42	94.862	94.862	hit_found	4.48442135623063e-05
+mock-4	Even2	mock-4|Even2	ASV	species	ASV_29	99.213	99.213	hit_found	9.204864889104979e-05
+mock-4	Even2	mock-4|Even2	ASV	species	ASV_24	99.605	99.605	hit_found	0.0006419803204709113
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_28	99.605	99.605	hit_found	0.0009935959158086235
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_37	99.605	99.605	hit_found	0.0003298328710210069
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_34	99.605	99.605	hit_found	0.0004302167882882699
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_4			no_hit_detected	0.0712500460946559
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_46			no_hit_detected	3.2778421964820565e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_27	99.605	99.605	hit_found	0.001278358456628002
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_22	99.605	99.605	hit_found	0.001743402318253894
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_47			no_hit_detected	2.0486513728012845e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_18	99.605	99.605	hit_found	0.002032262161818875
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_48			no_hit_detected	4.302167882882699e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_26	99.605	99.605	hit_found	0.0011329042091591107
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_25	99.606	99.606	hit_found	0.0017147211990346757
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_42	94.862	94.862	hit_found	7.170279804804499e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_36	99.605	99.605	hit_found	0.0004056329718146545
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_29	99.213	99.213	hit_found	0.000839947062848527
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_50	94.444	94.444	hit_found	1.0243256864006422e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_43	99.213	99.213	hit_found	5.7362238438435985e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0013582558601672524
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_28	99.605	99.605	hit_found	0.0009935959158086235
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_37	99.605	99.605	hit_found	0.0003298328710210069
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_34	99.605	99.605	hit_found	0.0004302167882882699
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_4			no_hit_detected	0.0712500460946559
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_46			no_hit_detected	3.2778421964820565e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_27	99.605	99.605	hit_found	0.001278358456628002
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_22	99.605	99.605	hit_found	0.001743402318253894
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_47			no_hit_detected	2.0486513728012845e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_18	99.605	99.605	hit_found	0.002032262161818875
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_48			no_hit_detected	4.302167882882699e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_26	99.605	99.605	hit_found	0.0011329042091591107
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_25	99.606	99.606	hit_found	0.0017147211990346757
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_42	94.862	94.862	hit_found	7.170279804804499e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_36	99.605	99.605	hit_found	0.0004056329718146545
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_29	99.213	99.213	hit_found	0.000839947062848527
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_50	94.444	94.444	hit_found	1.0243256864006422e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_43	99.213	99.213	hit_found	5.7362238438435985e-05
+mock-4	Staggered1	mock-4|Staggered1	ASV	species	ASV_24	99.605	99.605	hit_found	0.0013582558601672524
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_45			no_hit_detected	3.1470187794204844e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_28	99.605	99.605	hit_found	0.000990482752680763
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_37	99.605	99.605	hit_found	0.00033789043736935724
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_34	99.605	99.605	hit_found	0.0003792985792038373
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_4			no_hit_detected	0.06168984970500838
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_46			no_hit_detected	2.4844885100688025e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_27	99.605	99.605	hit_found	0.0011047692241439278
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_22	99.605	99.605	hit_found	0.0017043591179071989
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_47			no_hit_detected	2.4844885100688025e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_18	99.605	99.605	hit_found	0.0019958724364219386
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_33	99.605	99.605	hit_found	0.0007768167408148457
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_26	99.605	99.605	hit_found	0.0012339626266675056
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_49			no_hit_detected	3.4782839140963245e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_25	99.606	99.606	hit_found	0.0019263067581400126
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_42	94.862	94.862	hit_found	5.631507289489287e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_36	99.605	99.605	hit_found	0.00035776634544990764
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_29	99.213	99.213	hit_found	0.0008082869286090507
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_43	99.213	99.213	hit_found	3.6439164814342446e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_30	99.605	99.605	hit_found	0.0010385161972087597
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_35	99.605	99.605	hit_found	0.0006989694341660234
+mock-4	Staggered2	mock-4|Staggered2	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0015784783667303797
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_45			no_hit_detected	3.1470187794204844e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_28	99.605	99.605	hit_found	0.000990482752680763
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_37	99.605	99.605	hit_found	0.00033789043736935724
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_34	99.605	99.605	hit_found	0.0003792985792038373
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_4			no_hit_detected	0.06168984970500838
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_46			no_hit_detected	2.4844885100688025e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_27	99.605	99.605	hit_found	0.0011047692241439278
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_22	99.605	99.605	hit_found	0.0017043591179071989
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_47			no_hit_detected	2.4844885100688025e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_18	99.605	99.605	hit_found	0.0019958724364219386
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_33	99.605	99.605	hit_found	0.0007768167408148457
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_26	99.605	99.605	hit_found	0.0012339626266675056
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_49			no_hit_detected	3.4782839140963245e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_25	99.606	99.606	hit_found	0.0019263067581400126
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_42	94.862	94.862	hit_found	5.631507289489287e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_36	99.605	99.605	hit_found	0.00035776634544990764
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_29	99.213	99.213	hit_found	0.0008082869286090507
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_43	99.213	99.213	hit_found	3.6439164814342446e-05
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_30	99.605	99.605	hit_found	0.0010385161972087597
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_35	99.605	99.605	hit_found	0.0006989694341660234
+mock-4	Staggered2	mock-4|Staggered2	ASV	species	ASV_24	99.605	99.605	hit_found	0.0015784783667303797
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu26			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu22	99.213	99.213	hit_found	8.450674469456095e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu38			no_hit_detected	0.0001672529322079852
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu30			no_hit_detected	7.042228724546741e-06
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu37	98.031	98.031	hit_found	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu36			no_hit_detected	6.161950133978403e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu29	98.031	98.031	hit_found	1.0563343086820112e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu31	94.466	94.466	hit_found	1.7605571811366863e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu39			no_hit_detected	1.0563343086820112e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu33	97.638	97.638	hit_found	1.7605571811366803e-06
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu34			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu27	94.862	94.862	hit_found	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu32	98.031	98.031	hit_found	5.281671543410051e-06
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu25			no_hit_detected	0.0001021123165059278
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu35			no_hit_detected	7.394340160774083e-05
+mock-4	Even1	mock-4|Even1	zOTU	tip	Zotu23			no_hit_detected	0.00014436568885320828
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu26			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu22	99.213	99.213	hit_found	8.450674469456095e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu38			no_hit_detected	0.0001672529322079852
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu30			no_hit_detected	7.042228724546741e-06
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu37	98.031	98.031	hit_found	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu36			no_hit_detected	6.161950133978403e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu29	98.031	98.031	hit_found	1.0563343086820112e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu31	94.466	94.466	hit_found	1.7605571811366863e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu39			no_hit_detected	1.0563343086820112e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu33	97.638	97.638	hit_found	1.7605571811366803e-06
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu34			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu27	94.862	94.862	hit_found	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu32	98.031	98.031	hit_found	5.281671543410051e-06
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu25			no_hit_detected	0.0001021123165059278
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu35			no_hit_detected	7.394340160774083e-05
+mock-4	Even1	mock-4|Even1	zOTU	species	Zotu23			no_hit_detected	0.00014436568885320828
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu26			no_hit_detected	7.493937939488237e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu22	99.213	99.213	hit_found	0.0001213304237821905
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu38			no_hit_detected	0.00017842709379733897
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu30			no_hit_detected	3.568541875946771e-06
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu37	98.031	98.031	hit_found	2.6764064069600845e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu36			no_hit_detected	8.207646314677593e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu29	98.031	98.031	hit_found	1.4274167503787114e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu31	94.466	94.466	hit_found	1.0705625627840332e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu39			no_hit_detected	1.6058438441760502e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu33	97.638	97.638	hit_found	1.7842709379733806e-06
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu28			no_hit_detected	1.4274167503787114e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu34			no_hit_detected	7.672365033285575e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu27	94.862	94.862	hit_found	2.6764064069600845e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu32	98.031	98.031	hit_found	1.7842709379733806e-06
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu25			no_hit_detected	0.00012668323659611067
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu35			no_hit_detected	8.742927596069609e-05
+mock-4	Even2	mock-4|Even2	zOTU	tip	Zotu23			no_hit_detected	0.00015701584254165828
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu26			no_hit_detected	7.493937939488237e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu22	99.213	99.213	hit_found	0.0001213304237821905
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu38			no_hit_detected	0.00017842709379733897
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu30			no_hit_detected	3.568541875946771e-06
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu37	98.031	98.031	hit_found	2.6764064069600845e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu36			no_hit_detected	8.207646314677593e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu29	98.031	98.031	hit_found	1.4274167503787114e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu31	94.466	94.466	hit_found	1.0705625627840332e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu39			no_hit_detected	1.6058438441760502e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu33	97.638	97.638	hit_found	1.7842709379733806e-06
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu28			no_hit_detected	1.4274167503787114e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu34			no_hit_detected	7.672365033285575e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu27	94.862	94.862	hit_found	2.6764064069600845e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu32	98.031	98.031	hit_found	1.7842709379733806e-06
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu25			no_hit_detected	0.00012668323659611067
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu35			no_hit_detected	8.742927596069609e-05
+mock-4	Even2	mock-4|Even2	zOTU	species	Zotu23			no_hit_detected	0.00015701584254165828
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu26			no_hit_detected	0.0005384549161403427
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu22	99.213	99.213	hit_found	0.0010675181767666095
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu38			no_hit_detected	0.00013617900495409827
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu30			no_hit_detected	2.1913862866176732e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu37	98.031	98.031	hit_found	0.00020974697314769163
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu36			no_hit_detected	0.0004257550499714338
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu29	98.031	98.031	hit_found	8.609017554569431e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu31	94.466	94.466	hit_found	1.721803510913886e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu39			no_hit_detected	5.634993308445446e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu33	97.638	97.638	hit_found	1.8783311028151483e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu28			no_hit_detected	4.069717389432822e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu34			no_hit_detected	0.0005462812957354058
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu27	94.862	94.862	hit_found	4.226244981334084e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu32	98.031	98.031	hit_found	1.8783311028151483e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu25			no_hit_detected	0.0007435060615309963
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu35			no_hit_detected	0.0005321938124642922
+mock-4	Staggered1	mock-4|Staggered1	zOTU	tip	Zotu23			no_hit_detected	0.001081605660037723
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu26			no_hit_detected	0.0005384549161403427
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu22	99.213	99.213	hit_found	0.0010675181767666095
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu38			no_hit_detected	0.00013617900495409827
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu30			no_hit_detected	2.1913862866176732e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu37	98.031	98.031	hit_found	0.00020974697314769163
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu36			no_hit_detected	0.0004257550499714338
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu29	98.031	98.031	hit_found	8.609017554569431e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu31	94.466	94.466	hit_found	1.721803510913886e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu39			no_hit_detected	5.634993308445446e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu33	97.638	97.638	hit_found	1.8783311028151483e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu28			no_hit_detected	4.069717389432822e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu34			no_hit_detected	0.0005462812957354058
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu27	94.862	94.862	hit_found	4.226244981334084e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu32	98.031	98.031	hit_found	1.8783311028151483e-05
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu25			no_hit_detected	0.0007435060615309963
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu35			no_hit_detected	0.0005321938124642922
+mock-4	Staggered1	mock-4|Staggered1	zOTU	species	Zotu23			no_hit_detected	0.001081605660037723
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu26			no_hit_detected	0.0006300266776921335
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu22	99.213	99.213	hit_found	0.0010988551233966314
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu38			no_hit_detected	0.0001525845860035636
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu30			no_hit_detected	2.830197966195131e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu37	98.031	98.031	hit_found	0.000227646358150478
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu36			no_hit_detected	0.0005254324050284004
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu29	98.031	98.031	hit_found	8.736698069558883e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu31	94.466	94.466	hit_found	2.953250051681875e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu39			no_hit_detected	5.291239675930027e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu33	97.638	97.638	hit_found	1.722729196814427e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu28			no_hit_detected	2.707145880708386e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu34			no_hit_detected	0.0007309293877912643
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu27	94.862	94.862	hit_found	3.691562564602345e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu32	98.031	98.031	hit_found	3.32240630814211e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu25			no_hit_detected	0.0008219879310514555
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu35			no_hit_detected	0.0006521760530797476
+mock-4	Staggered2	mock-4|Staggered2	zOTU	tip	Zotu23			no_hit_detected	0.001034868038943524
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu26			no_hit_detected	0.0006300266776921335
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu22	99.213	99.213	hit_found	0.0010988551233966314
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu38			no_hit_detected	0.0001525845860035636
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu30			no_hit_detected	2.830197966195131e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu37	98.031	98.031	hit_found	0.000227646358150478
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu36			no_hit_detected	0.0005254324050284004
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu29	98.031	98.031	hit_found	8.736698069558883e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu31	94.466	94.466	hit_found	2.953250051681875e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu39			no_hit_detected	5.291239675930027e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu33	97.638	97.638	hit_found	1.722729196814427e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu28			no_hit_detected	2.707145880708386e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu34			no_hit_detected	0.0007309293877912643
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu27	94.862	94.862	hit_found	3.691562564602345e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu32	98.031	98.031	hit_found	3.32240630814211e-05
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu25			no_hit_detected	0.0008219879310514555
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu35			no_hit_detected	0.0006521760530797476
+mock-4	Staggered2	mock-4|Staggered2	zOTU	species	Zotu23			no_hit_detected	0.001034868038943524
+mock-4	Even1	mock-4|Even1	OTU	tip	OTU23			no_hit_detected	7.04585087456624e-06
+mock-4	Even1	mock-4|Even1	OTU	tip	OTU21	94.862	94.862	hit_found	3.699071709147276e-05
+mock-4	Even1	mock-4|Even1	OTU	species	OTU23			no_hit_detected	7.04585087456624e-06
+mock-4	Even1	mock-4|Even1	OTU	species	OTU21	94.862	94.862	hit_found	3.699071709147276e-05
+mock-4	Even2	mock-4|Even2	OTU	tip	OTU23			no_hit_detected	3.570739928728029e-06
+mock-4	Even2	mock-4|Even2	OTU	tip	OTU21	94.862	94.862	hit_found	3.749276925164431e-05
+mock-4	Even2	mock-4|Even2	OTU	tip	OTU22			no_hit_detected	1.4282959714912116e-05
+mock-4	Even2	mock-4|Even2	OTU	species	OTU23			no_hit_detected	3.570739928728029e-06
+mock-4	Even2	mock-4|Even2	OTU	species	OTU21	94.862	94.862	hit_found	3.749276925164431e-05
+mock-4	Even2	mock-4|Even2	OTU	species	OTU22			no_hit_detected	1.4282959714912116e-05
+mock-4	Staggered1	mock-4|Staggered1	OTU	tip	OTU23			no_hit_detected	2.197833250391292e-05
+mock-4	Staggered1	mock-4|Staggered1	OTU	tip	OTU21	94.862	94.862	hit_found	5.808559304605559e-05
+mock-4	Staggered1	mock-4|Staggered1	OTU	tip	OTU22			no_hit_detected	4.081690322155258e-05
+mock-4	Staggered1	mock-4|Staggered1	OTU	species	OTU23			no_hit_detected	2.197833250391292e-05
+mock-4	Staggered1	mock-4|Staggered1	OTU	species	OTU21	94.862	94.862	hit_found	5.808559304605559e-05
+mock-4	Staggered1	mock-4|Staggered1	OTU	species	OTU22			no_hit_detected	4.081690322155258e-05
+mock-4	Staggered2	mock-4|Staggered2	OTU	tip	OTU23			no_hit_detected	2.8393694624579807e-05
+mock-4	Staggered2	mock-4|Staggered2	OTU	tip	OTU21	94.862	94.862	hit_found	6.049091463497438e-05
+mock-4	Staggered2	mock-4|Staggered2	OTU	tip	OTU22			no_hit_detected	2.715918616264156e-05
+mock-4	Staggered2	mock-4|Staggered2	OTU	species	OTU23			no_hit_detected	2.8393694624579807e-05
+mock-4	Staggered2	mock-4|Staggered2	OTU	species	OTU21	94.862	94.862	hit_found	6.049091463497438e-05
+mock-4	Staggered2	mock-4|Staggered2	OTU	species	OTU22			no_hit_detected	2.715918616264156e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU502			no_hit_detected	0.00025704134844595623
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU2003			no_hit_detected	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU1102			no_hit_detected	6.161950133978403e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU2002			no_hit_detected	0.0026795680296900367
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU902	94.862	94.862	hit_found	3.6971700803870415e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU903			no_hit_detected	0.0001672529322079852
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU2001			no_hit_detected	1.7605571811366863e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU505			no_hit_detected	7.394340160774083e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU1101			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU503			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	TIC	tip	SOTU801			no_hit_detected	7.042228724546741e-06
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU502			no_hit_detected	0.00025704134844595623
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU2003			no_hit_detected	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU1102			no_hit_detected	6.161950133978403e-05
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU2002			no_hit_detected	0.0026795680296900367
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU902	94.862	94.862	hit_found	3.6971700803870415e-05
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU903			no_hit_detected	0.0001672529322079852
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU2001			no_hit_detected	1.7605571811366863e-05
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU505			no_hit_detected	7.394340160774083e-05
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU1101			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU503			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	TIC	species	SOTU801			no_hit_detected	7.042228724546741e-06
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU401			no_hit_detected	1.427416750378711e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU502			no_hit_detected	0.0002997575175795294
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU2003			no_hit_detected	2.676406406960084e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU1102			no_hit_detected	8.207646314677591e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU2002			no_hit_detected	0.0028316379785637688
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU902	94.862	94.862	hit_found	3.746968969744118e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU903			no_hit_detected	0.00017842709379733895
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU2001			no_hit_detected	1.784270937973389e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU505			no_hit_detected	8.742927596069607e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU1101			no_hit_detected	7.672365033285574e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU503			no_hit_detected	7.493937939488235e-05
+mock-4	Even2	mock-4|Even2	TIC	tip	SOTU801			no_hit_detected	3.56854187594677e-06
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU401			no_hit_detected	1.427416750378711e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU502			no_hit_detected	0.0002997575175795294
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU2003			no_hit_detected	2.676406406960084e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU1102			no_hit_detected	8.207646314677591e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU2002			no_hit_detected	0.0028316379785637688
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU902	94.862	94.862	hit_found	3.746968969744118e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU903			no_hit_detected	0.00017842709379733895
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU2001			no_hit_detected	1.784270937973389e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU505			no_hit_detected	8.742927596069607e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU1101			no_hit_detected	7.672365033285574e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU503			no_hit_detected	7.493937939488235e-05
+mock-4	Even2	mock-4|Even2	TIC	species	SOTU801			no_hit_detected	3.56854187594677e-06
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU401			no_hit_detected	4.069717389432821e-05
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU502			no_hit_detected	0.001881461654653173
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU2003			no_hit_detected	0.00020974697314769157
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU1102			no_hit_detected	0.00042575504997143367
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU2002			no_hit_detected	0.03186432188333998
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU902	94.862	94.862	hit_found	5.9480484922479694e-05
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU903			no_hit_detected	0.00013617900495409825
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU2001			no_hit_detected	0.00012365679760199726
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU505			no_hit_detected	0.0005321938124642921
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU1101			no_hit_detected	0.0005462812957354057
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU503			no_hit_detected	0.0005384549161403426
+mock-4	Staggered1	mock-4|Staggered1	TIC	tip	SOTU801			no_hit_detected	2.191386286617673e-05
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU401			no_hit_detected	4.069717389432821e-05
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU502			no_hit_detected	0.001881461654653173
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU2003			no_hit_detected	0.00020974697314769157
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU1102			no_hit_detected	0.00042575504997143367
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU2002			no_hit_detected	0.03186432188333998
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU902	94.862	94.862	hit_found	5.9480484922479694e-05
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU903			no_hit_detected	0.00013617900495409825
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU2001			no_hit_detected	0.00012365679760199726
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU505			no_hit_detected	0.0005321938124642921
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU1101			no_hit_detected	0.0005462812957354057
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU503			no_hit_detected	0.0005384549161403426
+mock-4	Staggered1	mock-4|Staggered1	TIC	species	SOTU801			no_hit_detected	2.191386286617673e-05
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU401			no_hit_detected	2.7071458807083853e-05
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU502			no_hit_detected	0.0019097683667542796
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU2003			no_hit_detected	0.00022764635815047797
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU1102			no_hit_detected	0.0005254324050284003
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU2002			no_hit_detected	0.032099367020072246
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU902	94.862	94.862	hit_found	6.644812616284219e-05
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU903			no_hit_detected	0.00015258458600356356
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU2001			no_hit_detected	0.00013781833574515417
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU505			no_hit_detected	0.0006521760530797475
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU1101			no_hit_detected	0.0007309293877912642
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU503			no_hit_detected	0.0006300266776921334
+mock-4	Staggered2	mock-4|Staggered2	TIC	tip	SOTU801			no_hit_detected	2.8301979661951305e-05
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU401			no_hit_detected	2.7071458807083853e-05
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU502			no_hit_detected	0.0019097683667542796
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU2003			no_hit_detected	0.00022764635815047797
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU1102			no_hit_detected	0.0005254324050284003
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU2002			no_hit_detected	0.032099367020072246
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU902	94.862	94.862	hit_found	6.644812616284219e-05
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU903			no_hit_detected	0.00015258458600356356
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU2001			no_hit_detected	0.00013781833574515417
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU505			no_hit_detected	0.0006521760530797475
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU1101			no_hit_detected	0.0007309293877912642
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU503			no_hit_detected	0.0006300266776921334
+mock-4	Staggered2	mock-4|Staggered2	TIC	species	SOTU801			no_hit_detected	2.8301979661951305e-05
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU12	94.862	94.862	hit_found	3.6971700803870415e-05
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU31			no_hit_detected	0.0002464780053591361
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU11			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU1	98.031	98.031	hit_found	0.0001021123165059278
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU9			no_hit_detected	0.0001672529322079852
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU8			no_hit_detected	6.161950133978403e-05
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU30			no_hit_detected	6.51406157020574e-05
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU2	98.031	98.031	hit_found	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU26			no_hit_detected	7.394340160774083e-05
+mock-4	Even1	mock-4|Even1	TAC	tip	OTU18			no_hit_detected	7.042228724546741e-06
+mock-4	Even1	mock-4|Even1	TAC	species	OTU12	94.862	94.862	hit_found	3.6971700803870415e-05
+mock-4	Even1	mock-4|Even1	TAC	species	OTU31			no_hit_detected	0.0002464780053591361
+mock-4	Even1	mock-4|Even1	TAC	species	OTU11			no_hit_detected	5.457727261523728e-05
+mock-4	Even1	mock-4|Even1	TAC	species	OTU1	98.031	98.031	hit_found	0.0001021123165059278
+mock-4	Even1	mock-4|Even1	TAC	species	OTU9			no_hit_detected	0.0001672529322079852
+mock-4	Even1	mock-4|Even1	TAC	species	OTU8			no_hit_detected	6.161950133978403e-05
+mock-4	Even1	mock-4|Even1	TAC	species	OTU30			no_hit_detected	6.51406157020574e-05
+mock-4	Even1	mock-4|Even1	TAC	species	OTU2	98.031	98.031	hit_found	1.9366128992503542e-05
+mock-4	Even1	mock-4|Even1	TAC	species	OTU26			no_hit_detected	7.394340160774083e-05
+mock-4	Even1	mock-4|Even1	TAC	species	OTU18			no_hit_detected	7.042228724546741e-06
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU12	94.862	94.862	hit_found	3.746968969744118e-05
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU31			no_hit_detected	0.0002836990791377689
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU11			no_hit_detected	7.672365033285574e-05
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU20			no_hit_detected	1.427416750378711e-05
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU1	98.031	98.031	hit_found	0.00013917313316192436
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU9			no_hit_detected	0.00017842709379733895
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU8			no_hit_detected	8.207646314677591e-05
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU30			no_hit_detected	9.099781783664286e-05
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU2	98.031	98.031	hit_found	2.676406406960084e-05
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU26			no_hit_detected	8.742927596069607e-05
+mock-4	Even2	mock-4|Even2	TAC	tip	OTU18			no_hit_detected	3.56854187594677e-06
+mock-4	Even2	mock-4|Even2	TAC	species	OTU12	94.862	94.862	hit_found	3.746968969744118e-05
+mock-4	Even2	mock-4|Even2	TAC	species	OTU31			no_hit_detected	0.0002836990791377689
+mock-4	Even2	mock-4|Even2	TAC	species	OTU11			no_hit_detected	7.672365033285574e-05
+mock-4	Even2	mock-4|Even2	TAC	species	OTU20			no_hit_detected	1.427416750378711e-05
+mock-4	Even2	mock-4|Even2	TAC	species	OTU1	98.031	98.031	hit_found	0.00013917313316192436
+mock-4	Even2	mock-4|Even2	TAC	species	OTU9			no_hit_detected	0.00017842709379733895
+mock-4	Even2	mock-4|Even2	TAC	species	OTU8			no_hit_detected	8.207646314677591e-05
+mock-4	Even2	mock-4|Even2	TAC	species	OTU30			no_hit_detected	9.099781783664286e-05
+mock-4	Even2	mock-4|Even2	TAC	species	OTU2	98.031	98.031	hit_found	2.676406406960084e-05
+mock-4	Even2	mock-4|Even2	TAC	species	OTU26			no_hit_detected	8.742927596069607e-05
+mock-4	Even2	mock-4|Even2	TAC	species	OTU18			no_hit_detected	3.56854187594677e-06
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU12	94.862	94.862	hit_found	5.9480484922479714e-05
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU31			no_hit_detected	0.0018251117215687198
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU11			no_hit_detected	0.0005462812957354059
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU20			no_hit_detected	4.0697173894328225e-05
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU1	98.031	98.031	hit_found	0.001191174974368607
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU9			no_hit_detected	0.0001361790049540983
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU8			no_hit_detected	0.00042575504997143383
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU30			no_hit_detected	0.0005948048492247972
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU2	98.031	98.031	hit_found	0.00020974697314769166
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU26			no_hit_detected	0.0005321938124642923
+mock-4	Staggered1	mock-4|Staggered1	TAC	tip	OTU18			no_hit_detected	2.1913862866176735e-05
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU12	94.862	94.862	hit_found	5.9480484922479714e-05
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU31			no_hit_detected	0.0018251117215687198
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU11			no_hit_detected	0.0005462812957354059
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU20			no_hit_detected	4.0697173894328225e-05
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU1	98.031	98.031	hit_found	0.001191174974368607
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU9			no_hit_detected	0.0001361790049540983
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU8			no_hit_detected	0.00042575504997143383
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU30			no_hit_detected	0.0005948048492247972
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU2	98.031	98.031	hit_found	0.00020974697314769166
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU26			no_hit_detected	0.0005321938124642923
+mock-4	Staggered1	mock-4|Staggered1	TAC	species	OTU18			no_hit_detected	2.1913862866176735e-05
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU12	94.862	94.862	hit_found	6.64481261628422e-05
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU31			no_hit_detected	0.0018568559699949794
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU11			no_hit_detected	0.0007309293877912643
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU20			no_hit_detected	2.707145880708386e-05
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU1	98.031	98.031	hit_found	0.0012366734591417856
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU9			no_hit_detected	0.0001525845860035636
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU8			no_hit_detected	0.0005254324050284004
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU30			no_hit_detected	0.0006829390744514338
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU2	98.031	98.031	hit_found	0.000227646358150478
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU26			no_hit_detected	0.0006521760530797476
+mock-4	Staggered2	mock-4|Staggered2	TAC	tip	OTU18			no_hit_detected	2.830197966195131e-05
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU12	94.862	94.862	hit_found	6.64481261628422e-05
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU31			no_hit_detected	0.0018568559699949794
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU11			no_hit_detected	0.0007309293877912643
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU20			no_hit_detected	2.707145880708386e-05
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU1	98.031	98.031	hit_found	0.0012366734591417856
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU9			no_hit_detected	0.0001525845860035636
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU8			no_hit_detected	0.0005254324050284004
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU30			no_hit_detected	0.0006829390744514338
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU2	98.031	98.031	hit_found	0.000227646358150478
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU26			no_hit_detected	0.0006521760530797476
+mock-4	Staggered2	mock-4|Staggered2	TAC	species	OTU18			no_hit_detected	2.830197966195131e-05
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_41	99.605	99.605	hit_found	0.0001662175360971534
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_16	99.605	99.605	hit_found	0.0008855128914202332
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_45	99.605	99.605	hit_found	0.0001059085185751774
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_28	99.605	99.605	hit_found	0.0011870579790301133
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_31	99.605	99.605	hit_found	0.00033537697548806177
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_20	99.605	99.605	hit_found	0.0006560444345073489
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_47	99.605	99.605	hit_found	7.796043728450558e-05
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_27	99.605	99.605	hit_found	0.0005824968521634757
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_18	99.605	99.605	hit_found	0.0006795796608573883
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_33	99.605	99.605	hit_found	0.000631038256510432
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_17	99.605	99.605	hit_found	0.001687181538968451
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_26	99.605	99.605	hit_found	0.00060897398180727
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_38	99.605	99.605	hit_found	0.0001985784723284576
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_29	99.605	99.605	hit_found	0.0005280716412290095
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_30	99.605	99.605	hit_found	0.0009296414408265573
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_35	99.605	99.605	hit_found	0.0003530283952505913
+mock-5	Even1	mock-5|Even1	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0005869097071041081
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_41	99.605	99.605	hit_found	0.0001662175360971534
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_16	99.605	99.605	hit_found	0.0008855128914202332
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_45	99.605	99.605	hit_found	0.0001059085185751774
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_28	99.605	99.605	hit_found	0.0011870579790301133
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_31	99.605	99.605	hit_found	0.00033537697548806177
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_20	99.605	99.605	hit_found	0.0006560444345073489
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_47	99.605	99.605	hit_found	7.796043728450558e-05
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_27	99.605	99.605	hit_found	0.0005824968521634757
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_18	99.605	99.605	hit_found	0.0006795796608573883
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_33	99.605	99.605	hit_found	0.000631038256510432
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_17	99.605	99.605	hit_found	0.001687181538968451
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_26	99.605	99.605	hit_found	0.00060897398180727
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_38	99.605	99.605	hit_found	0.0001985784723284576
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_29	99.605	99.605	hit_found	0.0005280716412290095
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_30	99.605	99.605	hit_found	0.0009296414408265573
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_35	99.605	99.605	hit_found	0.0003530283952505913
+mock-5	Even1	mock-5|Even1	ASV	species	ASV_24	99.605	99.605	hit_found	0.0005869097071041081
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_16	99.605	99.605	hit_found	0.0008125276998079479
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_51			no_hit_detected	4.714860927318839e-06
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_20	99.605	99.605	hit_found	0.0006365062251880442
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_46			no_hit_detected	1.72878234001691e-05
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_18	99.605	99.605	hit_found	0.0006726534922974887
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_33	99.605	99.605	hit_found	0.0004762009536592035
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_17	99.605	99.605	hit_found	0.0016470580839433838
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_42	99.605	99.605	hit_found	0.0001775930949290099
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_35	99.605	99.605	hit_found	0.00028289165563913084
+mock-5	Even2	mock-5|Even2	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0006066454393150248
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_16	99.605	99.605	hit_found	0.0008125276998079479
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_51			no_hit_detected	4.714860927318839e-06
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_20	99.605	99.605	hit_found	0.0006365062251880442
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_46			no_hit_detected	1.72878234001691e-05
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_18	99.605	99.605	hit_found	0.0006726534922974887
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_33	99.605	99.605	hit_found	0.0004762009536592035
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_17	99.605	99.605	hit_found	0.0016470580839433838
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_42	99.605	99.605	hit_found	0.0001775930949290099
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_35	99.605	99.605	hit_found	0.00028289165563913084
+mock-5	Even2	mock-5|Even2	ASV	species	ASV_24	99.605	99.605	hit_found	0.0006066454393150248
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_16	99.605	99.605	hit_found	0.0017647051497757687
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_28	99.605	99.605	hit_found	0.0014907212874252613
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_31	99.605	99.605	hit_found	0.0004844532838833974
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_20	99.605	99.605	hit_found	0.0009464897063017535
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_46			no_hit_detected	2.864376742755305e-05
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_27	99.605	99.605	hit_found	0.0009290543696067209
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_18	99.605	99.605	hit_found	0.001460832138805206
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_17	99.605	99.605	hit_found	0.0022292323345791294
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_26	99.605	99.605	hit_found	0.0009053921269491772
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_49	98.814	98.814	hit_found	1.369919311752537e-05
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_36	99.603	99.603	hit_found	0.00015567264906278836
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_29	99.605	99.605	hit_found	0.0007347749035763611
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_50			no_hit_detected	1.1208430732520759e-05
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_30	99.605	99.605	hit_found	0.0012379089053472928
+mock-5	Staggered1	mock-5|Staggered1	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0008481045920940708
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_16	99.605	99.605	hit_found	0.0017647051497757687
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_28	99.605	99.605	hit_found	0.0014907212874252613
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_31	99.605	99.605	hit_found	0.0004844532838833974
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_20	99.605	99.605	hit_found	0.0009464897063017535
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_46			no_hit_detected	2.864376742755305e-05
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_27	99.605	99.605	hit_found	0.0009290543696067209
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_18	99.605	99.605	hit_found	0.001460832138805206
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_17	99.605	99.605	hit_found	0.0022292323345791294
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_26	99.605	99.605	hit_found	0.0009053921269491772
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_49	98.814	98.814	hit_found	1.369919311752537e-05
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_36	99.603	99.603	hit_found	0.00015567264906278836
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_29	99.605	99.605	hit_found	0.0007347749035763611
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_50			no_hit_detected	1.1208430732520759e-05
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_30	99.605	99.605	hit_found	0.0012379089053472928
+mock-5	Staggered1	mock-5|Staggered1	ASV	species	ASV_24	99.605	99.605	hit_found	0.0008481045920940708
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_16	99.605	99.605	hit_found	0.0018045883075190527
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_31	99.605	99.605	hit_found	0.0005014917669324345
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_34	99.605	99.605	hit_found	0.00063737355173479
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_20	99.605	99.605	hit_found	0.0009492173600222102
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_46			no_hit_detected	2.541673672562046e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_27	99.605	99.605	hit_found	0.0009140249553251971
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_18	99.605	99.605	hit_found	0.0013226478765294032
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_26	99.605	99.605	hit_found	0.0009883200319077805
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_49	98.814	98.814	hit_found	1.173080156567098e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_40	99.603	99.603	hit_found	0.00011242018167101356
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_36	99.603	99.603	hit_found	0.00015641068754227976
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_29	99.605	99.605	hit_found	0.0007361077982458541
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_50			no_hit_detected	1.075323476853173e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_43	99.603	99.603	hit_found	8.993614533681087e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_44	99.603	99.603	hit_found	7.429507658258289e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_24	99.605	99.605	hit_found	0.0007713002029428671
+mock-5	Staggered2	mock-5|Staggered2	ASV	tip	ASV_39	99.605	99.605	hit_found	0.00012610611683096305
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_16	99.605	99.605	hit_found	0.0018045883075190527
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_31	99.605	99.605	hit_found	0.0005014917669324345
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_34	99.605	99.605	hit_found	0.00063737355173479
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_20	99.605	99.605	hit_found	0.0009492173600222102
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_46			no_hit_detected	2.541673672562046e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_27	99.605	99.605	hit_found	0.0009140249553251971
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_18	99.605	99.605	hit_found	0.0013226478765294032
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_26	99.605	99.605	hit_found	0.0009883200319077805
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_49	98.814	98.814	hit_found	1.173080156567098e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_40	99.603	99.603	hit_found	0.00011242018167101356
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_36	99.603	99.603	hit_found	0.00015641068754227976
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_29	99.605	99.605	hit_found	0.0007361077982458541
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_50			no_hit_detected	1.075323476853173e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_43	99.603	99.603	hit_found	8.993614533681087e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_44	99.603	99.603	hit_found	7.429507658258289e-05
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_24	99.605	99.605	hit_found	0.0007713002029428671
+mock-5	Staggered2	mock-5|Staggered2	ASV	species	ASV_39	99.605	99.605	hit_found	0.00012610611683096305
+mock-5	Even1	mock-5|Even1	zOTU	tip	Zotu24			no_hit_detected	6.39465406919815e-06
+mock-5	Even1	mock-5|Even1	zOTU	tip	Zotu25			no_hit_detected	7.193985827847919e-06
+mock-5	Even1	mock-5|Even1	zOTU	tip	Zotu23			no_hit_detected	3.99665879324884e-06
+mock-5	Even1	mock-5|Even1	zOTU	species	Zotu24			no_hit_detected	6.39465406919815e-06
+mock-5	Even1	mock-5|Even1	zOTU	species	Zotu25			no_hit_detected	7.193985827847919e-06
+mock-5	Even1	mock-5|Even1	zOTU	species	Zotu23			no_hit_detected	3.99665879324884e-06
+mock-5	Even2	mock-5|Even2	zOTU	tip	Zotu24			no_hit_detected	3.9371969834771505e-06
+mock-5	Even2	mock-5|Even2	zOTU	tip	Zotu25			no_hit_detected	4.724636380172591e-06
+mock-5	Even2	mock-5|Even2	zOTU	tip	Zotu23			no_hit_detected	1.1811590950431472e-05
+mock-5	Even2	mock-5|Even2	zOTU	species	Zotu24			no_hit_detected	3.9371969834771505e-06
+mock-5	Even2	mock-5|Even2	zOTU	species	Zotu25			no_hit_detected	4.724636380172591e-06
+mock-5	Even2	mock-5|Even2	zOTU	species	Zotu23			no_hit_detected	1.1811590950431472e-05
+mock-5	Staggered1	mock-5|Staggered1	zOTU	tip	Zotu24			no_hit_detected	2.7152755291902298e-05
+mock-5	Staggered1	mock-5|Staggered1	zOTU	tip	Zotu23			no_hit_detected	3.597740076177055e-05
+mock-5	Staggered1	mock-5|Staggered1	zOTU	species	Zotu24			no_hit_detected	2.7152755291902298e-05
+mock-5	Staggered1	mock-5|Staggered1	zOTU	species	Zotu23			no_hit_detected	3.597740076177055e-05
+mock-5	Staggered2	mock-5|Staggered2	zOTU	tip	Zotu24			no_hit_detected	2.2206580067890162e-05
+mock-5	Staggered2	mock-5|Staggered2	zOTU	tip	Zotu23			no_hit_detected	3.1502357770727904e-05
+mock-5	Staggered2	mock-5|Staggered2	zOTU	species	Zotu24			no_hit_detected	2.2206580067890162e-05
+mock-5	Staggered2	mock-5|Staggered2	zOTU	species	Zotu23			no_hit_detected	3.1502357770727904e-05
+mock-5	Even1	mock-5|Even1	OTU	tip	OTU23			no_hit_detected	7.193778820076389e-06
+mock-5	Even1	mock-5|Even1	OTU	tip	OTU21			no_hit_detected	3.99654378893133e-06
+mock-5	Even1	mock-5|Even1	OTU	tip	OTU22			no_hit_detected	6.3944700622901295e-06
+mock-5	Even1	mock-5|Even1	OTU	species	OTU23			no_hit_detected	7.193778820076389e-06
+mock-5	Even1	mock-5|Even1	OTU	species	OTU21			no_hit_detected	3.99654378893133e-06
+mock-5	Even1	mock-5|Even1	OTU	species	OTU22			no_hit_detected	6.3944700622901295e-06
+mock-5	Even2	mock-5|Even2	OTU	tip	OTU23			no_hit_detected	4.72458801592501e-06
+mock-5	Even2	mock-5|Even2	OTU	tip	OTU21			no_hit_detected	1.1811470039812519e-05
+mock-5	Even2	mock-5|Even2	OTU	tip	OTU22			no_hit_detected	3.9371566799375e-06
+mock-5	Even2	mock-5|Even2	OTU	species	OTU23			no_hit_detected	4.72458801592501e-06
+mock-5	Even2	mock-5|Even2	OTU	species	OTU21			no_hit_detected	1.1811470039812519e-05
+mock-5	Even2	mock-5|Even2	OTU	species	OTU22			no_hit_detected	3.9371566799375e-06
+mock-5	Staggered1	mock-5|Staggered1	OTU	tip	OTU21			no_hit_detected	3.59774251839261e-05
+mock-5	Staggered1	mock-5|Staggered1	OTU	tip	OTU22			no_hit_detected	2.715277372371781e-05
+mock-5	Staggered1	mock-5|Staggered1	OTU	species	OTU21			no_hit_detected	3.59774251839261e-05
+mock-5	Staggered1	mock-5|Staggered1	OTU	species	OTU22			no_hit_detected	2.715277372371781e-05
+mock-5	Staggered2	mock-5|Staggered2	OTU	tip	OTU21			no_hit_detected	3.150232523310429e-05
+mock-5	Staggered2	mock-5|Staggered2	OTU	tip	OTU22			no_hit_detected	2.2206557131532532e-05
+mock-5	Staggered2	mock-5|Staggered2	OTU	species	OTU21			no_hit_detected	3.150232523310429e-05
+mock-5	Staggered2	mock-5|Staggered2	OTU	species	OTU22			no_hit_detected	2.2206557131532532e-05
+mock-5	Even1	mock-5|Even1	TIC	tip	SOTU1901			no_hit_detected	3.996658793248839e-06
+mock-5	Even1	mock-5|Even1	TIC	tip	SOTU2001			no_hit_detected	6.394654069198148e-06
+mock-5	Even1	mock-5|Even1	TIC	tip	SOTU601			no_hit_detected	7.193985827847918e-06
+mock-5	Even1	mock-5|Even1	TIC	species	SOTU1901			no_hit_detected	3.996658793248839e-06
+mock-5	Even1	mock-5|Even1	TIC	species	SOTU2001			no_hit_detected	6.394654069198148e-06
+mock-5	Even1	mock-5|Even1	TIC	species	SOTU601			no_hit_detected	7.193985827847918e-06
+mock-5	Even2	mock-5|Even2	TIC	tip	SOTU1901			no_hit_detected	1.1811590950431472e-05
+mock-5	Even2	mock-5|Even2	TIC	tip	SOTU2001			no_hit_detected	3.9371969834771505e-06
+mock-5	Even2	mock-5|Even2	TIC	tip	SOTU601			no_hit_detected	4.724636380172591e-06
+mock-5	Even2	mock-5|Even2	TIC	species	SOTU1901			no_hit_detected	1.1811590950431472e-05
+mock-5	Even2	mock-5|Even2	TIC	species	SOTU2001			no_hit_detected	3.9371969834771505e-06
+mock-5	Even2	mock-5|Even2	TIC	species	SOTU601			no_hit_detected	4.724636380172591e-06
+mock-5	Staggered1	mock-5|Staggered1	TIC	tip	SOTU1901			no_hit_detected	3.597740076177054e-05
+mock-5	Staggered1	mock-5|Staggered1	TIC	tip	SOTU2001			no_hit_detected	2.715275529190229e-05
+mock-5	Staggered1	mock-5|Staggered1	TIC	species	SOTU1901			no_hit_detected	3.597740076177054e-05
+mock-5	Staggered1	mock-5|Staggered1	TIC	species	SOTU2001			no_hit_detected	2.715275529190229e-05
+mock-5	Staggered2	mock-5|Staggered2	TIC	tip	SOTU1901			no_hit_detected	3.15023577707279e-05
+mock-5	Staggered2	mock-5|Staggered2	TIC	tip	SOTU2001			no_hit_detected	2.2206580067890155e-05
+mock-5	Staggered2	mock-5|Staggered2	TIC	species	SOTU1901			no_hit_detected	3.15023577707279e-05
+mock-5	Staggered2	mock-5|Staggered2	TIC	species	SOTU2001			no_hit_detected	2.2206580067890155e-05
+mock-5	Even1	mock-5|Even1	TAC	tip	OTU11			no_hit_detected	3.996658793248839e-06
+mock-5	Even1	mock-5|Even1	TAC	tip	OTU10			no_hit_detected	7.193985827847918e-06
+mock-5	Even1	mock-5|Even1	TAC	tip	OTU13			no_hit_detected	6.394654069198148e-06
+mock-5	Even1	mock-5|Even1	TAC	species	OTU11			no_hit_detected	3.996658793248839e-06
+mock-5	Even1	mock-5|Even1	TAC	species	OTU10			no_hit_detected	7.193985827847918e-06
+mock-5	Even1	mock-5|Even1	TAC	species	OTU13			no_hit_detected	6.394654069198148e-06
+mock-5	Even2	mock-5|Even2	TAC	tip	OTU11			no_hit_detected	1.181159095043147e-05
+mock-5	Even2	mock-5|Even2	TAC	tip	OTU10			no_hit_detected	4.7246363801725905e-06
+mock-5	Even2	mock-5|Even2	TAC	tip	OTU13			no_hit_detected	3.9371969834771505e-06
+mock-5	Even2	mock-5|Even2	TAC	species	OTU11			no_hit_detected	1.181159095043147e-05
+mock-5	Even2	mock-5|Even2	TAC	species	OTU10			no_hit_detected	4.7246363801725905e-06
+mock-5	Even2	mock-5|Even2	TAC	species	OTU13			no_hit_detected	3.9371969834771505e-06
+mock-5	Staggered1	mock-5|Staggered1	TAC	tip	OTU11			no_hit_detected	3.597740076177055e-05
+mock-5	Staggered1	mock-5|Staggered1	TAC	tip	OTU13			no_hit_detected	2.7152755291902298e-05
+mock-5	Staggered1	mock-5|Staggered1	TAC	species	OTU11			no_hit_detected	3.597740076177055e-05
+mock-5	Staggered1	mock-5|Staggered1	TAC	species	OTU13			no_hit_detected	2.7152755291902298e-05
+mock-5	Staggered2	mock-5|Staggered2	TAC	tip	OTU11			no_hit_detected	3.15023577707279e-05
+mock-5	Staggered2	mock-5|Staggered2	TAC	tip	OTU13			no_hit_detected	2.2206580067890155e-05
+mock-5	Staggered2	mock-5|Staggered2	TAC	species	OTU11			no_hit_detected	3.15023577707279e-05
+mock-5	Staggered2	mock-5|Staggered2	TAC	species	OTU13			no_hit_detected	2.2206580067890155e-05
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_13	99.605	99.605	hit_found	0.03642703862660945
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_16	99.605	99.605	hit_found	0.016309012875536485
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_7			no_hit_detected	0.05681330472103006
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_18	99.605	99.605	hit_found	0.012231759656652363
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_14	99.605	99.605	hit_found	0.031062231759656656
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_9	99.605	99.605	hit_found	0.04822961373390559
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_17	99.209	99.209	hit_found	0.01663090128755365
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	tip	ASV_5			no_hit_detected	0.07762875536480689
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_13	99.605	99.605	hit_found	0.03642703862660945
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_16	99.605	99.605	hit_found	0.016309012875536485
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_7			no_hit_detected	0.05681330472103006
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_18	99.605	99.605	hit_found	0.012231759656652363
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_14	99.605	99.605	hit_found	0.031062231759656656
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_9	99.605	99.605	hit_found	0.04822961373390559
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_17	99.209	99.209	hit_found	0.01663090128755365
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ASV	species	ASV_5			no_hit_detected	0.07762875536480689
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_13	99.605	99.605	hit_found	0.03485364193328795
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_16	99.605	99.605	hit_found	0.0166643975493533
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_7			no_hit_detected	0.05731790333560245
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_18	99.605	99.605	hit_found	0.01301565690946222
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_14	99.605	99.605	hit_found	0.03218515997277059
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_9	99.605	99.605	hit_found	0.042722940776038124
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_17	99.209	99.209	hit_found	0.014132062627637847
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	tip	ASV_5			no_hit_detected	0.0788291354663036
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_13	99.605	99.605	hit_found	0.03485364193328795
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_16	99.605	99.605	hit_found	0.0166643975493533
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_7			no_hit_detected	0.05731790333560245
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_18	99.605	99.605	hit_found	0.01301565690946222
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_14	99.605	99.605	hit_found	0.03218515997277059
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_9	99.605	99.605	hit_found	0.042722940776038124
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_17	99.209	99.209	hit_found	0.014132062627637847
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ASV	species	ASV_5			no_hit_detected	0.0788291354663036
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu15	99.605	99.605	hit_found	0.0298763224556698
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu7			no_hit_detected	0.04894948591864104
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu9	99.605	99.605	hit_found	0.041573535985695124
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu16	99.605	99.605	hit_found	0.015981224854716133
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu18	99.605	99.605	hit_found	0.010579645358366859
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu17	99.209	99.209	hit_found	0.014789152138280434
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu5			no_hit_detected	0.08031589926985547
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	tip	Zotu13	99.605	99.605	hit_found	0.042132320071524364
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu15	99.605	99.605	hit_found	0.0298763224556698
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu7			no_hit_detected	0.04894948591864104
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu9	99.605	99.605	hit_found	0.041573535985695124
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu16	99.605	99.605	hit_found	0.015981224854716133
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu18	99.605	99.605	hit_found	0.010579645358366859
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu17	99.209	99.209	hit_found	0.014789152138280434
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu5			no_hit_detected	0.08031589926985547
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	zOTU	species	Zotu13	99.605	99.605	hit_found	0.042132320071524364
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu15	99.605	99.605	hit_found	0.030856760374832662
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu7			no_hit_detected	0.05298973672467648
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu9	99.605	99.605	hit_found	0.04053993752788933
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu16	99.605	99.605	hit_found	0.016443551985720662
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu18	99.605	99.605	hit_found	0.01209281570727354
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu17	99.209	99.209	hit_found	0.013810798750557789
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu5			no_hit_detected	0.08132530120481928
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	tip	Zotu13	99.605	99.605	hit_found	0.03672467648371263
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu15	99.605	99.605	hit_found	0.030856760374832662
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu7			no_hit_detected	0.05298973672467648
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu9	99.605	99.605	hit_found	0.04053993752788933
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu16	99.605	99.605	hit_found	0.016443551985720662
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu18	99.605	99.605	hit_found	0.01209281570727354
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu17	99.209	99.209	hit_found	0.013810798750557789
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu5			no_hit_detected	0.08132530120481928
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	zOTU	species	Zotu13	99.605	99.605	hit_found	0.03672467648371263
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	tip	OTU5			no_hit_detected	0.08032786885245902
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	tip	OTU7			no_hit_detected	0.04895678092399404
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	species	OTU5			no_hit_detected	0.08032786885245902
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	OTU	species	OTU7			no_hit_detected	0.04895678092399404
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	tip	OTU5			no_hit_detected	0.0813289303404882
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	tip	OTU7			no_hit_detected	0.05299210138783525
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	species	OTU5			no_hit_detected	0.0813289303404882
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	OTU	species	OTU7			no_hit_detected	0.05299210138783525
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	tip	SOTU1201			no_hit_detected	0.08031589926985547
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	tip	SOTU1301			no_hit_detected	0.04894948591864104
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	species	SOTU1201			no_hit_detected	0.08031589926985547
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TIC	species	SOTU1301			no_hit_detected	0.04894948591864104
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	tip	SOTU1201			no_hit_detected	0.08132530120481926
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	tip	SOTU1301			no_hit_detected	0.052989736724676474
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	species	SOTU1201			no_hit_detected	0.08132530120481926
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TIC	species	SOTU1301			no_hit_detected	0.052989736724676474
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	tip	OTU2			no_hit_detected	0.048949485918641046
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	tip	OTU4			no_hit_detected	0.08031589926985548
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	species	OTU2			no_hit_detected	0.048949485918641046
+mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	TAC	species	OTU4			no_hit_detected	0.08031589926985548
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	tip	OTU2			no_hit_detected	0.05298973672467648
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	tip	OTU4			no_hit_detected	0.08132530120481928
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	species	OTU2			no_hit_detected	0.05298973672467648
+mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	TAC	species	OTU4			no_hit_detected	0.08132530120481928
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	tip	ASV_10	98.419	98.419	hit_found	8.554502876451592e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	tip	ASV_2			no_hit_detected	0.16501636048675125
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	tip	ASV_1	99.605	99.605	hit_found	0.17671464317029878
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	tip	ASV_9	99.605	99.605	hit_found	0.014414337346820932
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	species	ASV_10	98.419	98.419	hit_found	8.554502876451592e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	species	ASV_2			no_hit_detected	0.16501636048675125
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	species	ASV_1	99.605	99.605	hit_found	0.17671464317029878
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ASV	species	ASV_9	99.605	99.605	hit_found	0.014414337346820932
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	tip	ASV_2			no_hit_detected	0.10142897170075652
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	tip	ASV_1	99.605	99.605	hit_found	0.16228635472121042
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	tip	ASV_9	99.605	99.605	hit_found	0.021742785093863827
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	species	ASV_2			no_hit_detected	0.10142897170075652
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	species	ASV_1	99.605	99.605	hit_found	0.16228635472121042
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ASV	species	ASV_9	99.605	99.605	hit_found	0.021742785093863827
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_13			no_hit_detected	6.851192107426693e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_16			no_hit_detected	4.567461404951128e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_12	94.466	94.466	hit_found	0.00011418653512377821
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_10	98.419	98.419	hit_found	0.00011418653512377821
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_2			no_hit_detected	0.16214487987576506
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_14			no_hit_detected	6.851192107426693e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_11			no_hit_detected	0.00013702384214853386
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_1	99.605	99.605	hit_found	0.19836484881702748
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_9	99.605	99.605	hit_found	0.014638713802868363
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	tip	ASV_15			no_hit_detected	4.567461404951128e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_13			no_hit_detected	6.851192107426693e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_16			no_hit_detected	4.567461404951128e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_12	94.466	94.466	hit_found	0.00011418653512377821
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_10	98.419	98.419	hit_found	0.00011418653512377821
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_2			no_hit_detected	0.16214487987576506
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_14			no_hit_detected	6.851192107426693e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_11			no_hit_detected	0.00013702384214853386
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_1	99.605	99.605	hit_found	0.19836484881702748
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_9	99.605	99.605	hit_found	0.014638713802868363
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ASV	species	ASV_15			no_hit_detected	4.567461404951128e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	tip	Zotu1	99.605	99.605	hit_found	0.18018284719198951
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	tip	Zotu3			no_hit_detected	0.15564649542882017
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	tip	Zotu9	99.605	99.605	hit_found	0.015063125816282105
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	tip	Zotu10	98.419	98.419	hit_found	0.00010448410970831518
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	tip	Zotu11			no_hit_detected	1.7414018284719187e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	species	Zotu1	99.605	99.605	hit_found	0.18018284719198951
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	species	Zotu3			no_hit_detected	0.15564649542882017
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	species	Zotu9	99.605	99.605	hit_found	0.015063125816282105
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	species	Zotu10	98.419	98.419	hit_found	0.00010448410970831518
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	zOTU	species	Zotu11			no_hit_detected	1.7414018284719187e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	tip	Zotu1	99.605	99.605	hit_found	0.16808324727937088
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	tip	Zotu3			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	tip	Zotu9	99.605	99.605	hit_found	0.02303598379537692
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	tip	Zotu11			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	species	Zotu1	99.605	99.605	hit_found	0.16808324727937088
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	species	Zotu3			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	species	Zotu9	99.605	99.605	hit_found	0.02303598379537692
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	zOTU	species	Zotu11			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	tip	Zotu1	99.605	99.605	hit_found	0.2015769230769231
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	tip	Zotu3			no_hit_detected	0.15486538461538465
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	tip	Zotu9	99.605	99.605	hit_found	0.014903846153846158
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	tip	Zotu10	98.419	98.419	hit_found	0.00011538461538461537
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	tip	Zotu11			no_hit_detected	0.00019230769230769233
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	species	Zotu1	99.605	99.605	hit_found	0.2015769230769231
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	species	Zotu3			no_hit_detected	0.15486538461538465
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	species	Zotu9	99.605	99.605	hit_found	0.014903846153846158
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	species	Zotu10	98.419	98.419	hit_found	0.00011538461538461537
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	zOTU	species	Zotu11			no_hit_detected	0.00019230769230769233
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	tip	OTU9			no_hit_detected	1.741462480190864e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	tip	OTU3			no_hit_detected	0.15565191647945945
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	species	OTU9			no_hit_detected	1.741462480190864e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	OTU	species	OTU3			no_hit_detected	0.15565191647945945
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	tip	OTU9			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	tip	OTU3			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	species	OTU9			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	OTU	species	OTU3			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	tip	OTU9			no_hit_detected	0.00019230769230769233
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	tip	OTU3			no_hit_detected	0.15486538461538465
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	species	OTU9			no_hit_detected	0.00019230769230769233
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	OTU	species	OTU3			no_hit_detected	0.15486538461538465
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	tip	SOTU201	98.419	98.419	hit_found	0.00010448410970831521
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	tip	SOTU301			no_hit_detected	1.741401828471919e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	tip	SOTU701			no_hit_detected	0.1556464954288202
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	species	SOTU201	98.419	98.419	hit_found	0.00010448410970831521
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	species	SOTU301			no_hit_detected	1.741401828471919e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TIC	species	SOTU701			no_hit_detected	0.1556464954288202
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	tip	SOTU301			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	tip	SOTU701			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	species	SOTU301			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TIC	species	SOTU701			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	tip	SOTU201	98.419	98.419	hit_found	0.00011538461538461535
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	tip	SOTU301			no_hit_detected	0.0001923076923076923
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	tip	SOTU701			no_hit_detected	0.15486538461538463
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	species	SOTU201	98.419	98.419	hit_found	0.00011538461538461535
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	species	SOTU301			no_hit_detected	0.0001923076923076923
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TIC	species	SOTU701			no_hit_detected	0.15486538461538463
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	tip	OTU2			no_hit_detected	1.741401828471919e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	tip	OTU4	98.419	98.419	hit_found	0.00010448410970831521
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	tip	OTU8			no_hit_detected	0.1556464954288202
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	species	OTU2			no_hit_detected	1.741401828471919e-05
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	species	OTU4	98.419	98.419	hit_found	0.00010448410970831521
+mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	TAC	species	OTU8			no_hit_detected	0.1556464954288202
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	tip	OTU2			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	tip	OTU8			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	species	OTU2			no_hit_detected	3.971721344030502e-05
+mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	TAC	species	OTU8			no_hit_detected	0.09206450075462705
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	tip	OTU2			no_hit_detected	0.00019230769230769228
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	tip	OTU4	98.419	98.419	hit_found	0.00011538461538461533
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	tip	OTU8			no_hit_detected	0.1548653846153846
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	species	OTU2			no_hit_detected	0.00019230769230769228
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	species	OTU4	98.419	98.419	hit_found	0.00011538461538461533
+mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	TAC	species	OTU8			no_hit_detected	0.1548653846153846

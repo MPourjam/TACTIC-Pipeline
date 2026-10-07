@@ -1,0 +1,16 @@
+#OTU ID	mock-19-S1	Taxonomy
+OTU1	5895.0	Bacteria;Deinococcota;Deinococci;Deinococcales;Deinococcaceae;Deinococcus;
+OTU2	5280.0	Bacteria;Bacillota;Bacilli;Bacillales;Bacillaceae;;
+OTU3	4864.0	Bacteria;Pseudomonadota;Alphaproteobacteria;Hyphomicrobiales;Xanthobacteraceae;Nitrobacter;
+OTU4	6279.0	Bacteria;Thermodesulfobacteriota;Desulfovibrionia;Desulfovibrionales;Desulfovibrionaceae;Desulfovibrio;
+OTU5	2515.0	Bacteria;Spirochaetota;Spirochaetia;Spirochaetales;Spirochaetaceae;Treponema;
+OTU6	7277.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Burkholderiales;Nitrosomonadaceae;Nitrosomonas;
+OTU7	4532.0	Bacteria;Chloroflexota;Anaerolineae;Anaerolineales;Anaerolineaceae;Anaerolinea;
+OTU8	4511.0	Bacteria;Gemmatimonadota;Gemmatimonadia;Gemmatimonadales;Gemmatimonadaceae;Gemmatimonas;
+OTU9	5925.0	Bacteria;Bacillota;Clostridia;Clostridiales;Clostridiaceae;Clostridium;
+OTU10	1357.0	Bacteria;Actinomycetota;Actinobacteria;Propionibacteriales;Propionibacteriaceae;Microlunatus;
+OTU11	5766.0	Bacteria;Chloroflexota;Chloroflexia;Chloroflexales;Chloroflexaceae;Chloroflexus;
+OTU12	4876.0	Bacteria;Bacillota;Desulfitobacteriia;Desulfitobacteriales;Desulfitobacteriaceae;Desulfitobacterium;
+OTU13	6889.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Pseudomonadales;Pseudomonadaceae;Pseudomonas;
+OTU14	5395.0	Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;
+OTU15	5169.0	Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;Escherichia-Shigella;

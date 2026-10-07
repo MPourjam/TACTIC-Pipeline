@@ -1,0 +1,17 @@
+mix_type	mix_label	method	taxonomy_status	cluster_count	total_clusters_in_group	cluster_fraction	abundance_tss1000	present_sample_count	present_mean_abundance_fraction
+pure_exact	Pure exact	TIC	Single species	21	22	0.9545454545454546	14318.477369004431	16	0.0894904835562777
+pure_exact	Pure exact	TIC	Multi-species or unresolved	1	22	0.045454545454545456	287.45846383847663	1	0.028745846383847664
+pure_exact	Pure exact	TAC	Single species	22	24	0.9166666666666666	14790.51504013731	16	0.09244071900085819
+pure_exact	Pure exact	TAC	Multi-species or unresolved	2	24	0.08333333333333333	470.65556569964707	1	0.04706555656996471
+pure_near	Pure near-exact	TIC	Single species	0	0		0.0	0	
+pure_near	Pure near-exact	TIC	Multi-species or unresolved	0	0		0.0	0	
+pure_near	Pure near-exact	TAC	Single species	0	0		0.0	0	
+pure_near	Pure near-exact	TAC	Multi-species or unresolved	0	0		0.0	0	
+pure_no_match	Pure no match	TIC	Single species	9	21	0.42857142857142855	174.82247347885567	5	0.003496449469577114
+pure_no_match	Pure no match	TIC	Multi-species or unresolved	12	21	0.5714285714285714	233.7589613625435	9	0.00259732179291715
+pure_no_match	Pure no match	TAC	Single species	4	20	0.2	2.0037000158663347	4	5.009250039665837e-05
+pure_no_match	Pure no match	TAC	Multi-species or unresolved	16	20	0.8	246.73894382096944	9	0.002741543820232994
+exact_near	Exact + near-exact	TIC	Single species	22	22	1.0	18067.505900230477	14	0.12905361357307485
+exact_near	Exact + near-exact	TIC	Multi-species or unresolved	0	22	0.0	0.0	0	
+exact_near	Exact + near-exact	TAC	Single species	16	17	0.9411764705882353	13218.041205201043	9	0.14686712450223383
+exact_near	Exact + near-exact	TAC	Multi-species or unresolved	1	17	0.058823529411764705	4004.5083033173855	1	0.40045083033173856

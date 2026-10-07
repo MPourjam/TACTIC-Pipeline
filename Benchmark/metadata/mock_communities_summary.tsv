@@ -1,0 +1,17 @@
+renamed_name	raw_id	samples	expected_species	multi_v4_community	multi_v4_species	even_staggered	source
+Mock 1	mock-4	4	21	Yes	3	Mixed (2 even, 2 staggered)	Gevers/Bokulich 21-strain mock, Broad Institute (B4/B5)
+Mock 2	mock-5	4	21	Yes	3	Mixed (2 even, 2 staggered)	Gevers/Bokulich 21-strain mock, Broad Institute (B4/B5)
+Mock 3	mock-12	1	26	Yes	5	N/A	Callahan et al. "Extreme" mock, Stanford University (2015)
+Mock 4	mock-13	1	21	Yes	3	Even	Kozich et al. dual-indexed V4 HMP mock, BEI HM-278D
+Mock 5	mock-14	1	21	Yes	3	Even	Kozich et al. dual-indexed V4 HMP mock, BEI HM-278D
+Mock 6	mock-15	1	21	Yes	3	Even	Kozich et al. dual-indexed V4 HMP mock, BEI HM-278D
+Mock 7	mock-16	1	56	Yes	10	N/A	Schirmer et al. dataset 35, University of Glasgow (2015)
+Mock 8	mock-18	1	15	No	0	N/A	Synthetic 15-species community, source file does not name a publication
+Mock 9	mock-19	1	15	No	0	N/A	Synthetic 15-species community, source file does not name a publication
+Mock 10	mock-20	1	20	Yes	3	Even	Gohl et al. EMP(Taq) mock, BEI HM-276D
+Mock 11	mock-21	1	20	Yes	3	Staggered	Gohl et al. EMP(Taq) mock, BEI HM-277D
+Mock 12	mock-22	1	20	Yes	3	Even	Gohl et al. EMP(Taq) mock, BEI HM-276D
+Mock 13	mock-23	1	20	Yes	3	Staggered	Gohl et al. EMP(Taq) mock, BEI HM-277D
+ZIEL I	mock-ZIEL_1	2	13	No	0	N/A	ZIEL reference mock community
+ZIEL II	mock-ZIEL_2	3	19	No	0	N/A	ZIEL reference mock community
+ZYMO	mock-ZYMO	3	8	No	0	N/A	ZYMO reference mock community

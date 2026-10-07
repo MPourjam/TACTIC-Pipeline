@@ -1,0 +1,487 @@
+method	metric	distance	community_id	sample_id	sample_key	community_label	sample_label	method_label	metric_label	endpoint_group_id	endpoint_group_label	endpoint_id
+zOTU	jaccard	0.5116279069767442	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5535661474095175	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3827110008647207	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.4523202526545911	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0400220056211182	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0218021134692067	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.4848484848484848	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.1065056534046908	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.0562482024814063	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.419798671290906	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0316130104716645	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.014894799539651	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.4848484848484848	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.1065056534046908	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.0562482024814063	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.4193865669790065	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0328815249837726	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.0149619674736387	mock-12	Mock 3	mock-12|Mock 3	Mock 3	Mock 3	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.3333333333333333	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.4984922187223954	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3319944291585607	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.3893630426052051	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1357284997280007	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1614498910426628	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.2857142857142857	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4506594206809901	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2908717596999045	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2816960826368102	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1272560252163183	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1597936719674929	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.2857142857142857	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4506594206809901	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.2908717596999045	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2816960826368101	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1272560252163183	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1597936719674928	mock-13	Mock 4	mock-13|Mock 4	Mock 4	Mock 4	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5152665631452374	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3470431461668773	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.4691393522608448	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1492744303865898	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1555293438237626	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.4594594594594594	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4681686824250677	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.3056267860917175	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.4577902667186587	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1419116204070767	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1529200846689317	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.4594594594594594	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4681686824250678	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.3056267860917176	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.4634504018957559	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.151856604136143	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.159218445690631	mock-14	Mock 5	mock-14|Mock 5	Mock 5	Mock 5	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.4054054054054054	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5198589427374616	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3512225677321051	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.4219127030016218	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1538401455948512	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2008345761880055	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.375	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.471077433758687	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.3081107206866458	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.4075343258985073	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.149409479483942	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1994830613079779	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.471077433758687	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.3081107206866459	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.415122186727028	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1548258070190621	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.201772743770876	mock-15	Mock 6	mock-15|Mock 6	Mock 6	Mock 6	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.3103448275862068	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5223479231464558	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3534985882865764	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1791711609337088	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1486653556550821	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1899988665841859	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3289473684210526	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.5133259277837757	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.3452847785382759	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1678253027843587	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1448146965951305	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1893985010305631	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.3333333333333333	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.5148389893468208	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.3466553361243929	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1679720843005843	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1448713210875084	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1894084733802142	mock-16	Mock 7	mock-16|Mock 7	Mock 7	Mock 7	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.0666666666666666	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.2599758433571636	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.1494093299593928	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0267126813835075	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0836911601111729	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1335002199698469	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.0666666666666666	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.2599758433571636	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.1494093299593928	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0267126813835075	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0836911601111729	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1335002199698468	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.0666666666666666	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.2599758433571636	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.1494093299593928	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0267126813835075	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0836911601111729	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1335002199698469	mock-18	Mock 8	mock-18|Mock 8	Mock 8	Mock 8	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.1883603394605086	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.1039722984450542	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0531792104920329	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0881852282587962	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.1883603394605086	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.1039722984450542	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0531792104920329	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.0881852282587962	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.0	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.1883603394605086	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.1039722984450542	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	2.935588446741791e-08	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0531792104920329	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.0881852282587962	mock-19	Mock 9	mock-19|Mock 9	Mock 9	Mock 9	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.375	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5403643147009366	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3702049217782873	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0666726472891868	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1484897928878897	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1690645966427899	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3571428571428571	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4902046376506183	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.3246828344258617	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.064309998633311	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1474398928132403	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1683630831793182	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.3571428571428571	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4953289604452395	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.3291941875825627	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.064309998633311	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1479431136366295	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1685154414321656	mock-20	Mock 10	mock-20|Mock 10	Mock 10	Mock 10	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.65	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.6184356105544903	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.4476343015780097	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2654524165897504	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.138642984488086	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1878431300615089	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.5757575757575757	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.6108319793561402	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.4397106543476491	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2547639315206949	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1361259760259262	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.187454496291391	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.5333333333333333	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.6108319793561402	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.4397106543476491	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.251143867414617	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1412504099860151	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1957540769079603	mock-21	Mock 11	mock-21|Mock 11	Mock 11	Mock 11	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.125	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.3781826271584136	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2331844716250634	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0496930172662127	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0614328130997946	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0820015010475524	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.0952380952380952	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.3221562368644042	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.1920060996992657	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0488311433547045	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0606955381801092	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.081437839271248	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.0952380952380952	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.3221562368644042	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.1920060996992657	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0488311433547045	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0606955381801092	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.081437839271248	mock-22	Mock 12	mock-22|Mock 12	Mock 12	Mock 12	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.1923076923076923	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.4944623837863736	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3284291129370311	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1927603649310422	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0706689568982892	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.0975446917843293	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.1363636363636363	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4817561426194271	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.3173114386582147	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1919883562016926	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0701342750151288	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.0973683161797509	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.1363636363636363	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4817561426194271	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.3173114386582147	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1919883562016926	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0701342750151288	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.0973683161797508	mock-23	Mock 13	mock-23|Mock 13	Mock 13	Mock 13	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.4499999999999999	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.7571833026237703	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6092477709885107	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1021941900215225	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2160798665484894	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2367962705581667	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3448275862068966	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.7513569838160125	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.601738826932501	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0727656604863603	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2150858920270929	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2363630292406049	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.3548387096774194	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.7493307087432599	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.5991437656475055	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0740339818603892	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2152147769083906	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2363668578089274	mock-4	Even1	mock-4|Even1	Mock 1	Mock 1|Even1	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.7559975813211868	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6077139159617474	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2303816371827417	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2174631713651143	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2401844422063752	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3666666666666667	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.7494637719348849	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.5993139223919072	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2087502063357416	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2164841351619987	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2397741709225309	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.7473409295744167	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.5966036148371255	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2096739780216586	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2166336563777425	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2397789978919818	mock-4	Even2	mock-4|Even2	Mock 1	Mock 1|Even2	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.7791985729578169	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6382680718564501	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2303816371827417	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2718328113357134	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3724846585799842	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3666666666666667	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.7972293253897971	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.6628273720160042	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2087502063357416	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2703448602204477	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3720973716025286	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.7745327576359446	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.6320305683094307	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2096739780216586	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2707999763881228	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3721275404204167	mock-4	Staggered1	mock-4|Staggered1	Mock 1	Mock 1|Staggered1	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.4634146341463414	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.7741878416105852	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6315713515419725	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.2303816371827417	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2677470696138876	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3669681723157211	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3666666666666667	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.7925110026790543	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.656329792186428	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.2087502063357416	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2662227403039625	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3665742100174249	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.375	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.7694801144273644	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.6253292802897522	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.2096739780216586	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.266681106769929	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3666055304747582	mock-4	Staggered2	mock-4|Staggered2	Mock 1	Mock 1|Staggered2	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.1851851851851852	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.7643752439686997	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.618614381297923	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1957357444284353	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2089445619610123	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2310190309485485	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.1666666666666666	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.757295588233194	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.6093931759335386	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1951152539639504	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2083095959116876	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2305342925712193	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.1666666666666666	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.757295588233194	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.6093931759335386	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1951152539639505	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2083095959116876	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2305342925712193	mock-5	Even1	mock-5|Even1	Mock 2	Mock 2|Even1	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.1851851851851852	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.7640360310325001	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6181701491433935	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1957357444284353	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2088181874608906	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.2336269262681189	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.1666666666666666	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.75651438019837	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.6083820899505494	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1951152539639504	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2082052348238529	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.2331595453386266	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.1666666666666666	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.75651438019837	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.6083820899505493	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1951152539639505	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2082052348238529	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.2331595453386266	mock-5	Even2	mock-5|Even2	Mock 2	Mock 2|Even2	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.1538461538461538	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.765120050187011	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6195906333266495	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1728076184409431	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2405766795896795	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3453698270873186	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.1304347826086956	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.7625701997425165	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.616253301467155	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2400765983000688	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3450094857158532	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.1304347826086956	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.7625701997425165	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.6162533014671551	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2400765983000688	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3450094857158532	mock-5	Staggered1	mock-5|Staggered1	Mock 2	Mock 2|Staggered1	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.1538461538461538	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.761645050217783	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.6150458318527571	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.1728076184409431	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.2388162913921762	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3427596046280098	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.1304347826086956	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.7589630295446395	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.6115555359049145	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.2383191080717907	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3423947797617424	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.1304347826086956	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.7589630295446395	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.6115555359049145	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.1721730413262089	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.2383191080717907	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3423947797617425	mock-5	Staggered2	mock-5|Staggered2	Mock 2	Mock 2|Staggered2	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.5238095238095238	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5363199393769154	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3664188327800309	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0796768754638561	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1164730492429135	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1330259199550615	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4043332480376259	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2533945434034839	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0390526383818354	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1055580879654298	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1326339021463007	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4043332480376259	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.2533945434034839	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0412616344341514	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1072750951281124	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1337769107500407	mock-ZIEL_1	SRR13005984	mock-ZIEL_1|SRR13005984	ZIEL I	ZIEL I|SRR13005984	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.5238095238095238	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5360899458031779	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3662041559631921	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0796768754638561	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.1171727462277252	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1299296797726641	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4095652040479679	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2575177587225781	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0390526383818354	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.1092187686746384	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1349062462643856	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.2666666666666667	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4095652040479678	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.257517758722578	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0412616344341514	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.1109545904598204	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1360695034717727	mock-ZIEL_1	SRR13005985	mock-ZIEL_1|SRR13005985	ZIEL I	ZIEL I|SRR13005985	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.3076923076923077	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.4215259045353334	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2670464505857132	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0525507775472785	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0784825743819303	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1268412399749603	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.1904761904761904	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.398611687030908	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2489163207965796	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0495516057235061	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0775641363677908	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1266050111165637	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.2380952380952381	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4555403912984558	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.294951314189069	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0495496985953652	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0780119264765952	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1272704072963175	mock-ZIEL_2	SRR13005964	mock-ZIEL_2|SRR13005964	ZIEL II	ZIEL II|SRR13005964	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.3333333333333333	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.4141038626118946	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2611166348471619	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0759082586426915	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0751350594065326	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1166888803166941	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.2272727272727273	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.3960282003176359	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2469047151552551	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0730553639111434	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0742314649475732	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1164534137531	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.2727272727272727	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4508150499873481	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.291001439165586	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0730535500367519	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0746914607922659	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1171653961659105	mock-ZIEL_2	SRR13005965	mock-ZIEL_2|SRR13005965	ZIEL II	ZIEL II|SRR13005965	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.3333333333333333	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.4202801979990238	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.2660473062796765	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.0759082586426915	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.0767011201471098	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.1207447531576922	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.2272727272727273	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4029626528303203	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2523188662710133	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.0730553639111434	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.0757779764098918	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.1204970778810024	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.2727272727272727	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4598241830647213	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.2985530470019346	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.0730535500367519	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.0762601046516757	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.1212405346339308	mock-ZIEL_2	SRR13005966	mock-ZIEL_2|SRR13005966	ZIEL II	ZIEL II|SRR13005966	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.5	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5375019967181215	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3675232345698626	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.5524155158926085	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.4515884840464453	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.3697994535604594	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.3903721521212751	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2425232345698626	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.5515567807814321	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.4511199092577516	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.3695830140659589	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.3	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.3903721521212751	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.2425232345698626	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.5515567807814321	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.4511199092577516	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.3695830140659589	mock-ZYMO	SRR13006002	mock-ZYMO|SRR13006002	ZYMO	ZYMO|SRR13006002	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.5384615384615384	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5844947735191637	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.4129230769230769	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.5495978773190001	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.5273667307999256	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.4993543128324175	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.4289318247050471	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2730192307692307	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.5270642427344702	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.4992447098513051	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.4289318247050472	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.2730192307692307	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.5270642427344702	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.499244709851305	mock-ZYMO	SRR13006003	mock-ZYMO|SRR13006003	ZYMO	ZYMO|SRR13006003	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0
+zOTU	jaccard	0.5384615384615384	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__jaccard
+zOTU	weighted_jaccard	0.5653568339167883	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	Weighted Jaccard	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__weighted_jaccard
+zOTU	braycurtis	0.3940748802786242	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	Bray-Curtis	denoising_phylogeny_agnostic	Denoising | phylo-agnostic	zOTU__braycurtis
+zOTU	gunifrac_a0.0	0.5495978773190001	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	gUniFrac (α=0.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.0
+zOTU	gunifrac_a0.5	0.5216791799851285	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	gUniFrac (α=0.5)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a0.5
+zOTU	gunifrac_a1.0	0.4901357177776066	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	UNOISE3	gUniFrac (α=1.0)	denoising_phylogeny_aware	Denoising | phylo-aware	zOTU__gunifrac_a1.0
+TIC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__jaccard
+TIC	weighted_jaccard	0.405118618000913	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__weighted_jaccard
+TIC	braycurtis	0.2540117544623422	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TIC__braycurtis
+TIC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.0
+TIC	gunifrac_a0.5	0.5213712789971708	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a0.5
+TIC	gunifrac_a1.0	0.4900223448173293	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TIC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TIC__gunifrac_a1.0
+TAC	jaccard	0.3636363636363636	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__jaccard
+TAC	weighted_jaccard	0.405118618000913	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	Weighted Jaccard	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__weighted_jaccard
+TAC	braycurtis	0.2540117544623422	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	Bray-Curtis	clustering_phylogeny_agnostic	Clustering | phylo-agnostic	TAC__braycurtis
+TAC	gunifrac_a0.0	0.5487410674853992	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	gUniFrac (α=0.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.0
+TAC	gunifrac_a0.5	0.5213712789971708	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	gUniFrac (α=0.5)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a0.5
+TAC	gunifrac_a1.0	0.4900223448173293	mock-ZYMO	SRR13006004	mock-ZYMO|SRR13006004	ZYMO	ZYMO|SRR13006004	TAC	gUniFrac (α=1.0)	clustering_phylogeny_aware	Clustering | phylo-aware	TAC__gunifrac_a1.0

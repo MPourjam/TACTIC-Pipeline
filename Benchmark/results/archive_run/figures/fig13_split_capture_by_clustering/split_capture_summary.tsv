@@ -1,0 +1,19 @@
+source_method	clustering_method	capture_status	capture_status_label	n_events	n_total_events	fraction
+ASV	OTU	captured_as_one	Captured as one	32	32	1.0
+ASV	OTU	still_split	Still split	0	32	0.0
+ASV	OTU	not_captured	Not captured	0	32	0.0
+ASV	TIC	captured_as_one	Captured as one	32	32	1.0
+ASV	TIC	still_split	Still split	0	32	0.0
+ASV	TIC	not_captured	Not captured	0	32	0.0
+ASV	TAC	captured_as_one	Captured as one	32	32	1.0
+ASV	TAC	still_split	Still split	0	32	0.0
+ASV	TAC	not_captured	Not captured	0	32	0.0
+zOTU	OTU	captured_as_one	Captured as one	23	23	1.0
+zOTU	OTU	still_split	Still split	0	23	0.0
+zOTU	OTU	not_captured	Not captured	0	23	0.0
+zOTU	TIC	captured_as_one	Captured as one	23	23	1.0
+zOTU	TIC	still_split	Still split	0	23	0.0
+zOTU	TIC	not_captured	Not captured	0	23	0.0
+zOTU	TAC	captured_as_one	Captured as one	23	23	1.0
+zOTU	TAC	still_split	Still split	0	23	0.0
+zOTU	TAC	not_captured	Not captured	0	23	0.0

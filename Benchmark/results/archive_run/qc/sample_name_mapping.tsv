@@ -1,0 +1,136 @@
+community_id	method	expected_sample	expected_sample_label	inferred_sample
+mock-12	ASV	Extreme.1	Mock 3	mock-12-Extreme
+mock-12	zOTU	Extreme.1	Mock 3	mock-12-Extreme
+mock-12	OTU	Extreme.1	Mock 3	mock-12-Extreme
+mock-12	TIC	Extreme.1	Mock 3	mock-12-Extreme
+mock-12	TAC	Extreme.1	Mock 3	mock-12-Extreme
+mock-13	ASV	mock-13	Mock 4	mock-13-S1
+mock-13	zOTU	mock-13	Mock 4	mock-13-S1
+mock-13	OTU	mock-13	Mock 4	mock-13-S1
+mock-13	TIC	mock-13	Mock 4	mock-13-S1
+mock-13	TAC	mock-13	Mock 4	mock-13-S1
+mock-14	ASV	mock-14	Mock 5	mock-14-S1
+mock-14	zOTU	mock-14	Mock 5	mock-14-S1
+mock-14	OTU	mock-14	Mock 5	mock-14-S1
+mock-14	TIC	mock-14	Mock 5	mock-14-S1
+mock-14	TAC	mock-14	Mock 5	mock-14-S1
+mock-15	ASV	mock-15	Mock 6	mock-15-S1
+mock-15	zOTU	mock-15	Mock 6	mock-15-S1
+mock-15	OTU	mock-15	Mock 6	mock-15-S1
+mock-15	TIC	mock-15	Mock 6	mock-15-S1
+mock-15	TAC	mock-15	Mock 6	mock-15-S1
+mock-16	ASV	mock-16	Mock 7	mock-16-S1
+mock-16	zOTU	mock-16	Mock 7	mock-16-S1
+mock-16	OTU	mock-16	Mock 7	mock-16-S1
+mock-16	TIC	mock-16	Mock 7	mock-16-S1
+mock-16	TAC	mock-16	Mock 7	mock-16-S1
+mock-18	ASV	mock-18	Mock 8	mock-18-S1
+mock-18	zOTU	mock-18	Mock 8	mock-18-S1
+mock-18	OTU	mock-18	Mock 8	mock-18-S1
+mock-18	TIC	mock-18	Mock 8	mock-18-S1
+mock-18	TAC	mock-18	Mock 8	mock-18-S1
+mock-19	ASV	mock-19	Mock 9	mock-19-S1
+mock-19	zOTU	mock-19	Mock 9	mock-19-S1
+mock-19	OTU	mock-19	Mock 9	mock-19-S1
+mock-19	TIC	mock-19	Mock 9	mock-19-S1
+mock-19	TAC	mock-19	Mock 9	mock-19-S1
+mock-20	ASV	mock-20	Mock 10	mock-20-S1
+mock-20	zOTU	mock-20	Mock 10	mock-20-S1
+mock-20	OTU	mock-20	Mock 10	mock-20-S1
+mock-20	TIC	mock-20	Mock 10	mock-20-S1
+mock-20	TAC	mock-20	Mock 10	mock-20-S1
+mock-21	ASV	mock-21	Mock 11	mock-21-S1
+mock-21	zOTU	mock-21	Mock 11	mock-21-S1
+mock-21	OTU	mock-21	Mock 11	mock-21-S1
+mock-21	TIC	mock-21	Mock 11	mock-21-S1
+mock-21	TAC	mock-21	Mock 11	mock-21-S1
+mock-22	ASV	mock-22	Mock 12	mock-22-S1
+mock-22	zOTU	mock-22	Mock 12	mock-22-S1
+mock-22	OTU	mock-22	Mock 12	mock-22-S1
+mock-22	TIC	mock-22	Mock 12	mock-22-S1
+mock-22	TAC	mock-22	Mock 12	mock-22-S1
+mock-23	ASV	mock-23	Mock 13	mock-23-S1
+mock-23	zOTU	mock-23	Mock 13	mock-23-S1
+mock-23	OTU	mock-23	Mock 13	mock-23-S1
+mock-23	TIC	mock-23	Mock 13	mock-23-S1
+mock-23	TAC	mock-23	Mock 13	mock-23-S1
+mock-4	ASV	HMPMockV1.1.Even1	Even1	mock-4-Even1
+mock-4	ASV	HMPMockV1.1.Even2	Even2	mock-4-Even2
+mock-4	ASV	HMPMockV1.2.Staggered1	Staggered1	mock-4-Staggered1
+mock-4	ASV	HMPMockV1.2.Staggered2	Staggered2	mock-4-Staggered2
+mock-4	zOTU	HMPMockV1.1.Even1	Even1	mock-4-Even1
+mock-4	zOTU	HMPMockV1.1.Even2	Even2	mock-4-Even2
+mock-4	zOTU	HMPMockV1.2.Staggered1	Staggered1	mock-4-Staggered1
+mock-4	zOTU	HMPMockV1.2.Staggered2	Staggered2	mock-4-Staggered2
+mock-4	OTU	HMPMockV1.1.Even1	Even1	mock-4-Even1
+mock-4	OTU	HMPMockV1.1.Even2	Even2	mock-4-Even2
+mock-4	OTU	HMPMockV1.2.Staggered1	Staggered1	mock-4-Staggered1
+mock-4	OTU	HMPMockV1.2.Staggered2	Staggered2	mock-4-Staggered2
+mock-4	TIC	HMPMockV1.1.Even1	Even1	mock-4-Even1
+mock-4	TIC	HMPMockV1.1.Even2	Even2	mock-4-Even2
+mock-4	TIC	HMPMockV1.2.Staggered1	Staggered1	mock-4-Staggered1
+mock-4	TIC	HMPMockV1.2.Staggered2	Staggered2	mock-4-Staggered2
+mock-4	TAC	HMPMockV1.1.Even1	Even1	mock-4-Even1
+mock-4	TAC	HMPMockV1.1.Even2	Even2	mock-4-Even2
+mock-4	TAC	HMPMockV1.2.Staggered1	Staggered1	mock-4-Staggered1
+mock-4	TAC	HMPMockV1.2.Staggered2	Staggered2	mock-4-Staggered2
+mock-5	ASV	HMPMockV1.1.Even1	Even1	mock-5-Even1
+mock-5	ASV	HMPMockV1.1.Even2	Even2	mock-5-Even2
+mock-5	ASV	HMPMockV1.2.Staggered1	Staggered1	mock-5-Staggered1
+mock-5	ASV	HMPMockV1.2.Staggered2	Staggered2	mock-5-Staggered2
+mock-5	zOTU	HMPMockV1.1.Even1	Even1	mock-5-Even1
+mock-5	zOTU	HMPMockV1.1.Even2	Even2	mock-5-Even2
+mock-5	zOTU	HMPMockV1.2.Staggered1	Staggered1	mock-5-Staggered1
+mock-5	zOTU	HMPMockV1.2.Staggered2	Staggered2	mock-5-Staggered2
+mock-5	OTU	HMPMockV1.1.Even1	Even1	mock-5-Even1
+mock-5	OTU	HMPMockV1.1.Even2	Even2	mock-5-Even2
+mock-5	OTU	HMPMockV1.2.Staggered1	Staggered1	mock-5-Staggered1
+mock-5	OTU	HMPMockV1.2.Staggered2	Staggered2	mock-5-Staggered2
+mock-5	TIC	HMPMockV1.1.Even1	Even1	mock-5-Even1
+mock-5	TIC	HMPMockV1.1.Even2	Even2	mock-5-Even2
+mock-5	TIC	HMPMockV1.2.Staggered1	Staggered1	mock-5-Staggered1
+mock-5	TIC	HMPMockV1.2.Staggered2	Staggered2	mock-5-Staggered2
+mock-5	TAC	HMPMockV1.1.Even1	Even1	mock-5-Even1
+mock-5	TAC	HMPMockV1.1.Even2	Even2	mock-5-Even2
+mock-5	TAC	HMPMockV1.2.Staggered1	Staggered1	mock-5-Staggered1
+mock-5	TAC	HMPMockV1.2.Staggered2	Staggered2	mock-5-Staggered2
+mock-ZIEL_1	ASV	SRR13005984	SRR13005984	SRR13005984
+mock-ZIEL_1	ASV	SRR13005985	SRR13005985	SRR13005985
+mock-ZIEL_1	zOTU	SRR13005984	SRR13005984	SRR13005984
+mock-ZIEL_1	zOTU	SRR13005985	SRR13005985	SRR13005985
+mock-ZIEL_1	OTU	SRR13005984	SRR13005984	SRR13005984
+mock-ZIEL_1	OTU	SRR13005985	SRR13005985	SRR13005985
+mock-ZIEL_1	TIC	SRR13005984	SRR13005984	SRR13005984
+mock-ZIEL_1	TIC	SRR13005985	SRR13005985	SRR13005985
+mock-ZIEL_1	TAC	SRR13005984	SRR13005984	SRR13005984
+mock-ZIEL_1	TAC	SRR13005985	SRR13005985	SRR13005985
+mock-ZIEL_2	ASV	SRR13005964	SRR13005964	SRR13005964
+mock-ZIEL_2	ASV	SRR13005965	SRR13005965	SRR13005965
+mock-ZIEL_2	ASV	SRR13005966	SRR13005966	SRR13005966
+mock-ZIEL_2	zOTU	SRR13005964	SRR13005964	SRR13005964
+mock-ZIEL_2	zOTU	SRR13005965	SRR13005965	SRR13005965
+mock-ZIEL_2	zOTU	SRR13005966	SRR13005966	SRR13005966
+mock-ZIEL_2	OTU	SRR13005964	SRR13005964	SRR13005964
+mock-ZIEL_2	OTU	SRR13005965	SRR13005965	SRR13005965
+mock-ZIEL_2	OTU	SRR13005966	SRR13005966	SRR13005966
+mock-ZIEL_2	TIC	SRR13005964	SRR13005964	SRR13005964
+mock-ZIEL_2	TIC	SRR13005965	SRR13005965	SRR13005965
+mock-ZIEL_2	TIC	SRR13005966	SRR13005966	SRR13005966
+mock-ZIEL_2	TAC	SRR13005964	SRR13005964	SRR13005964
+mock-ZIEL_2	TAC	SRR13005965	SRR13005965	SRR13005965
+mock-ZIEL_2	TAC	SRR13005966	SRR13005966	SRR13005966
+mock-ZYMO	ASV	SRR13006004	SRR13006004	SRR13006004
+mock-ZYMO	ASV	SRR13006002	SRR13006002	SRR13006002
+mock-ZYMO	ASV	SRR13006003	SRR13006003	SRR13006003
+mock-ZYMO	zOTU	SRR13006004	SRR13006004	SRR13006004
+mock-ZYMO	zOTU	SRR13006002	SRR13006002	SRR13006002
+mock-ZYMO	zOTU	SRR13006003	SRR13006003	SRR13006003
+mock-ZYMO	OTU	SRR13006004	SRR13006004	SRR13006004
+mock-ZYMO	OTU	SRR13006002	SRR13006002	SRR13006002
+mock-ZYMO	OTU	SRR13006003	SRR13006003	SRR13006003
+mock-ZYMO	TIC	SRR13006004	SRR13006004	SRR13006004
+mock-ZYMO	TIC	SRR13006002	SRR13006002	SRR13006002
+mock-ZYMO	TIC	SRR13006003	SRR13006003	SRR13006003
+mock-ZYMO	TAC	SRR13006004	SRR13006004	SRR13006004
+mock-ZYMO	TAC	SRR13006002	SRR13006002	SRR13006002
+mock-ZYMO	TAC	SRR13006003	SRR13006003	SRR13006003

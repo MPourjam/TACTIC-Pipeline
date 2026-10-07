@@ -1,0 +1,15 @@
+inferred_feature	target_species	best_tip	target_tip	effective_identity	pident	bitscore	evalue	length
+OTU1	Bacteroides_vulgatus	Bacteroides_vulgatus_ATCC-8482	Bacteroides_vulgatus_ATCC-8482	100.0	100.0	468.0	9.06e-136	253.0
+OTU10	Chloroflexus_aurantiacus	Chloroflexus_aurantiacus_J-10-fl	Chloroflexus_aurantiacus_J-10-fl	100.0	100.0	468.0	9.06e-136	253.0
+OTU11	Nitrobacter_winogradskyi	Nitrobacter_winogradskyi_ATCC-14123	Nitrobacter_winogradskyi_ATCC-14123	100.0	100.0	468.0	9.06e-136	253.0
+OTU12	Gemmatimonas_aurantiaca	Gemmatimonas_aurantiaca_T-27	Gemmatimonas_aurantiaca_T-27	100.0	100.0	468.0	9.06e-136	253.0
+OTU13	Clostridium_acetobutylicum	Clostridium_acetobutylicum_ATCC-824	Clostridium_acetobutylicum_ATCC-824	100.0	100.0	468.0	9.06e-136	253.0
+OTU14	Desulfovibrio_vulgaris	Desulfovibrio_vulgaris_Hildenborough	Desulfovibrio_vulgaris_Hildenborough	100.0	100.0	468.0	9.06e-136	253.0
+OTU2	Escherichia_coli	Escherichia_coli_DH5a	Escherichia_coli_DH5a	100.0	100.0	468.0	9.06e-136	253.0
+OTU3	Bacillus_subtilis	Bacillus_subtilis_ATCC-6051	Bacillus_subtilis_ATCC-6051	100.0	100.0	468.0	9.06e-136	253.0
+OTU4	Treponema_bryantii	Treponema_bryantii_ATCC-33254	Treponema_bryantii_ATCC-33254	100.0	100.0	468.0	9.06e-136	253.0
+OTU5	Nitrosomonas_europaea	Nitrosomonas_europaea_ATCC-19178	Nitrosomonas_europaea_ATCC-19178	100.0	100.0	468.0	9.06e-136	253.0
+OTU6	Deinococcus_grandis	Deinococcus_grandis_DSM-3963	Deinococcus_grandis_DSM-3963	100.0	100.0	468.0	9.06e-136	253.0
+OTU7	Anaerolinea_thermophila	Anaerolinea_thermophila_UNI-1	Anaerolinea_thermophila_UNI-1	100.0	100.0	468.0	9.06e-136	253.0
+OTU8	Desulfitobacterium_hafniense	Desulfitobacterium_hafniense_DCB-2	Desulfitobacterium_hafniense_DCB-2	100.0	100.0	468.0	9.06e-136	253.0
+OTU9	Pseudomonas_putida	Pseudomonas_putida_KT2440	Pseudomonas_putida_KT2440	100.0	100.0	468.0	9.06e-136	253.0

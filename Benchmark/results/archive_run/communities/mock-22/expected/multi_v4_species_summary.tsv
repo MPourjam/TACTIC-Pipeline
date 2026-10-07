@@ -1,0 +1,2 @@
+community_id	source_sequences_file	n_species_total	n_species_with_multiple_v4_unique_sequences	multi_v4_species	multi_v4_species_abundance_sum	multi_v4_species_abundance_fraction	multi_v4_species_abundance_percent	has_multi_v4_species
+mock-22	/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/cleaned_up_202605/mock-22/source/expected-sequences.v4.fasta	20	3	Bacteroides_vulgatus;Clostridium_beijerinckii;Staphylococcus_epidermidis	1499.9999999999995	0.15	14.999999999999996	True

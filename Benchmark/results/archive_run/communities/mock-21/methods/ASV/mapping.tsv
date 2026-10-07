@@ -1,0 +1,15 @@
+inferred_feature	target_tip	effective_identity	pident	bitscore	evalue	length
+ASV_1	Staphylococcus_aureus_ATCC_BAA-1718	100.0	100.0	468.0	1.39e-135	253.0
+ASV_10	Lactobacillus_gasseri_DSM_20243	100.0	100.0	468.0	1.39e-135	253.0
+ASV_11	Helicobacter_pylori_ATCC_700392	100.0	100.0	470.0	3.88e-136	254.0
+ASV_12	Listeria_monocytogenes_ATCC_BAA-679	100.0	100.0	468.0	1.39e-135	253.0
+ASV_13	Neisseria_meningitidis_ATCC_BAA-335	100.0	100.0	468.0	1.39e-135	253.0
+ASV_14	Streptococcus_pneumoniae_ATCC_BAA-334	100.0	100.0	466.0	4.98e-135	252.0
+ASV_2	Streptococcus_mutans_ATCC_700610	100.0	100.0	466.0	4.98e-135	252.0
+ASV_3	Escherichia_coli_ATCC_700926	100.0	100.0	468.0	1.39e-135	253.0
+ASV_4	Rhodobacter_sphaeroides_ATCC_17023	100.0	100.0	468.0	1.39e-135	253.0
+ASV_5	Bacillus_cereus_ATCC_10987	100.0	100.0	468.0	1.39e-135	253.0
+ASV_6	Clostridium_beijerinckii_ATCC_51743	100.0	100.0	468.0	1.39e-135	253.0
+ASV_7	Streptococcus_agalactiae_ATCC_BAA-611	100.0	100.0	466.0	4.98e-135	252.0
+ASV_8	Acinetobacter_baumannii_ATCC_17978	100.0	100.0	468.0	1.39e-135	253.0
+ASV_9	Pseudomonas_aeruginosa_ATCC_47085	100.0	100.0	468.0	1.39e-135	253.0
