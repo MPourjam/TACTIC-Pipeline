@@ -478,6 +478,15 @@ def calc_spikes(
 def find_files_and_dirs_owned_by_root(directory):
     root_files_and_dirs = []
     directory = Path(directory).absolute()
+    if not directory.exists():
+        return root_files_and_dirs
+
+    if directory != Path(directory.root):
+        try:
+            if not directory.is_symlink() and directory.stat().st_uid == 0:
+                root_files_and_dirs.append(str(directory))
+        except Exception:
+            pass
 
     for path in directory.rglob('*'):
         try:

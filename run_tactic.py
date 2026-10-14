@@ -143,18 +143,44 @@ def handle_system_signals(signum, frame):
         sys.exit(1)
 
 
-def correct_created_files_modes(mode=777) -> bool:
+def correct_created_files_modes(mode=777, target_dirs=None) -> bool:
     """
     It corrects the mode of created files by the pipeline.
     """
     mode = int("0o" + str(mode), 8)
-    to_change_mode = proc_helper.find_files_and_dirs_owned_by_root(INPUT_DIR)
-    for fi in to_change_mode:
-        fi = Path(PurePath(fi)).absolute()
-        try:
-            fi.chmod(mode)
-        except Exception as exc:
-            PREP_LOG.warning(f"Could not change mode of {fi}. {exc}")
+    if target_dirs is None:
+        target_dirs = []
+        if "INPUT_DIR" in globals() and INPUT_DIR:
+            target_dirs.append(INPUT_DIR)
+        if "DBS_DIR" in globals() and DBS_DIR:
+            target_dirs.append(DBS_DIR)
+    elif not isinstance(target_dirs, (list, tuple, set)):
+        target_dirs = [target_dirs]
+
+    unique_dirs = []
+    seen = set()
+    for d in target_dirs:
+        if d:
+            try:
+                p = Path(PurePath(d)).absolute()
+                if p.exists() and str(p) not in seen:
+                    seen.add(str(p))
+                    unique_dirs.append(p)
+            except Exception:
+                pass
+
+    seen_files = set()
+    for target_dir in unique_dirs:
+        to_change_mode = proc_helper.find_files_and_dirs_owned_by_root(target_dir)
+        for fi in to_change_mode:
+            fi = Path(PurePath(fi)).absolute()
+            if str(fi) in seen_files:
+                continue
+            seen_files.add(str(fi))
+            try:
+                fi.chmod(mode)
+            except Exception as exc:
+                PREP_LOG.warning(f"Could not change mode of {fi}. {exc}")
 
     return mode
 
@@ -1010,8 +1036,9 @@ def run_tactic(
         skip_non_bacterial_filter: bool = False,
         spikes_references_dir: str = SPIKESIDX_PARENT,
         threads: int = POOL_SIZE) -> str:
-    # NOTE if this function is imported then the default global variables will be used
-    global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE
+    global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE, DBS_DIR
+    if dbs_dir:
+        DBS_DIR = dbs_dir
     PREP_LOG = proc_helper.gimmelogger(
         "run_tactic",
         log_file=INPUT_DIR.joinpath("Pipeline_log.txt"),
@@ -1436,6 +1463,9 @@ if __name__ == "__main__":
             expected_md5="db6e72022cf650c4b33bd888b92a0391",
             logger_obj=PREP_LOG
         )
+
+        # Correct permissions/modes of database files right after preparation
+        correct_created_files_modes(target_dirs=[DBS_DIR, silva_db_dir])
 
         # PREP_LOG.info(f"SILVA database version {silva_version} is ready.")
 
