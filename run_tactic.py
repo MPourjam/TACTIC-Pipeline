@@ -939,6 +939,61 @@ def check_taxed_zotus_fasta(file_path: str) -> bool:
     return format_is_correct
 
 
+def copy_pipeline_log_to_analysis(analysis_dir: Path, fastq_file_dir: Path, logger: logging.Logger) -> None:
+    """
+    Flushes logger buffers and copies Pipeline_log.txt to the final Analysis directory.
+    """
+    if not analysis_dir or not Path(analysis_dir).is_dir():
+        return
+
+    analysis_dir = Path(PurePath(analysis_dir)).absolute()
+    fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
+
+    # Flush all logger handlers to ensure pending log entries are written to disk
+    for handler in logger.handlers:
+        try:
+            handler.flush()
+        except Exception:
+            pass
+
+    # Find the active Pipeline_log.txt
+    pipeline_log_src = None
+    for handler in logger.handlers:
+        if isinstance(handler, logging.FileHandler):
+            try:
+                candidate = Path(handler.baseFilename).resolve()
+                if candidate.name == "Pipeline_log.txt" and candidate.is_file():
+                    pipeline_log_src = candidate
+                    break
+            except Exception:
+                pass
+
+    if not pipeline_log_src or not pipeline_log_src.is_file():
+        if fastq_file_dir.joinpath("Pipeline_log.txt").is_file():
+            pipeline_log_src = fastq_file_dir.joinpath("Pipeline_log.txt")
+        elif INPUT_DIR.joinpath("Pipeline_log.txt").is_file():
+            pipeline_log_src = INPUT_DIR.joinpath("Pipeline_log.txt")
+
+    if pipeline_log_src and pipeline_log_src.is_file():
+        try:
+            dest_log = analysis_dir.joinpath("Pipeline_log.txt")
+            shutil.copy2(str(pipeline_log_src), str(dest_log))
+            try:
+                rel_dest = str(dest_log.relative_to(INPUT_DIR))
+            except Exception:
+                rel_dest = str(dest_log)
+            logger.info(f"Copied {pipeline_log_src.name} to {rel_dest}")
+            for handler in logger.handlers:
+                try:
+                    handler.flush()
+                except Exception:
+                    pass
+        except Exception as exc:
+            logger.warning(f"Could not copy {pipeline_log_src.name} to {analysis_dir}: {exc}")
+    else:
+        logger.warning("Pipeline_log.txt not found; skipping copy to Analysis directory.")
+
+
 def run_tactic(
         fastq_file_dir: str,
         usearch_11_bin: str = str(USEARCH_11_BIN),
@@ -1137,9 +1192,9 @@ def run_tactic(
 
     # Runing analysis
     if not skip_analysis:
+        analysis_dir = fastq_file_dir.joinpath(f"Analysis_{proc_helper.generate_timestamp()}")
+        analysis_dir.mkdir(parents=True, exist_ok=True)
         try:
-            analysis_dir = fastq_file_dir.joinpath(f"Analysis_{proc_helper.generate_timestamp()}")
-            analysis_dir.mkdir(parents=True, exist_ok=True)
             # we do the step down because if skip_preprocess is True then the path to preprocess would be given not all smaple_dirs
             if str(combined_spike_stats_path) != str(default_spike_stat_compiled):
                 PREP_LOG.warning(f"Using custom spike_stat file: {combined_spike_stats_path} for spike normalization!! Default spike_stat file {default_spike_stat_compiled} is ignored!")
@@ -1171,6 +1226,8 @@ def run_tactic(
             sys.exit(166)
         else:
             PREP_LOG.info(f"Analysis done. Results directory: {str(analysis_dir.relative_to(INPUT_DIR))}")
+        finally:
+            copy_pipeline_log_to_analysis(analysis_dir, fastq_file_dir, PREP_LOG)
     else:
         PREP_LOG.warning("Analyss step is skipped. Exiting...")
         analysis_exit_code = 169
