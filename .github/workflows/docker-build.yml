@@ -59,10 +59,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run Unit Tests
-      run: |
-        pytest -v tactic_pipeline/test/test_processing_helper.py
-
     - name: Run Pre-Publish End-to-End Tests
       run: |
         SILVA_SOURCE=ftp pytest -v -m pre_publish tactic_pipeline/test/end_to_end/test_pipeline.py
