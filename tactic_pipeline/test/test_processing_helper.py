@@ -158,8 +158,10 @@ def test_find_files_and_dirs_owned_by_root(tmp_path, monkeypatch):
     assert processing_helper.find_files_and_dirs_owned_by_root(non_existent) == []
 
 
-def test_correct_created_files_modes(tmp_path, monkeypatch):
-    import run_tactic
+# NOTE: do not import run_tactic in unit tests. Importing it opens
+# /base/inputs/Pipeline_log.txt in 'w' mode (truncating it) and registers
+# signal/atexit handlers. Keep testable logic in processing_helper instead.
+def test_correct_files_modes(tmp_path, monkeypatch):
     target_dir = tmp_path / "test_db"
     target_dir.mkdir()
     test_file = target_dir / "test.txt"
@@ -177,7 +179,10 @@ def test_correct_created_files_modes(tmp_path, monkeypatch):
         lambda d: [str(target_dir), str(test_file)] if str(d) == str(target_dir) else []
     )
 
-    mode_result = run_tactic.correct_created_files_modes(mode=777, target_dirs=[target_dir])
+    # duplicated and missing directories must not cause repeated or failing chmods
+    mode_result = processing_helper.correct_files_modes(
+        [target_dir, str(target_dir), tmp_path / "missing", "", None],
+        mode=0o777
+    )
     assert mode_result == 0o777
-    assert (str(target_dir), 0o777) in chmod_calls
-    assert (str(test_file), 0o777) in chmod_calls
+    assert sorted(chmod_calls) == sorted([(str(target_dir), 0o777), (str(test_file), 0o777)])

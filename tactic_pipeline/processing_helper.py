@@ -505,6 +505,46 @@ def find_files_and_dirs_owned_by_root(directory):
     return root_files_and_dirs
 
 
+def correct_files_modes(target_dirs, mode: int = 0o777, logger_obj: logging.Logger = None) -> int:
+    """
+    Changes the mode of root-owned files and directories (including the given
+    directories themselves) found in target_dirs. Duplicated or missing
+    directories are skipped. Returns the applied mode.
+    """
+    logger_obj = logger_obj if logger_obj else argparse_logger
+    if target_dirs is None:
+        target_dirs = []
+    elif isinstance(target_dirs, (str, Path)):
+        target_dirs = [target_dirs]
+
+    unique_dirs = []
+    seen_dirs = set()
+    for target_dir in target_dirs:
+        if not target_dir:
+            continue
+        try:
+            target_dir = Path(PurePath(target_dir)).absolute()
+        except Exception:
+            continue
+        if target_dir.exists() and str(target_dir) not in seen_dirs:
+            seen_dirs.add(str(target_dir))
+            unique_dirs.append(target_dir)
+
+    seen_files = set()
+    for target_dir in unique_dirs:
+        for fi in find_files_and_dirs_owned_by_root(target_dir):
+            fi = Path(PurePath(fi)).absolute()
+            if str(fi) in seen_files:
+                continue
+            seen_files.add(str(fi))
+            try:
+                fi.chmod(mode)
+            except Exception as exc:
+                logger_obj.warning(f"Could not change mode of {fi}. {exc}")
+
+    return mode
+
+
 def generate_timestamp(thread_safe=False):
     current_time = dt.now()
     timestamp = current_time.strftime("%Y%m%d_%H%M%S")
