@@ -29,6 +29,15 @@ def build_image():
     if os.path.isfile("/.dockerenv"):
         # We are already testing in the docker container
         return
+    inspect_tag = f"{IMAGE_NAME}:latest" if ":" not in IMAGE_NAME else IMAGE_NAME
+    check_image = subprocess.run(
+        ["docker", "image", "inspect", inspect_tag],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+    if check_image.returncode == 0:
+        print(f"Docker image {inspect_tag} already exists, skipping build.")
+        return
     print("Building the image using file system image")
     dockerfile = "Dockerfile.TACTIC" if os.path.isfile("Dockerfile.TACTIC") else "Dockerfile.TACTICPipeline"
     subprocess.run(["docker", "buildx", "build", "-f", dockerfile, "--output", "type=tar,dest=image.tar", "."])

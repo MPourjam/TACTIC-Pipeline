@@ -1863,7 +1863,7 @@ def get_silva_release_urls(
         base_url: str = "https://ftp.arb-silva.de/",
         timeout: int = 10,
         logger_obj: logging.Logger = SILVA_db_logger):
-    '''
+    r'''
     Return (chosen_arb_url, releases_list).
 
     - chosen_arb_url: URL to the SILVA ARB gz file for the chosen release (or the release dir if not found)
