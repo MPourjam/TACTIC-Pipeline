@@ -30,9 +30,8 @@ def build_image():
         # We are already testing in the docker container
         return
     print("Building the image using file system image")
-    # build the image using tar file target
-    # docker buildx build -f Dockerfile.TACTICPipeline --output type=tar,dest=image.tar .
-    subprocess.run(["docker", "buildx", "build", "-f", "Dockerfile.TACTICPipeline", "--output", "type=tar,dest=image.tar", "."])
+    dockerfile = "Dockerfile.TACTIC" if os.path.isfile("Dockerfile.TACTIC") else "Dockerfile.TACTICPipeline"
+    subprocess.run(["docker", "buildx", "build", "-f", dockerfile, "--output", "type=tar,dest=image.tar", "."])
     # load with tag
     subprocess.run(["docker", "image", "import", "image.tar", IMAGE_NAME])
 
@@ -44,7 +43,7 @@ class ArgumentSet:
     mapping_file: str = ""  # path to the mapping file
     spike_stats_file: str = ""  # path to the spike stats file
     usearch_bin: str = ""  # path to the usearch binary
-    db_directory: str = ""  # path to the database directory
+    db_directory: str = "/databases" if os.path.isdir("/databases") else ""  # path to the database directory
     skip_preprocess = False
     skip_analysis = False
     place_template_file = False
@@ -73,7 +72,7 @@ class ArgumentSet:
             args += ["--spike-stat", self.spike_stats_file]
         if self.usearch_bin:
             args += ["--usearch-bin", self.usearch_bin]
-        if True:
+        if self.db_directory:
             args += ["--db-directory", self.db_directory]
         if self.skip_preprocess:
             args += ["--skip-preprocess"]
@@ -452,14 +451,29 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             assert result.returncode == 169, f"Command failed with return code {result.returncode}, expected return code is 169 for skipped preprocessing and analysis"
 
 
-def copy_initial_files(run_dir: str) -> None:
+def copy_initial_files(run_dir: str, max_reads: Optional[int] = None) -> None:
     """
     Copy the fastq files from the data directory to the run directory.
     The data directory is expected to be in the same directory as this script.
+    If max_reads is given, copies only up to max_reads reads to speed up execution.
     """
-    # move the contents of the data folder to the run_dir
-    for file in glob.glob(data + "/truncated/*"):
-        subprocess.run(["cp", file, str(run_dir) + "/"])
+    if max_reads is None:
+        for file in glob.glob(data + "/truncated/*"):
+            subprocess.run(["cp", file, str(run_dir) + "/"])
+    else:
+        max_lines = max_reads * 4
+        for file in glob.glob(data + "/truncated/*"):
+            file_path = Path(file)
+            target_path = Path(run_dir) / file_path.name
+            if file.endswith(".fastq.gz"):
+                with gzip.open(file_path, "rt") as f_in, gzip.open(target_path, "wt") as f_out:
+                    for _ in range(max_lines):
+                        line = f_in.readline()
+                        if not line:
+                            break
+                        f_out.write(line)
+            else:
+                subprocess.run(["cp", file, str(run_dir) + "/"])
     subprocess.run(["cp", data + "/TACTICPipeline_args_test.yml", run_dir])
 
 
@@ -518,9 +532,10 @@ def test_flat_mapping(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.pre_publish
 def test_preprocessing(build_image):
     def setup_file_structure(run_dir: str):
-        copy_initial_files(run_dir)
+        copy_initial_files(run_dir, max_reads=1000)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -657,9 +672,10 @@ def test_full_denovo_analysis(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.pre_publish
 def test_full_multi_analysis_mode_selector(build_image):
     def setup_file_structure(run_dir: str):
-        copy_initial_files(run_dir)
+        copy_initial_files(run_dir, max_reads=1000)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -703,9 +719,10 @@ def test_full_TAC_analysis(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.pre_publish
 def test_full_TIC_analysis_no_iz(build_image):
     def setup_file_structure(run_dir: str):
-        copy_initial_files(run_dir)
+        copy_initial_files(run_dir, max_reads=1000)
         # setting args
         args_set = ArgumentSet("", "")
         # create a mapping file
@@ -800,6 +817,7 @@ def test_full_TIC_analysis_custom_database_path(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.pre_publish
 def test_duplicate_samples_in_different_folders(build_image):
     with contextlib.nullcontext(tempfile.mkdtemp()) as run_dir:
         folder_a = Path(run_dir) / "folder_a"

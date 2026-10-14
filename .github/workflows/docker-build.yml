@@ -8,7 +8,7 @@ on:
 jobs:
 
   build:
-    name: Build and publish docker image
+    name: Build, test and publish docker image
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,37 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Build and push to registry
+    - name: Build and load image for testing
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: "./Dockerfile.TACTIC"
+        load: true
+        tags: tic-pipeline-test:latest
+        secrets: |
+          silva_app_token=${{ secrets.SILVA_APP_TOKEN }}
+        build-args: |
+          GIT_TAG=${{ github.ref_name }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install test dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+
+    - name: Run Unit Tests
+      run: |
+        pytest -v tactic_pipeline/test/test_processing_helper.py
+
+    - name: Run Pre-Publish End-to-End Tests
+      run: |
+        SILVA_SOURCE=ftp pytest -v -m pre_publish tactic_pipeline/test/end_to_end/test_pipeline.py
+
+    - name: Push to registry
       uses: docker/build-push-action@v5
       with:
         context: .
@@ -48,10 +78,9 @@ jobs:
         secrets: |
           silva_app_token=${{ secrets.SILVA_APP_TOKEN }}
         build-args: |
-          GIT_TAG=${{ github.ref_name }}  # it only works if the trigger is a tag
-        #labels: ${{ steps.meta.outputs.labels }}
+          GIT_TAG=${{ github.ref_name }}
 
-    - name: Build and export
+    - name: Build and export archive
       uses: docker/build-push-action@v5
       with:
         context: .
@@ -61,7 +90,7 @@ jobs:
         secrets: |
           silva_app_token=${{ secrets.SILVA_APP_TOKEN }}
         build-args: |
-          GIT_TAG=${{ github.ref_name }}  # it only works if the trigger is a tag
+          GIT_TAG=${{ github.ref_name }}
 
     - name: Compress image tar
       run: gzip image.tar
