@@ -15,6 +15,10 @@ from pathlib import Path, PurePath
 from .analysis_helper import onelinefasta, prepare_picrust2_input
 import logging
 from ticlust import TICAnalysis
+try:
+    from tactic_pipeline.version import get_version
+except ImportError:
+    from version import get_version
 
 import warnings
 # In Python ≤3.11, invalid escape sequences (like "\d" outside raw strings) were allowed but discouraged.
@@ -1572,6 +1576,7 @@ def main(
     ANA_LOG = gimmelogger(
         logger_name="run_tactic.analysis.main",
     )
+    ANA_LOG.info(f"Starting pipeline version {get_version()}")
     ANA_LOG.info(f"Using DBs from: {str(DB_LOC)}")
     # updating POOL_SIZE
     try:

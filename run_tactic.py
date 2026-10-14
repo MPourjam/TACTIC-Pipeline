@@ -14,6 +14,7 @@ import logging
 from os import symlink, chdir
 from tactic_pipeline.processing_job import main_processing as preprocessing
 from tactic_pipeline.analysis.analysis import main as main_analysis
+from tactic_pipeline.version import get_version
 from collections import namedtuple
 import tactic_pipeline.processing_helper as proc_helper
 from tactic_pipeline.processing_helper import (
@@ -1017,6 +1018,9 @@ def run_tactic(
         only_file=False,
         propagate=False
     )
+    if not getattr(PREP_LOG, "_version_logged", False):
+        PREP_LOG.info(f"Starting pipeline version {get_version()}")
+        PREP_LOG._version_logged = True
     # update SPIKESIDX
     spikes_references_dir = Path(PurePath(spikes_references_dir)).absolute()
     try:
@@ -1038,7 +1042,6 @@ def run_tactic(
         PREP_LOG.warning(f"Failed to index spike references: {exc}. Falling back to default spike references.")
         sys.exit(171)
 
-    # PREP_LOG.info("Starting pipeline version {}".format(environ.get("TAG_GIT", "NA")))
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     POOL_SIZE = threads
 
@@ -1353,6 +1356,8 @@ if __name__ == "__main__":
         only_file=False,
         propagate=False
     )
+    PREP_LOG.info(f"Starting pipeline version {get_version()}")
+    PREP_LOG._version_logged = True
     # updating spikes references dir
     args.spikes_references_dir = str(INPUT_DIR.joinpath(args.spikes_references_dir).absolute()) if args.spikes_references_dir else SPIKESIDX_PARENT
     # updating usearch path
