@@ -10,11 +10,15 @@ import glob
 import tempfile
 import re
 import csv
+from pathlib import Path
 
 
 global data, IMAGE_NAME
 IMAGE_NAME = "tic-pipeline-test"
-data = "test/data"
+os.environ.setdefault("SILVA_SOURCE", "ftp")
+CURRENT_DIR = Path(__file__).resolve().parent
+DATA_DIR = CURRENT_DIR / "data" if (CURRENT_DIR / "data").is_dir() else CURRENT_DIR.parent / "data"
+data = str(DATA_DIR)
 usearch_11_32_url = "https://drive5.com/downloads/usearch11.0.667_i86linux32.gz"
 
 
@@ -345,10 +349,19 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             cmd = ["python", "/base/run_tactic.py"]
             arg_set.input_dir = run_dir
         else:
-            cmd = ["docker", "run", "--rm", "-v", run_dir + ":/base/inputs", IMAGE_NAME, "run_tactic"]
+            cmd = [
+                "docker", "run", "--rm",
+                "-e", f"SILVA_SOURCE={os.environ.get('SILVA_SOURCE', 'ftp')}",
+                "-v", run_dir + ":/base/inputs",
+                IMAGE_NAME, "run_tactic"
+            ]
         cmd += arg_set.to_args()
         # Write the command to a file
+        run_env = os.environ.copy()
+        run_env.setdefault("SILVA_SOURCE", "ftp")
         with open(run_dir + "/cmd.txt", "w") as f:
+            if os.path.isfile("/.dockerenv"):
+                f.write(f"export SILVA_SOURCE={run_env.get('SILVA_SOURCE', 'ftp')}\n")
             f.write(" ".join(cmd) + "\n")
         print("cmd =", cmd)
         fastq_dir = os.path.join(run_dir, arg_set.fastq_dir)
@@ -358,6 +371,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
         # run docker cmd with the image
         result = subprocess.run(
             cmd,
+            env=run_env,
             capture_output=False, text=True
         )
 
