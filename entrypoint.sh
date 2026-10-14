@@ -10,4 +10,8 @@ printf " |____|\____|__  /\______    |____|   |___|\______  / \n"
 printf "               \/        \/                       \/  \n"
 
 
+if [ "${1:-}" = "run_tactic" ] || [ "${1:-}" = "run_tactic.py" ] || [ "${1:-}" = "/base/run_tactic.py" ]; then
+    shift
+fi
+
 exec /base/run_tactic.py "$@"

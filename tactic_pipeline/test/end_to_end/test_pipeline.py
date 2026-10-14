@@ -363,7 +363,7 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
                 "docker", "run", "--rm",
                 "-e", f"SILVA_SOURCE={os.environ.get('SILVA_SOURCE', 'ftp')}",
                 "-v", run_dir + ":/base/inputs",
-                IMAGE_NAME, "run_tactic"
+                IMAGE_NAME
             ]
         cmd += arg_set.to_args()
         # Write the command to a file
