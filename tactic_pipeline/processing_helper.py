@@ -677,6 +677,7 @@ def pair_seq_files(directory):
                 if reve_file:
                     skip_reverses.append(reve_file)
 
+    paired_files.sort(key=lambda x: (str(x[0]), str(x[1])))
     return paired_files
 
 

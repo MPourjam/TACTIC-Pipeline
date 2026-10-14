@@ -186,3 +186,22 @@ def test_correct_files_modes(tmp_path, monkeypatch):
     )
     assert mode_result == 0o777
     assert sorted(chmod_calls) == sorted([(str(target_dir), 0o777), (str(test_file), 0o777)])
+
+
+def test_pair_seq_files_deterministic_sorting(tmp_path):
+    dir_z = tmp_path / "z_folder"
+    dir_a = tmp_path / "a_folder"
+    dir_m = tmp_path / "m_folder"
+    for d in [dir_z, dir_a, dir_m]:
+        d.mkdir()
+        (d / "sample_R1.fastq").write_text("@r1\nACGT\n+\nIIII\n")
+        (d / "sample_R2.fastq").write_text("@r2\nTGCA\n+\nIIII\n")
+
+    pairs = processing_helper.pair_seq_files(str(tmp_path))
+    assert len(pairs) == 3
+    expected_order = [
+        (str(dir_a / "sample_R1.fastq"), str(dir_a / "sample_R2.fastq")),
+        (str(dir_m / "sample_R1.fastq"), str(dir_m / "sample_R2.fastq")),
+        (str(dir_z / "sample_R1.fastq"), str(dir_z / "sample_R2.fastq")),
+    ]
+    assert pairs == expected_order

@@ -166,19 +166,22 @@ atexit.register(correct_created_files_modes)
 
 
 def is_in_processed_dir(fastq_path: Path, sample_id: str = None) -> bool:
-    default = None
     type_test = [
         isinstance(fastq_path, str),
         isinstance(fastq_path, Path),
     ]
     if not any(type_test):
-        return default
-    default = False
-    base_name = proc_helper.get_base_name(str(fastq_path)) if sample_id is None else sample_id
-    if f"{str(base_name)}{PROC_DIR_SUFFIX}" in str(fastq_path):
-        default = True
-
-    return default
+        return None
+    try:
+        path_obj = Path(PurePath(fastq_path))
+        if any(part.endswith(PROC_DIR_SUFFIX) for part in path_obj.parent.parts):
+            return True
+        base_name = proc_helper.get_base_name(str(fastq_path)) if sample_id is None else sample_id
+        if f"{str(base_name)}{PROC_DIR_SUFFIX}" in str(fastq_path):
+            return True
+    except Exception:
+        pass
+    return False
 
 
 def is_argset_different(existing_arg_file: Path, processed_arg_file: Path = None) -> bool:
@@ -722,6 +725,20 @@ def remove_spikes(
     return out_tup
 
 
+def _cleanup_failed_preprocessing_dir(sample_dir_path):
+    if not sample_dir_path:
+        return
+    try:
+        sample_dir_path = Path(PurePath(sample_dir_path)).absolute()
+        if sample_dir_path.is_dir():
+            shutil.rmtree(str(sample_dir_path), ignore_errors=True)
+        parent_dir = sample_dir_path.parent
+        if parent_dir.is_dir() and not list(parent_dir.iterdir()):
+            shutil.rmtree(str(parent_dir), ignore_errors=True)
+    except Exception:
+        pass
+
+
 def run_preprocessing(
         seq_files_t: tuple,
         args_yml_path: str,
@@ -828,34 +845,30 @@ def run_preprocessing(
         err_msg += "\n\tIf you are using usearch 32-bit version, consider upgrading to 64-bit version."
         err_msg += "\n\tIf you are using usearch 64-bit then run the programm with lower number of threads."
         PREPPROC_LOG.error(f"{err_msg}")
-        # If parent of sample_dir is empty then remove it
-        if not list(sample_dir.parent.iterdir()):
-            shutil.rmtree(str(sample_dir.parent))
+        _cleanup_failed_preprocessing_dir(sample_dir)
         sample_dir = None
         sys.exit(160)
     except proc_helper.SpikeRemovalException as spike_exc:
         PREPPROC_LOG.error(f"Failed to remove spikes for {sample_id}. {spike_exc}")
-        # If parent of sample_dir is empty then remove it
-        if not list(sample_dir.parent.iterdir()):
-            shutil.rmtree(str(sample_dir.parent))
+        _cleanup_failed_preprocessing_dir(sample_dir)
         sample_dir = None
         # TODO check if bowtie2 raises any other return code than 0 if the sample
         # does not have any spike reads
         raise spike_exc
     except proc_helper.ArgsetException as argset_exc:
         PREPPROC_LOG.error(f"Failed to run preprocessing for {sample_id}. {argset_exc}")
-        # If parent of sample_dir is empty then remove it
-        if not list(sample_dir.parent.iterdir()):
-            shutil.rmtree(str(sample_dir.parent))
+        _cleanup_failed_preprocessing_dir(sample_dir)
         sample_dir = None
         raise argset_exc
     except Exception as exc:
         msg = f"{exc}"
         PREPPROC_LOG.error(msg)
-        PREPPROC_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
-        # If parent of sample_dir is empty then remove it
-        if not list(sample_dir.parent.iterdir()):
-            shutil.rmtree(str(sample_dir.parent))
+        if sample_dir:
+            try:
+                PREPPROC_LOG.warning("Failed while processing {}, Deleting !!!".format(sample_dir.relative_to(FASTQ_DIR)))
+            except Exception:
+                PREPPROC_LOG.warning(f"Failed while processing {sample_dir}, Deleting !!!")
+        _cleanup_failed_preprocessing_dir(sample_dir)
         sample_dir = None
 
     return sample_dir

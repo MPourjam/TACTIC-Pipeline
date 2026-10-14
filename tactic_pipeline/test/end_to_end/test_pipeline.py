@@ -10,6 +10,8 @@ import glob
 import tempfile
 import re
 import csv
+import gzip
+import shutil
 from pathlib import Path
 
 
@@ -796,3 +798,65 @@ def test_full_TIC_analysis_custom_database_path(build_image):
         return args_set
 
     run_container(setup_file_structure)
+
+
+def test_duplicate_samples_in_different_folders(build_image):
+    with contextlib.nullcontext(tempfile.mkdtemp()) as run_dir:
+        folder_a = Path(run_dir) / "folder_a"
+        folder_b = Path(run_dir) / "folder_b"
+        folder_a.mkdir(parents=True)
+        folder_b.mkdir(parents=True)
+
+        subprocess.run(["cp", str(DATA_DIR / "TACTICPipeline_args_test.yml"), str(run_dir)])
+
+        # Create FASTQ pairs with identical base names in folder_a and folder_b
+        source_r1 = DATA_DIR / "truncated" / "truncSRR13005876_S1_L001_R1_001.fastq.gz"
+        source_r2 = DATA_DIR / "truncated" / "truncSRR13005876_S1_L001_R2_001.fastq.gz"
+        for folder in [folder_a, folder_b]:
+            with gzip.open(source_r1, "rt") as f_in, gzip.open(folder / "sample_dup_S1_L001_R1_001.fastq.gz", "wt") as f_out:
+                for _ in range(400):
+                    f_out.write(next(f_in))
+            with gzip.open(source_r2, "rt") as f_in, gzip.open(folder / "sample_dup_S1_L001_R2_001.fastq.gz", "wt") as f_out:
+                for _ in range(400):
+                    f_out.write(next(f_in))
+
+        args_set = ArgumentSet(run_dir if os.path.isfile("/.dockerenv") else "", "")
+        args_set.yml_file = "TACTICPipeline_args_test.yml"
+        args_set.skip_analysis = True
+        if os.path.isdir("/databases"):
+            args_set.db_directory = "/databases"
+
+        if os.path.isfile("/.dockerenv"):
+            base_cmd = ["python", "/base/run_tactic.py"]
+        else:
+            base_cmd = [
+                "docker", "run", "--rm",
+                "-e", f"SILVA_SOURCE={os.environ.get('SILVA_SOURCE', 'ftp')}",
+                "-v", f"{run_dir}:/base/inputs",
+                IMAGE_NAME, "run_tactic"
+            ]
+
+        cmd = base_cmd + args_set.to_args()
+        run_env = os.environ.copy()
+        run_env.setdefault("SILVA_SOURCE", "ftp")
+
+        try:
+            # Run 1: initial preprocessing
+            result1 = subprocess.run(cmd, env=run_env, capture_output=True, text=True)
+            assert result1.returncode == 169, f"Run 1 failed with code {result1.returncode}: {result1.stderr}"
+
+            proc_dirs_run1 = sorted([str(p.relative_to(run_dir)) for p in Path(run_dir).rglob("*__processed")])
+            assert len(proc_dirs_run1) == 2, f"Expected 2 processed directories after run 1, found: {proc_dirs_run1}"
+            assert any(d.endswith("__processed") and "__2__processed" not in d for d in proc_dirs_run1), f"Expected a base processed directory: {proc_dirs_run1}"
+            assert any(d.endswith("__2__processed") for d in proc_dirs_run1), f"Expected a __2__processed directory: {proc_dirs_run1}"
+
+            # Run 2: rerun pipeline on the same directory
+            result2 = subprocess.run(cmd, env=run_env, capture_output=True, text=True)
+            assert result2.returncode == 169, f"Run 2 failed with code {result2.returncode}: {result2.stderr}"
+
+            proc_dirs_run2 = sorted([str(p.relative_to(run_dir)) for p in Path(run_dir).rglob("*__processed")])
+            assert len(proc_dirs_run2) == 2, f"Runaway directories detected after run 2: {proc_dirs_run2}"
+            assert not any("__3__processed" in d for d in proc_dirs_run2), f"Runaway __3__processed directory created: {proc_dirs_run2}"
+            assert proc_dirs_run2 == proc_dirs_run1, f"Processed directories changed between runs: {proc_dirs_run1} vs {proc_dirs_run2}"
+        finally:
+            shutil.rmtree(run_dir, ignore_errors=True)
