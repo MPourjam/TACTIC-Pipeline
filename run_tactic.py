@@ -477,7 +477,7 @@ def select_samples_for_analysis(mapping_line_tup_list: List[Tuple[Tuple[MapLineT
     return list(filtered_samples_dir.values()), missed_samples_ids
 
 
-def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
+def parse_mapping_file(mapping_file_path: str = "", files_tups: list = None):
     """
     mapping_file_path: should be a path to mapping file
     files_tups: should be a list of files path tuples. i.e: [(<forward_path>, <reverse_path>), ...]
@@ -492,24 +492,25 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     amounts_col_name = MAPPING_FILE_COLS[2]
     index_of_parent_path_col = None
     parent_path_col_name = MAPPING_FILE_COLS[3]
-    # Preparing default argument for each sample preprocessing
+    files_tups = list(files_tups) if files_tups is not None else []
 
-    for file_pair in files_tups:
-        forw_file = Path(PurePath(file_pair[0])).absolute()
-        sample_id = proc_helper.get_base_name(forw_file)
-        curr_parent = forw_file.parent.relative_to(FASTQ_DIR)
-        _row_vals_tup = MapLineTup(
-            sample_id,
-            DEFAULT_MAP_LINE.total_weight_in_g,
-            DEFAULT_MAP_LINE.spike_amount,
-            "" if str(curr_parent) == "." else str(curr_parent)
-        )
-        mapping_lines.append((_row_vals_tup, file_pair))
-    # If mapping_file exists then we parse it and change the default of sample_weight, spike_mount to actual values.
-    mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
     if not mapping_file_path:
+        # Preparing default argument for each sample preprocessing from autodiscovered pairs
+        for file_pair in files_tups:
+            forw_file = Path(PurePath(file_pair[0])).absolute()
+            sample_id = proc_helper.get_base_name(forw_file)
+            curr_parent = forw_file.parent.relative_to(FASTQ_DIR)
+            _row_vals_tup = MapLineTup(
+                sample_id,
+                DEFAULT_MAP_LINE.total_weight_in_g,
+                DEFAULT_MAP_LINE.spike_amount,
+                "" if str(curr_parent) == "." else str(curr_parent)
+            )
+            mapping_lines.append((_row_vals_tup, file_pair))
+        mapping_lines = convert_mapping_entries_to_dict(mapping_lines)
         PREP_LOG.info("No Mapping file provided. Using default values for sample preprocessing.")
         return mapping_lines
+
     mapping_file_path = Path(PurePath(mapping_file_path)).absolute()
     # if mapping_file_path is not empty string and is not a file then raise an error
     if not mapping_file_path.is_file():
@@ -519,6 +520,7 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
     PREP_LOG.info(f"When mapping file is provided ({mapping_file_path}), only samples in mapping file will get processed!!!")
     # If mapping_file_is there then renew the mapping_lines
     mapping_lines = []  # List[(MapLineTup, file_pair)] -> from mapping file, full line for each relevant sample
+    claimed_files = set()
 
     with open(mapping_file_path, 'r') as mapping_file_h:
         header: str = str(next(mapping_file_h)).replace("\r", "")
@@ -618,9 +620,9 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                 hypo_fields[2],
                 hypo_fields[3],
             )
-            # Mapping file paris to sample_id
+            # Mapping file pairs to sample_id
             file_pairs_tup = ("", "")
-            # files_tups contain all found fastq files in fastq directory
+            # If files_tups was provided, check it first
             for ind in range(len(files_tups)):
                 file_tup = files_tups[ind]
                 try:
@@ -639,9 +641,37 @@ def parse_mapping_file(mapping_file_path: str, files_tups: list = []):
                     file_pairs_tup = file_tup
                     del files_tups[ind]
                     break
-            found_fastqs = [True if fi else False for fi in file_pairs_tup]
-            # NOTE: We should warn the user if we consider a sample being single layout and not paired layout
-            if not all(found_fastqs):
+
+            # If not matched from files_tups, perform targeted lookup directly
+            if not file_pairs_tup[0]:
+                found_pair = proc_helper.find_fastq_pair_for_sample(
+                    sample_id=sample_id,
+                    parent_path=map_line.parent_path,
+                    base_fastq_dir=FASTQ_DIR,
+                    logger_obj=PREP_LOG,
+                    claimed_files=claimed_files
+                )
+                if found_pair[0]:
+                    file_pairs_tup = found_pair
+                    forw_p = Path(PurePath(file_pairs_tup[0]))
+                    try:
+                        rel_parent = str(forw_p.parent.relative_to(FASTQ_DIR))
+                        if rel_parent == ".":
+                            rel_parent = ""
+                    except Exception:
+                        rel_parent = str(forw_p.parent)
+                    map_line = MapLineTup(
+                        map_line.SampleID,
+                        map_line.total_weight_in_g,
+                        map_line.spike_amount,
+                        rel_parent
+                    )
+
+            if file_pairs_tup[0]:
+                claimed_files.add(str(file_pairs_tup[0]))
+                if file_pairs_tup[1]:
+                    claimed_files.add(str(file_pairs_tup[1]))
+            else:
                 PREP_LOG.warning(f"Could not match fastq  to sample_id: {sample_id} in mapping file.")
 
             mapping_lines.append((map_line, file_pairs_tup))
@@ -1085,16 +1115,28 @@ def run_tactic(
     given_spike_stat_file = Path(PurePath(spike_stat_file)).absolute()
     combined_spike_stats_path = default_spike_stat_compiled if not given_spike_stat_file.is_file() else given_spike_stat_file
     reduced_samples_dirs = []
-    mapping_file_path = Path(PurePath(str(mapping_file))).absolute() if mapping_file else ""  # it will return a path to current directory if mapping_file = ""
+    mapping_file_path = None
+    if mapping_file:
+        candidate = Path(PurePath(str(mapping_file))).absolute()
+        if candidate.is_file():
+            mapping_file_path = candidate
+        elif Path(fastq_file_dir).joinpath(str(mapping_file)).is_file():
+            mapping_file_path = Path(fastq_file_dir).joinpath(str(mapping_file)).absolute()
+        elif Path(INPUT_DIR).joinpath(str(mapping_file)).is_file():
+            mapping_file_path = Path(INPUT_DIR).joinpath(str(mapping_file)).absolute()
+        else:
+            mapping_file_path = candidate
+
     # Preparing mapping file entries
-    # Gathering sequence files
-    PREP_LOG.info("# Gathering sequence files in {}".format(str(fastq_file_dir)))
-    seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
-    seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
-    PREP_LOG.info("{} samples were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
-    # Filtering fastq files if they are already in processed directories
-    # Sometimes failed processing leaves fastq files in the processing directories
-    mapping_line_tup_dict = parse_mapping_file(mapping_file_path, seq_file_pairs)
+    if mapping_file_path and mapping_file_path.is_file():
+        PREP_LOG.info(f"# Mapping file provided ({mapping_file_path}). Resolving target samples...")
+        mapping_line_tup_dict = parse_mapping_file(mapping_file_path=str(mapping_file_path))
+    else:
+        PREP_LOG.info("# Gathering sequence files in {}".format(str(fastq_file_dir)))
+        seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
+        seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
+        PREP_LOG.info("{} samples were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
+        mapping_line_tup_dict = parse_mapping_file(files_tups=seq_file_pairs)
 
     analysis_modes = parse_analysis_modes(analysis_mode)
     # choosing analysis_mode

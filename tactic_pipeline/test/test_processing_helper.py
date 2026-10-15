@@ -205,3 +205,165 @@ def test_pair_seq_files_deterministic_sorting(tmp_path):
         (str(dir_z / "sample_R1.fastq"), str(dir_z / "sample_R2.fastq")),
     ]
     assert pairs == expected_order
+
+
+def test_is_fastq_extension():
+    assert processing_helper.is_fastq_extension("sample.fastq") is True
+    assert processing_helper.is_fastq_extension("sample.fq") is True
+    assert processing_helper.is_fastq_extension("sample_R1_001.fastq.gz") is True
+    assert processing_helper.is_fastq_extension("SAMPLE_R2.FQ.GZ") is True
+    assert processing_helper.is_fastq_extension("sample.fasta") is False
+    assert processing_helper.is_fastq_extension("report.txt") is False
+    assert processing_helper.is_fastq_extension("archive.tar.gz") is False
+
+
+def test_pair_seq_files_skips_non_fastq_and_processed(tmp_path, monkeypatch):
+    run_dir = tmp_path / "run_dir"
+    run_dir.mkdir()
+    proc_dir = run_dir / "sample_01__processed"
+    proc_dir.mkdir()
+
+    # Valid FASTQ pair
+    (run_dir / "sample_01_R1.fastq").write_text("@seq1\nACGT\n+\nIIII\n")
+    (run_dir / "sample_01_R2.fastq").write_text("@seq1\nTGCA\n+\nIIII\n")
+
+    # Non-FASTQ files that should be completely skipped without opening
+    (run_dir / "notes.txt").write_text("not a fastq")
+    (run_dir / "image.png").write_text("binary data")
+    (proc_dir / "processed_R1.fastq").write_text("@proc1\nACGT\n+\nIIII\n")
+    (proc_dir / "processed_R2.fastq").write_text("@proc1\nTGCA\n+\nIIII\n")
+
+    opened_files = []
+    real_is_seq_file = processing_helper.is_seq_file
+
+    def tracking_is_seq_file(path, *args, **kwargs):
+        opened_files.append(str(path))
+        return real_is_seq_file(path, *args, **kwargs)
+
+    monkeypatch.setattr(processing_helper, "is_seq_file", tracking_is_seq_file)
+
+    pairs = processing_helper.pair_seq_files(str(run_dir))
+    assert len(pairs) == 1
+    assert pairs[0] == (str(run_dir / "sample_01_R1.fastq"), str(run_dir / "sample_01_R2.fastq"))
+    # notes.txt, image.png, and processed files must never be passed to is_seq_file
+    assert str(run_dir / "notes.txt") not in opened_files
+    assert str(run_dir / "image.png") not in opened_files
+    assert str(proc_dir / "processed_R1.fastq") not in opened_files
+
+
+def test_find_fastq_pair_for_sample_with_and_without_parent(tmp_path):
+    folder_a = tmp_path / "folder_a"
+    folder_b = tmp_path / "folder_b"
+    folder_a.mkdir()
+    folder_b.mkdir()
+
+    (folder_a / "sample_A_R1_001.fastq.gz").write_bytes(gzip.compress(b"@sA\nACGT\n+\nIIII\n"))
+    (folder_a / "sample_A_R2_001.fastq.gz").write_bytes(gzip.compress(b"@sA\nTGCA\n+\nIIII\n"))
+    (folder_b / "sample_B_R1_001.fastq.gz").write_bytes(gzip.compress(b"@sB\nACGT\n+\nIIII\n"))
+    (folder_b / "sample_B_R2_001.fastq.gz").write_bytes(gzip.compress(b"@sB\nTGCA\n+\nIIII\n"))
+
+    # Test with explicit parent_path
+    pair_a = processing_helper.find_fastq_pair_for_sample(
+        sample_id="sample_A",
+        parent_path="folder_a",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_a == (
+        str(folder_a / "sample_A_R1_001.fastq.gz"),
+        str(folder_a / "sample_A_R2_001.fastq.gz")
+    )
+
+    # Test without parent_path (subfolder recursive discovery)
+    pair_b = processing_helper.find_fastq_pair_for_sample(
+        sample_id="sample_B",
+        parent_path="",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_b == (
+        str(folder_b / "sample_B_R1_001.fastq.gz"),
+        str(folder_b / "sample_B_R2_001.fastq.gz")
+    )
+
+
+def test_find_fastq_pair_exact_sample_id_differentiation(tmp_path):
+    (tmp_path / "Sample1_R1_001.fastq").write_text("@s1\nACGT\n+\nIIII\n")
+    (tmp_path / "Sample1_R2_001.fastq").write_text("@s1\nTGCA\n+\nIIII\n")
+    (tmp_path / "Sample10_R1_001.fastq").write_text("@s10\nACGT\n+\nIIII\n")
+    (tmp_path / "Sample10_R2_001.fastq").write_text("@s10\nTGCA\n+\nIIII\n")
+
+    # Sample1 must match Sample1 and not Sample10
+    pair_1 = processing_helper.find_fastq_pair_for_sample(
+        sample_id="Sample1",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_1 == (
+        str(tmp_path / "Sample1_R1_001.fastq"),
+        str(tmp_path / "Sample1_R2_001.fastq")
+    )
+
+    # Sample10 must match Sample10
+    pair_10 = processing_helper.find_fastq_pair_for_sample(
+        sample_id="Sample10",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_10 == (
+        str(tmp_path / "Sample10_R1_001.fastq"),
+        str(tmp_path / "Sample10_R2_001.fastq")
+    )
+
+
+def test_find_fastq_pair_claimed_files(tmp_path):
+    (tmp_path / "sample_dup_R1.fastq").write_text("@s\nACGT\n+\nIIII\n")
+    (tmp_path / "sample_dup_R2.fastq").write_text("@s\nTGCA\n+\nIIII\n")
+
+    claimed = set()
+    pair_1 = processing_helper.find_fastq_pair_for_sample(
+        sample_id="sample_dup",
+        base_fastq_dir=tmp_path,
+        claimed_files=claimed
+    )
+    assert pair_1[0] == str(tmp_path / "sample_dup_R1.fastq")
+    assert pair_1[1] == str(tmp_path / "sample_dup_R2.fastq")
+    claimed.add(pair_1[0])
+    claimed.add(pair_1[1])
+
+    # Second call with claimed files must return empty
+    pair_2 = processing_helper.find_fastq_pair_for_sample(
+        sample_id="sample_dup",
+        base_fastq_dir=tmp_path,
+        claimed_files=claimed
+    )
+    assert pair_2 == ("", "")
+
+
+def test_parse_mapping_file_targeted_without_seq_file_pairs(tmp_path, monkeypatch):
+    import run_tactic
+
+    folder = tmp_path / "fastqs"
+    folder.mkdir()
+    (folder / "SampleA_R1_001.fastq").write_text("@sA\nACGT\n+\nIIII\n")
+    (folder / "SampleA_R2_001.fastq").write_text("@sA\nTGCA\n+\nIIII\n")
+    (folder / "SampleB_R1_001.fastq").write_text("@sB\nACGT\n+\nIIII\n")
+    (folder / "SampleB_R2_001.fastq").write_text("@sB\nTGCA\n+\nIIII\n")
+
+    map_content = "#SampleID\ttotal_weight_in_g\tspike_amount\tparent_path\nSampleA\t1.5\t5.0\tfastqs\n"
+    map_file = tmp_path / "mapping_file.csv"
+    map_file.write_text(map_content)
+
+    monkeypatch.setattr(run_tactic, "FASTQ_DIR", tmp_path)
+
+    # Calling parse_mapping_file with ONLY the mapping_file_path (no files_tups)
+    mapping_dict = run_tactic.parse_mapping_file(mapping_file_path=str(map_file))
+
+    assert "SampleA" in mapping_dict
+    map_entry = mapping_dict["SampleA"]
+    map_line, file_pair = map_entry
+    assert map_line.SampleID == "SampleA"
+    assert map_line.total_weight_in_g == 1.5
+    assert map_line.spike_amount == "5.0"
+    assert file_pair == (
+        str(folder / "SampleA_R1_001.fastq"),
+        str(folder / "SampleA_R2_001.fastq")
+    )
+
+

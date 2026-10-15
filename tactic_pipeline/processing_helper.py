@@ -628,6 +628,10 @@ def is_forward_file(file_name):
     return any([True for indi_reg in forw_file_indicators if bool(indi_reg.search(file_name))])
 
 
+def is_reverse_file(file_name):
+    return any([True for indi_reg in reve_file_indicators if bool(indi_reg.search(file_name))])
+
+
 def find_reverse_file(file_path):
     """
     It assumes that reverse file exists in the same directory
@@ -658,27 +662,121 @@ def find_reverse_file(file_path):
     return reverse_file_path
 
 
+FASTQ_EXTENSIONS = (
+    ".fastq",
+    ".fq",
+    ".fastq.gz",
+    ".fq.gz",
+    ".fastq.zst",
+    ".fq.zst",
+)
+
+
+def is_fastq_extension(file_name: str) -> bool:
+    name_lower = str(file_name).lower()
+    return any(name_lower.endswith(ext) for ext in FASTQ_EXTENSIONS)
+
+
 def pair_seq_files(directory):
     direcotry_path = Path(PurePath(directory))
     paired_files = []
     if not direcotry_path.is_dir():
         return paired_files
     # is_seq_file checks the format of file as well.
-    skip_reverses = []
+    skip_reverses = set()
     for file_path in direcotry_path.rglob("*"):
+        if not file_path.is_file():
+            continue
+        if "__processed" in str(file_path):
+            continue
+        if not is_fastq_extension(file_path.name):
+            continue
         file_path = Path(PurePath(file_path)).absolute()
+        if str(file_path) in skip_reverses:
+            continue
         isSeqFile = is_seq_file(file_path, seq_file_format="fastq")
-        if isSeqFile and str(file_path) not in skip_reverses:
+        if isSeqFile:
             if is_forward_file(file_path.name):
                 forw_file = str(file_path)
                 reve_file = str(find_reverse_file(file_path))
                 paired_file = (forw_file, reve_file)
                 paired_files.append(paired_file)
                 if reve_file:
-                    skip_reverses.append(reve_file)
+                    skip_reverses.add(reve_file)
 
     paired_files.sort(key=lambda x: (str(x[0]), str(x[1])))
     return paired_files
+
+
+def find_fastq_pair_for_sample(
+        sample_id: str,
+        parent_path: str = "",
+        base_fastq_dir = None,
+        logger_obj: logging.Logger = None,
+        claimed_files: set = None) -> tuple:
+    """
+    Directly locate the forward and reverse FASTQ files for a specific sample_id
+    within base_fastq_dir (or base_fastq_dir / parent_path) without scanning unrelated directories.
+
+    Returns:
+        tuple: (forward_fastq_path, reverse_fastq_path) or ("", "") if not found.
+    """
+    logger = logger_obj if logger_obj else argparse_logger
+    claimed = claimed_files if claimed_files is not None else set()
+    base_dir = Path(PurePath(base_fastq_dir)).resolve() if base_fastq_dir else Path.cwd().resolve()
+
+    parent_str = str(parent_path).strip().lstrip("\\").lstrip("/") if parent_path else ""
+    if parent_str and parent_str != ".":
+        search_dir = base_dir.joinpath(parent_str)
+        if not search_dir.is_dir():
+            logger.debug(f"Search directory for parent_path '{parent_path}' does not exist: {search_dir}")
+            return ("", "")
+    else:
+        search_dir = base_dir
+
+    def _filter_candidates(paths):
+        cands = []
+        for p in paths:
+            if p.is_file() and is_fastq_extension(p.name) and "__processed" not in str(p) and str(p) not in claimed:
+                cands.append(p)
+        return cands
+
+    # 1. Non-recursive glob in search_dir first (fastest)
+    candidates = _filter_candidates(search_dir.glob(f"*{sample_id}*"))
+
+    # 2. If not found in search_dir directly, search recursively under search_dir
+    if not candidates:
+        candidates = _filter_candidates(search_dir.rglob(f"*{sample_id}*"))
+
+    if not candidates:
+        return ("", "")
+
+    # Prioritize exact base name match: get_base_name(p) == sample_id
+    exact_cands = [p for p in candidates if get_base_name(p) == sample_id]
+    eval_cands = exact_cands if exact_cands else candidates
+
+    # Forward files among candidates
+    forw_cands = [p for p in eval_cands if is_forward_file(p.name)]
+    forw_cands.sort(key=lambda p: str(p))
+
+    for forw_cand in forw_cands:
+        if is_seq_file(forw_cand, seq_file_format="fastq"):
+            forw_file = str(forw_cand)
+            reve_path = find_reverse_file(forw_cand)
+            reve_file = ""
+            if reve_path and Path(reve_path).is_file():
+                if is_seq_file(reve_path, seq_file_format="fastq") and str(reve_path) not in claimed:
+                    reve_file = str(reve_path)
+            return (forw_file, reve_file)
+
+    # Fallback for single-end reads without forward indicator (must not be a reverse read)
+    single_cands = [p for p in eval_cands if not is_reverse_file(p.name)]
+    single_cands.sort(key=lambda p: str(p))
+    for cand in single_cands:
+        if is_seq_file(cand, seq_file_format="fastq"):
+            return (str(cand), "")
+
+    return ("", "")
 
 
 def is_relative_to(path, *other):
