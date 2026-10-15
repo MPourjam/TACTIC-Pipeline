@@ -609,6 +609,58 @@ def test_find_fastq_pair_for_sample_hyphenated(tmp_path):
     )
 
 
+def test_file_discovery_skips_analysis_directories(tmp_path):
+    # 1. Normal sample directory with valid FASTQ files
+    valid_dir = tmp_path / "fastqs"
+    valid_dir.mkdir()
+    (valid_dir / "sample_A_R1.fastq").write_text("@sA\nACGT\n+\nIIII\n")
+    (valid_dir / "sample_A_R2.fastq").write_text("@sA\nTGCA\n+\nIIII\n")
+
+    # Sample whose filename happens to start with Analysis_
+    (valid_dir / "Analysis_named_sample_R1.fastq").write_text("@sAn\nACGT\n+\nIIII\n")
+    (valid_dir / "Analysis_named_sample_R2.fastq").write_text("@sAn\nTGCA\n+\nIIII\n")
+
+    # 2. Output directory starting with Analysis_
+    analysis_dir = tmp_path / "Analysis_20261015_120000" / "Shared" / "relabeling"
+    analysis_dir.mkdir(parents=True)
+    (analysis_dir / "sample_A_relabeled.fastq").write_text("@sA\nACGT\n+\nIIII\n")
+    (analysis_dir / "sample_old_R1.fastq").write_text("@old\nACGT\n+\nIIII\n")
+    (analysis_dir / "sample_old_R2.fastq").write_text("@old\nTGCA\n+\nIIII\n")
+
+    # 3. Processed directory
+    proc_dir = tmp_path / "sample_A__processed" / "20261015"
+    proc_dir.mkdir(parents=True)
+    (proc_dir / "sample_A_R1_trimmed.fastq").write_text("@sA\nACGT\n+\nIIII\n")
+
+    # Verify pair_seq_files skips both Analysis_ and __processed directories
+    pairs = processing_helper.pair_seq_files(str(tmp_path))
+    found_forws = [p[0] for p in pairs]
+    assert str(valid_dir / "sample_A_R1.fastq") in found_forws
+    assert str(valid_dir / "Analysis_named_sample_R1.fastq") in found_forws
+    assert str(analysis_dir / "sample_old_R1.fastq") not in found_forws
+    assert str(analysis_dir / "sample_A_relabeled.fastq") not in found_forws
+    assert str(proc_dir / "sample_A_R1_trimmed.fastq") not in found_forws
+
+    # Verify find_fastq_pair_for_sample skips Analysis_ directories
+    # Sample "sample_old" exists ONLY inside Analysis_ directory, so it must return ("", "")
+    pair_old = processing_helper.find_fastq_pair_for_sample(
+        sample_id="sample_old",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_old == ("", "")
+
+    # Sample "sample_A" must match the valid directory files, not the Analysis_ or __processed files
+    pair_a = processing_helper.find_fastq_pair_for_sample(
+        sample_id="sample_A",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_a == (
+        str(valid_dir / "sample_A_R1.fastq"),
+        str(valid_dir / "sample_A_R2.fastq")
+    )
+
+
+
 
 
 

@@ -764,7 +764,7 @@ def pair_seq_files(directory):
     for file_path in directory_path.rglob("*"):
         if not file_path.is_file():
             continue
-        if "__processed" in str(file_path):
+        if "__processed" in str(file_path) or any(part.startswith("Analysis_") for part in file_path.parent.parts):
             continue
         if not is_fastq_extension(file_path.name):
             continue
@@ -821,8 +821,15 @@ def find_fastq_pair_for_sample(
     def _filter_candidates(paths):
         cands = []
         for p in paths:
-            if p.is_file() and is_fastq_extension(p.name) and "__processed" not in str(p) and str(p) not in claimed:
-                cands.append(p)
+            if not p.is_file():
+                continue
+            if not is_fastq_extension(p.name):
+                continue
+            if "__processed" in str(p) or any(part.startswith("Analysis_") for part in p.parent.parts):
+                continue
+            if str(p) in claimed:
+                continue
+            cands.append(p)
         return cands
 
     # Escape glob meta-characters in sample_id to prevent bracket/wildcard misinterpretation
