@@ -860,7 +860,7 @@ def test_duplicate_samples_in_different_folders(build_image):
                 "docker", "run", "--rm",
                 "-e", f"SILVA_SOURCE={os.environ.get('SILVA_SOURCE', 'ftp')}",
                 "-v", f"{run_dir}:/base/inputs",
-                IMAGE_NAME, "run_tactic"
+                IMAGE_NAME
             ]
 
         cmd = base_cmd + args_set.to_args()
@@ -885,5 +885,82 @@ def test_duplicate_samples_in_different_folders(build_image):
             assert len(proc_dirs_run2) == 2, f"Runaway directories detected after run 2: {proc_dirs_run2}"
             assert not any("__3__processed" in d for d in proc_dirs_run2), f"Runaway __3__processed directory created: {proc_dirs_run2}"
             assert proc_dirs_run2 == proc_dirs_run1, f"Processed directories changed between runs: {proc_dirs_run1} vs {proc_dirs_run2}"
+        finally:
+            shutil.rmtree(run_dir, ignore_errors=True)
+
+
+@pytest.mark.pre_publish
+def test_targeted_fastq_lookup_with_mapping_file(build_image):
+    with contextlib.nullcontext(tempfile.mkdtemp()) as run_dir:
+        folder_target = Path(run_dir) / "folder_target"
+        folder_ignored = Path(run_dir) / "folder_ignored"
+        folder_target.mkdir(parents=True)
+        folder_ignored.mkdir(parents=True)
+
+        subprocess.run(["cp", str(DATA_DIR / "TACTICPipeline_args_test.yml"), str(run_dir)])
+
+        source_r1 = DATA_DIR / "truncated" / "truncSRR13005876_S1_L001_R1_001.fastq.gz"
+        source_r2 = DATA_DIR / "truncated" / "truncSRR13005876_S1_L001_R2_001.fastq.gz"
+
+        # Create target sample in folder_target
+        with gzip.open(source_r1, "rt") as f_in, gzip.open(folder_target / "SampleTarget_S1_L001_R1_001.fastq.gz", "wt") as f_out:
+            for _ in range(400):
+                f_out.write(next(f_in))
+        with gzip.open(source_r2, "rt") as f_in, gzip.open(folder_target / "SampleTarget_S1_L001_R2_001.fastq.gz", "wt") as f_out:
+            for _ in range(400):
+                f_out.write(next(f_in))
+
+        # Create ignored sample in folder_ignored
+        with gzip.open(source_r1, "rt") as f_in, gzip.open(folder_ignored / "SampleIgnored_S2_L001_R1_001.fastq.gz", "wt") as f_out:
+            for _ in range(400):
+                f_out.write(next(f_in))
+        with gzip.open(source_r2, "rt") as f_in, gzip.open(folder_ignored / "SampleIgnored_S2_L001_R2_001.fastq.gz", "wt") as f_out:
+            for _ in range(400):
+                f_out.write(next(f_in))
+
+        # Write mapping file only referencing SampleTarget
+        mapping_file = Path(run_dir) / "mapping_file.csv"
+        mapping_file.write_text(
+            "#SampleID\ttotal_weight_in_g\tspike_amount\tparent_path\n"
+            "SampleTarget_S1_L001\t1.0\t6.0\tfolder_target\n"
+        )
+
+        args_set = ArgumentSet(run_dir if os.path.isfile("/.dockerenv") else "", "")
+        args_set.yml_file = "TACTICPipeline_args_test.yml"
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.skip_analysis = True
+        if os.path.isdir("/databases"):
+            args_set.db_directory = "/databases"
+
+        if os.path.isfile("/.dockerenv"):
+            base_cmd = ["python", "/base/run_tactic.py"]
+        else:
+            base_cmd = [
+                "docker", "run", "--rm",
+                "-e", f"SILVA_SOURCE={os.environ.get('SILVA_SOURCE', 'ftp')}",
+                "-v", f"{run_dir}:/base/inputs",
+                IMAGE_NAME
+            ]
+
+        cmd = base_cmd + args_set.to_args()
+        run_env = os.environ.copy()
+        run_env.setdefault("SILVA_SOURCE", "ftp")
+
+        try:
+            result = subprocess.run(cmd, env=run_env, capture_output=True, text=True)
+            assert result.returncode == 169, f"Pipeline run failed with code {result.returncode}: {result.stderr}"
+
+            # Only folder_target must contain a processed directory
+            target_proc_dirs = list(folder_target.glob("*__processed"))
+            ignored_proc_dirs = list(folder_ignored.glob("*__processed"))
+            assert len(target_proc_dirs) == 1, f"Expected 1 processed dir in folder_target, found: {target_proc_dirs}"
+            assert len(ignored_proc_dirs) == 0, f"Expected 0 processed dirs in folder_ignored, found: {ignored_proc_dirs}"
+
+            # Verify Pipeline_log shows targeted mapping file resolution and no broad gathering
+            log_file = Path(run_dir) / "Pipeline_log.txt"
+            assert log_file.is_file(), "Pipeline_log.txt was not created"
+            log_content = log_file.read_text()
+            assert "Mapping file provided" in log_content
+            assert "Gathering sequence files in" not in log_content
         finally:
             shutil.rmtree(run_dir, ignore_errors=True)
