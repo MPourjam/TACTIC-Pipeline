@@ -1394,9 +1394,19 @@ class ArgsParserUtil(ArgsParserDunderUtil):
                 """
                 if key == arg_parser_key and str(self.__class__.__name__) == arg_parser_class_name:
                     arg_val_to_put = vl
-            if str(arg_val_to_put) != not_valid_value and isinstance(arg_val_to_put, type(val)):
-                setattr(self, key, arg_val_to_put)
-                parsed_args[key] = arg_val_to_put
+            if str(arg_val_to_put) != not_valid_value:
+                if isinstance(val, bool):
+                    if isinstance(arg_val_to_put, bool):
+                        setattr(self, key, arg_val_to_put)
+                        parsed_args[key] = arg_val_to_put
+                elif isinstance(val, (int, float)):
+                    if isinstance(arg_val_to_put, (int, float)) and not isinstance(arg_val_to_put, bool):
+                        conv_val = type(val)(arg_val_to_put)
+                        setattr(self, key, conv_val)
+                        parsed_args[key] = conv_val
+                elif isinstance(arg_val_to_put, type(val)):
+                    setattr(self, key, arg_val_to_put)
+                    parsed_args[key] = arg_val_to_put
 
         setattr(self, "parsed_args", parsed_args)
 
@@ -1412,8 +1422,16 @@ class ArgsParserUtil(ArgsParserDunderUtil):
             key_class = key_class[0] if key_class else str(None)
             key_ = str(key).split(ArgsParserUtil.dict_flatt_sep)[1:2]
             key_ = key_[0] if key_ and str(self.__class__.__name__) in key_class else str(None)
-            if hasattr(self, key) and isinstance(val, type(getattr(self, key, None))):
-                setattr(self, key, val)
+            if hasattr(self, key):
+                current_attr = getattr(self, key, None)
+                if isinstance(current_attr, bool):
+                    if isinstance(val, bool):
+                        setattr(self, key, val)
+                elif isinstance(current_attr, (int, float)):
+                    if isinstance(val, (int, float)) and not isinstance(val, bool):
+                        setattr(self, key, type(current_attr)(val))
+                elif isinstance(val, type(current_attr)):
+                    setattr(self, key, val)
 
     @staticmethod
     def parse_yaml(yaml_path: str):
@@ -1467,14 +1485,14 @@ class TrimBothSidesArgs(ArgsParserUtil):
     default_args = {
         # "fastq_truncate": "merged.fasta",
         # "fastqout": "filtered1.fasta",
-        "stripleft": 5,
-        "stripright": 5,
+        "stripleft": 17, # for 341F primer (ref:https://probebase.csb.univie.ac.at/pb_report/probe/3844) Change only if you know exact lenght of you primers
+        "stripright": 21, # for 785R primer. Change only if you know exact lenght of you primers
     }
 
 
 class TrimOneSideArgs(ArgsParserUtil):
     default_args = {
-        "stripleft": 5,
+        "stripleft": 17,  # for 341F primer (ref:https://probebase.csb.univie.ac.at/pb_report/probe/3844) Change only if you know exact lenght of you primers
     }
 
 
@@ -1590,20 +1608,22 @@ class ComplexTICArgs(ArgsParserUtil):
         "family_sim": 0.95,
         "genus_sim": 0.97,
         "species_sim": 0.987,
+        "abund_limit": 0.0,
+        "sample_wise_correction": False,
     }
 
 
 class CreateTableTICArgs(ArgsParserUtil):
     default_args = {
-        "abund_limit": 0.0025,
-        "sample_wise_correction": True,
+        "abund_limit": 0.0,
+        "sample_wise_correction": False,
     }
 
 
 class TACClusterArgs(ArgsParserUtil):
     default_args = {
-        "abund_limit": 0.0025,
-        "sample_wise_correction": True,
+        "abund_limit": 0.0,
+        "sample_wise_correction": False,
         "cluster_thr": 0.987,
     }
 

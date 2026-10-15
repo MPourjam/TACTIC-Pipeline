@@ -417,4 +417,70 @@ def test_find_fastq_pair_warns_when_only_reverse_read_present(tmp_path, caplog):
     assert "A forward read is required." in caplog.text
 
 
+def test_tac_and_tic_default_args():
+    tic_defaults = processing_helper.ComplexTICArgs.default_args
+    tac_defaults = processing_helper.TACClusterArgs.default_args
+
+    assert tic_defaults["abund_limit"] == 0.0
+    assert tic_defaults["sample_wise_correction"] is False
+    assert tac_defaults["abund_limit"] == 0.0
+    assert tac_defaults["sample_wise_correction"] is False
+
+
+def test_tactic_args_parser_reflects_yaml_and_defaults_when_omitted(tmp_path):
+    # 1. Parse official TACTICPipeline_args.yml
+    official_yaml = Path("/src/IMNGS2Pipeline/TACTICPipeline_args.yml")
+    parser = processing_helper.TACTICArgsParser(str(official_yaml))
+
+    assert parser.analysis_args.complex_tic.abund_limit == 0.0
+    assert parser.analysis_args.complex_tic.sample_wise_correction is False
+    assert parser.analysis_args.tac_cluster.abund_limit == 0.0
+    assert parser.analysis_args.tac_cluster.sample_wise_correction is False
+
+    # 2. Parse YAML where ComplexTICArgs and TACClusterArgs are completely omitted
+    sparse_yaml = tmp_path / "sparse.yml"
+    sparse_yaml.write_text("BuildZOTUTableArgs:\n  match_id: 0.99\n")
+    sparse_parser = processing_helper.TACTICArgsParser(str(sparse_yaml))
+
+    assert sparse_parser.analysis_args.complex_tic.abund_limit == 0.0
+    assert sparse_parser.analysis_args.complex_tic.sample_wise_correction is False
+    assert sparse_parser.analysis_args.tac_cluster.abund_limit == 0.0
+    assert sparse_parser.analysis_args.tac_cluster.sample_wise_correction is False
+
+    # 3. Parse YAML where sections exist but abund_limit / sample_wise_correction are omitted
+    partial_yaml = tmp_path / "partial.yml"
+    partial_yaml.write_text("ComplexTICArgs:\n  family_sim: 0.85\nTACClusterArgs:\n  cluster_thr: 0.97\n")
+    partial_parser = processing_helper.TACTICArgsParser(str(partial_yaml))
+
+    assert partial_parser.analysis_args.complex_tic.family_sim == 0.85
+    assert partial_parser.analysis_args.complex_tic.abund_limit == 0.0
+    assert partial_parser.analysis_args.complex_tic.sample_wise_correction is False
+    assert partial_parser.analysis_args.tac_cluster.cluster_thr == 0.97
+    assert partial_parser.analysis_args.tac_cluster.abund_limit == 0.0
+    assert partial_parser.analysis_args.tac_cluster.sample_wise_correction is False
+
+
+def test_args_parser_util_numeric_coercion(tmp_path):
+    # Test that integer 0 in YAML properly coerces to float 0.0, and explicit floats/bools work
+    test_yaml = tmp_path / "types.yml"
+    test_yaml.write_text(
+        "ComplexTICArgs:\n"
+        "  abund_limit: 0\n"
+        "  sample_wise_correction: true\n"
+        "TACClusterArgs:\n"
+        "  abund_limit: 0.005\n"
+        "  sample_wise_correction: false\n"
+    )
+    parser = processing_helper.TACTICArgsParser(str(test_yaml))
+
+    assert isinstance(parser.analysis_args.complex_tic.abund_limit, float)
+    assert parser.analysis_args.complex_tic.abund_limit == 0.0
+    assert parser.analysis_args.complex_tic.sample_wise_correction is True
+
+    assert isinstance(parser.analysis_args.tac_cluster.abund_limit, float)
+    assert parser.analysis_args.tac_cluster.abund_limit == 0.005
+    assert parser.analysis_args.tac_cluster.sample_wise_correction is False
+
+
+
 

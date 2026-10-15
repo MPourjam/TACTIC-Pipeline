@@ -53,9 +53,9 @@ ComplexTICArgs:  ## Adjustable from GUI's expert mode
   family_sim: 0.90
   genus_sim: 0.95
   species_sim: 0.987
-  abund_limit: 0.0025  # Not implemented yet
+  abund_limit: 0.0  # Not implemented yet
   sample_wise_correction: false  # Not implemented yet
 TACClusterArgs:  ## Adjustable from GUI's expert mode
-  abund_limit: 0.0025  # Not implemented yet
+  abund_limit: 0.0  # Not implemented yet
   sample_wise_correction: false  # Not implemented yet
   cluster_thr: 0.987
