@@ -1,448 +1,316 @@
 # TACTIC Pipeline
-TACTIC is an incremental, privacy-aware, and user-friendly tool designed for 16S rRNA amplicon sequence analysis, offering a comprehensive and versatile solution to address the challenges of microbial community profiling. It integrates four distinct pipelines—OTU (legacy clustering), zOTU (denoised amplicons), and the novel hybrid approaches, Taxonomy Agnostic Clustering (TAC) and Taxonomy Informed Clustering (TIC)—to provide researchers with flexible options, including conventional methods and advanced strategies that mitigate diversity inflation inherent to denoising. The platform is accessible via a containerized command-line interface, a stand-alone installable software with a graphical user interface, and a browser-based web tool, ensuring accessibility, reproducibility, and scalability for users of all computing environments and skill levels, while its results are compatible with downstream analysis tools like Namco and Rhea.
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/docker-ghcr.io%2Fmpourjam%2Ftactic--pipeline-blue)](https://github.com/MPourjam/TACTIC-Pipeline/pkgs/container/tactic-pipeline)
 
-## Installation
-You can run the TACTIC pipeline either by cloning the repository and running the `run_tactic.py` script or via docker image.
-### 1. Clone the repository
-You can clone this repository as below:
+**TACTIC** is an incremental, privacy-aware, and user-friendly pipeline designed for 16S rRNA amplicon sequence analysis. It provides a comprehensive solution for microbial community profiling by integrating four complementary analysis modes:
+
+1. **TIC (Taxonomy-Informed Clustering)**: Novel hybrid clustering utilizing taxonomic boundaries to prevent diversity inflation while preserving true biological variation (*Default*).
+2. **TAC (Taxonomy-Agnostic Clustering)**: De novo sequence-identity-based clustering that operates independently of reference taxonomies.
+3. **ZOTU (Zero-radius OTUs / Denoised Amplicons)**: High-resolution denoising powered by the UNOISE3 algorithm.
+4. **OTU (Operational Taxonomic Units)**: Standard 97% sequence-similarity clustering for backward compatibility.
+
+TACTIC can be run via **Docker** (recommended for all platforms) or directly as a **Python CLI** on Linux x86_64 systems. Results are fully compatible with downstream statistical and visualization suites such as Namco and Rhea.
+
+---
+
+## ⚡ Quick Start (3 Steps)
+
+Run the entire pipeline in 3 simple steps:
+
+### Step 1: Organize Your Data
+
+Place your forward and reverse FASTQ files (e.g. `Sample1_R1.fastq.gz`, `Sample1_R2.fastq.gz`) inside a working directory:
+
 ```bash
-git clone https://github.com/MPourjam/TACTIC-Pipeline.git
+mkdir -p my_project/fastqs
+# Copy or symlink your FASTQ files into my_project/fastqs
 ```
-or you can alternatively download the repository and unzip it.
 
-Then you need to create a virtual environment and install the required packages in the environment:
+### Step 2: Run with Docker
 
 ```bash
+docker run --rm \
+  -v "/path/to/my_project:/base/inputs" \
+  -v "/path/to/databases:/databases" \
+  ghcr.io/mpourjam/tactic-pipeline:latest
+```
+
+> 💡 **Tip — Database Volume (`-v ...:/databases`)**:  
+> Always mount a persistent local folder to `/databases`. On your first run, TACTIC will automatically download and index the SILVA reference database into this directory. Subsequent runs will reuse it immediately, saving 15–30 minutes per analysis!
+
+### Step 3: View Your Results
+
+All outputs are automatically generated in a timestamped analysis directory inside your project folder:
+
+```text
+my_project/
+├── fastqs/
+├── Analysis_20261015_080000/
+│   ├── Pipeline_log.txt              # Complete preprocessing parameters and log
+│   ├── Analysis_log.txt              # Detailed clustering and taxonomy log
+│   ├── TIC_Pipeline/
+│   │   └── SOTUs-Table-TIC.tab       # Final abundance table for TIC
+│   ├── taxed_ZOTUs.fasta             # Representative sequences with SILVA taxonomy
+│   ├── text.krona.html               # Interactive browser-based Krona taxonomy plot
+│   ├── R1-per_base_quality.png       # Forward read quality assessment
+│   └── reads_report.txt              # Read counts through filtering, merging, and dereplication
+```
+
+---
+
+## 📦 Installation Options
+
+### Option A: Docker (Recommended)
+
+Docker packages all external bioinformatics binaries (`usearch`, `bowtie2`, `sina`, `krona`) and Python dependencies into a self-contained image.
+
+1. **Pull the latest image**:
+   ```bash
+   docker pull ghcr.io/mpourjam/tactic-pipeline:latest
+   ```
+
+2. Alternatively, download the archived `image.tar.gz` from the [GitHub Releases page](https://github.com/MPourjam/TACTIC-Pipeline/releases) and load it locally:
+   ```bash
+   docker load -i image.tar.gz
+   ```
+
+### Option B: Local Python Installation (Linux x86_64)
+
+If you prefer running without Docker on a native Linux x86_64 machine:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/MPourjam/TACTIC-Pipeline.git
 cd TACTIC-Pipeline
+
+# 2. Create and activate a virtual environment
 python3 -m venv tactic_env
 source tactic_env/bin/activate
+
+# 3. Install dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
+
+# 4. Verify installation
+python run_tactic.py --help
 ```
 
-> As the binary files are for linux and CPU architecture of x86, this method only works on __linux__ operating system and
-CPU architecture of __x86__.
+---
 
-### 2. Docker (recommended)
-There is a docker image for each release available that you can pull and start using. For example:
+## 📖 How-To Guide & Common Use Cases
+
+### 1. Run Multiple Analysis Modes Simultaneously
+
+You can run one or multiple clustering modes in a single pass. Supported modes are `TIC`, `TAC`, `ZOTU`, and `OTU`:
 
 ```bash
-docker pull ghcr.io/mpourjam/tactic-pipeline:0.7.2
+docker run --rm \
+  -v "/path/to/my_project:/base/inputs" \
+  -v "/path/to/databases:/databases" \
+  ghcr.io/mpourjam/tactic-pipeline:latest \
+  --analysis-mode TIC TAC ZOTU
 ```
 
-or you can download the exported docker image (`image.tar.gz`) of each version in [the releases page](https://github.com/MPourjam/TACTIC-Pipeline/releases). Then import it to your local docker image repository. 
+### 2. Narrow Down to a Specific FastQ Subdirectory
 
+If your project directory has multiple sequencing runs or folders, use `--fastq-directory` (specified relative to your input directory):
 
 ```bash
-docker load -i image.tar.gz
-# or
-docker import image.tar.gz
+docker run --rm \
+  -v "/path/to/my_project:/base/inputs" \
+  -v "/path/to/databases:/databases" \
+  ghcr.io/mpourjam/tactic-pipeline:latest \
+  --fastq-directory Sequencing_Run_1/
 ```
 
-## Command Line Interface (CLI)
-The pipeline is given as single python script (`run_tactic.py`) which you can run by `python3 </path/to/run_tactic.py>`. In order to get the help text on the arguments run `python3 </path/to/run_tactic.py> --help`. Below you find the the CLI arguments output from the help of the pipeline.
+### 3. Customize Pipeline Parameters
+
+To customize primer trimming lengths, error thresholds, or clustering parameters:
+
+1. **Generate template configuration files**:
+   ```bash
+   docker run --rm \
+     -v "/path/to/my_project:/base/inputs" \
+     ghcr.io/mpourjam/tactic-pipeline:latest \
+     --place-template-files
+   ```
+   This places `TACTICPipeline_args_TEMPLATE.yml` and `mapping_file_TEMPLATE.csv` into your project directory.
+
+2. **Edit the YAML file**:
+   Rename `TACTICPipeline_args_TEMPLATE.yml` to `my_params.yml` and adjust parameters as desired (e.g. primer trimming lengths, maximum expected errors).
+
+3. **Run using your custom configuration**:
+   ```bash
+   docker run --rm \
+     -v "/path/to/my_project:/base/inputs" \
+     -v "/path/to/databases:/databases" \
+     ghcr.io/mpourjam/tactic-pipeline:latest \
+     --yml-file my_params.yml
+   ```
+
+### 4. Sample Mapping & Spike-In Absolute Quantification
+
+If your sequencing run includes synthetic spike-in standards for absolute cell abundance quantification, provide a tab-separated mapping file:
+
+1. **Format of `mapping_file.csv`** (tab-delimited):
+   ```text
+   #SampleID	total_weight_in_g	spike_amount	parent_path
+   Sample_01	1.0	nan	
+   Sample_02	1.2	50.0	
+   Sample_03	0.9	50.0	
+   ```
+   - `#SampleID`: Unique sample base name matching your FASTQ file prefix.
+   - `total_weight_in_g`: Sample biomass / weight (g). Use `nan` or any positive number if unspiked.
+   - `spike_amount`: Spike amount added in nanograms (`ng`). If a sample was not spiked, set to `nan`.
+   - `parent_path`: Optional subfolder path if duplicate sample names exist across subdirectories.
+
+2. **Execute with mapping file**:
+   ```bash
+   docker run --rm \
+     -v "/path/to/my_project:/base/inputs" \
+     -v "/path/to/databases:/databases" \
+     ghcr.io/mpourjam/tactic-pipeline:latest \
+     --mapping-file mapping_file.csv
+   ```
+
+### 5. Multi-Threading for High Performance
+
+TACTIC supports parallel sample preprocessing. Adjust CPU thread allocation with `--threads`:
 
 ```bash
+docker run --rm \
+  -v "/path/to/my_project:/base/inputs" \
+  -v "/path/to/databases:/databases" \
+  ghcr.io/mpourjam/tactic-pipeline:latest \
+  --threads 16
+```
+
+---
+
+## 📁 File Structure & Results Interpretation
+
+After the pipeline finishes, your `Analysis_<timestamp>/` results directory contains:
+
+| Output File / Directory | Description |
+| :--- | :--- |
+| **`Pipeline_log.txt`** | Complete log of the pipeline run, preprocessing parameters, and version details. |
+| **`Analysis_log.txt`** | Log of the OTU/ZOTU clustering, taxonomic mapping, and spike normalization steps. |
+| **`reads_report.txt`** | Table reporting input, merged, filtered, dereplicated, and retained read counts per sample. |
+| **`taxed_ZOTUs.fasta`** | FASTA file of representative amplicon sequences with SILVA taxonomic annotations in headers. |
+| **`silva_start_end.txt`** | Estimated 16S rRNA gene alignment coordinates for your sequenced amplicon region. |
+| **`text.krona.html`** | Interactive, standalone hierarchical Krona chart viewable in any web browser. |
+| **`R1-per_base_quality.png`** | Per-base quality score distribution across forward reads. |
+| **`R2-per_base_quality.png`** | Per-base quality score distribution across reverse reads. |
+| **`TIC_Pipeline/SOTUs-Table-TIC.tab`** | Final SOTU abundance table generated by Taxonomy-Informed Clustering. |
+| **`TAC_Pipeline/OTUs-Table-TAC.tab`** | Final OTU abundance table generated by Taxonomy-Agnostic Clustering. |
+| **`ZOTU_Pipeline/ZOTUs-Table.tab`** | Denoised amplicon (ZOTU) table generated by the UNOISE3 algorithm. |
+| **`OTU_Pipeline/OTUs-Table.tab`** | Standard 97% sequence-identity clustered OTU table. |
+
+---
+
+## 🛠️ Command-Line Interface (CLI) Reference
+
+```text
 usage: run_tactic.py [-h] [-i INPUT_DIRECTORY] [-d FASTQ_DIRECTORY]
-                     [-am {de-novo,TAC,TIC,ZOTU}] [-y YML_FILE]
-                     [-map MAPPING_FILE] [-stat SPIKE_STAT]
-                     [-ut USEARCH_BIN] [-db DB_DIRECTORY]
-                     [-spk-ref SPIKES_REFERENCES_DIR] [-sp] [-sa] [-fp]
-                     [-tf] [-iz] [-snbf] [-t THREADS]
+                     [-am ANALYSIS_MODE [ANALYSIS_MODE ...]] [-y YML_FILE]
+                     [-map MAPPING_FILE] [-stat SPIKE_STAT] [-ut USEARCH_BIN]
+                     [-db DB_DIRECTORY] [-spk-ref SPIKES_REFERENCES_DIR] [-sp]
+                     [-sa] [-fp] [-tf] [-iz] [-snbf] [-t THREADS]
 
 options:
-  -h, --help            show this help message and exit
+  -h, --help            Show this help message and exit.
   -i INPUT_DIRECTORY, --input-directory INPUT_DIRECTORY
-                        Base directory for all pipeline inputs and outputs;
-                        every needed file and directory should be findable
-                        relative to this directory.
+                        Base directory for all pipeline inputs and outputs.
+                        Every needed file and directory should be accessible
+                        relative to this directory (Default: current directory).
   -d FASTQ_DIRECTORY, --fastq-directory FASTQ_DIRECTORY
                         Directory containing FASTQ files to be processed;
-                        should be relative to <--input-directory>. Default
-                        is <--input-directory>.
-  -am {de-novo,TAC,TIC,ZOTU}, --analysis-mode {de-novo,TAC,TIC,ZOTU}
-                        Choose an analysis mode. Default is 'TIC'.
+                        relative to <--input-directory>. (Default: <--input-directory>).
+  -am ANALYSIS_MODE [ANALYSIS_MODE ...], --analysis-mode ANALYSIS_MODE [ANALYSIS_MODE ...]
+                        Choose one or more analysis modes (space-separated or
+                        comma-separated). Supported: TIC, TAC, ZOTU, OTU.
+                        (Default: 'TIC').
   -y YML_FILE, --yml-file YML_FILE
-                        Path to pipeline configuration file in YAML format.
-                        This file defines the arguments for the pipeline and
-                        should be relative to <--input-directory>.
+                        Path to pipeline configuration YAML file, relative to
+                        <--input-directory>.
   -map MAPPING_FILE, --mapping-file MAPPING_FILE
+                        Path to mapping file defining sample metadata, sample
+                        weight, and spike amount (relative to <--input-directory>).
   -stat SPIKE_STAT, --spike-stat SPIKE_STAT
-                        The path to a mapping file defining spike count,
-                        sample weight and spike amount for each sample.
-                        #SampleID SpikeReads spikes_total_weight_in_g
-                        spike_amount parent_path. Relative to
-                        <--input-directory>
+                        Path to compiled spike statistics file.
   -ut USEARCH_BIN, --usearch-bin USEARCH_BIN
-                        Path to binary of usearch version 11. Default is
-                        usearch11.0.667_i86linux64.
+                        Path to USEARCH v11 binary. (Default: bundled 64-bit binary).
   -db DB_DIRECTORY, --db-directory DB_DIRECTORY
-                        Path to directory containing required databases
-                        (e.g., SILVA, SortMeRNA).
+                        Path to directory containing reference databases
+                        (SILVA, SortMeRNA). (Default: /databases).
   -spk-ref SPIKES_REFERENCES_DIR, --spikes-references-dir SPIKES_REFERENCES_DIR
-                        Directory containing FASTA files of spike-in
-                        references (required for spike removal). Should be
-                        relative to <--input-directory>. Default is
-                        {SPIKESIDX}.
+                        Directory containing spike-in reference FASTA files.
   -sp, --skip-preprocess
-                        Should skip preprocessing step
-  -sa, --skip-analysis  Should skip analysis step
+                        Skip sample preprocessing and use existing preprocessed data.
+  -sa, --skip-analysis  Skip clustering and analysis step (only run preprocessing).
   -fp, --force-preprocess
-                        Force preprocessing samples. It invalidates
-                        --skip-preprocess argument.
+                        Force re-preprocessing even if existing processed data is detected.
   -tf, --place-template-files
-                        Writes the default argument yaml template file
-                        (TACTICPipeline_args.yml) and mapping template file
-                        (mapping_file.csv) to <--input-directory>, print
-                        help text and exits.
+                        Write template YAML and mapping CSV files to <--input-directory>
+                        and exit.
   -iz, --individual-zotus
-                        If set, the preprocessing step will produce
-                        individual ZOTUs tables for each sample (slower,
-                        more detailed output). If not set, only a combined
-                        table is produced, which speeds up the pipeline.
+                        Generate individual sample ZOTU tables in preprocessing
+                        (slower, more detailed).
   -snbf, --skip-non-bacterial-filter
                         Skip filtering of non-bacterial 16S sequences.
   -t THREADS, --threads THREADS
-                        Number of threads to use for parallel processing
-                        (default: 16). Recommended range: 1 to 24.
+                        Number of threads to use for parallel processing (Default: 16).
 ```
 
-## TACTIC Pipeline Configuration Arguments
-Anaylsis arguments are defined in a YAML file named `TACTICPipeline_args.yml`. You can modify the arguments to your desired values in the file and give the file to the pipeline to have the arguments taken into account.
-
-### Preprocessing Parameters
-These arguemtns affects the pre-processing step. Each (pair) of fastq file goes into pre-processing step. In this pre-processing step:
-
-1. Spike removal
-2. Quality check
-3. Reads merge (if paired)
-4. Trimming
-5. Filtering
-6. Dereplication
-
-If `-iz / --individual-zotus` flag is set to true then:
-
-7. ZOTUs clustering
-8. Filtering for bacterial/archaeal 16S rRNA reads (if opted for by giving `` flag to the pipeline)
-9. ZOTU table creation
-10. Taxonomy assignment
-11. Krona graph generation
-
-
-#### MergePairsArgs (Adjustable from GUI's expert mode)
-The arguments below are set to most lenient argument to merge as many as possible reads. Later in the filtering step the merged reads with bad quality get filtered out.
-- **fastq_maxdiffs**: Maximum number of mismatches allowed in the alignment of overlapping region (default: 50)
-- **fastq_pctid**: Minimum percentage identity for merging paired reads (default: 50)
-- **fastq_minmergelen**: Minimum length of merged reads in base pairs (default: 200)
-- **fastq_maxmergelen**: Maximum length of merged reads in base pairs (default: 600)
-
-#### TrimBothSidesArgs (Adjustable from GUI's basic mode)
-- **stripleft**: Number of bases to remove from the left side, corresponding to __341F__ primer length (default: 17)
-- **stripright**: Number of bases to remove from the right side, corresponding to __785R__ primer length (default: 21)
-
-Reference: [www.probebase.csb.univie.ac.at](https://probebase.csb.univie.ac.at/pb_report/probe/3844)
-
-#### TrimOneSideArgs
-- **stripleft**: Number of bases to remove from the left side, corresponding to __341F__ primer length (default: 17)
-
-Reference: [www.probebase.csb.univie.ac.at](https://probebase.csb.univie.ac.at/pb_report/probe/3844)
-
-#### FilterBothSidesArgs (Adjustable from GUI's expert mode)
-- **fastq_maxee_rate**: Discard reads with > E expected errors per base.Calculated after any truncation options have been applied. For example, with the fastq_maxee_rate option set to 0.01, then a read of length 100 will be discarded if the expected errors is >1, and a read of length 1,000 will be discarded if the expected errors is >10. (default: 0.002)
-- **fastq_truncqual**: Quality score threshold for truncating reads; truncation occurs at first position with Q score ≤ N (default: 10)
-
-> __fastq_truncqual__ is deprecated in versions >=0.7.3 as it could cause drop of some merged reads due to short length after truncation.
-
-Reference: [USEARCH manual for read filtering](https://www.drive5.com/usearch/manual/cmd_fastq_filter.html)
-
-#### FilterOneSideArgs (Adjustable from GUI's expert mode)
-- **fastq_maxee_rate**: Discard reads with > E expected errors per base.Calculated after any truncation options have been applied. For example, with the fastq_maxee_rate option set to 0.01, then a read of length 100 will be discarded if the expected errors is >1, and a read of length 1,000 will be discarded if the expected errors is >10. (default: 0.002)
-- **fastq_truncqual**: Quality score threshold for truncating reads; truncation occurs at first position with Q score ≤ N (default: 10)
-
-> __fastq_truncqual__ is deprecated in versions >=0.7.3 as it could cause drop of some merged reads due to short length after truncation.
-
-Reference: [USEARCH manual for read filtering](https://www.drive5.com/usearch/manual/cmd_fastq_filter.html)
-
-#### IndividualSampleClusterZOTUsArgs (Adjustable from GUI's basic mode)
-- **minsize**: Minimum abundance threshold for merged sequences clustering; sequences with fewer reads are filtered out and not taken to the clustering step (default: 2)
-
-Reference: [USEARCH manual for UNOISE algorithm (ZOTU clustering)](https://www.drive5.com/usearch/manual/cmd_unoise3.html)
-
-#### Filter16SArgs
-- **e**: E-value threshold for filtering 16S sequences (default: 0.1)
-- **num_alignments**: Number of alignments to report per query (default: 1)
-
-#### BuildZOTUTableArgs
-- **match_id**: Minimum sequence identity threshold for ZOTU matching; higher values result in more refined ZOTUs and lower total count of ZOTUs (default: 0.99)
-
-#### AddTaxArgs
-- **turn**: Specifies which sequences to add taxonomy information to (default: all)
-
-### Analysis Parameters
-
-#### ClusterZOTUsArgs (Adjustable from GUI's expert mode)
-- **minsize**: Minimum abundance threshold; amplicons with fewer reads are filtered out (default: 2)
-- **abund_limit**: Abundance limit threshold for filtering low-abundance sequences. ZOTUs with relative abundance below this threshold in all samples will be discarded (default: 0.000)
-- **sample_wise_correction**: Enable or disable sample-wise abundance correction (default: false)
-- **match_id**: Minimum sequence identity threshold for ZOTU clustering (default: 0.99)
-
-Reference: [USEARCH manual for UNOISE algorithm (ZOTU clustering)](https://www.drive5.com/usearch/manual/cmd_unoise3.html)
-
-#### DeNovoClusterOTUsArgs (Adjustable from GUI's expert mode)
-- **minsize**: Minimum abundance threshold for de novo OTU clustering (default: 8)
-- **abund_limit**: Abundance limit threshold for filtering low-abundance sequences. ZOTUs with relative abundance below this threshold in all samples will be discarded (default: 0.0025)
-- **sample_wise_correction**: Enable or disable sample-wise abundance correction (default: false)
-
-#### ComplexTICArgs (Adjustable from GUI's expert mode)
-- **family_sim**: Sequence similarity threshold for family-level taxonomic clustering (default: 0.90)
-- **genus_sim**: Sequence similarity threshold for genus-level taxonomic clustering (default: 0.95)
-- **species_sim**: Sequence similarity threshold for species-level taxonomic clustering (default: 0.987)
-- **abund_limit**: Abundance limit threshold for filtering low-abundance sequences. ZOTUs with relative abundance below this threshold in all samples will be discarded. (not yet implemented) (default: 0.0025)
-- **sample_wise_correction**: Enable or disable sample-wise abundance correction. Abudnance values below this threshold will be rounded to __0__ in the S/ZOTUs tables (not yet implemented) (default: false)
-
-
-References:
-1. [TIC paper](https://doi.org/10.3389/fbinf.2022.864597)
-2. [Ticlust python package](https://pypi.org/project/ticlust/)
-3. [TIC scripts](https://github.com/Lagkouvardos/TIC)
-
-
-#### TACClusterArgs (Adjustable from GUI's expert mode)
-- **abund_limit**: Abundance limit threshold (not yet implemented) (default: 0.0025)
-- **sample_wise_correction**: Enable or disable sample-wise abundance correction (not yet implemented) (default: false)
-- **cluster_thr**: Clustering threshold for sequence similarity (default: 0.987)
-
-
-## Tutorial
-You can run the pipeline either by directly running the script (`run_tactic.py`) or the docker image.
-
-### Quickstart
-You can run the pipeline quickly with _fastq files auto-discovery_ and _default pipeline arguments_. In this mode the pipeline will automatically discover the fastq files (and pair them), creates a mapping file and runs the pipeline with default arguments.
-
-__Running via Script__:
-```bash
-cd TACTIC-Pipeline
-python run_tactic.py --input-directory /path/to/your/project/directory
-```
-__Running via Docker (recommended)__:
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 
-```
-
-> With `-v` argument we are mounting our desired local path to a the path `/base/inputs` (default `--input-directory`) in which the pipeline by default look for fastq files. Any fastq files (also nested inside other sub directories) will be visible to the pipeline when only setting `--input-directory` (i.e., `/base/inputs/`). If we want to mount an upper-level directory as our `--input-directory` and narrow the pipeline's search and analysis scope, we can set the `--fastq-directory` argument, which should be relative to `--input-directory`. This way the pipeline searches for fastq files within the path given via `-fastq-dir`. Sample mapping file and arguments YAML file could be still relative to `--input-directory`.
-
-
-> It is **recommended** (for pipeline **version>=v0.7.4**) to set an additional volume to store the SILVA database and its indices. To do so, pick a directory in your local machine to be your SILVA database storage and **always** introduce that directory as a volume to `/databases`. See below for an example:
-
-```bash
-# setting both input directory and database directory volumes
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" -v "/path/to/your/database/directory:/databases" ghcr.io/mpourjam/tactic-pipeline:0.7.4 --fastq-directory Sequencing_Run_1/
-```
-
-For images built from this source, SILVA preparation uses a token-gated
-Cloudflare Worker to find and download verified prebuilt ARB and SINA index
-files. The GitHub Actions build includes the shared application token in the
-image, so Docker users need no sign-in or runtime configuration. Anyone with
-the image can extract the token. Use your newly built image tag below:
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" -v "/path/to/your/database/directory:/databases" YOUR_NEW_IMAGE_TAG --fastq-directory Sequencing_Run_1/
-```
-
-The Worker must be deployed with Cloudflare Access disabled for its production
-URL; see the [Worker setup](cloudflare/silva-downloads-worker/README.md).
-The R2 credentials stay on the Worker; only the limited application token
-is distributed with the image. If the Worker or R2 files are unavailable, the
-pipeline logs a warning and falls back to SILVA FTP and local SINA indexing.
-This fallback can require substantial RAM. Missing or rejected tokens, checksum
-failures, and local file errors remain errors. Set `SILVA_SOURCE=ftp` to use
-FTP directly.
-
-
-We can narrow the pipeline to a sub-directory within the `--input-directory` like below:
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --fastq-directory Sequencing_Run_1/
-```
-or 
-
-```bash
-python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/
-```
-In the example above the content of `/path/to/your/project/directory` which is (`/base/inputs` in the docker container) looks like:
-```bash
-.
-├── Sequencing_Run_1
-│   └── fastqs
-│       ├── 001-654_Stool_R1_001.fastq.gz
-│       ├── 001-654_Stool_R2_001.fastq.gz
-│       ├── 002-342_Stool_R1_001.fastq.gz
-│       └── 002-342_Stool_R2_001.fastq.gz
-└── Sequencing_Run_2
-    └── fastqs
-        ├── 001-435_Saliva_R1_001.fastq.gz
-        ├── 001-435_Saliva_R2_001.fastq.gz
-        ├── 002-436_Saliva_R1_001.fastq.gz
-        └── 002-436_Saliva_R2_001.fastq.gz
-```
-All fastq files, in this example,, in the directory `Sequencing_Run_1` will be processed with the default argument.
-
-
-
-#### Run with custom pipeline arguments
-The pipeline reads the arguments from a [YAML](https://en.wikipedia.org/wiki/YAML) file it expects as input to `-y` or `--yml-file`. To have a template of such YAML file and fill in your desired arguments you can run the pipeline as described in [Quickstart](#quickstart) and with the switch `-tf` or `--place-template-files`. This will put template files of the argument YAML file and the mapping file (described in the next section) in your project directory.
-
-__Running via Script__:
-```bash
-cd TACTIC-Pipeline
-python run_tactic.py --input-dir /path/to/your/project/directory --place-template-files
-# or
-python run_tactic.py --input-dir /path/to/your/project/directory -y
-```
-__Running via Docker__:
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --place-template-files
-# or
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 -tf
-```
-
-These commands will put two files in your project directory:
-1. `mapping_file_TEMPLATE.csv`: This is the template file to give samples in a mapping file with their sample weight and spike amount for spike normalization.
-2. `TACTICPipeline_args_TEMPLATE.yml`: This is a YAML file containing the arguments to the pipeline.
-
-Now that we want to tweak arguments of the analysis, we can directly open the `TACTICPipeline_args_TEMPLATE.yml` and change the desired argument. After the change is applied, we put the argument file in a path visible to the pipeline (i.e., any sub-path to `--input-directory` or `/path/to/your/project/directory` when using docker image). As an example, the commands below will run the pipeline on two different batches of fastq files with two different argument set.
-
-My project directory now looks like:
-
-```bash
-├── Sequencing_Run_1
-│   └── fastqs
-│       ├── 001-654_Stool_R1_001.fastq.gz
-│       ├── 001-654_Stool_R2_001.fastq.gz
-│       ├── 002-342_Stool_R1_001.fastq.gz
-│       └── 002-342_Stool_R2_001.fastq.gz
-├── Sequencing_Run_2
-│   └── fastqs
-│       ├── 001-435_Saliva_R1_001.fastq.gz
-│       ├── 001-435_Saliva_R2_001.fastq.gz
-│       ├── 002-436_Saliva_R1_001.fastq.gz
-│       └── 002-436_Saliva_R2_001.fastq.gz
-├── TACTICPipeline_args_set_1.yml
-└── TACTICPipeline_args_set_2.yml
-```
-
-__Arguemnt set 1__:
-
-When using docker image:
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
-```
-
-or when using the script:
-
-```bash
-python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
-```
-
-__Argument set 2__:
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
-```
-
-or when using the script:
-
-```bash
-python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml
-```
-
-> Note that every path argument to the CLI is given __relative to `--input-directory``__ !!!
-
-#### Run with custom set of your fastq files
-
-The _auto discovery_ of pipeline can also be overridden by a giving mapping file in tab-separated format file. In the case like below, you can choose a custom set of fastq files from different directory to analyze by giving a __uniq__ part of their name in a mapping file.
-
-
-My project directory looks like below:
-```bash
-├── Sequencing_Run_1
-│   └── fastqs
-│       ├── 001-654_Stool_R1_001.fastq.gz
-│       ├── 001-654_Stool_R2_001.fastq.gz
-│       ├── 002-342_Stool_R1_001.fastq.gz
-│       └── 002-342_Stool_R2_001.fastq.gz
-├── Sequencing_Run_2
-│   └── fastqs
-│       ├── 001-435_Saliva_R1_001.fastq.gz
-│       ├── 001-435_Saliva_R2_001.fastq.gz
-│       ├── 002-436_Saliva_R1_001.fastq.gz
-│       └── 002-436_Saliva_R2_001.fastq.gz
-├── TACTICPipeline_args_set_1.yml
-├── TACTICPipeline_args_set_2.yml
-├── TACTICPipeline_args_set_combined.yml
-└── my_maping_file.csv
-```
-
-I want to pick one file from each sequencing run and run the analysis. In order to do so, I follow the steps below:
-
-1. I generate a _mapping file template_ by running _TACTIC_ by `-tf` or `--place-template-files`.
-2. I modify the `mapping_file_TEMPLATE.csv` placed in the working directory and make sure that `#SampleID` column of the file include __uniq__ base name of desired fastq files cut from __R1__ or __R2__ suffix.
-3. I run the pipeline with `-map` or `--mapping-file` argument and pass my modified mapping file to it.
-
-In this example, I have modified the mapping file like below as I only want to run one sample from each sequencing run.
-
-```my_mapping_file.csv
-#SampleID       total_weight_in_g       spike_amount    parent_path
-001-435_Saliva    1  nan
-001-654_Stool    1.2  nan
-```
-
-__Columns__:
-
-- __#SampleID__: contains the uniq basename of samples
-- __total_weight_in_g__: The weight of sample taken for sequencing. The value should be given if your samples are spiked. Otherwise any positive value could be given.
-- __spike_amoung__: amount of spike (in __nano gram__) added to your samples if you have asked for spiked sequencing. If your samples are not spiked the value of this column for your samples should be "__nan__".
-- __parent_path__: This column could contain the path (relative to `--fastq-directory`) to parent directory of given samples. This clarifies the situations in which two exact samples with the same file names exist in two different directories. In this case, by giving proper parent directory path to this column, the pipeline will pick the correct (pairs of) files.  
-
-
-After, I have prepared the `mapping_file.csv`, I run the pipeline like below:
-
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv
-```
-
-or when using the script:
-
-```bash
-python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv
-```
-
-> Note that the search scope of the pipeline is not narrowed down to specific directory by `--fastq-directory` as our samples are in two different directories within our `--input-directory`.
-
-#### Setting fixed databases directory
-Every time the pipeline runs, it checks the existence of required database files. By default it checks `/databases` direcotry but this could be set manually to avoid re-download and re-indexing of of databases which takes time. In order to set the databases directory:
-
-```bash
-docker run --rm -v "/path/to/your/project/directory:/base/inputs" -v "/path/to/desired/database/directory:/databases" ghcr.io/mpourjam/tactic-pipeline:0.7.3 --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv 
-```
-
-> We defined a mount point in the docker container by the second `-v` so that the container sees our fixed database directory in its `/databases`
-
-or when using the script:
-
-```bash
-python run_tactic.py --input-directory /path/to/your/project/directory --fastq-directory Sequencing_Run_1/ --yml-file TACTICPipeline_args_set_1.yml --mapping-file my_mapping_file.csv --db-directory /path/to/desired/database/directory
-```
-
-> `--db-directory` could be relative or absolute. If given as absolute (with preceding "/") then the absolute path is taken, if given as relative path then it will be a path inside `--input-directory`. 
-
-<!--
-### Inputs
-To run the pipeline with default 
-### Outputs
-# References
--->
+---
+
+## ⚙️ Configuration File Details (`TACTICPipeline_args.yml`)
+
+Parameters in `TACTICPipeline_args.yml` allow fine-grained control over read processing and clustering:
+
+### 1. Read Merging (`MergePairsArgs`)
+- **`fastq_maxdiffs`**: Maximum alignment mismatches allowed in overlapping region (default: `50`).
+- **`fastq_pctid`**: Minimum percentage identity for merging read pairs (default: `50`).
+- **`fastq_minmergelen`**: Minimum merged read length in base pairs (default: `200`).
+- **`fastq_maxmergelen`**: Maximum merged read length in base pairs (default: `600`).
+
+### 2. Primer Trimming (`TrimBothSidesArgs` / `TrimOneSideArgs`)
+- **`stripleft`**: Bases to strip from 5' end, matching forward primer (default: `17`, corresponding to **341F** length).
+- **`stripright`**: Bases to strip from 3' end, matching reverse primer (default: `21`, corresponding to **785R** length).
+
+*Reference*: [ProbeBase 341F/785R details](https://probebase.csb.univie.ac.at/pb_report/probe/3844)
+
+### 3. Read Quality Filtering (`FilterBothSidesArgs` / `FilterOneSideArgs`)
+- **`fastq_maxee_rate`**: Maximum expected errors per base allowed (default: `0.002`). Reads with expected errors exceeding `(length * maxee_rate)` are discarded.
+- **`fastq_truncqual`**: Deprecated in versions >=0.7.3 to avoid premature truncation.
+
+### 4. Clustering Parameters
+- **`ClusterZOTUsArgs`** (UNOISE3):
+  - `minsize`: Minimum abundance threshold; amplicons with fewer reads are filtered out (default: `2`).
+  - `match_id`: Identity threshold for read assignment (default: `0.99`).
+  - `abund_limit`: Minimum relative abundance threshold across all samples (default: `0.000`).
+- **`ComplexTICArgs`** (Taxonomy-Informed Clustering):
+  - `family_sim`: Similarity cutoff for family-level grouping (default: `0.90`).
+  - `genus_sim`: Similarity cutoff for genus-level grouping (default: `0.95`).
+  - `species_sim`: Similarity cutoff for species-level clustering (default: `0.987`).
+- **`TACClusterArgs`** (Taxonomy-Agnostic Clustering):
+  - `cluster_thr`: Sequence identity threshold for de novo clustering (default: `0.987`).
+- **`DeNovoClusterOTUsArgs`** (Standard OTUs):
+  - `minsize`: Minimum amplicon abundance threshold (default: `8`).
+  - `abund_limit`: Low-abundance filter threshold (default: `0.0025`).
+
+---
+
+## 📚 References & Citation
+
+If you use TACTIC in your research, please cite:
+
+1. **TACTIC Pipeline**:
+   > Pourjam M., et al. *TACTIC: Taxonomy-Agnostic and Taxonomy-Informed Clustering for High-Precision 16S rRNA Amplicon Analysis.* (Manuscript in preparation).
+2. **TIC Algorithm**:
+   > Lagkouvardos I., et al. (2023). *Taxonomy-informed clustering improves the resolution of 16S rRNA amplicon sequencing data analysis.* **Frontiers in Bioinformatics**, 2:864597. [doi:10.3389/fbinf.2022.864597](https://doi.org/10.3389/fbinf.2022.864597)
+3. **UNOISE Algorithm**:
+   > Edgar R.C. (2016). *UNOISE2: improved error-correction for Illumina 16S and ITS amplicon sequencing.* **bioRxiv**, 081257. [doi:10.1101/081257](https://doi.org/10.1101/081257)
+4. **SINA Classifier & SILVA Database**:
+   > Pruesse E., et al. (2012). *SINA: Accurate high-throughput multiple sequence alignment of ribosomal RNA genes.* **Bioinformatics**, 28(14):1823–1829. [doi:10.1093/bioinformatics/bts252](https://doi.org/10.1093/bioinformatics/bts252)
