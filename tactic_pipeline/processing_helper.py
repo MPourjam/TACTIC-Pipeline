@@ -113,8 +113,6 @@ SixteenS_regions_dict = {
 FASTQ_EXTENSIONS = (
     ".fastq.gz",
     ".fq.gz",
-    ".fastq.zst",
-    ".fq.zst",
     ".fastq",
     ".fq",
 )
@@ -133,27 +131,25 @@ def strip_illumina_suffix(name: str) -> str:
     return re.sub(r'_S\d+(_L\d+)?$', '', str(name))
 
 
+_EXT = r'(?=\.(?i:fastq|fq)(?:\.(?i:gz))?$)'
+_SEP_L, _SEP_R = r'[._-]', r'(?=[._-])'
+_TAIL = r'(?=_\d{3}\.(?i:fastq|fq)(?:\.(?i:gz))?$)'
+
 INDICATOR_PAIRS = [
-    # 1. Standard Illumina / delimiter-bounded R1 / R2: e.g. _R1_, -R1-, .R1., _R1_001.fastq
-    (re.compile(r'([._-]R1[._-])', re.IGNORECASE), re.compile(r'([._-]R2[._-])', re.IGNORECASE)),
-    # 2. Delimiter + R1 / R2 directly before fastq extension: e.g. -R1.fastq, _R1.fq.gz, .R1.fastq
-    (re.compile(r'([._-]R1)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]R2)(?=\.(?:fastq|fq))', re.IGNORECASE)),
-    # 3. Read word indicators: _read1_ / _read2_, -read1- / -read2-
-    (re.compile(r'([._-]read1[._-])', re.IGNORECASE), re.compile(r'([._-]read2[._-])', re.IGNORECASE)),
-    (re.compile(r'([._-]read1)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]read2)(?=\.(?:fastq|fq))', re.IGNORECASE)),
-    # 4. Forward / reverse words: _forward_ / _reverse_, -forward- / -reverse-
-    (re.compile(r'([._-]forward[._-])', re.IGNORECASE), re.compile(r'([._-]reverse[._-])', re.IGNORECASE)),
-    (re.compile(r'([._-]forward)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]reverse)(?=\.(?:fastq|fq))', re.IGNORECASE)),
-    # 5. Numbered 1 / 2 directly before fastq extension: e.g. _1.fastq, -1.fq.gz, .1.fastq
-    (re.compile(r'([._-]1)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]2)(?=\.(?:fastq|fq))', re.IGNORECASE)),
-    # 6. Numbered 1 / 2 delimited: e.g. _1_001.fastq, -1-001.fastq
-    (re.compile(r'([._-]1[._-])', re.IGNORECASE), re.compile(r'([._-]2[._-])', re.IGNORECASE)),
-    # 7. Single letter F / R delimited: e.g. _F_, -F-, .F.
-    (re.compile(r'([._-]F[._-])', re.IGNORECASE), re.compile(r'([._-]R[._-])', re.IGNORECASE)),
-    # 8. Single letter F / R directly before fastq extension: e.g. _F.fastq, -F.fq
-    (re.compile(r'([._-]F)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]R)(?=\.(?:fastq|fq))', re.IGNORECASE)),
-    # 9. Legacy @F / @R
-    (re.compile(r'(@F)', re.IGNORECASE), re.compile(r'(@R)', re.IGNORECASE)),
+    # 1. Standard Illumina / delimiter-bounded R1 / R2 (e.g. _R1_, -R1-, .r1., _r2_001, -R1.fastq)
+    (re.compile(rf'{_SEP_L}[Rr]1{_SEP_R}'), re.compile(rf'{_SEP_L}[Rr]2{_SEP_R}')),
+    # 2. Word indicators: read1 / read2 (case-insensitive, delimiter-bounded)
+    (re.compile(rf'{_SEP_L}(?i:read)1{_SEP_R}'), re.compile(rf'{_SEP_L}(?i:read)2{_SEP_R}')),
+    # 3. Word indicators: forward / reverse (case-insensitive, delimiter-bounded)
+    (re.compile(rf'{_SEP_L}(?i:forward){_SEP_R}'), re.compile(rf'{_SEP_L}(?i:reverse){_SEP_R}')),
+    # 4. SRA / ENA numbered _1 / _2 directly before fastq extension (e.g. SRR123_1.fastq.gz)
+    (re.compile(rf'_1{_EXT}'), re.compile(rf'_2{_EXT}')),
+    # 5. Single letter F / R directly before fastq extension (e.g. _F.fastq, -r.fq.gz)
+    (re.compile(rf'{_SEP_L}[Ff]{_EXT}'), re.compile(rf'{_SEP_L}[Rr]{_EXT}')),
+    # 6. Single letter _F_ / _R_ directly before Illumina machine tail (e.g. _F_001.fastq.gz)
+    (re.compile(rf'_[Ff]{_TAIL}'), re.compile(rf'_[Rr]{_TAIL}')),
+    # 7. Legacy @F / @R
+    (re.compile(r'@F', re.IGNORECASE), re.compile(r'@R', re.IGNORECASE)),
 ]
 
 forw_file_indicators = [f for f, r in INDICATOR_PAIRS]
@@ -590,22 +586,31 @@ def generate_timestamp(thread_safe=False):
     return timestamp
 
 
+def _rightmost_indicator(file_name: str):
+    """
+    Finds the rightmost read direction indicator in a file name.
+    Returns:
+        (match_object, 'F' | 'R') or (None, None) if no indicator found.
+    """
+    best_match = None
+    best_direction = None
+    for forw_ind_reg, reve_ind_reg in paired_files_indicators:
+        for reg, direction in ((forw_ind_reg, "F"), (reve_ind_reg, "R")):
+            for m in reg.finditer(file_name):
+                if (best_match is None or m.start() > best_match.start()
+                        or (m.start() == best_match.start() and m.end() > best_match.end())):
+                    best_match = m
+                    best_direction = direction
+    return best_match, best_direction
+
+
 def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple = ("", ""), strip_illumina: bool = False):
     file_path = Path(PurePath(file_path)).absolute()
     parent_path, file_name = file_path.parent, file_path.name
     if include_path is None or not isinstance(include_path, Path):
         include_path = parent_path
 
-    # Search for the rightmost read indicator match across all paired patterns
-    best_match = None
-    for forw_ind_reg, reve_ind_reg in paired_files_indicators:
-        for reg in (forw_ind_reg, reve_ind_reg):
-            matches = list(reg.finditer(file_name))
-            if matches:
-                m = matches[-1]
-                if best_match is None or m.start() > best_match.start():
-                    best_match = m
-
+    best_match, _ = _rightmost_indicator(file_name)
     if best_match is not None:
         file_name = file_name[:best_match.start()]
     else:
@@ -667,16 +672,18 @@ def is_seq_file(file_path, seq_file_format="any"):
 
 
 def is_forward_file(file_name: str) -> bool:
-    return any(bool(indi_reg.search(file_name)) for indi_reg in forw_file_indicators)
+    _, direction = _rightmost_indicator(file_name)
+    return direction == "F"
 
 
 def is_reverse_file(file_name: str) -> bool:
-    return any(bool(indi_reg.search(file_name)) for indi_reg in reve_file_indicators)
+    _, direction = _rightmost_indicator(file_name)
+    return direction == "R"
 
 
 def _predict_reverse_token(token: str) -> str:
     """
-    Given a matched forward token (e.g. '_R1_', '-R1', '_1', '_forward_'),
+    Given a matched forward token (e.g. '_R1', '-R1', '.r1', '_read1', '_forward', '_1', '_F', '@F'),
     returns the corresponding reverse token preserving case and delimiters.
     """
     tok_lower = token.lower()
@@ -710,49 +717,55 @@ def find_reverse_file(file_path):
     """
     Finds the corresponding reverse file in the same directory as forward file.
     Uses token substitution of the rightmost forward indicator for direct lookup,
-    falling back to matching against reverse indicator patterns in the parent directory.
+    falling back to matching against reverse candidates in the parent directory.
+    Returns:
+        Path to reverse file if found, or "" otherwise.
     """
     file_path = Path(PurePath(file_path))
     parent_dir = file_path.parent
     file_name = file_path.name
 
-    best_match = None
-    best_pair = None
-    for forw_ind_reg, reve_ind_reg in paired_files_indicators:
-        matches = list(forw_ind_reg.finditer(file_name))
-        if matches:
-            m = matches[-1]
-            if best_match is None or m.start() > best_match.start():
-                best_match = m
-                best_pair = (forw_ind_reg, reve_ind_reg)
+    best_match, direction = _rightmost_indicator(file_name)
+    if direction != "F" or best_match is None:
+        return ""
 
-    if best_match is not None:
-        start, end = best_match.start(), best_match.end()
-        forw_token = file_name[start:end]
-        rev_token = _predict_reverse_token(forw_token)
-        predicted_name = file_name[:start] + rev_token + file_name[end:]
-        predicted_path = parent_dir / predicted_name
-        if predicted_path.is_file():
+    start, end = best_match.start(), best_match.end()
+    forw_token = file_name[start:end]
+    rev_token = _predict_reverse_token(forw_token)
+    predicted_name = file_name[:start] + rev_token + file_name[end:]
+    predicted_path = parent_dir / predicted_name
+
+    # Check predicted path: must exist, not be the input file itself, and be reverse
+    if predicted_path.is_file() and predicted_path.resolve() != file_path.resolve():
+        if is_reverse_file(predicted_path.name):
             return predicted_path
 
-        # If direct predicted file is not found, search candidates in parent directory
-        _, reve_ind_reg = best_pair
-        stem_name = file_name[:start]
-        try:
-            for cand in parent_dir.iterdir():
-                if cand.is_file() and is_fastq_extension(cand.name):
-                    cand_name = cand.name
-                    if cand_name.startswith(stem_name):
-                        m_rev = reve_ind_reg.search(cand_name[len(stem_name):])
-                        if m_rev:
-                            return cand
-        except Exception:
-            pass
+    # If direct predicted file is not found, search candidates in parent directory
+    stem_name = file_name[:start]
+    expected_suffix = file_name[end:].lower()
+    try:
+        candidates = sorted(parent_dir.iterdir(), key=lambda p: p.name)
+        for cand in candidates:
+            if not cand.is_file():
+                continue
+            if not is_fastq_extension(cand.name):
+                continue
+            if cand.resolve() == file_path.resolve():
+                continue
+            cand_match, cand_direction = _rightmost_indicator(cand.name)
+            if cand_direction == "R" and cand_match is not None:
+                cand_stem = cand.name[:cand_match.start()]
+                cand_suffix = cand.name[cand_match.end():].lower()
+                if cand_stem == stem_name and cand_suffix == expected_suffix:
+                    return cand
+    except Exception:
+        pass
 
     return ""
 
 
-def pair_seq_files(directory):
+def pair_seq_files(directory, logger_obj: logging.Logger = None):
+    logger = logger_obj if logger_obj else argparse_logger
     directory_path = Path(PurePath(directory))
     paired_files = []
     if not directory_path.is_dir():
@@ -761,7 +774,8 @@ def pair_seq_files(directory):
     skip_reverses = set()
     single_end_candidates = []
 
-    for file_path in directory_path.rglob("*"):
+    # Sort rglob to ensure deterministic ordering regardless of filesystem listing order
+    for file_path in sorted(directory_path.rglob("*"), key=lambda p: str(p)):
         if not file_path.is_file():
             continue
         if "__processed" in str(file_path) or any(part.startswith("Analysis_") for part in file_path.parent.parts):
@@ -775,13 +789,29 @@ def pair_seq_files(directory):
         if isSeqFile:
             if is_forward_file(file_path.name):
                 forw_file = str(file_path)
-                reve_file = str(find_reverse_file(file_path))
+                reve_path = find_reverse_file(file_path)
+                reve_file = ""
+                if reve_path and Path(reve_path).is_file():
+                    skip_reverses.add(str(reve_path))
+                    if is_seq_file(reve_path, seq_file_format="fastq"):
+                        reve_file = str(reve_path)
+                    else:
+                        logger.warning(
+                            f"Reverse file '{Path(reve_path).name}' found for forward file '{file_path.name}' "
+                            f"is not a valid FASTQ file. Treating forward read as single-end."
+                        )
+                else:
+                    logger.warning(
+                        f"Could not find matching reverse FASTQ pair for forward file '{file_path.name}'. "
+                        f"Treating as single-end."
+                    )
                 paired_file = (forw_file, reve_file)
                 paired_files.append(paired_file)
-                if reve_file:
-                    skip_reverses.add(reve_file)
             elif not is_reverse_file(file_path.name):
                 single_end_candidates.append(str(file_path))
+            else:
+                # Reverse file encountered before forward file or orphan reverse file
+                pass
 
     # Add single-end reads that were not claimed as reverse reads
     for se_file in single_end_candidates:
@@ -880,9 +910,15 @@ def find_fastq_pair_for_sample(
             reve_path = find_reverse_file(forw_cand)
             reve_file = ""
             if reve_path and Path(reve_path).is_file():
-                if is_seq_file(reve_path, seq_file_format="fastq") and str(reve_path) not in claimed:
-                    reve_file = str(reve_path)
-                    return (forw_file, reve_file)
+                if is_seq_file(reve_path, seq_file_format="fastq"):
+                    if str(reve_path) not in claimed:
+                        reve_file = str(reve_path)
+                        return (forw_file, reve_file)
+                else:
+                    logger.warning(
+                        f"Reverse file '{Path(reve_path).name}' found for forward file '{forw_cand.name}' "
+                        f"(sample '{sample_id}') is not a valid FASTQ file."
+                    )
             if valid_forw_without_pair is None:
                 valid_forw_without_pair = forw_cand
 

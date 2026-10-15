@@ -27,6 +27,14 @@ mkdir -p my_project/fastqs
 # Copy or symlink your FASTQ files into my_project/fastqs
 ```
 
+> 💡 **Supported Paired Read Naming Conventions**:
+> - `_R1` / `_R2` or `-R1` / `-R2` (case-insensitive, e.g. `Sample_R1_001.fastq.gz`, `Sample-r1.fq`)
+> - `_read1` / `_read2` (case-insensitive, e.g. `Sample_read1.fq.gz`, `Sample_read2.fq.gz`)
+> - `_forward` / `_reverse` (case-insensitive, e.g. `Sample_forward.fastq`, `Sample_reverse.fastq`)
+> - SRA / ENA numbered reads: `_1` / `_2` directly before file extension (e.g. `SRR123_1.fastq.gz`, `SRR123_2.fastq.gz`)
+> - `_F` / `_R` or `-F` / `-R` directly before file extension (e.g. `Sample_F.fastq.gz`, `Sample-r.fq`)
+> - `_F_` / `_R_` directly before Illumina machine chunk tail (e.g. `Sample_F_001.fastq.gz`, `Sample_R_001.fastq.gz`)
+
 ### Step 2: Run with Docker
 
 ```bash

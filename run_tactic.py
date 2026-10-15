@@ -1147,7 +1147,7 @@ def run_tactic(
         mapping_line_tup_dict = parse_mapping_file(mapping_file_path=str(mapping_file_path))
     else:
         PREP_LOG.info("# Gathering sequence files in {}".format(str(fastq_file_dir)))
-        seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir))
+        seq_file_pairs = proc_helper.pair_seq_files(str(fastq_file_dir), logger_obj=PREP_LOG)
         seq_file_pairs = [file_pair_tup for file_pair_tup in seq_file_pairs if bool(not is_in_processed_dir(file_pair_tup[0]) and not is_in_processed_dir(file_pair_tup[1]))]
         PREP_LOG.info("{} samples were collected from {}.".format(str(len(seq_file_pairs)), str(fastq_file_dir)))
         mapping_line_tup_dict = parse_mapping_file(files_tups=seq_file_pairs)

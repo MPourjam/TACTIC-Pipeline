@@ -215,6 +215,8 @@ def test_is_fastq_extension():
     assert processing_helper.is_fastq_extension("sample.fasta") is False
     assert processing_helper.is_fastq_extension("report.txt") is False
     assert processing_helper.is_fastq_extension("archive.tar.gz") is False
+    assert processing_helper.is_fastq_extension("sample.fastq.zst") is False
+    assert processing_helper.is_fastq_extension("sample.fq.zst") is False
 
 
 def test_pair_seq_files_skips_non_fastq_and_processed(tmp_path, monkeypatch):
@@ -503,17 +505,25 @@ def test_get_base_name_various_formats():
     assert processing_helper.get_base_name("sample_read1.fq.gz") == "sample"
     assert processing_helper.get_base_name("sample_read2.fq.gz") == "sample"
 
-    # 5. Numbered 1 / 2 indicators
+    # 5. Numbered 1 / 2 indicators (SRA convention: _1 / _2 directly before extension)
     assert processing_helper.get_base_name("sample_1.fastq.gz") == "sample"
     assert processing_helper.get_base_name("sample_2.fastq.gz") == "sample"
-    assert processing_helper.get_base_name("sample.1.fq") == "sample"
-    assert processing_helper.get_base_name("sample-1.fq.gz") == "sample"
+    # Bare numbers with dot or hyphen are not indicators
+    assert processing_helper.get_base_name("sample.1.fq") == "sample.1"
+    assert processing_helper.get_base_name("sample-1.fq.gz") == "sample-1"
 
     # 6. Rightmost match preservation (embedded R1 / 1 in sample name)
     assert processing_helper.get_base_name("Patient_R1_rep1_R1_001.fastq.gz") == "Patient_R1_rep1"
     assert processing_helper.get_base_name("Cohort_1_pool_1.fastq.gz") == "Cohort_1_pool"
+    assert processing_helper.get_base_name("537-522-3751-FU-1_S388_L001_R2_001.fastq.gz") == "537-522-3751-FU-1_S388_L001"
 
-    # 7. Single-end reads without forward / reverse indicators
+    # 7. Single letter F / R indicators
+    assert processing_helper.get_base_name("sample_F.fastq") == "sample"
+    assert processing_helper.get_base_name("sample-r.fq.gz") == "sample"
+    assert processing_helper.get_base_name("sample_F_001.fastq.gz") == "sample"
+    assert processing_helper.get_base_name("sample_R_001.fastq.gz") == "sample"
+
+    # 8. Single-end reads without forward / reverse indicators
     assert processing_helper.get_base_name("SingleSample.fastq.gz") == "SingleSample"
     assert processing_helper.get_base_name("my_reads.fq") == "my_reads"
 
@@ -540,12 +550,26 @@ def test_find_reverse_file_hyphenated_and_various_formats(tmp_path):
     rev_lower.write_text("dummy")
     assert processing_helper.find_reverse_file(fwd_lower) == rev_lower
 
-    # 4. Dot-separated 1 / 2
-    fwd_dot = tmp_path / "sample.1.fq"
-    rev_dot = tmp_path / "sample.2.fq"
-    fwd_dot.write_text("dummy")
-    rev_dot.write_text("dummy")
-    assert processing_helper.find_reverse_file(fwd_dot) == rev_dot
+    # 4. SRA convention _1 / _2
+    fwd_sra = tmp_path / "SRR123_1.fastq.gz"
+    rev_sra = tmp_path / "SRR123_2.fastq.gz"
+    fwd_sra.write_text("dummy")
+    rev_sra.write_text("dummy")
+    assert processing_helper.find_reverse_file(fwd_sra) == rev_sra
+
+    # 5. F / R directly before extension
+    fwd_f = tmp_path / "sample_F.fastq.gz"
+    rev_r = tmp_path / "sample_R.fastq.gz"
+    fwd_f.write_text("dummy")
+    rev_r.write_text("dummy")
+    assert processing_helper.find_reverse_file(fwd_f) == rev_r
+
+    # 6. _F_ / _R_ directly before Illumina machine tail
+    fwd_ftail = tmp_path / "sample_F_001.fastq.gz"
+    rev_rtail = tmp_path / "sample_R_001.fastq.gz"
+    fwd_ftail.write_text("dummy")
+    rev_rtail.write_text("dummy")
+    assert processing_helper.find_reverse_file(fwd_ftail) == rev_rtail
 
 
 def test_pair_seq_files_hyphenated_and_single_end(tmp_path):
@@ -658,6 +682,123 @@ def test_file_discovery_skips_analysis_directories(tmp_path):
         str(valid_dir / "sample_A_R1.fastq"),
         str(valid_dir / "sample_A_R2.fastq")
     )
+
+
+def test_only_explicit_markers_set_direction():
+    cases = [
+        ("537-522-3751-FU-1_S388_L001_R1_001.fastq.gz", True, False, "537-522-3751-FU-1_S388_L001"),
+        ("537-522-3751-FU-1_S388_L001_R2_001.fastq.gz", False, True, "537-522-3751-FU-1_S388_L001"),
+        ("T01-Ad4-V2-R1.fastq", True, False, "T01-Ad4-V2"),
+        ("T01-Ad4-V2-R2.fastq", False, True, "T01-Ad4-V2"),
+        ("S_r1_001.fastq.gz", True, False, "S"),
+        ("S_r2_001.fastq.gz", False, True, "S"),
+        ("S.r1.fq", True, False, "S"),
+        ("Sr1.fastq", False, False, "Sr1"),
+        ("S_read1.fq.gz", True, False, "S"),
+        ("S_READ2.fq", False, True, "S"),
+        ("S_forward.fastq", True, False, "S"),
+        ("S_Reverse.fq.gz", False, True, "S"),
+        ("S-F.fastq", True, False, "S"),
+        ("S_r.fq.gz", False, True, "S"),
+        ("S_f.FASTQ", True, False, "S"),
+        ("S_F_001.fastq.gz", True, False, "S"),
+        ("S_R_001.fastq.gz", False, True, "S"),
+        ("S_f_001.fq", True, False, "S"),
+        ("S_F_x.fastq", False, False, "S_F_x"),
+        ("S_F_01.fastq", False, False, "S_F_01"),
+        ("SRR123_1.fastq.gz", True, False, "SRR123"),
+        ("SRR123_2.fq", False, True, "SRR123"),
+        ("S-1.fastq", False, False, "S-1"),
+        ("S.1.fq", False, False, "S.1"),
+        ("S_1_001.fastq", False, False, "S_1_001"),
+        ("Cohort_1_pool_R2_001.fastq", False, True, "Cohort_1_pool"),
+        ("X-2_S1_L001_R1_001.fastq", True, False, "X-2_S1_L001"),
+        ("Patient_R1_rep_R2_001.fastq", False, True, "Patient_R1_rep"),
+        ("S@F.fastq", True, False, "S"),
+        ("S@R.fastq", False, True, "S"),
+        ("Sample.fastq.gz", False, False, "Sample"),
+        ("SampleR.fastq", False, False, "SampleR"),
+        ("S_R1_001_trimmed.fastq.gz", True, False, "S"),
+        ("mock-4-S1_R2_trimmed.fastq", False, True, "mock-4-S1"),
+    ]
+
+    for name, exp_fwd, exp_rev, exp_base in cases:
+        is_fwd = processing_helper.is_forward_file(name)
+        is_rev = processing_helper.is_reverse_file(name)
+        base = processing_helper.get_base_name(name)
+        assert is_fwd == exp_fwd, f"{name}: expected is_forward={exp_fwd}, got {is_fwd}"
+        assert is_rev == exp_rev, f"{name}: expected is_reverse={exp_rev}, got {is_rev}"
+        assert not (is_fwd and is_rev), f"{name}: file cannot be both forward and reverse"
+        assert base == exp_base, f"{name}: expected base={exp_base}, got {base}"
+
+
+def test_pair_seq_files_order_independent_and_no_ghost_samples(tmp_path):
+    run_dir = tmp_path / "fu_run"
+    run_dir.mkdir()
+
+    fwd = run_dir / "537-522-3751-FU-1_S388_L001_R1_001.fastq"
+    rev = run_dir / "537-522-3751-FU-1_S388_L001_R2_001.fastq"
+    fwd.write_text("@fu1_r1\nACGT\n+\nIIII\n")
+    rev.write_text("@fu1_r2\nTGCA\n+\nIIII\n")
+
+    # Call pair_seq_files
+    pairs = processing_helper.pair_seq_files(str(run_dir))
+    assert len(pairs) == 1
+    assert pairs[0] == (str(fwd), str(rev))
+
+
+def test_pair_seq_files_and_find_fastq_pair_invalid_reverse_consistency(tmp_path):
+    run_dir = tmp_path / "corrupt_test"
+    run_dir.mkdir()
+
+    fwd = run_dir / "sample_R1.fastq"
+    rev = run_dir / "sample_R2.fastq"
+    fwd.write_text("@valid\nACGT\n+\nIIII\n")
+    # Write invalid reverse file (not starting with @)
+    rev.write_text("CORRUPTED_NON_FASTQ_CONTENT\n")
+
+    # 1. pair_seq_files should treat fwd as single-end and NOT claim invalid rev
+    pairs = processing_helper.pair_seq_files(str(run_dir))
+    assert len(pairs) == 1
+    assert pairs[0] == (str(fwd), "")
+
+    # 2. find_fastq_pair_for_sample should also treat fwd as single-end
+    pair = processing_helper.find_fastq_pair_for_sample(
+        sample_id="sample",
+        base_fastq_dir=run_dir
+    )
+    assert pair == (str(fwd), "")
+
+
+def test_find_reverse_file_never_returns_self_or_reverse(tmp_path):
+    fwd = tmp_path / "sample_R1.fastq"
+    rev = tmp_path / "sample_R2.fastq"
+    se = tmp_path / "single_sample.fastq"
+    fwd.write_text("@f\nACGT\n+\nIIII\n")
+    rev.write_text("@r\nTGCA\n+\nIIII\n")
+    se.write_text("@s\nAAAA\n+\nIIII\n")
+
+    assert processing_helper.find_reverse_file(fwd) == rev
+    # Must never return self or any pair when given a reverse file
+    assert processing_helper.find_reverse_file(rev) == ""
+    # Must never return anything when given a single-end file
+    assert processing_helper.find_reverse_file(se) == ""
+
+
+def test_find_reverse_file_case_insensitive_fallback(tmp_path):
+    fwd = tmp_path / "sample_R1_001.fastq.gz"
+    rev_lower = tmp_path / "sample_r2_001.fastq.gz"
+    other_chunk = tmp_path / "sample_r2_002.fastq.gz"
+    diff_sample = tmp_path / "sample_diff_r2_001.fastq.gz"
+
+    fwd.write_text("dummy")
+    rev_lower.write_text("dummy")
+    other_chunk.write_text("dummy")
+    diff_sample.write_text("dummy")
+
+    # Should match rev_lower with same stem and suffix, ignoring other chunks / samples
+    assert processing_helper.find_reverse_file(fwd) == rev_lower
+
 
 
 
