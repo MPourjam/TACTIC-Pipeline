@@ -672,7 +672,7 @@ def parse_mapping_file(mapping_file_path: str = "", files_tups: list = None):
                 if file_pairs_tup[1]:
                     claimed_files.add(str(file_pairs_tup[1]))
             else:
-                PREP_LOG.warning(f"Could not match fastq  to sample_id: {sample_id} in mapping file.")
+                PREP_LOG.warning(f"Could not match fastq to sample_id: {sample_id} in mapping file.")
 
             mapping_lines.append((map_line, file_pairs_tup))
     mapping_lines = convert_mapping_entries_to_dict(mapping_lines)

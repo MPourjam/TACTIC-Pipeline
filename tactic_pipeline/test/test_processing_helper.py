@@ -367,3 +367,54 @@ def test_parse_mapping_file_targeted_without_seq_file_pairs(tmp_path, monkeypatc
     )
 
 
+def test_find_fastq_pair_warns_when_reverse_pair_missing(tmp_path, caplog):
+    (tmp_path / "sample_unpaired_R1_001.fastq").write_text("@s1\nACGT\n+\nIIII\n")
+    logger = logging.getLogger("test_unpaired")
+    logger.setLevel(logging.WARNING)
+
+    with caplog.at_level(logging.WARNING):
+        pair = processing_helper.find_fastq_pair_for_sample(
+            sample_id="sample_unpaired",
+            base_fastq_dir=tmp_path,
+            logger_obj=logger
+        )
+
+    assert pair == (str(tmp_path / "sample_unpaired_R1_001.fastq"), "")
+    assert "Could not find matching reverse FASTQ pair for forward file 'sample_unpaired_R1_001.fastq'" in caplog.text
+    assert "Treating as single-end." in caplog.text
+
+
+def test_find_fastq_pair_warns_when_parent_path_missing(tmp_path, caplog):
+    logger = logging.getLogger("test_missing_dir")
+    logger.setLevel(logging.WARNING)
+
+    with caplog.at_level(logging.WARNING):
+        pair = processing_helper.find_fastq_pair_for_sample(
+            sample_id="sample_missing",
+            parent_path="non_existent_folder",
+            base_fastq_dir=tmp_path,
+            logger_obj=logger
+        )
+
+    assert pair == ("", "")
+    assert "Search directory for parent_path 'non_existent_folder' does not exist" in caplog.text
+
+
+def test_find_fastq_pair_warns_when_only_reverse_read_present(tmp_path, caplog):
+    (tmp_path / "sample_only_rev_R2_001.fastq").write_text("@s2\nTGCA\n+\nIIII\n")
+    logger = logging.getLogger("test_only_rev")
+    logger.setLevel(logging.WARNING)
+
+    with caplog.at_level(logging.WARNING):
+        pair = processing_helper.find_fastq_pair_for_sample(
+            sample_id="sample_only_rev",
+            base_fastq_dir=tmp_path,
+            logger_obj=logger
+        )
+
+    assert pair == ("", "")
+    assert "Found reverse FASTQ file(s) for sample 'sample_only_rev'" in caplog.text
+    assert "A forward read is required." in caplog.text
+
+
+

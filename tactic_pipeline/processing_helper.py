@@ -729,7 +729,7 @@ def find_fastq_pair_for_sample(
     if parent_str and parent_str != ".":
         search_dir = base_dir.joinpath(parent_str)
         if not search_dir.is_dir():
-            logger.debug(f"Search directory for parent_path '{parent_path}' does not exist: {search_dir}")
+            logger.warning(f"Search directory for parent_path '{parent_path}' does not exist: {search_dir}")
             return ("", "")
     else:
         search_dir = base_dir
@@ -759,6 +759,7 @@ def find_fastq_pair_for_sample(
     forw_cands = [p for p in eval_cands if is_forward_file(p.name)]
     forw_cands.sort(key=lambda p: str(p))
 
+    valid_forw_without_pair = None
     for forw_cand in forw_cands:
         if is_seq_file(forw_cand, seq_file_format="fastq"):
             forw_file = str(forw_cand)
@@ -767,7 +768,16 @@ def find_fastq_pair_for_sample(
             if reve_path and Path(reve_path).is_file():
                 if is_seq_file(reve_path, seq_file_format="fastq") and str(reve_path) not in claimed:
                     reve_file = str(reve_path)
-            return (forw_file, reve_file)
+                    return (forw_file, reve_file)
+            if valid_forw_without_pair is None:
+                valid_forw_without_pair = forw_cand
+
+    if valid_forw_without_pair is not None:
+        logger.warning(
+            f"Could not find matching reverse FASTQ pair for forward file '{valid_forw_without_pair.name}' "
+            f"(sample '{sample_id}'). Treating as single-end."
+        )
+        return (str(valid_forw_without_pair), "")
 
     # Fallback for single-end reads without forward indicator (must not be a reverse read)
     single_cands = [p for p in eval_cands if not is_reverse_file(p.name)]
@@ -775,6 +785,13 @@ def find_fastq_pair_for_sample(
     for cand in single_cands:
         if is_seq_file(cand, seq_file_format="fastq"):
             return (str(cand), "")
+
+    rev_cands = [p for p in eval_cands if is_reverse_file(p.name)]
+    if rev_cands:
+        logger.warning(
+            f"Found reverse FASTQ file(s) for sample '{sample_id}' in '{search_dir}' "
+            f"but no matching forward read. A forward read is required."
+        )
 
     return ("", "")
 
