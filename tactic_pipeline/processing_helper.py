@@ -1,5 +1,6 @@
 import pickle as pk
 import re
+import glob
 import yaml
 import logging
 import subprocess
@@ -109,23 +110,55 @@ SixteenS_regions_dict = {
     ],
 }
 
-forw_file_indicators = [
-    re.compile(r".*(_R1_).*"),
-    re.compile(r".*(_1)\.(fastq|fq)(\.gz)?"),
-    re.compile(r".*(_R1).*"),
-    re.compile(r".*(_F_).*"),
-    re.compile(r".*(@F).*"),
+FASTQ_EXTENSIONS = (
+    ".fastq.gz",
+    ".fq.gz",
+    ".fastq.zst",
+    ".fq.zst",
+    ".fastq",
+    ".fq",
+)
+
+
+def is_fastq_extension(file_name: str) -> bool:
+    name_lower = str(file_name).lower()
+    return any(name_lower.endswith(ext) for ext in FASTQ_EXTENSIONS)
+
+
+def strip_illumina_suffix(name: str) -> str:
+    """
+    Strips Illumina sample sheet and lane suffixes from the end of a base name,
+    e.g. '_S388_L001' or '_S1' -> ''
+    """
+    return re.sub(r'_S\d+(_L\d+)?$', '', str(name))
+
+
+INDICATOR_PAIRS = [
+    # 1. Standard Illumina / delimiter-bounded R1 / R2: e.g. _R1_, -R1-, .R1., _R1_001.fastq
+    (re.compile(r'([._-]R1[._-])', re.IGNORECASE), re.compile(r'([._-]R2[._-])', re.IGNORECASE)),
+    # 2. Delimiter + R1 / R2 directly before fastq extension: e.g. -R1.fastq, _R1.fq.gz, .R1.fastq
+    (re.compile(r'([._-]R1)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]R2)(?=\.(?:fastq|fq))', re.IGNORECASE)),
+    # 3. Read word indicators: _read1_ / _read2_, -read1- / -read2-
+    (re.compile(r'([._-]read1[._-])', re.IGNORECASE), re.compile(r'([._-]read2[._-])', re.IGNORECASE)),
+    (re.compile(r'([._-]read1)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]read2)(?=\.(?:fastq|fq))', re.IGNORECASE)),
+    # 4. Forward / reverse words: _forward_ / _reverse_, -forward- / -reverse-
+    (re.compile(r'([._-]forward[._-])', re.IGNORECASE), re.compile(r'([._-]reverse[._-])', re.IGNORECASE)),
+    (re.compile(r'([._-]forward)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]reverse)(?=\.(?:fastq|fq))', re.IGNORECASE)),
+    # 5. Numbered 1 / 2 directly before fastq extension: e.g. _1.fastq, -1.fq.gz, .1.fastq
+    (re.compile(r'([._-]1)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]2)(?=\.(?:fastq|fq))', re.IGNORECASE)),
+    # 6. Numbered 1 / 2 delimited: e.g. _1_001.fastq, -1-001.fastq
+    (re.compile(r'([._-]1[._-])', re.IGNORECASE), re.compile(r'([._-]2[._-])', re.IGNORECASE)),
+    # 7. Single letter F / R delimited: e.g. _F_, -F-, .F.
+    (re.compile(r'([._-]F[._-])', re.IGNORECASE), re.compile(r'([._-]R[._-])', re.IGNORECASE)),
+    # 8. Single letter F / R directly before fastq extension: e.g. _F.fastq, -F.fq
+    (re.compile(r'([._-]F)(?=\.(?:fastq|fq))', re.IGNORECASE), re.compile(r'([._-]R)(?=\.(?:fastq|fq))', re.IGNORECASE)),
+    # 9. Legacy @F / @R
+    (re.compile(r'(@F)', re.IGNORECASE), re.compile(r'(@R)', re.IGNORECASE)),
 ]
 
-reve_file_indicators = [
-    re.compile(r".*(_R2_).*"),
-    re.compile(r".*(_2)\.(fastq|fq)(\.gz)?"),
-    re.compile(r".*(_R2).*"),
-    re.compile(r".*(_R_).*"),
-    re.compile(r".*(@R).*"),
-]
-
-paired_files_indicators = list(zip(forw_file_indicators, reve_file_indicators))
+forw_file_indicators = [f for f, r in INDICATOR_PAIRS]
+reve_file_indicators = [r for f, r in INDICATOR_PAIRS]
+paired_files_indicators = INDICATOR_PAIRS
 
 
 class ArgsetException(Exception):
@@ -557,26 +590,35 @@ def generate_timestamp(thread_safe=False):
     return timestamp
 
 
-def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple = ("", "")):
+def get_base_name(file_path: Path, include_path: Path = None, replace_sep: tuple = ("", ""), strip_illumina: bool = False):
     file_path = Path(PurePath(file_path)).absolute()
     parent_path, file_name = file_path.parent, file_path.name
     if include_path is None or not isinstance(include_path, Path):
         include_path = parent_path
 
-    while file_path.suffixes:
-        file_path = Path(PurePath(file_path.parent)).absolute().joinpath(file_path.stem)
-
+    # Search for the rightmost read indicator match across all paired patterns
+    best_match = None
     for forw_ind_reg, reve_ind_reg in paired_files_indicators:
-        forw_ind_reg_mo = forw_ind_reg.search(file_name)
-        reve_ind_reg_mo = reve_ind_reg.search(file_name)
-        if forw_ind_reg_mo:
-            # split by first group of matched indicator
-            file_name = str(file_name.split(str(forw_ind_reg_mo.group(1)))[0])
-            break
-        elif reve_ind_reg_mo:
-            # split by first group of matched indicator
-            file_name = str(file_name.split(str(reve_ind_reg_mo.group(1)))[0])
-            break
+        for reg in (forw_ind_reg, reve_ind_reg):
+            matches = list(reg.finditer(file_name))
+            if matches:
+                m = matches[-1]
+                if best_match is None or m.start() > best_match.start():
+                    best_match = m
+
+    if best_match is not None:
+        file_name = file_name[:best_match.start()]
+    else:
+        # If no indicator was found, strip standard FASTQ extensions
+        lower_name = file_name.lower()
+        for ext in FASTQ_EXTENSIONS:
+            if lower_name.endswith(ext):
+                file_name = file_name[:-len(ext)]
+                break
+
+    if strip_illumina:
+        file_name = strip_illumina_suffix(file_name)
+
     new_name = parent_path.joinpath(file_name).absolute().relative_to(include_path)
     new_name = str(Path(PurePath(str(new_name).replace(*replace_sep))))
     return new_name
@@ -624,67 +666,102 @@ def is_seq_file(file_path, seq_file_format="any"):
     return any(return_bool)
 
 
-def is_forward_file(file_name):
-    return any([True for indi_reg in forw_file_indicators if bool(indi_reg.search(file_name))])
+def is_forward_file(file_name: str) -> bool:
+    return any(bool(indi_reg.search(file_name)) for indi_reg in forw_file_indicators)
 
 
-def is_reverse_file(file_name):
-    return any([True for indi_reg in reve_file_indicators if bool(indi_reg.search(file_name))])
+def is_reverse_file(file_name: str) -> bool:
+    return any(bool(indi_reg.search(file_name)) for indi_reg in reve_file_indicators)
+
+
+def _predict_reverse_token(token: str) -> str:
+    """
+    Given a matched forward token (e.g. '_R1_', '-R1', '_1', '_forward_'),
+    returns the corresponding reverse token preserving case and delimiters.
+    """
+    tok_lower = token.lower()
+    if 'read1' in tok_lower:
+        idx = tok_lower.find('read1')
+        sub = 'read2' if token[idx:idx+5].islower() else ('READ2' if token[idx:idx+5].isupper() else 'Read2')
+        return token[:idx] + sub + token[idx+5:]
+    if 'forward' in tok_lower:
+        idx = tok_lower.find('forward')
+        sub = 'reverse' if token[idx:idx+7].islower() else ('REVERSE' if token[idx:idx+7].isupper() else 'Reverse')
+        return token[:idx] + sub + token[idx+7:]
+    if 'r1' in tok_lower:
+        idx = tok_lower.find('r1')
+        sub = 'r2' if token[idx:idx+2].islower() else 'R2'
+        return token[:idx] + sub + token[idx+2:]
+    if '@f' in tok_lower:
+        idx = tok_lower.find('@f')
+        sub = '@r' if token[idx:idx+2].islower() else '@R'
+        return token[:idx] + sub + token[idx+2:]
+    if 'f' in tok_lower:
+        idx = tok_lower.find('f')
+        sub = 'r' if token[idx].islower() else 'R'
+        return token[:idx] + sub + token[idx+1:]
+    if '1' in token:
+        idx = token.rfind('1')
+        return token[:idx] + '2' + token[idx+1:]
+    return token
 
 
 def find_reverse_file(file_path):
     """
-    It assumes that reverse file exists in the same directory
-    as forward file and the naming convention follows the same
-    logic. i.e: _R2_ is the reverse of _R1_ and not of @F
+    Finds the corresponding reverse file in the same directory as forward file.
+    Uses token substitution of the rightmost forward indicator for direct lookup,
+    falling back to matching against reverse indicator patterns in the parent directory.
     """
     file_path = Path(PurePath(file_path))
-    file_name_parts = (file_path.name, file_path.name)
-    reverse_name = ""
-    rev_file_reg = re.compile(r"")
-    stem_path = get_base_name(str(file_path))
-    for forw_indic_reg, reve_indic_reg in paired_files_indicators:
-        forw_indic_reg_mo = forw_indic_reg.search(file_path.name)
-        if bool(forw_indic_reg_mo):
-            file_name_parts = file_path.name.split(forw_indic_reg_mo.group(1))
-            rev_file_reg = reve_indic_reg
-            break
-    # Finding most compatibe reverse file
-    for caught_file in file_path.parent.glob(f"*{stem_path}*"):
-        reve_reg_mo = rev_file_reg.search(caught_file.name)
-        if reve_reg_mo and reve_reg_mo.groups():
-            reve_file_parts = caught_file.name.split(reve_reg_mo.group(1))
-            if reve_file_parts == file_name_parts:
-                reverse_name = caught_file.name
-                break
+    parent_dir = file_path.parent
+    file_name = file_path.name
 
-    reverse_file_path = file_path.parent.joinpath(reverse_name) if reverse_name else ""
-    return reverse_file_path
+    best_match = None
+    best_pair = None
+    for forw_ind_reg, reve_ind_reg in paired_files_indicators:
+        matches = list(forw_ind_reg.finditer(file_name))
+        if matches:
+            m = matches[-1]
+            if best_match is None or m.start() > best_match.start():
+                best_match = m
+                best_pair = (forw_ind_reg, reve_ind_reg)
 
+    if best_match is not None:
+        start, end = best_match.start(), best_match.end()
+        forw_token = file_name[start:end]
+        rev_token = _predict_reverse_token(forw_token)
+        predicted_name = file_name[:start] + rev_token + file_name[end:]
+        predicted_path = parent_dir / predicted_name
+        if predicted_path.is_file():
+            return predicted_path
 
-FASTQ_EXTENSIONS = (
-    ".fastq",
-    ".fq",
-    ".fastq.gz",
-    ".fq.gz",
-    ".fastq.zst",
-    ".fq.zst",
-)
+        # If direct predicted file is not found, search candidates in parent directory
+        _, reve_ind_reg = best_pair
+        stem_name = file_name[:start]
+        try:
+            for cand in parent_dir.iterdir():
+                if cand.is_file() and is_fastq_extension(cand.name):
+                    cand_name = cand.name
+                    if cand_name.startswith(stem_name):
+                        m_rev = reve_ind_reg.search(cand_name[len(stem_name):])
+                        if m_rev:
+                            return cand
+        except Exception:
+            pass
 
-
-def is_fastq_extension(file_name: str) -> bool:
-    name_lower = str(file_name).lower()
-    return any(name_lower.endswith(ext) for ext in FASTQ_EXTENSIONS)
+    return ""
 
 
 def pair_seq_files(directory):
-    direcotry_path = Path(PurePath(directory))
+    directory_path = Path(PurePath(directory))
     paired_files = []
-    if not direcotry_path.is_dir():
+    if not directory_path.is_dir():
         return paired_files
-    # is_seq_file checks the format of file as well.
+
     skip_reverses = set()
-    for file_path in direcotry_path.rglob("*"):
+    single_end_candidates = []
+
+    for file_path in directory_path.rglob("*"):
         if not file_path.is_file():
             continue
         if "__processed" in str(file_path):
@@ -703,6 +780,13 @@ def pair_seq_files(directory):
                 paired_files.append(paired_file)
                 if reve_file:
                     skip_reverses.add(reve_file)
+            elif not is_reverse_file(file_path.name):
+                single_end_candidates.append(str(file_path))
+
+    # Add single-end reads that were not claimed as reverse reads
+    for se_file in single_end_candidates:
+        if se_file not in skip_reverses:
+            paired_files.append((se_file, ""))
 
     paired_files.sort(key=lambda x: (str(x[0]), str(x[1])))
     return paired_files
@@ -741,19 +825,42 @@ def find_fastq_pair_for_sample(
                 cands.append(p)
         return cands
 
+    # Escape glob meta-characters in sample_id to prevent bracket/wildcard misinterpretation
+    escaped_id = glob.escape(sample_id)
+
     # 1. Non-recursive glob in search_dir first (fastest)
-    candidates = _filter_candidates(search_dir.glob(f"*{sample_id}*"))
+    candidates = _filter_candidates(search_dir.glob(f"*{escaped_id}*"))
 
     # 2. If not found in search_dir directly, search recursively under search_dir
     if not candidates:
-        candidates = _filter_candidates(search_dir.rglob(f"*{sample_id}*"))
+        candidates = _filter_candidates(search_dir.rglob(f"*{escaped_id}*"))
 
     if not candidates:
         return ("", "")
 
-    # Prioritize exact base name match: get_base_name(p) == sample_id
-    exact_cands = [p for p in candidates if get_base_name(p) == sample_id]
-    eval_cands = exact_cands if exact_cands else candidates
+    # Multi-tier prioritization to prevent prefix collisions (e.g. FU-1 vs FU-10):
+    # Tier 1: Exact base name match: get_base_name(p) == sample_id
+    tier1_cands = [p for p in candidates if get_base_name(p) == sample_id]
+    # Tier 2: Illumina suffix stripped match: strip_illumina_suffix(get_base_name(p)) == sample_id
+    tier2_cands = [p for p in candidates if strip_illumina_suffix(get_base_name(p)) == sample_id]
+    # Tier 3: Word boundary / delimiter match (cand base starts with sample_id followed by delimiter)
+    def _is_boundary_match(p):
+        base = get_base_name(p)
+        if base.startswith(sample_id):
+            rem = base[len(sample_id):]
+            if not rem or rem[0] in ('_', '-', '.'):
+                return True
+        return False
+    tier3_cands = [p for p in candidates if _is_boundary_match(p)]
+
+    if tier1_cands:
+        eval_cands = tier1_cands
+    elif tier2_cands:
+        eval_cands = tier2_cands
+    elif tier3_cands:
+        eval_cands = tier3_cands
+    else:
+        eval_cands = candidates
 
     # Forward files among candidates
     forw_cands = [p for p in eval_cands if is_forward_file(p.name)]

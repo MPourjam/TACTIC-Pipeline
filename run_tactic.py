@@ -622,25 +622,39 @@ def parse_mapping_file(mapping_file_path: str = "", files_tups: list = None):
             )
             # Mapping file pairs to sample_id
             file_pairs_tup = ("", "")
-            # If files_tups was provided, check it first
-            for ind in range(len(files_tups)):
-                file_tup = files_tups[ind]
-                try:
-                    forw_file_name = str(file_tup[0]).split("/")[-1]
-                except Exception:
-                    forw_file_name = ""
-                correct_parent = is_correct_parent(file_tup[0], map_line.parent_path)
-                if sample_id in forw_file_name and correct_parent:  # sample_id could also be partial path of file_names
-                    # update parent path to the correct one
-                    map_line = MapLineTup(
-                        map_line.SampleID,
-                        map_line.total_weight_in_g,
-                        map_line.spike_amount,
-                        str(Path(PurePath(file_tup[0])).parent.relative_to(FASTQ_DIR))
-                    )
-                    file_pairs_tup = file_tup
-                    del files_tups[ind]
+            # If files_tups was provided, check it first (prioritizing exact / stripped base name matches)
+            matched_ind = None
+            for ind, file_tup in enumerate(files_tups):
+                if not is_correct_parent(file_tup[0], map_line.parent_path):
+                    continue
+                cand_base = proc_helper.get_base_name(file_tup[0])
+                cand_stripped = proc_helper.strip_illumina_suffix(cand_base)
+                if cand_base == sample_id or cand_stripped == sample_id:
+                    matched_ind = ind
                     break
+
+            if matched_ind is None:
+                for ind, file_tup in enumerate(files_tups):
+                    if not is_correct_parent(file_tup[0], map_line.parent_path):
+                        continue
+                    try:
+                        forw_file_name = str(file_tup[0]).split("/")[-1]
+                    except Exception:
+                        forw_file_name = ""
+                    if sample_id in forw_file_name:
+                        matched_ind = ind
+                        break
+
+            if matched_ind is not None:
+                file_tup = files_tups[matched_ind]
+                map_line = MapLineTup(
+                    map_line.SampleID,
+                    map_line.total_weight_in_g,
+                    map_line.spike_amount,
+                    str(Path(PurePath(file_tup[0])).parent.relative_to(FASTQ_DIR))
+                )
+                file_pairs_tup = file_tup
+                del files_tups[matched_ind]
 
             # If not matched from files_tups, perform targeted lookup directly
             if not file_pairs_tup[0]:

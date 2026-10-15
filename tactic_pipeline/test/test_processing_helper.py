@@ -482,5 +482,133 @@ def test_args_parser_util_numeric_coercion(tmp_path):
     assert parser.analysis_args.tac_cluster.sample_wise_correction is False
 
 
+def test_get_base_name_various_formats():
+    # 1. Hyphenated R1 / R2 (user screenshot format)
+    assert processing_helper.get_base_name("T01-Ad4-V2-R1.fastq") == "T01-Ad4-V2"
+    assert processing_helper.get_base_name("T01-Ad4-V2-R2.fastq") == "T01-Ad4-V2"
+
+    # 2. Standard Illumina format with Lane and Sample numbers
+    raw_name = processing_helper.get_base_name("537-522-3751-FU-1_S388_L001_R1_001.fastq.gz")
+    assert raw_name == "537-522-3751-FU-1_S388_L001"
+    clean_name = processing_helper.get_base_name("537-522-3751-FU-1_S388_L001_R1_001.fastq.gz", strip_illumina=True)
+    assert clean_name == "537-522-3751-FU-1"
+
+    # 3. Case insensitivity (lowercase r1 / r2)
+    assert processing_helper.get_base_name("sample_r1_001.fastq.gz") == "sample"
+    assert processing_helper.get_base_name("sample_r2_001.fastq.gz") == "sample"
+
+    # 4. Word indicators: forward / reverse, read1 / read2
+    assert processing_helper.get_base_name("sample_forward.fastq") == "sample"
+    assert processing_helper.get_base_name("sample_reverse.fastq") == "sample"
+    assert processing_helper.get_base_name("sample_read1.fq.gz") == "sample"
+    assert processing_helper.get_base_name("sample_read2.fq.gz") == "sample"
+
+    # 5. Numbered 1 / 2 indicators
+    assert processing_helper.get_base_name("sample_1.fastq.gz") == "sample"
+    assert processing_helper.get_base_name("sample_2.fastq.gz") == "sample"
+    assert processing_helper.get_base_name("sample.1.fq") == "sample"
+    assert processing_helper.get_base_name("sample-1.fq.gz") == "sample"
+
+    # 6. Rightmost match preservation (embedded R1 / 1 in sample name)
+    assert processing_helper.get_base_name("Patient_R1_rep1_R1_001.fastq.gz") == "Patient_R1_rep1"
+    assert processing_helper.get_base_name("Cohort_1_pool_1.fastq.gz") == "Cohort_1_pool"
+
+    # 7. Single-end reads without forward / reverse indicators
+    assert processing_helper.get_base_name("SingleSample.fastq.gz") == "SingleSample"
+    assert processing_helper.get_base_name("my_reads.fq") == "my_reads"
+
+
+def test_find_reverse_file_hyphenated_and_various_formats(tmp_path):
+    # 1. Hyphenated R1 / R2
+    fwd_hyphen = tmp_path / "T01-Ad4-V2-R1.fastq"
+    rev_hyphen = tmp_path / "T01-Ad4-V2-R2.fastq"
+    fwd_hyphen.write_text("@s\nACGT\n+\nIIII\n")
+    rev_hyphen.write_text("@s\nTGCA\n+\nIIII\n")
+    assert processing_helper.find_reverse_file(fwd_hyphen) == rev_hyphen
+
+    # 2. Standard Illumina
+    fwd_illum = tmp_path / "537-522-3751-FU-1_S388_L001_R1_001.fastq.gz"
+    rev_illum = tmp_path / "537-522-3751-FU-1_S388_L001_R2_001.fastq.gz"
+    fwd_illum.write_text("dummy")
+    rev_illum.write_text("dummy")
+    assert processing_helper.find_reverse_file(fwd_illum) == rev_illum
+
+    # 3. Lowercase r1 / r2
+    fwd_lower = tmp_path / "sample_r1_001.fastq.gz"
+    rev_lower = tmp_path / "sample_r2_001.fastq.gz"
+    fwd_lower.write_text("dummy")
+    rev_lower.write_text("dummy")
+    assert processing_helper.find_reverse_file(fwd_lower) == rev_lower
+
+    # 4. Dot-separated 1 / 2
+    fwd_dot = tmp_path / "sample.1.fq"
+    rev_dot = tmp_path / "sample.2.fq"
+    fwd_dot.write_text("dummy")
+    rev_dot.write_text("dummy")
+    assert processing_helper.find_reverse_file(fwd_dot) == rev_dot
+
+
+def test_pair_seq_files_hyphenated_and_single_end(tmp_path):
+    run_dir = tmp_path / "reads"
+    run_dir.mkdir()
+
+    # Hyphenated pair
+    fwd_h = run_dir / "T01-Ad4-V2-R1.fastq"
+    rev_h = run_dir / "T01-Ad4-V2-R2.fastq"
+    fwd_h.write_text("@s1\nACGT\n+\nIIII\n")
+    rev_h.write_text("@s1\nTGCA\n+\nIIII\n")
+
+    # Single-end read
+    se = run_dir / "Sample_SE.fastq"
+    se.write_text("@s2\nAAAA\n+\nIIII\n")
+
+    pairs = processing_helper.pair_seq_files(str(run_dir))
+    assert len(pairs) == 2
+    assert (str(fwd_h), str(rev_h)) in pairs
+    assert (str(se), "") in pairs
+
+
+def test_find_fastq_pair_for_sample_illumina_clean_id(tmp_path):
+    # Setup files: FU-1 and FU-10 to verify no prefix collision occurs
+    (tmp_path / "537-522-3751-FU-1_S388_L001_R1_001.fastq").write_text("@fu1\nACGT\n+\nIIII\n")
+    (tmp_path / "537-522-3751-FU-1_S388_L001_R2_001.fastq").write_text("@fu1\nTGCA\n+\nIIII\n")
+    (tmp_path / "537-522-3751-FU-10_S389_L001_R1_001.fastq").write_text("@fu10\nACGT\n+\nIIII\n")
+    (tmp_path / "537-522-3751-FU-10_S389_L001_R2_001.fastq").write_text("@fu10\nTGCA\n+\nIIII\n")
+
+    # Sample ID in mapping file is clean without Illumina lane suffixes
+    pair_fu1 = processing_helper.find_fastq_pair_for_sample(
+        sample_id="537-522-3751-FU-1",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_fu1 == (
+        str(tmp_path / "537-522-3751-FU-1_S388_L001_R1_001.fastq"),
+        str(tmp_path / "537-522-3751-FU-1_S388_L001_R2_001.fastq")
+    )
+
+    pair_fu10 = processing_helper.find_fastq_pair_for_sample(
+        sample_id="537-522-3751-FU-10",
+        base_fastq_dir=tmp_path
+    )
+    assert pair_fu10 == (
+        str(tmp_path / "537-522-3751-FU-10_S389_L001_R1_001.fastq"),
+        str(tmp_path / "537-522-3751-FU-10_S389_L001_R2_001.fastq")
+    )
+
+
+def test_find_fastq_pair_for_sample_hyphenated(tmp_path):
+    (tmp_path / "T01-Ad4-V2-R1.fastq").write_text("@t1\nACGT\n+\nIIII\n")
+    (tmp_path / "T01-Ad4-V2-R2.fastq").write_text("@t1\nTGCA\n+\nIIII\n")
+
+    pair = processing_helper.find_fastq_pair_for_sample(
+        sample_id="T01-Ad4-V2",
+        base_fastq_dir=tmp_path
+    )
+    assert pair == (
+        str(tmp_path / "T01-Ad4-V2-R1.fastq"),
+        str(tmp_path / "T01-Ad4-V2-R2.fastq")
+    )
+
+
+
 
 
