@@ -12,7 +12,7 @@ def _format_v_tag(tag: str) -> str:
     any prerelease suffixes (e.g. -alpha-1, -beta.2).
     """
     tag = str(tag).strip()
-    if not tag:
+    if not tag or tag in ("NA", "None"):
         return DEFAULT_VERSION
     return tag if tag.startswith("v") else f"v{tag}"
 
@@ -21,22 +21,23 @@ def get_version() -> str:
     """
     Resolves the pipeline version as 'vX.X.X'.
     Priority:
-      1. os.environ['TAG_GIT'] or os.environ['TACTIC_VERSION'] (injected by GitHub Actions/Docker)
+      1. os.environ['GIT_TAG'], os.environ['TAG_GIT'], or os.environ['TACTIC_VERSION'] (injected by GitHub Actions/Docker)
       2. tactic_pipeline/VERSION file (if generated during build)
       3. git describe --tags (when running in a local cloned git repo)
       4. DEFAULT_VERSION fallback ('v1.0.0')
     """
     # 1. Environment variable (e.g. in Docker container or CI)
-    env_tag = os.environ.get("TAG_GIT") or os.environ.get("TACTIC_VERSION")
-    if env_tag:
-        return _format_v_tag(env_tag)
+    for var in ("GIT_TAG", "TAG_GIT", "TACTIC_VERSION"):
+        env_tag = os.environ.get(var)
+        if env_tag and env_tag.strip() not in ("NA", "None", ""):
+            return _format_v_tag(env_tag)
 
     # 2. Check for a VERSION file in the package directory
     version_file = Path(__file__).resolve().parent / "VERSION"
     if version_file.is_file():
         try:
             content = version_file.read_text(encoding="utf-8").strip()
-            if content:
+            if content and content not in ("NA", "None", ""):
                 return _format_v_tag(content)
         except Exception:
             pass
