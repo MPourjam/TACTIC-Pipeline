@@ -295,6 +295,56 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
             ]
         )
 
+    is_v144_plus = False
+    log_path = os.path.join(analysis_folder, "Analysis_log.txt")
+    if os.path.isfile(log_path):
+        with open(log_path, "r", encoding="utf-8", errors="ignore") as lf:
+            log_text = lf.read()
+        ver_match = re.search(r"Using DBs from:.*?/SILVA/v?(\d+)", log_text, re.IGNORECASE)
+        if ver_match and int(ver_match.group(1)) >= 144:
+            is_v144_plus = True
+
+    if is_v144_plus:
+        if any(mode in {"ZOTU", "TAC", "TIC"} for mode in modes):
+            files_to_be_there.extend(
+                [
+                    re.compile(r"ZOTU_Pipeline/ZOTUs-Seqs-7Levels\.fasta$"),
+                    re.compile(r"ZOTU_Pipeline/ZOTUs-Table-7Levels\.tab$"),
+                    re.compile(r"ZOTU_Pipeline/ZOTUs-Krona-7Levels\.html$"),
+                    re.compile(r"ZOTU_Pipeline/SampleMinCount_Normalized.*ZOTUs-Table-7Levels\.tab$"),
+                ]
+            )
+        if "OTU" in modes:
+            files_to_be_there.extend(
+                [
+                    re.compile(r"OTU_Pipeline/OTUs-Seqs-7Levels\.fasta$"),
+                    re.compile(r"OTU_Pipeline/OTUs-Table-7Levels\.tab$"),
+                    re.compile(r"OTU_Pipeline/OTUs-Krona-7Levels\.html$"),
+                    re.compile(r"OTU_Pipeline/SampleMinCount_Normalized.*OTUs-Table-7Levels\.tab$"),
+                ]
+            )
+        if "TAC" in modes:
+            files_to_be_there.extend(
+                [
+                    re.compile(r"TAC_Pipeline/OTUs-Table-TAC-8Levels\.tab$"),
+                    re.compile(r"TAC_Pipeline/OTUs-Seqs-TAC-8Levels\.fasta$"),
+                    re.compile(r"TAC_Pipeline/OTUs-Krona-8Levels\.html$"),
+                    re.compile(r"TAC_Pipeline/SampleMinCount_Normalized.*OTUs-Table-TAC-8Levels\.tab$"),
+                ]
+            )
+        if "TIC" in modes:
+            files_to_be_there.extend(
+                [
+                    re.compile(r"TIC_Pipeline/SOTUs-Table-TIC-8Levels\.tab$"),
+                    re.compile(r"TIC_Pipeline/SOTUs-Seqs-TIC-8Levels\.fasta$"),
+                    re.compile(r"TIC_Pipeline/SOTUs-Krona-8Levels\.html$"),
+                    re.compile(r"TIC_Pipeline/Invalid-Tax-Seqs-TIC-8Levels\.fasta$"),
+                    re.compile(r"TIC_Pipeline/.*FullTaxonomy-8Levels\.tab$"),
+                    re.compile(r"TIC_Pipeline/SampleMinCount_Normalized.*SOTUs-Table-TIC-8Levels\.tab$"),
+                ]
+            )
+        files_to_be_there.append(re.compile(r"README_Taxonomy_Levels\.txt$"))
+
     existing_files_list = []
     # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
     # If it's a zip file and the path exists, list all entries inside the zip.

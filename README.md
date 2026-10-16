@@ -57,13 +57,31 @@ my_project/
 ├── Analysis_20261015_080000/
 │   ├── Pipeline_log.txt              # Complete preprocessing parameters and log
 │   ├── Analysis_log.txt              # Detailed clustering and taxonomy log
+│   ├── README_Taxonomy_Levels.txt    # Explanation of standard vs 7-level/8-level taxonomy outputs
 │   ├── TIC_Pipeline/
-│   │   └── SOTUs-Table-TIC.tab       # Final abundance table for TIC
+│   │   ├── SOTUs-Table-TIC.tab       # Final abundance table for TIC (classic 7 levels)
+│   │   ├── SOTUs-Table-TIC-8Levels.tab # Final abundance table with SILVA 144+ Kingdom (8 levels)
+│   │   ├── SOTUs-Krona.html          # Interactive Krona taxonomy plot
+│   │   └── SOTUs-Krona-8Levels.html  # Interactive Krona plot with bacterial Kingdom ring
 │   ├── taxed_ZOTUs.fasta             # Representative sequences with SILVA taxonomy
 │   ├── text.krona.html               # Interactive browser-based Krona taxonomy plot
 │   ├── R1-per_base_quality.png       # Forward read quality assessment
 │   └── reads_report.txt              # Read counts through filtering, merging, and dereplication
 ```
+
+### 🏷️ SILVA 144+ Dual Taxonomy Outputs (`-7Levels` and `-8Levels`)
+
+In SILVA release 144 onward, a formal **Kingdom** rank ending in `-ati` (e.g. *Bacillati*, *Pseudomonadati*, *Fusobacteriati*) was introduced between Domain and Phylum.
+
+TACTIC automatically detects when SILVA $\ge 144$ is in use and generates parallel versions of all taxonomy-containing files (abundance tables, FASTAs, and Krona HTML charts):
+
+| File Suffix | Analysis Pipelines | Taxonomic Levels | Description & Recommended Use |
+| :--- | :--- | :--- | :--- |
+| *(None / standard)* | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`) | 7 levels: `Domain;Phylum;Class;Order;Family;Genus;Species/SOTU;` | **Backward compatibility**: Standard 7 ranks (Kingdom temporarily excluded). Use for downstream tools strictly expecting classic 7-level taxonomies (e.g., PICRUSt2, legacy QIIME / R scripts). |
+| `*-8Levels.*` | `TIC` & `TAC` Pipelines | 8 levels: `Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species/SOTU;` | **Full SILVA 144+ taxonomy**: Includes the bacterial Kingdom rank (`*-ati`) plus species/SOTU level. Recommended for detailed taxonomic profiling, Rhea, Namco, and 8-ring Krona charts. |
+| `*-7Levels.*` | `ZOTU` & `OTU` Pipelines (and `-iz`) | 7 levels: `Domain;Kingdom;Phylum;Class;Order;Family;Genus;` | **Full rank resolution without species**: Includes the bacterial Kingdom rank (`*-ati`) up to genus level. |
+
+> 💡 **Notice**: A descriptive `README_Taxonomy_Levels.txt` file is automatically placed in your `Analysis_*` results folder detailing the level mapping and tool recommendations.
 
 ---
 

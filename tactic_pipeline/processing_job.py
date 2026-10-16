@@ -11,6 +11,13 @@ from .processing_helper import (
     calc_spikes,
     onelinefasta)
 from .processing_helper import system_sub as sys_sub
+from .analysis.analysis_helper import (
+    build_kingdom_lookup_from_sina_csv,
+    is_silva_144_or_newer,
+    parse_sina_taxonomy,
+    write_kingdom_enriched_fasta,
+    write_kingdom_enriched_table,
+)
 import re
 import random
 import shutil
@@ -544,11 +551,18 @@ def addTax(input_id):
     out_file = open('classifiedF.txt', 'w+')
     silva_contents_header = read_file(filebasename + '.csv')
     silva_contents = silva_contents_header[1:]
+    raw_taxonomies = [
+        line.split(',')[6]
+        for line in silva_contents
+        if len(line.split(',')) > 6
+    ]
+    is_v144_plus = is_silva_144_or_newer(SINA_ARB, sample_taxonomies=raw_taxonomies)
     for line in silva_contents:
         line_tokens = line.split(',')
         silva_taxo = line_tokens[6]
+        formatted_taxo, _, _ = parse_sina_taxonomy(silva_taxo, is_v144_plus=is_v144_plus)
         seq_name = line_tokens[0]
-        out_file.write(seq_name + '\t' + silva_taxo + '\n')
+        out_file.write(seq_name + '\t' + formatted_taxo + '\n')
     out_file.close()
 
 
@@ -597,13 +611,13 @@ def add_taxonomy_to_fasta():
     out_file.close()
 
 
-def addKrona(KRONA_TOOL):
-    OTUfinal_line = read_file('ZOTUs-table.final.tab')[1:]
+def addKrona(KRONA_TOOL, table_file='ZOTUs-table.final.tab', output_html_name=""):
+    OTUfinal_line = read_file(table_file)[1:]
     krona_text = open('krona.txt', 'w+')
     krona_dct = {}
     for OTU_taxonomy in OTUfinal_line:
         OTUFinal_list = OTU_taxonomy.split('\t')[1:]
-        taxo = '\t'.join(OTUFinal_list[-1].split(";")[:-1])
+        taxo = '\t'.join(OTUFinal_list[-1].strip().rstrip(";").split(";"))
         size = OTUFinal_list[:-1]
         if not krona_dct.get(taxo, False):
             krona_dct[taxo] = sum([int(s) for s in size])
@@ -612,16 +626,14 @@ def addKrona(KRONA_TOOL):
     for tax, size in krona_dct.items():
         krona_text.write(str(size) + '\t' + tax + '\n')
     krona_text.close()
-    # system("{} ./krona.txt".format(KRONA_TOOL))
+    cmd = [KRONA_TOOL, "./krona.txt"]
+    if output_html_name:
+        cmd.extend(["-o", output_html_name])
     system_sub(
-        [
-            KRONA_TOOL,
-            "./krona.txt"
-        ],
+        cmd,
         capture_output=True,
         quiet=True
     )
-    # system("rm krona.txt")
     system_sub(
         [
             "rm",
@@ -632,10 +644,40 @@ def addKrona(KRONA_TOOL):
     )
 
 
+def generate_individual_zotu_7level_outputs(input_id, KRONA_TOOL):
+    sina_csv = f"aligned_{input_id}.csv"
+    seq_kingdom_map, phylum_kingdom_map = build_kingdom_lookup_from_sina_csv(sina_csv)
+    if not (is_silva_144_or_newer(SINA_ARB) or bool(seq_kingdom_map)):
+        return
+    if path.isfile("ZOTUs-table.final.tab"):
+        write_kingdom_enriched_table(
+            "ZOTUs-table.final.tab",
+            "ZOTUs-table.final-7Levels.tab",
+            seq_kingdom_map=seq_kingdom_map,
+            phylum_kingdom_map=phylum_kingdom_map,
+            target_levels=7,
+        )
+        addKrona(
+            KRONA_TOOL,
+            table_file="ZOTUs-table.final-7Levels.tab",
+            output_html_name="text.krona-7Levels.html",
+        )
+    if path.isfile("taxed_ZOTUs.fasta"):
+        write_kingdom_enriched_fasta(
+            "taxed_ZOTUs.fasta",
+            "taxed_ZOTUs-7Levels.fasta",
+            seq_kingdom_map=seq_kingdom_map,
+            phylum_kingdom_map=phylum_kingdom_map,
+            target_levels=7,
+        )
+
+
 def create_zip(input_id):
     files_to_zip = [
         "ZOTUs-table.final.tab",
+        "ZOTUs-table.final-7Levels.tab",
         "taxed_ZOTUs.fasta",
+        "taxed_ZOTUs-7Levels.fasta",
         "spike_stat_mapping_file.csv",
         "krona.html",
         "silva_start_end.txt",
@@ -981,6 +1023,7 @@ def main_processing(
             add_taxonomy_to_fasta()
             PREPPROC_LOG.info("# Add Krona Graph")
             addKrona(krona_importtext)
+            generate_individual_zotu_7level_outputs(input_id, krona_importtext)
             # udb for both similarity queries
             PREPPROC_LOG.info('# Create UDB')
             create_udb(input_id)

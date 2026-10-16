@@ -12,7 +12,19 @@ from processing_helper import TACTICArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
 from pathlib import Path, PurePath
-from .analysis_helper import onelinefasta, prepare_picrust2_input
+from .analysis_helper import (
+    build_cluster_id_kingdom_map,
+    build_kingdom_lookup_from_sina_csv,
+    ensure_7level_semicolons_in_fasta,
+    ensure_7level_semicolons_in_table,
+    format_taxonomy_levels,
+    generate_kingdom_enriched_pipeline_outputs,
+    is_silva_144_or_newer,
+    onelinefasta,
+    parse_sina_taxonomy,
+    prepare_picrust2_input,
+    write_taxonomy_levels_readme,
+)
 import logging
 from ticlust import TICAnalysis
 try:
@@ -536,14 +548,17 @@ def addTax_new(zotu_fasta_path):
     sina_test_out = os.path.join(dirname, 'test_{}.csv'.format("".join(filename.split(".")[:-1])))
     silva_contents_header = read_file(sina_test_out)
     silva_contents = silva_contents_header[1:]
+    raw_taxonomies = [
+        line.split(',')[6]
+        for line in silva_contents
+        if len(line.split(',')) > 6
+    ]
+    is_v144_plus = is_silva_144_or_newer(str(DB_LOC), sample_taxonomies=raw_taxonomies)
     with open(new_taxed_path, 'w+') as out_file:
         for line in silva_contents:
             line_tokens = line.split(',')
             silva_taxo = line_tokens[6]
-            silva_taxo_list = silva_taxo.strip().split(';')
-            padded_silva_taxo_list = silva_taxo_list + [""] * (7 - len(silva_taxo_list))
-            padded_silva_taxo_list = [str(p).strip() for p in padded_silva_taxo_list]
-            full_silva_taxo = ";".join(padded_silva_taxo_list[:7])
+            full_silva_taxo, _, _ = parse_sina_taxonomy(silva_taxo, is_v144_plus=is_v144_plus)
             seq_name = line_tokens[0]
             out_file.write('>' + seq_name + ' ' + "tax=" + full_silva_taxo + '\n' + zotu_seq_dict[seq_name] + '\n')
     shutil.move(new_taxed_path, filename)
@@ -561,7 +576,7 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
     :return: none
     """
     # Path handling
-    tax_all_empty = ';;;;;;'
+    tax_all_empty = format_taxonomy_levels([], 7)
     table_file = os.path.abspath(table_file)
     taxed_seq_file = os.path.abspath(taxed_seq_file)
     tax_regex = re.compile(r"tax=(?P<tax>([^;]*;)*[^;]*);*", re.IGNORECASE)
@@ -575,7 +590,7 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
                 _tax = ''
                 seq_id = seq_id_regex.search(seq_line).group('seq_header')
                 curr_tax = tax_regex.search(seq_line)
-                _tax += curr_tax.group('tax') if curr_tax.group('tax') else tax_all_empty
+                _tax += curr_tax.group('tax') if (curr_tax and curr_tax.group('tax')) else tax_all_empty
                 seq_headers[seq_id] = _tax
             seq_line = taxed_seq_fio.readline().strip()
 
@@ -593,14 +608,9 @@ def addTax_to_table(table_file: str, taxed_seq_file: str, replace_originals: boo
             else:
                 seq_name = str(table_line.split('\t')[0]).strip()
                 _tax = seq_headers.get(seq_name, tax_all_empty)
-                _tax_list = _tax.strip().split(';')
-                # Pad _tax_list to ensure it has at least 7 elements
-                # This operation is redundant here as we already ensure that
-                # _tax_list has 7 elements in the function addTax_new() but
-                # we keep it anyway
-                padded_tax_list = _tax_list + [""] * (7 - len(_tax_list))
-                padded_tax_list = [str(p).strip() for p in padded_tax_list]
-                new_line = table_line + '\t' + ";".join(padded_tax_list[:7]) + '\n'
+                _tax_list = [str(p).strip() for p in _tax.strip().split(';')]
+                formatted_tax = format_taxonomy_levels(_tax_list[:7], 7)
+                new_line = table_line + '\t' + formatted_tax + '\n'
                 out_fio.write(new_line)
             table_line = table_fio.readline().strip()
 
@@ -738,7 +748,7 @@ def create_krona(krona_tool: str, taxed_otu_table: str, output_html_name: str):
     krona_dct = {}
     for OTU_taxonomy in OTUfinal_line:
         OTUFinal_list = OTU_taxonomy.split('\t')[1:]
-        taxo = '\t'.join(str(OTUFinal_list[-1]).strip().split(";"))
+        taxo = '\t'.join(str(OTUFinal_list[-1]).strip().rstrip(";").split(";"))
         size = OTUFinal_list[:-1]
         curr_sum = krona_dct.get(taxo, 0) + sum([float(s) for s in size])
         krona_dct[taxo] = curr_sum
@@ -866,17 +876,20 @@ def cleanup(directory: str, to_keep: list = []) -> bool:
         re.compile(r".*\.yml"),
         re.compile(r"spike_mapping_file\.csv"),
         # Pipelne outputs
-        re.compile(r"[ZS]?OTUs-Seqs(-TAC|-TIC)?\.fasta"),
-        re.compile(r"[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
+        re.compile(r"[ZS]?OTUs-Seqs(-TAC|-TIC)?(-[78]Levels)?\.fasta"),
+        re.compile(r"[ZS]?OTUs-Table(-TAC|-TIC)?(-[78]Levels)?\.tab"),
         re.compile(r"[ZS]?OTUs-Tree-nj(-TAC|-TIC)?\.tre"),
         re.compile(r"[ZS]?OTUs-Tree-FastTree(-TAC|-TIC)?\.tre"),
-        re.compile(r"[ZS]?OTUs-Krona(-TAC|-TIC)?\.html"),
+        re.compile(r"[ZS]?OTUs-Krona(-TAC|-TIC)?(-[78]Levels)?\.html"),
         re.compile(r"Map-.*\.tab"),
-        re.compile(r"SampleMinCount_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
-        re.compile(r"Spike_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?\.tab"),
+        re.compile(r"SampleMinCount_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?(-[78]Levels)?\.tab"),
+        re.compile(r"Spike_Normalized-[ZS]?OTUs-Table(-TAC|-TIC)?(-[78]Levels)?\.tab"),
+        re.compile(r"Seqs(-TIC|-TAC)?(-[78]Levels)?\.fasta"),
+        re.compile(r"Invalid-Tax-Seqs-TIC(-[78]Levels)?\.fasta"),
+        re.compile(r"TIC-FullTaxonomy-Sequences(-[78]Levels)?\.fasta"),
+        re.compile(r".*FullTaxonomy(-[78]Levels)?\.tab"),  # For ZOTU tables with full taxonomy
         re.compile(r".*log\.txt"),
-        re.compile(r"Seqs(-TIC|-TAC)?\.fasta"),
-        re.compile(r".*FullTaxonomy\.tab"),  # For ZOTU tables with full taxonomy
+        re.compile(r"README.*\.txt"),
     ]
     white_list = [re.compile(f"{tk}") for tk in to_keep] + must_keep
     files = list(directory.glob("*"))
@@ -1518,6 +1531,12 @@ def tic_pipeline(
             rename_map={zotus[0]: otu for otu, zotus in sotu_zotu_map.items()},
             output_file=str(sotus_tree_file)
         )
+    for tab_file in sorted(tic_analysis.tic_wd.glob("*.tab")):
+        if not tab_file.name.startswith("Map-"):
+            ensure_7level_semicolons_in_table(str(tab_file))
+    for fasta_file in sorted(tic_analysis.tic_wd.glob("*.fasta")):
+        ensure_7level_semicolons_in_fasta(str(fasta_file))
+
     tic_logger.info('# Adding Krona HTML')
     create_krona(
         krona_importtext,
@@ -1813,6 +1832,73 @@ def main(
 
     ANA_LOG.info('# Preparing PICRUSt2 input files')
     prepare_picrust2_input(str(ANALYSIS_DIR))
+
+    zotu_sina_csv = pipeline_dirs["zotu"] / "test_ZOTUs-Seqs.csv"
+    otu_sina_csv = pipeline_dirs["otu"] / "test_OTUs-Seqs.csv"
+    zotu_kingdom_map, zotu_phylum_map = build_kingdom_lookup_from_sina_csv(str(zotu_sina_csv))
+    otu_kingdom_map, otu_phylum_map = build_kingdom_lookup_from_sina_csv(str(otu_sina_csv))
+    combined_phylum_map = {**otu_phylum_map, **zotu_phylum_map}
+    if is_silva_144_or_newer(str(DB_LOC)) or bool(zotu_kingdom_map) or bool(otu_kingdom_map):
+        ANA_LOG.info('# Generating SILVA >= 144 Kingdom-enriched taxonomy output files')
+        if run_zotu_pipeline:
+            generate_kingdom_enriched_pipeline_outputs(
+                str(pipeline_dirs["zotu"]),
+                target_levels=7,
+                seq_kingdom_map=zotu_kingdom_map,
+                phylum_kingdom_map=combined_phylum_map,
+                krona_tool=krona_importtext,
+                create_krona_fn=create_krona,
+            )
+        if run_otu_pipeline:
+            generate_kingdom_enriched_pipeline_outputs(
+                str(pipeline_dirs["otu"]),
+                target_levels=7,
+                seq_kingdom_map=otu_kingdom_map,
+                phylum_kingdom_map=combined_phylum_map,
+                krona_tool=krona_importtext,
+                create_krona_fn=create_krona,
+            )
+        if run_tac_pipeline:
+            tac_kingdom_map = build_cluster_id_kingdom_map(
+                str(pipeline_dirs["tac"] / "Map-ZOTUs-OTUs-TAC.tab"),
+                zotu_kingdom_map,
+            )
+            generate_kingdom_enriched_pipeline_outputs(
+                str(pipeline_dirs["tac"]),
+                target_levels=8,
+                seq_kingdom_map=tac_kingdom_map,
+                phylum_kingdom_map=combined_phylum_map,
+                krona_tool=krona_importtext,
+                create_krona_fn=create_krona,
+            )
+        if run_tic_pipeline:
+            tic_kingdom_map = build_cluster_id_kingdom_map(
+                str(pipeline_dirs["tic"] / "Map-SOTU-ZOTU.tab"),
+                zotu_kingdom_map,
+            )
+            generate_kingdom_enriched_pipeline_outputs(
+                str(pipeline_dirs["tic"]),
+                target_levels=8,
+                seq_kingdom_map=tic_kingdom_map,
+                phylum_kingdom_map=combined_phylum_map,
+                krona_tool=krona_importtext,
+                create_krona_fn=create_krona,
+            )
+
+        write_taxonomy_levels_readme(str(ANALYSIS_DIR))
+        banner_msg = (
+            "\n" + "=" * 78 + "\n"
+            "SILVA >= 144 Dual Taxonomy Outputs Generated:\n"
+            "  • Standard files (e.g. SOTUs-Table-TIC.tab): Classic 7 levels (Domain..Species)\n"
+            "    -> Recommended for: PICRUSt2 and tools expecting classic 7-level taxonomies.\n"
+            "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab): 8 levels (Domain..Kingdom..Species)\n"
+            "    -> Recommended for: SILVA 144+ bacterial kingdom analysis (Bacillati, etc.).\n"
+            "  • *-7Levels files (e.g. ZOTUs-Table-7Levels.tab): 7 levels (Domain..Kingdom..Genus)\n"
+            "  • Refer to README_Taxonomy_Levels.txt in the analysis folder for full details.\n"
+            "=" * 78
+        )
+        ANA_LOG.info(banner_msg)
+
     ANA_LOG.info('ANALYSIS DONE')
     # to keep the same return value as the main function
     return tuple(to_return)
