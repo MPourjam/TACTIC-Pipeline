@@ -1854,7 +1854,7 @@ def main(
         if run_zotu_pipeline:
             generate_kingdom_enriched_pipeline_outputs(
                 str(pipeline_dirs["zotu"]),
-                target_levels=7,
+                target_levels=8,
                 seq_kingdom_map=zotu_kingdom_map,
                 phylum_kingdom_map=combined_phylum_map,
                 krona_tool=krona_importtext,
@@ -1863,7 +1863,7 @@ def main(
         if run_otu_pipeline:
             generate_kingdom_enriched_pipeline_outputs(
                 str(pipeline_dirs["otu"]),
-                target_levels=7,
+                target_levels=8,
                 seq_kingdom_map=otu_kingdom_map,
                 phylum_kingdom_map=combined_phylum_map,
                 krona_tool=krona_importtext,
@@ -1902,11 +1902,10 @@ def main(
             "",
             sep_line,
             "SILVA >= 144 Dual Taxonomy Outputs Generated:",
-            "  • Standard files (e.g. SOTUs-Table-TIC.tab): Classic 7 levels (Domain..Species)",
+            "  • Standard files (e.g. SOTUs-Table-TIC.tab, ZOTUs-Table.tab): Classic 7 levels (Domain..Species)",
             "    -> Recommended for: PICRUSt2 and tools expecting classic 7-level taxonomies.",
-            "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab): 8 levels (Domain..Kingdom..Species)",
+            "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab, ZOTUs-Table-8Levels.tab): 8 levels (Domain..Kingdom..Species)",
             "    -> Recommended for: SILVA 144+ bacterial kingdom analysis (Bacillati, etc.).",
-            "  • *-7Levels files (e.g. ZOTUs-Table-7Levels.tab): 7 levels (Domain..Kingdom..Genus)",
             "  • Refer to README_Taxonomy_Levels.txt in the analysis folder for full details.",
             sep_line,
         ])

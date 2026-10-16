@@ -205,18 +205,18 @@ def test_tic_analysis_and_dual_output_generation_with_silva_144(tmp_path):
     )
     addTax_to_table(str(zotu_table), str(zotu_fasta))
 
-    # Generate 7-level outputs for ZOTU_Pipeline
+    # Generate 8-level outputs for ZOTU_Pipeline (down to species, with empty 8th level)
     generate_kingdom_enriched_pipeline_outputs(
         str(zotu_dir),
-        target_levels=7,
+        target_levels=8,
         seq_kingdom_map=seq_k_map,
         phylum_kingdom_map=phylum_k_map,
     )
-    assert (zotu_dir / "ZOTUs-Table-7Levels.tab").is_file()
-    assert (zotu_dir / "ZOTUs-Seqs-7Levels.fasta").is_file()
-    zotu_7lvl_text = (zotu_dir / "ZOTUs-Table-7Levels.tab").read_text(encoding="utf-8")
-    assert "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;" in zotu_7lvl_text
-    assert "Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;" in zotu_7lvl_text
+    assert (zotu_dir / "ZOTUs-Table-8Levels.tab").is_file()
+    assert (zotu_dir / "ZOTUs-Seqs-8Levels.fasta").is_file()
+    zotu_8lvl_text = (zotu_dir / "ZOTUs-Table-8Levels.tab").read_text(encoding="utf-8")
+    assert "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;;" in zotu_8lvl_text
+    assert "Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;;" in zotu_8lvl_text
 
     # Stage into TIC_Pipeline and run TICAnalysis directly
     staged_fasta = tic_dir / "ZOTUs-Seqs.fasta"
@@ -284,10 +284,10 @@ def test_tic_analysis_and_dual_output_generation_with_silva_144(tmp_path):
     picrust_files = sorted(p.name for p in (tmp_path / "PICRUSt2-Inputs").iterdir())
     assert not any("7Levels" in name or "8Levels" in name for name in picrust_files)
 
-    # Cleanup preserves both standard and -7Levels/-8Levels files
+    # Cleanup preserves both standard and -8Levels files
     analysis_cleanup(str(zotu_dir))
     analysis_cleanup(str(tic_dir))
-    assert (zotu_dir / "ZOTUs-Table-7Levels.tab").is_file()
+    assert (zotu_dir / "ZOTUs-Table-8Levels.tab").is_file()
     assert (tic_dir / "SOTUs-Table-TIC-8Levels.tab").is_file()
     assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab").is_file()
     assert not (tic_dir / "ZOTU-Table-All-FullTaxonomy.tab").exists()
@@ -694,7 +694,7 @@ def test_write_taxonomy_levels_readme(tmp_path):
     assert "SILVA reference database version >= 144" in text
     assert "Standard Outputs" in text
     assert "*-8Levels.*" in text
-    assert "*-7Levels.*" in text
+    assert "Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species;" in text
     assert "Which file should I use?" in text
     assert "PICRUSt2" in text
 

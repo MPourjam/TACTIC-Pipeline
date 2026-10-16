@@ -69,7 +69,7 @@ my_project/
 │   └── reads_report.txt              # Read counts through filtering, merging, and dereplication
 ```
 
-### 🏷️ SILVA 144+ Dual Taxonomy Outputs (`-7Levels` and `-8Levels`)
+### 🏷️ SILVA 144+ Dual Taxonomy Outputs (`-8Levels`)
 
 In SILVA release 144 onward, a formal **Kingdom** rank ending in `-ati` (e.g. *Bacillati*, *Pseudomonadati*, *Fusobacteriati*) was introduced between Domain and Phylum.
 
@@ -77,9 +77,8 @@ TACTIC automatically detects when SILVA $\ge 144$ is in use and generates parall
 
 | File Suffix | Analysis Pipelines | Taxonomic Levels | Description & Recommended Use |
 | :--- | :--- | :--- | :--- |
-| *(None / standard)* | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`) | 7 levels: `Domain;Phylum;Class;Order;Family;Genus;Species/SOTU;` | **Backward compatibility**: Standard 7 ranks (Kingdom temporarily excluded). Use for downstream tools strictly expecting classic 7-level taxonomies (e.g., PICRUSt2, legacy QIIME / R scripts). |
-| `*-8Levels.*` | `TIC` & `TAC` Pipelines | 8 levels: `Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species/SOTU;` | **Full SILVA 144+ taxonomy**: Includes the bacterial Kingdom rank (`*-ati`) plus species/SOTU level. Recommended for detailed taxonomic profiling, Rhea, Namco, and 8-ring Krona charts. |
-| `*-7Levels.*` | `ZOTU` & `OTU` Pipelines (and `-iz`) | 7 levels: `Domain;Kingdom;Phylum;Class;Order;Family;Genus;` | **Full rank resolution without species**: Includes the bacterial Kingdom rank (`*-ati`) up to genus level. |
+| *(None / standard)* | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`, `-iz`) | 7 levels: `Domain;Phylum;Class;Order;Family;Genus;Species;` | **Backward compatibility**: Classic 7 ranks down to Species (Kingdom temporarily excluded; unassigned lower ranks left empty). Use for downstream tools strictly expecting classic 7-level taxonomies (e.g., PICRUSt2, legacy QIIME / R scripts). |
+| `*-8Levels.*` | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`, `-iz`) | 8 levels: `Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species;` | **Full SILVA 144+ taxonomy**: Includes the bacterial Kingdom rank (`*-ati`) down to Species (unassigned lower ranks left empty in modes without species imputation). Recommended for detailed taxonomic profiling, Rhea, Namco, and 8-ring Krona charts. |
 
 > 💡 **Notice**: A descriptive `README_Taxonomy_Levels.txt` file is automatically placed in your `Analysis_*` results folder detailing the level mapping and tool recommendations.
 

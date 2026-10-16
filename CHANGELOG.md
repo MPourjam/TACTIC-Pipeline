@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Taxonomy & SILVA 144+ Support
 - **SILVA 144+ Kingdom Classification**: Fully compatible with SILVA release 144+ databases by detecting and handling the formal bacterial Kingdom rank (ending in `-ati` / `-ati--other`) between Domain and Phylum, while ignoring 8th-level source tags (such as `metagenome`).
-- **Dual Taxonomy Outputs**: Simultaneously produces classic 7-level files (`Domain..Genus;` or `Domain..Species;`) for backward compatibility with legacy tools (PICRUSt2, classic R/QIIME scripts) alongside enriched files (`*-8Levels.*` for TAC/TIC, `*-7Levels.*` for ZOTU/OTU) containing the full SILVA 144+ bacterial Kingdom resolution.
+- **Dual Taxonomy Outputs**: Simultaneously produces classic 7-level files (`Domain..Species;`) for backward compatibility with legacy tools (PICRUSt2, classic R/QIIME scripts) alongside 8-level enriched files (`*-8Levels.*` across TIC, TAC, ZOTU, OTU, and `-iz`) containing the full SILVA 144+ bacterial Kingdom resolution down to Species.
 - **Strict Trailing Semicolon Normalization**: Every taxonomic rank cleanly terminates with a trailing semicolon across all abundance tables and FASTA headers (7 semicolons for 7 levels, 8 semicolons for 8 levels), preventing rank-shifting issues in downstream parsers.
 - **Automatic Output Guidance**: Automatically writes a clear `README_Taxonomy_Levels.txt` guide into each `Analysis_<timestamp>/` results directory and logs an explanatory summary banner in `Analysis_log.txt` detailing output files and tool compatibility.
 

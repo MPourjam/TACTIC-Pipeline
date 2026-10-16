@@ -644,7 +644,7 @@ def addKrona(KRONA_TOOL, table_file='ZOTUs-table.final.tab', output_html_name=""
     )
 
 
-def generate_individual_zotu_7level_outputs(input_id, KRONA_TOOL):
+def generate_individual_zotu_8level_outputs(input_id, KRONA_TOOL):
     sina_csv = f"aligned_{input_id}.csv"
     seq_kingdom_map, phylum_kingdom_map = build_kingdom_lookup_from_sina_csv(sina_csv)
     if not (is_silva_144_or_newer(SINA_ARB) or bool(seq_kingdom_map)):
@@ -652,32 +652,32 @@ def generate_individual_zotu_7level_outputs(input_id, KRONA_TOOL):
     if path.isfile("ZOTUs-table.final.tab"):
         write_kingdom_enriched_table(
             "ZOTUs-table.final.tab",
-            "ZOTUs-table.final-7Levels.tab",
+            "ZOTUs-table.final-8Levels.tab",
             seq_kingdom_map=seq_kingdom_map,
             phylum_kingdom_map=phylum_kingdom_map,
-            target_levels=7,
+            target_levels=8,
         )
         addKrona(
             KRONA_TOOL,
-            table_file="ZOTUs-table.final-7Levels.tab",
-            output_html_name="text.krona-7Levels.html",
+            table_file="ZOTUs-table.final-8Levels.tab",
+            output_html_name="text.krona-8Levels.html",
         )
     if path.isfile("taxed_ZOTUs.fasta"):
         write_kingdom_enriched_fasta(
             "taxed_ZOTUs.fasta",
-            "taxed_ZOTUs-7Levels.fasta",
+            "taxed_ZOTUs-8Levels.fasta",
             seq_kingdom_map=seq_kingdom_map,
             phylum_kingdom_map=phylum_kingdom_map,
-            target_levels=7,
+            target_levels=8,
         )
 
 
 def create_zip(input_id):
     files_to_zip = [
         "ZOTUs-table.final.tab",
-        "ZOTUs-table.final-7Levels.tab",
+        "ZOTUs-table.final-8Levels.tab",
         "taxed_ZOTUs.fasta",
-        "taxed_ZOTUs-7Levels.fasta",
+        "taxed_ZOTUs-8Levels.fasta",
         "spike_stat_mapping_file.csv",
         "krona.html",
         "silva_start_end.txt",
@@ -1023,7 +1023,7 @@ def main_processing(
             add_taxonomy_to_fasta()
             PREPPROC_LOG.info("# Add Krona Graph")
             addKrona(krona_importtext)
-            generate_individual_zotu_7level_outputs(input_id, krona_importtext)
+            generate_individual_zotu_8level_outputs(input_id, krona_importtext)
             # udb for both similarity queries
             PREPPROC_LOG.info('# Create UDB')
             create_udb(input_id)

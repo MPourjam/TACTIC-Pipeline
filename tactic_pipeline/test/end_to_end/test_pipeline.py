@@ -308,19 +308,19 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
         if any(mode in {"ZOTU", "TAC", "TIC"} for mode in modes):
             files_to_be_there.extend(
                 [
-                    re.compile(r"ZOTU_Pipeline/ZOTUs-Seqs-7Levels\.fasta$"),
-                    re.compile(r"ZOTU_Pipeline/ZOTUs-Table-7Levels\.tab$"),
-                    re.compile(r"ZOTU_Pipeline/ZOTUs-Krona-7Levels\.html$"),
-                    re.compile(r"ZOTU_Pipeline/SampleMinCount_Normalized.*ZOTUs-Table-7Levels\.tab$"),
+                    re.compile(r"ZOTU_Pipeline/ZOTUs-Seqs-8Levels\.fasta$"),
+                    re.compile(r"ZOTU_Pipeline/ZOTUs-Table-8Levels\.tab$"),
+                    re.compile(r"ZOTU_Pipeline/ZOTUs-Krona-8Levels\.html$"),
+                    re.compile(r"ZOTU_Pipeline/SampleMinCount_Normalized.*ZOTUs-Table-8Levels\.tab$"),
                 ]
             )
         if "OTU" in modes:
             files_to_be_there.extend(
                 [
-                    re.compile(r"OTU_Pipeline/OTUs-Seqs-7Levels\.fasta$"),
-                    re.compile(r"OTU_Pipeline/OTUs-Table-7Levels\.tab$"),
-                    re.compile(r"OTU_Pipeline/OTUs-Krona-7Levels\.html$"),
-                    re.compile(r"OTU_Pipeline/SampleMinCount_Normalized.*OTUs-Table-7Levels\.tab$"),
+                    re.compile(r"OTU_Pipeline/OTUs-Seqs-8Levels\.fasta$"),
+                    re.compile(r"OTU_Pipeline/OTUs-Table-8Levels\.tab$"),
+                    re.compile(r"OTU_Pipeline/OTUs-Krona-8Levels\.html$"),
+                    re.compile(r"OTU_Pipeline/SampleMinCount_Normalized.*OTUs-Table-8Levels\.tab$"),
                 ]
             )
         if "TAC" in modes:

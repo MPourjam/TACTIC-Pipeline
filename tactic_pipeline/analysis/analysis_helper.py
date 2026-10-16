@@ -439,7 +439,7 @@ def _with_level_suffix(file_path: Path, target_levels: int) -> Path:
 
 def generate_kingdom_enriched_pipeline_outputs(
     pipeline_dir: str,
-    target_levels: int,
+    target_levels: int = 8,
     seq_kingdom_map: Optional[Dict[str, str]] = None,
     phylum_kingdom_map: Optional[Dict[Tuple[str, str], str]] = None,
     krona_tool: str = "",
@@ -448,8 +448,8 @@ def generate_kingdom_enriched_pipeline_outputs(
     """
     For a finished pipeline directory (`ZOTU_Pipeline`, `OTU_Pipeline`,
     `TAC_Pipeline`, or `TIC_Pipeline`), generate the Kingdom-enriched version
-    (`*-7Levels.*` for ZOTU/OTU or `*-8Levels.*` for TAC/TIC) of all output
-    tables, FASTA files, and Krona HTML charts that contain taxonomy.
+    (`*-8Levels.*`) of all output tables, FASTA files, and Krona HTML charts
+    that contain taxonomy.
     """
     dir_path = Path(PurePath(pipeline_dir)).resolve()
     if not dir_path.is_dir():
@@ -520,7 +520,7 @@ def generate_kingdom_enriched_pipeline_outputs(
 def write_taxonomy_levels_readme(output_dir: str) -> str:
     """
     Write README_Taxonomy_Levels.txt into `output_dir` explaining the difference
-    between standard outputs and the SILVA >= 144 *-7Levels and *-8Levels files.
+    between standard 7-level outputs and the SILVA >= 144 *-8Levels files.
     """
     dest_dir = Path(PurePath(output_dir)).resolve()
     dest_dir.mkdir(parents=True, exist_ok=True)
@@ -535,22 +535,21 @@ def write_taxonomy_levels_readme(output_dir: str) -> str:
         "was introduced between Domain and Phylum.\n\n"
         "To guarantee seamless compatibility with both traditional bioinformatics tools\n"
         "and updated taxonomy standards, TACTIC generates parallel sets of output files:\n\n"
-        "1. Standard Outputs (e.g., SOTUs-Table-TIC.tab, OTUs-Table-TAC.tab, ZOTUs-Table.tab):\n"
-        "   - Format: Domain;Phylum;Class;Order;Family;Genus;Species/SOTU; (7 levels, 7 ';')\n"
+        "1. Standard Outputs (e.g., SOTUs-Table-TIC.tab, OTUs-Table-TAC.tab, ZOTUs-Table.tab, OTUs-Table.tab):\n"
+        "   - Format: Domain;Phylum;Class;Order;Family;Genus;Species; (7 levels, 7 ';')\n"
+        "   - Note: In pipelines without species-level taxonomy imputation (ZOTU, OTU, TAC),\n"
+        "     unassigned lower ranks such as Species remain empty between semicolons.\n"
         "   - Purpose: Direct compatibility with legacy tools, QIIME, PICRUSt2, and R\n"
         "     packages that strictly expect traditional 7-level taxonomies without Kingdom.\n\n"
-        "2. Enriched Output Files:\n"
-        "   - '*-8Levels.*' (generated for TAC & TIC pipelines):\n"
-        "       Format: Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species/SOTU; (8 levels, 8 ';')\n"
-        "       Includes the bacterial kingdom rank between Domain and Phylum.\n"
-        "   - '*-7Levels.*' (generated for ZOTU & OTU pipelines, and -iz individual outputs):\n"
-        "       Format: Domain;Kingdom;Phylum;Class;Order;Family;Genus; (7 levels, 7 ';')\n"
-        "       Reflects the full taxonomic resolution available without species/SOTU clustering.\n\n"
+        "2. Enriched '*-8Levels.*' Output Files (generated across TIC, TAC, ZOTU, OTU, and -iz):\n"
+        "   - Format: Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species; (8 levels, 8 ';')\n"
+        "   - Includes the bacterial Kingdom rank between Domain and Phylum down to Species\n"
+        "     (with unassigned ranks left empty between semicolons).\n\n"
         "Which file should I use?\n"
         "------------------------\n"
         "• Use Standard files if your downstream scripts (e.g. PICRUSt2, legacy phyloseq\n"
         "  scripts) require classic 7-level taxonomies.\n"
-        "• Use *-8Levels / *-7Levels files if you want the most up-to-date SILVA 144+\n"
+        "• Use *-8Levels files if you want the most up-to-date SILVA 144+\n"
         "  taxonomic nomenclature including bacterial kingdoms (e.g. for Rhea, Namco, or Krona).\n"
         "===============================================================================\n"
     )
