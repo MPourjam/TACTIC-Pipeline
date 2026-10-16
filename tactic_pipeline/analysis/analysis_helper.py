@@ -3,7 +3,7 @@ import os
 import re
 from pathlib import Path, PurePath
 import tempfile
-from typing import Callable, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 
 _KINGDOM_ATI_RE = re.compile(r"^[A-Za-z]+ati(?:--other)?$", re.IGNORECASE)
@@ -589,6 +589,21 @@ def onelinefasta(fastafilepath):
     finally:
         if Path(newfile_temp_name).exists():
             Path(newfile_temp_name).unlink()
+
+
+def has_fasta_records(fasta_path: Union[str, Path]) -> bool:
+    """
+    Return True if fasta_path exists, is a regular file, and contains at least
+    one sequence record starting with '>'.
+    """
+    p = Path(fasta_path).resolve()
+    if not p.is_file() or p.stat().st_size == 0:
+        return False
+    with open(p, "r", encoding="utf-8", errors="replace") as f:
+        for line in f:
+            if line.startswith(">"):
+                return True
+    return False
 
 
 def keep_seq_id_only(input_fasta: str, output_fasta: str) -> None:

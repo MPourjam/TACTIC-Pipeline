@@ -4,6 +4,7 @@ from ticlust import TICAnalysis
 from tactic_pipeline.analysis.analysis import (
     addTax_to_table,
     cleanup as analysis_cleanup,
+    tic_pipeline,
 )
 from tactic_pipeline.analysis.analysis_helper import (
     build_cluster_id_kingdom_map,
@@ -13,6 +14,7 @@ from tactic_pipeline.analysis.analysis_helper import (
     ensure_7level_semicolons_in_table,
     format_taxonomy_levels,
     generate_kingdom_enriched_pipeline_outputs,
+    has_fasta_records,
     is_silva_144_or_newer,
     parse_sina_taxonomy,
     prepare_picrust2_input,
@@ -234,9 +236,13 @@ def test_tic_analysis_and_dual_output_generation_with_silva_144(tmp_path):
     for fa_f in sorted(tic_analysis.tic_wd.glob("*.fasta")):
         ensure_7level_semicolons_in_fasta(str(fa_f))
 
-    (tic_analysis.tic_wd / "Non-Bacteria-Sequences.fasta").rename(tic_dir / "Invalid-Tax-Seqs-TIC.fasta")
+    invalid_tax_f = tic_dir / "Invalid-Tax-Seqs-TIC.fasta"
+    (tic_analysis.tic_wd / "Non-Bacteria-Sequences.fasta").rename(invalid_tax_f)
     (tic_analysis.tic_wd / "SOTUs-Seq.fasta").rename(tic_dir / "SOTUs-Seqs-TIC.fasta")
     (tic_analysis.tic_wd / "SOTUs-Table.tab").rename(tic_dir / "SOTUs-Table-TIC.tab")
+    all_full_tax = tic_analysis.tic_wd / "ZOTU-Table-All-FullTaxonomy.tab"
+    if not has_fasta_records(invalid_tax_f) and all_full_tax.exists():
+        all_full_tax.unlink()
     for item in list(tic_analysis.tic_wd.iterdir()):
         item.rename(tic_dir / item.name)
     tic_analysis.tic_wd.rmdir()
@@ -283,7 +289,9 @@ def test_tic_analysis_and_dual_output_generation_with_silva_144(tmp_path):
     analysis_cleanup(str(tic_dir))
     assert (zotu_dir / "ZOTUs-Table-7Levels.tab").is_file()
     assert (tic_dir / "SOTUs-Table-TIC-8Levels.tab").is_file()
-    assert (tic_dir / "ZOTU-Table-All-FullTaxonomy-8Levels.tab").is_file()
+    assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab").is_file()
+    assert not (tic_dir / "ZOTU-Table-All-FullTaxonomy.tab").exists()
+    assert not (tic_dir / "ZOTU-Table-All-FullTaxonomy-8Levels.tab").exists()
 
 
 def test_detect_silva_version_edge_cases(tmp_path):
@@ -689,4 +697,118 @@ def test_write_taxonomy_levels_readme(tmp_path):
     assert "*-7Levels.*" in text
     assert "Which file should I use?" in text
     assert "PICRUSt2" in text
+
+
+def test_tic_pipeline_full_taxonomy_table_when_no_non_bacteria(tmp_path):
+    tic_dir = tmp_path / "TIC_Pipeline"
+    tic_dir.mkdir(parents=True, exist_ok=True)
+
+    # 2 bacterial ZOTUs
+    fasta_file = tic_dir / "ZOTUs-Seqs.fasta"
+    fasta_file.write_text(
+        ">ZOTU1 tax=Bacteria;Bacillota;Clostridia;Lachnospirales;Lachnospiraceae;Roseburia;Roseburia faecis\n"
+        "AGAGTTTGATCCTGGCTCAGGACGAACGCTGGCGGCGTGCTTAACACATGCAAGTCGAACGAAGCACTTTATTTGATTTCCTTCGGGACTGATTATTT\n"
+        ">ZOTU2 tax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;Bacteroides fragilis\n"
+        "AGAGTTTGATCCTGGCTCAGGATGAACGCTAGCGACAGGCTTAACACATGCAAGTCGAGGGGCAGCATGAACTTAGCTTGCTAAGTTCATGGCGACCG\n",
+        encoding="utf-8"
+    )
+    table_file = tic_dir / "ZOTUs-Table.tab"
+    table_file.write_text(
+        "ZOTU\tSample1\tSample2\tTaxonomy\n"
+        "ZOTU1\t100\t150\ttax=Bacteria;Bacillota;Clostridia;Lachnospirales;Lachnospiraceae;Roseburia;Roseburia faecis\n"
+        "ZOTU2\t200\t250\ttax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;Bacteroides fragilis\n",
+        encoding="utf-8"
+    )
+
+    tic_pipeline(
+        zotus_seq_fasta=str(fasta_file),
+        zotus_table_file=str(table_file),
+    )
+
+    # Invalid-Tax-Seqs-TIC.fasta exists but has 0 sequences
+    invalid_tax_fa = tic_dir / "Invalid-Tax-Seqs-TIC.fasta"
+    assert invalid_tax_fa.is_file()
+    assert not has_fasta_records(invalid_tax_fa)
+
+    # When no non-bacterial sequences exist, All-FullTaxonomy is redundant and must be dropped
+    assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy.tab").is_file()
+    assert not (tic_dir / "ZOTU-Table-All-FullTaxonomy.tab").exists()
+
+    # Downstream Kingdom enrichment creates OnlyBacteria-8Levels, but not All-8Levels
+    generate_kingdom_enriched_pipeline_outputs(
+        str(tic_dir),
+        target_levels=8,
+    )
+    assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab").is_file()
+    assert not (tic_dir / "ZOTU-Table-All-FullTaxonomy-8Levels.tab").exists()
+
+    # PICRUSt2 preparation creates OnlyBacteria input, but not All input
+    prepare_picrust2_input(str(tmp_path))
+    picrust_dir = tmp_path / "PICRUSt2-Inputs"
+    assert (picrust_dir / "TIC_Pipeline__ZOTU-Table-OnlyBacteria-FullTaxonomy-For-PICRUSt2.tab").is_file()
+    assert not (picrust_dir / "TIC_Pipeline__ZOTU-Table-All-FullTaxonomy-For-PICRUSt2.tab").exists()
+
+
+def test_tic_pipeline_full_taxonomy_table_when_non_bacteria_present(tmp_path):
+    tic_dir = tmp_path / "TIC_Pipeline"
+    tic_dir.mkdir(parents=True, exist_ok=True)
+
+    # 2 bacterial ZOTUs + 1 archaeal ZOTU
+    fasta_file = tic_dir / "ZOTUs-Seqs.fasta"
+    fasta_file.write_text(
+        ">ZOTU1 tax=Bacteria;Bacillota;Clostridia;Lachnospirales;Lachnospiraceae;Roseburia;Roseburia faecis\n"
+        "AGAGTTTGATCCTGGCTCAGGACGAACGCTGGCGGCGTGCTTAACACATGCAAGTCGAACGAAGCACTTTATTTGATTTCCTTCGGGACTGATTATTT\n"
+        ">ZOTU2 tax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;Bacteroides fragilis\n"
+        "AGAGTTTGATCCTGGCTCAGGATGAACGCTAGCGACAGGCTTAACACATGCAAGTCGAGGGGCAGCATGAACTTAGCTTGCTAAGTTCATGGCGACCG\n"
+        ">ZOTU3 tax=Archaea;Methanobacteriota;Methanobacteria;Methanobacteriales;Methanobacteriaceae;Methanobrevibacter;Methanobrevibacter smithii\n"
+        "ATTCCGGTTGATCCTGCCGGACCCGACCGCTATCGGGGTGGCTAACACATGCAAGTCGAACGGAGCGCCCCTTCGGGGGTGCGTCGAGTGGCGAACGG\n",
+        encoding="utf-8"
+    )
+    table_file = tic_dir / "ZOTUs-Table.tab"
+    table_file.write_text(
+        "ZOTU\tSample1\tSample2\tTaxonomy\n"
+        "ZOTU1\t100\t150\ttax=Bacteria;Bacillota;Clostridia;Lachnospirales;Lachnospiraceae;Roseburia;Roseburia faecis\n"
+        "ZOTU2\t200\t250\ttax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;Bacteroides fragilis\n"
+        "ZOTU3\t50\t75\ttax=Archaea;Methanobacteriota;Methanobacteria;Methanobacteriales;Methanobacteriaceae;Methanobrevibacter;Methanobrevibacter smithii\n",
+        encoding="utf-8"
+    )
+
+    tic_pipeline(
+        zotus_seq_fasta=str(fasta_file),
+        zotus_table_file=str(table_file),
+    )
+
+    # Invalid-Tax-Seqs-TIC.fasta exists and contains the archaeal record
+    invalid_tax_fa = tic_dir / "Invalid-Tax-Seqs-TIC.fasta"
+    assert invalid_tax_fa.is_file()
+    assert has_fasta_records(invalid_tax_fa)
+    invalid_text = invalid_tax_fa.read_text(encoding="utf-8")
+    assert "ZOTU3" in invalid_text
+
+    # Both OnlyBacteria and All full taxonomy tables exist when non-bacteria are present
+    bact_tab = tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy.tab"
+    all_tab = tic_dir / "ZOTU-Table-All-FullTaxonomy.tab"
+    assert bact_tab.is_file()
+    assert all_tab.is_file()
+
+    bact_tab_text = bact_tab.read_text(encoding="utf-8")
+    all_tab_text = all_tab.read_text(encoding="utf-8")
+    assert "ZOTU1" in bact_tab_text and "ZOTU2" in bact_tab_text
+    assert "ZOTU3" not in bact_tab_text  # only bacteria
+    assert "ZOTU1" in all_tab_text and "ZOTU2" in all_tab_text and "ZOTU3" in all_tab_text  # all
+
+    # Downstream Kingdom enrichment creates both -8Levels files
+    generate_kingdom_enriched_pipeline_outputs(
+        str(tic_dir),
+        target_levels=8,
+    )
+    assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab").is_file()
+    assert (tic_dir / "ZOTU-Table-All-FullTaxonomy-8Levels.tab").is_file()
+
+    # PICRUSt2 preparation creates inputs for both tables
+    prepare_picrust2_input(str(tmp_path))
+    picrust_dir = tmp_path / "PICRUSt2-Inputs"
+    assert (picrust_dir / "TIC_Pipeline__ZOTU-Table-OnlyBacteria-FullTaxonomy-For-PICRUSt2.tab").is_file()
+    assert (picrust_dir / "TIC_Pipeline__ZOTU-Table-All-FullTaxonomy-For-PICRUSt2.tab").is_file()
+
 

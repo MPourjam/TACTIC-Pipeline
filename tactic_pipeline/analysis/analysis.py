@@ -19,6 +19,7 @@ from .analysis_helper import (
     ensure_7level_semicolons_in_table,
     format_taxonomy_levels,
     generate_kingdom_enriched_pipeline_outputs,
+    has_fasta_records,
     is_silva_144_or_newer,
     onelinefasta,
     parse_sina_taxonomy,
@@ -1543,11 +1544,21 @@ def tic_pipeline(
         str(tic_analysis.sotu_table_path),
         output_html_name="SOTUs-Krona.html"
     )
-    # moving files in tic_analysis.tic_wd to parent directory
-    # TODO check if it works. It seems that the file is not moved.
-    shutil.move(tic_analysis.non_bact_fasta_path, tic_analysis.tic_wd / "Invalid-Tax-Seqs-TIC.fasta")
+    invalid_tax_seqs = tic_analysis.tic_wd / "Invalid-Tax-Seqs-TIC.fasta"
+    shutil.move(tic_analysis.non_bact_fasta_path, invalid_tax_seqs)
     shutil.move(tic_analysis.sotu_fasta_path, tic_analysis.tic_wd / "SOTUs-Seqs-TIC.fasta")
     shutil.move(tic_analysis.sotu_table_path, tic_analysis.tic_wd / "SOTUs-Table-TIC.tab")
+
+    # When no non-bacterial sequences exist in the dataset, ZOTU-Table-All-FullTaxonomy.tab
+    # is identical to ZOTU-Table-OnlyBacteria-FullTaxonomy.tab. Remove the redundant All table.
+    all_full_tax_file = tic_analysis.zotu_table_full_tax_file
+    if not has_fasta_records(invalid_tax_seqs) and all_full_tax_file.exists():
+        tic_logger.info(
+            "# No non-bacterial sequences present; removing redundant %s",
+            all_full_tax_file.name
+        )
+        all_full_tax_file.unlink()
+
     move_content_to_parent_directory(tic_analysis.tic_wd)
 
     return (
