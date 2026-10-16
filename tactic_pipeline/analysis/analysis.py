@@ -1897,17 +1897,19 @@ def main(
             )
 
         write_taxonomy_levels_readme(str(ANALYSIS_DIR))
-        banner_msg = (
-            "\n" + "=" * 78 + "\n"
-            "SILVA >= 144 Dual Taxonomy Outputs Generated:\n"
-            "  • Standard files (e.g. SOTUs-Table-TIC.tab): Classic 7 levels (Domain..Species)\n"
-            "    -> Recommended for: PICRUSt2 and tools expecting classic 7-level taxonomies.\n"
-            "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab): 8 levels (Domain..Kingdom..Species)\n"
-            "    -> Recommended for: SILVA 144+ bacterial kingdom analysis (Bacillati, etc.).\n"
-            "  • *-7Levels files (e.g. ZOTUs-Table-7Levels.tab): 7 levels (Domain..Kingdom..Genus)\n"
-            "  • Refer to README_Taxonomy_Levels.txt in the analysis folder for full details.\n"
-            "=" * 78
-        )
+        sep_line = "=" * 78
+        banner_msg = "\n".join([
+            "",
+            sep_line,
+            "SILVA >= 144 Dual Taxonomy Outputs Generated:",
+            "  • Standard files (e.g. SOTUs-Table-TIC.tab): Classic 7 levels (Domain..Species)",
+            "    -> Recommended for: PICRUSt2 and tools expecting classic 7-level taxonomies.",
+            "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab): 8 levels (Domain..Kingdom..Species)",
+            "    -> Recommended for: SILVA 144+ bacterial kingdom analysis (Bacillati, etc.).",
+            "  • *-7Levels files (e.g. ZOTUs-Table-7Levels.tab): 7 levels (Domain..Kingdom..Genus)",
+            "  • Refer to README_Taxonomy_Levels.txt in the analysis folder for full details.",
+            sep_line,
+        ])
         ANA_LOG.info(banner_msg)
 
     ANA_LOG.info('ANALYSIS DONE')
