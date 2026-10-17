@@ -1,0 +1,15 @@
+{
+  "python": "3.11.14 | packaged by conda-forge | (main, Oct 22 2025, 22:46:25) [GCC 14.3.0]",
+  "numpy": "2.1.3",
+  "matplotlib": "3.9.2",
+  "seqkit": "/tmp/stepwise-diversity-reproduction-env/bin/seqkit",
+  "usearch_sha256": "a2b981fbef45e2ec981dc8ade3118f58356bc3dcc286d658a7fe298b36590ea8",
+  "usearch_threads_by_dataset": {
+    "silva": 19,
+    "ltp": 19,
+    "gg2": 19
+  },
+  "workers": 2,
+  "seqkit_version": "seqkit v2.12.0",
+  "usearch_version": "usearch v11.0.667_i86linux64"
+}

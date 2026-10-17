@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-10-17T13:19:57.259323+00:00",
+  "checks": {
+    "archive": {
+      "passed": true,
+      "original_report": "inputs/input_verification.json"
+    },
+    "isolated_commands": {
+      "passed": true,
+      "original_report": "relocated-confirmed/test_report.json"
+    },
+    "isolated_smoke": {
+      "passed": true,
+      "original_report": "relocated-confirmed/smoke/validation.json"
+    },
+    "full_ltp": {
+      "passed": true,
+      "original_report": "full_historical/validation.json"
+    },
+    "reference_populations": {
+      "passed": true,
+      "original_report": "population-historical/reference_population_validation.json"
+    },
+    "gg2_species": {
+      "passed": true,
+      "original_report": "gg2-species-historical/species_summary_validation.json"
+    }
+  },
+  "passed": true,
+  "full_window_clustering_not_recomputed": [
+    "silva",
+    "gg2"
+  ]
+}

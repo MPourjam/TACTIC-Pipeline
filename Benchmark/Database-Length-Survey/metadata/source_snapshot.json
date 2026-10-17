@@ -1,0 +1,6 @@
+{
+  "source_root": "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Step-wise_Diversity",
+  "commit": "971d2346fe86864cdeaf971947f5d75cb7651de7",
+  "status": " M pcr_simulation/silva_algn_cut_and_count.py\n?? .gitignore\n?? .nextflow/\n?? SILVA_SSURef.sh\n?? all_primers.tsv\n?? example.png\n?? main.nf\n?? match_and_unmatched.stats\n?? nexflow.config\n?? primers.tsv\n?? seqkit.log\n?? silva_algn_cut_and_count.log\n?? some_primers.tsv\n?? test_results/\n",
+  "note": "The working-tree scripts, including local edits, are copied without modification."
+}

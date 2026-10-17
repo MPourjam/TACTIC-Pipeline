@@ -1,0 +1,2 @@
+file                                                                                                                  format  type  num_seqs      sum_len  min_len  avg_len  max_len
+outputs_GG2_cut_clust20260318_clust0p995-0p987-0p97/start1150_end43026_step2000/silva_full_length_unique_nogap.fasta  FASTA   RNA    127,841  190,947,985      416  1,493.6    4,525

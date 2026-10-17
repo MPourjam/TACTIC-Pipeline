@@ -1,0 +1,36 @@
+{
+  "archive": "stepwise_diversity_inputs.zip",
+  "datasets": [
+    "silva",
+    "ltp",
+    "gg2"
+  ],
+  "files": [
+    {
+      "path": "DBs/SILVA/SILVA_138.2_SSURef_NR99_tax_silva_full_align_trunc_full_known_taxonomy.fasta",
+      "bytes": 7645147819,
+      "sha256": "fa578bce74762be57c231bc046f6b95284b116ec3d1b5c48262273ceb281a733",
+      "passed": true
+    },
+    {
+      "path": "DBs/LTP/LTP_10_2024_SILVA_align_DNA_OnlyBacteria_all7.fasta",
+      "bytes": 982383308,
+      "sha256": "298ee000132ff6414ebd99e35fe01d23de7d465d6d9b57549da372920a8763d4",
+      "passed": true
+    },
+    {
+      "path": "DBs/GG2/GG2_FullSpeciesTax_SILVA_align.fasta",
+      "bytes": 6429400782,
+      "sha256": "1b1ee7b131fb8d65617fe3f704305bdbe65814038a6e1af431f0267e95e6d72e",
+      "passed": true
+    },
+    {
+      "path": "DBs/GG2/GG2_FullSpeciesTax_SILVA_align_headers.list",
+      "bytes": 19222581,
+      "sha256": "f8645e264036d483dd8a9ec0ed720183b36b0d66636a08c05fead65f32a213af",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "archive_sha256": "9a462e282092baa281521b125f6298df2d37b4e6ca8817cd6a5b11ce9fd82fdf"
+}

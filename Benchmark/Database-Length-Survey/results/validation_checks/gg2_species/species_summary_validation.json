@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "source": "DBs/GG2/GG2_FullSpeciesTax_SILVA_align.fasta",
+  "cluster_ids": [
+    0.987,
+    0.97
+  ],
+  "comparisons": {
+    "top25": {
+      "passed": true,
+      "rows": 26,
+      "differences": []
+    },
+    "top5": {
+      "passed": true,
+      "rows": 6,
+      "differences": []
+    }
+  }
+}
