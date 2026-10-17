@@ -1,0 +1,10 @@
+{
+  "archive": "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/reproducibility/tacticbench_TIC_Archaea_mock4_mock5_SRP/data/tacticbench_inputs_with_fastq.zip",
+  "verified_payload_and_manifest_files": 1450,
+  "zip_members": 1451,
+  "verified_uncompressed_bytes": 11566781493,
+  "zip_crc_and_sha256": "passed",
+  "elapsed_seconds": 61.3,
+  "archive_size_bytes": 11413439984,
+  "archive_sha256": "8bbfc6606fbe774d48688b1fbd0ebd36504f67408235d7ae3a896f2e5499d565"
+}

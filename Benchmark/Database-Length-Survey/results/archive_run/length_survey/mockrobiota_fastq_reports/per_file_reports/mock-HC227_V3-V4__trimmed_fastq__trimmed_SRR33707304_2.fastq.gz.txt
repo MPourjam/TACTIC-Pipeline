@@ -1,0 +1,42 @@
+FASTQ FILE REPORT
+================================================================================
+File: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Picked DO NOT ENTER ME DO NOT ENTER ME DO NOT ENTER ME/mockrobiota/data/mock-HC227_V3-V4/trimmed_fastq/trimmed_SRR33707304_2.fastq.gz
+Mock group: mock-HC227_V3-V4
+Total reads: 80986
+Length range: 62-301 bp
+Mean length: 280.83 bp
+Median length: 281.00 bp
+Std dev: 6.19
+Unique lengths: 28
+
+Length distribution:
+  62 bp: 2 reads (0.00%)
+  65 bp: 3 reads (0.00%)
+  80 bp: 1 reads (0.00%)
+  139 bp: 1 reads (0.00%)
+  140 bp: 1 reads (0.00%)
+  141 bp: 3 reads (0.00%)
+  146 bp: 4 reads (0.00%)
+  147 bp: 2 reads (0.00%)
+  157 bp: 1 reads (0.00%)
+  165 bp: 1 reads (0.00%)
+  166 bp: 178 reads (0.22%)
+  167 bp: 2 reads (0.00%)
+  181 bp: 2 reads (0.00%)
+  255 bp: 1 reads (0.00%)
+  280 bp: 171 reads (0.21%)
+  281 bp: 79506 reads (98.17%)
+  282 bp: 546 reads (0.67%)
+  283 bp: 50 reads (0.06%)
+  284 bp: 11 reads (0.01%)
+  286 bp: 5 reads (0.01%)
+  287 bp: 5 reads (0.01%)
+  288 bp: 3 reads (0.00%)
+  289 bp: 4 reads (0.00%)
+  290 bp: 5 reads (0.01%)
+  291 bp: 1 reads (0.00%)
+  295 bp: 1 reads (0.00%)
+  298 bp: 1 reads (0.00%)
+  301 bp: 475 reads (0.59%)
+
+Consistency: VARIABLE (28 lengths observed)

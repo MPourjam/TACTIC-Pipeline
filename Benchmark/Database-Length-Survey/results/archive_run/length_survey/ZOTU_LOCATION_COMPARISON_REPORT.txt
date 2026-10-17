@@ -1,0 +1,242 @@
+COMPREHENSIVE ZOTU SEQUENCE LENGTH COMPARISON REPORT
+Comparing tactic_results vs raw_data Analysis Results
+===============================================================================
+
+ANALYSIS OVERVIEW
+===============================================================================
+
+Location 1 (tactic_results):
+  Path: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/
+  Files analyzed: 57 ZOTU FASTA files
+  Total ZOTUs: 2,604
+  Mean ZOTUs per file: 45.7
+  Sequence length range: 212-429 bp
+  Mean sequence length: 241.21 bp
+  Std Dev of mean lengths: 46.44 bp
+
+Location 2 (raw_data):
+  Path: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/raw_data/
+  Files analyzed: 58 ZOTU FASTA files
+  Total ZOTUs: 3,333
+  Mean ZOTUs per file: 57.5
+  Sequence length range: 203-266 bp
+  Mean sequence length: 239.62 bp
+  Std Dev of mean lengths: 21.13 bp
+
+===============================================================================
+KEY FINDINGS - MAJOR DIFFERENCES
+===============================================================================
+
+⚠ SIGNIFICANT DISCREPANCIES DETECTED:
+
+1. MOCK-20:
+   - tactic_results:  78 total ZOTUs, 212-214 bp (mean 212.85 bp)
+   - raw_data:      1,137 total ZOTUs, 266 bp (mean 266.00 bp)
+   
+   DELTA: +1,059 ZOTUs (+1,258% increase!)
+   LENGTH DELTA: +53 bp (25% longer)
+   
+   ⚠ CRITICAL: Massive ZOTU count difference AND length variation
+   Possible cause: Different preprocessing/trimming parameters, different
+   reference databases, or version differences in TACTIC
+
+2. MOCK-21:
+   - tactic_results:  90 total ZOTUs, 212-214 bp (mean 212.90 bp)
+   - raw_data:      747 total ZOTUs, 266 bp (mean 266.00 bp)
+   
+   DELTA: +657 ZOTUs (+730% increase!)
+   LENGTH DELTA: +53 bp (25% longer)
+   
+   ⚠ CRITICAL: Massive ZOTU count difference AND length variation
+   Possible cause: Same as mock-20 (related mock communities?)
+
+3. MOCK-16:
+   - tactic_results: 240 total ZOTUs, 249-251 bp (mean 250.00 bp)
+   - raw_data:      234 total ZOTUs, 204 bp (mean 204.00 bp)
+   
+   DELTA: -6 ZOTUs (-2.5%)
+   LENGTH DELTA: -46 bp (18% shorter)
+   
+   ⚠ SIGNIFICANT: Length reduction in raw_data (204 bp vs 250 bp)
+   Possible cause: More aggressive trimming, primer removal, or length cutoffs
+
+4. MOCK-18 & MOCK-19:
+   - mock-18: 218-203 bp delta = -15 bp (7% shorter)
+   - mock-19: 219-204 bp delta = -15 bp (7% shorter)
+   
+   ⚠ CONSISTENT: Pattern of shorter sequences in raw_data
+   These are both 15 bp shorter
+
+5. MOCK-4:
+   - tactic_results: 87 ZOTUs, 213-215 bp (mean 214.03 bp)
+   - raw_data:      120 ZOTUs, 252-254 bp (mean 252.97 bp)
+   
+   DELTA: +33 ZOTUs (+38% increase)
+   LENGTH DELTA: +39 bp (18% longer)
+   
+   ⚠ MODERATE: Longer sequences in raw_data
+
+===============================================================================
+MOCK-BY-MOCK COMPARISON TABLE
+===============================================================================
+
+Mock Community     Location        File Count   Total ZOTUs   Length Range   Mean Length
+─────────────────────────────────────────────────────────────────────────────────────
+mock-12            tactic_results      3            87        221 bp         221.00 bp
+                   raw_data            3            87        221 bp         221.00 bp ✓ IDENTICAL
+
+mock-13            tactic_results      3            81        220 bp         220.00 bp
+                   raw_data            3            81        220 bp         220.00 bp ✓ IDENTICAL
+
+mock-14            tactic_results      3            96        220 bp         220.00 bp
+                   raw_data            3            96        220 bp         220.00 bp ✓ IDENTICAL
+
+mock-15            tactic_results      3           138        220 bp         220.00 bp
+                   raw_data            3           138        220 bp         220.00 bp ✓ IDENTICAL
+
+mock-16            tactic_results      3           240       249-251 bp      250.00 bp
+                   raw_data            3           234        204 bp         204.00 bp ✗ -46 bp
+
+mock-18            tactic_results      3            57        218 bp         218.00 bp
+                   raw_data            3            57        203 bp         203.00 bp ✗ -15 bp
+
+mock-19            tactic_results      3            75        219 bp         219.00 bp
+                   raw_data            3            75        204 bp         204.00 bp ✗ -15 bp
+
+mock-20            tactic_results      3            78       212-214 bp      212.85 bp
+                   raw_data            3          1,137       266 bp         266.00 bp ✗ +1,059 ZOTUs, +53 bp
+
+mock-21            tactic_results      3            90       212-214 bp      212.90 bp
+                   raw_data            3           747        266 bp         266.00 bp ✗ +657 ZOTUs, +53 bp
+
+mock-22            tactic_results      6           228       225-266 bp      245.50 bp
+                   raw_data            3            69       250-251 bp      251.00 bp ✗ SIGNIFICANT DIFFERENCE
+
+mock-23            tactic_results      6           201       225-266 bp      245.50 bp
+                   raw_data            3            69       250 bp          250.00 bp ✗ SIGNIFICANT DIFFERENCE
+
+mock-4             tactic_results      3            87       213-215 bp      214.03 bp
+                   raw_data            3           120       252-254 bp      252.97 bp ✗ +33 ZOTUs, +39 bp
+
+mock-5             tactic_results      3            75       213-215 bp      213.96 bp
+                   raw_data            3            75       252-254 bp      252.96 bp ✗ +39 bp
+
+mock-HC227         tactic_results      3           906       401-429 bp      420.46 bp
+                   raw_data            -            -           -               -        (Only in tactic_results)
+
+mock-ZIEL_1        tactic_results      3            54       252-253 bp      252.89 bp
+                   raw_data            7           126       252-253 bp      252.89 bp ✓ IDENTICAL LENGTH
+
+mock-ZIEL_2        tactic_results      3            81       252-253 bp      252.85 bp
+                   raw_data            6           162       252-253 bp      252.85 bp ✓ IDENTICAL LENGTH
+
+mock-ZYMO          tactic_results      3            30        253 bp         253.00 bp
+                   raw_data            6            60        253 bp         253.00 bp ✓ IDENTICAL LENGTH
+
+===============================================================================
+ANALYSIS PATTERNS
+===============================================================================
+
+CONSISTENCY (Identical Results):
+  ✓ mock-12, mock-13, mock-14, mock-15: PERFECT MATCH
+    → Both locations produce identical ZOTU sequences
+  
+  ✓ ZIEL_1, ZIEL_2, ZYMO: LENGTH MATCH
+    → Sequences are same length in both locations
+    → Some file count differences in raw_data (more analysis runs)
+
+MODERATE DIFFERENCES (5-50 bp variation):
+  ⚠ mock-16: -46 bp (250 → 204)
+  ⚠ mock-18: -15 bp (218 → 203)
+  ⚠ mock-19: -15 bp (219 → 204)
+  ⚠ mock-4:  +39 bp (214 → 253)
+  ⚠ mock-5:  +39 bp (214 → 253)
+
+CRITICAL DIFFERENCES (>50 bp and/or massive ZOTU count changes):
+  ✗ mock-20: +1,059 ZOTUs, +53 bp (212 → 266)
+  ✗ mock-21: +657 ZOTUs, +53 bp (212 → 266)
+  ✗ mock-22: -159 ZOTUs, +5 bp (228 files vs 69 files, mean 245 → 251)
+  ✗ mock-23: -132 ZOTUs, +4 bp (201 files vs 69 files, mean 245 → 250)
+
+UNIQUE TO LOCATION:
+  ✗ mock-HC227: Only exists in tactic_results (906 ZOTUs, 401-429 bp, mean 420.46 bp)
+
+===============================================================================
+POSSIBLE EXPLANATIONS FOR DISCREPANCIES
+===============================================================================
+
+1. PARAMETER DIFFERENCES:
+   - Different minimum/maximum length cutoffs
+   - Different quality thresholds (Qscore minimums)
+   - Different clustering thresholds (sequence similarity %)
+   
+2. REFERENCE DATABASE DIFFERENCES:
+   - Different taxonomy assignments
+   - Different chimera detection methods
+   - Different denoising algorithms
+
+3. PIPELINE VERSION/MODIFICATIONS:
+   - raw_data may use newer TACTIC version
+   - tactic_results may use older configuration
+   - One location may have custom scripts applied
+
+4. DATA PROCESSING DIFFERENCES:
+   - raw_data: More aggressive trimming → shorter sequences
+   - tactic_results: Less aggressive trimming → longer sequences
+   
+   Evidence:
+   - mock-16, mock-18, mock-19 consistently shorter in raw_data
+   - mock-4, mock-5 consistently longer in raw_data
+   
+5. QUALITY CONTROL DIFFERENCES:
+   - raw_data mock-20/-21: Massive inflation suggests looser QC
+   - tactic_results mock-22/-23: More files analyzed (6 vs 3)
+
+===============================================================================
+RECOMMENDATIONS FOR BENCHMARKING
+===============================================================================
+
+1. IDENTIFY WHICH LOCATION TO USE:
+   ⚠ CRITICAL: These results are NOT DIRECTLY COMPARABLE
+   Choose ONE consistent source for benchmarking
+   
+   Option A: Use tactic_results consistently
+   - Pro: Original curated analysis
+   - Con: Some differences in ZOTU counts/lengths vs raw_data
+   
+   Option B: Use raw_data consistently
+   - Pro: Newer analysis, more complete
+   - Con: More variable results
+
+2. RECONCILE DIFFERENCES:
+   ⚠ Document which location is authoritative
+   ⚠ Re-run raw_data with tactic_results parameters if needed
+   ⚠ Verify mock-20, mock-21, mock-HC227 data quality
+
+3. INVESTIGATE PROBLEMATIC MOCKS:
+   - mock-20/-21: Verify ZOTU count inflation (1000+ vs 80-90)
+   - mock-HC227: Only in tactic_results - verify existence in raw_data
+   - mock-22/-23: Reconcile file count and ZOTU differences
+
+4. VALIDATE FOR PUBLICATION:
+   - Document which dataset version was used for final results
+   - Include this analysis in supplementary materials
+   - Consider re-analysis with unified parameters
+
+===============================================================================
+CONCLUSION
+===============================================================================
+
+The two locations (tactic_results vs raw_data) produce SIGNIFICANTLY DIFFERENT
+results for 8 out of 16 mock communities (50% discrepancy rate).
+
+While some mocks (mock-12, mock-13, mock-14, mock-15, ZIEL_1/2, ZYMO) show
+perfect consistency, others show critical differences in ZOTU counts (up to
++1,059 difference for mock-20) and sequence lengths (±46 bp variation).
+
+These findings indicate:
+✗ The two datasets should NOT be mixed for benchmarking
+✓ Clear documentation of data source is essential
+⚠ Investigation into the causes of differences is recommended before publication
+
+===============================================================================

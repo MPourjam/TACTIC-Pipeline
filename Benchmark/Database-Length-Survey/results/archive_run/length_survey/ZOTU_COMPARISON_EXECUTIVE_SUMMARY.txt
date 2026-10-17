@@ -1,0 +1,193 @@
+EXECUTIVE SUMMARY - ZOTU SEQUENCE LENGTH COMPARISON
+tactic_results vs raw_data
+===============================================================================
+
+SURVEY SCOPE
+===============================================================================
+
+Location 1 - tactic_results:
+  Path: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/
+  Files: 57 Analysis directories (original TACTIC runs)
+  Total ZOTUs: 2,604
+  Sequence lengths: 212-429 bp (mean 241.21 bp)
+
+Location 2 - raw_data:
+  Path: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/raw_data/
+  Files: 58 Analysis directories (additional analysis)
+  Total ZOTUs: 3,333 (28% more)
+  Sequence lengths: 203-266 bp (mean 239.62 bp)
+
+===============================================================================
+CONSISTENCY CHECK BY MOCK
+===============================================================================
+
+✓ PERFECTLY CONSISTENT (Identical results):
+  • mock-12: 221 bp
+  • mock-13: 220 bp
+  • mock-14: 220 bp
+  • mock-15: 220 bp
+  • mock-ZIEL_1: 252.89 bp
+  • mock-ZIEL_2: 252.85 bp
+  • mock-ZYMO: 253 bp
+  
+  Count: 7 out of 16 mocks (44%) ✓
+
+✗ SIGNIFICANTLY DIFFERENT (Discrepancies detected):
+  • mock-16:  250 bp → 204 bp (-46 bp, -18%)
+  • mock-18:  218 bp → 203 bp (-15 bp, -7%)
+  • mock-19:  219 bp → 204 bp (-15 bp, -7%)
+  • mock-4:   214 bp → 253 bp (+39 bp, +18%)
+  • mock-5:   214 bp → 253 bp (+39 bp, +18%)
+  
+  Count: 5 mocks with length variation
+
+✗ CRITICAL DIFFERENCES (ZOTU count inflation):
+  • mock-20:   78 → 1,137 ZOTUs (+1,059, +1,258%)
+  • mock-21:   90 → 747 ZOTUs (+657, +730%)
+  • mock-22:  228 → 69 ZOTUs (-159, -70%)
+  • mock-23:  201 → 69 ZOTUs (-132, -66%)
+  
+  Count: 4 mocks with major ZOTU count changes
+
+✗ MISSING DATA:
+  • mock-HC227: Only in tactic_results (906 ZOTUs, 401-429 bp, mean 420.46 bp)
+  
+  Count: 1 mock missing in raw_data
+
+===============================================================================
+QUICK COMPARISON TABLE
+===============================================================================
+
+Mock        tactic_results              raw_data                    Status
+─────────────────────────────────────────────────────────────────────────────
+mock-12     221 bp (87 ZOTUs)           221 bp (87 ZOTUs)          ✓ MATCH
+mock-13     220 bp (81 ZOTUs)           220 bp (81 ZOTUs)          ✓ MATCH
+mock-14     220 bp (96 ZOTUs)           220 bp (96 ZOTUs)          ✓ MATCH
+mock-15     220 bp (138 ZOTUs)          220 bp (138 ZOTUs)         ✓ MATCH
+mock-16     250 bp (240 ZOTUs)          204 bp (234 ZOTUs)         ✗ -46 bp
+mock-18     218 bp (57 ZOTUs)           203 bp (57 ZOTUs)          ✗ -15 bp
+mock-19     219 bp (75 ZOTUs)           204 bp (75 ZOTUs)          ✗ -15 bp
+mock-20     212 bp (78 ZOTUs)           266 bp (1,137 ZOTUs)       ✗✗ +1,059 ZOTUs!
+mock-21     212 bp (90 ZOTUs)           266 bp (747 ZOTUs)         ✗✗ +657 ZOTUs!
+mock-22     245 bp (228 ZOTUs)          251 bp (69 ZOTUs)          ✗ -159 ZOTUs
+mock-23     245 bp (201 ZOTUs)          250 bp (69 ZOTUs)          ✗ -132 ZOTUs
+mock-4      214 bp (87 ZOTUs)           253 bp (120 ZOTUs)         ✗ +39 bp, +33 ZOTUs
+mock-5      214 bp (75 ZOTUs)           253 bp (75 ZOTUs)          ✗ +39 bp
+mock-HC227  420 bp (906 ZOTUs)          [MISSING]                  ✗ MISSING
+ZIEL_1      252.89 bp (54 ZOTUs)        252.89 bp (126 ZOTUs)      ✓ Length match
+ZIEL_2      252.85 bp (81 ZOTUs)        252.85 bp (162 ZOTUs)      ✓ Length match
+ZYMO        253 bp (30 ZOTUs)           253 bp (60 ZOTUs)          ✓ Length match
+
+===============================================================================
+KEY METRICS
+===============================================================================
+
+Consistency Rate: 44% (7/16 mocks have identical results)
+Discrepancy Rate: 56% (9/16 mocks have differences)
+
+ZOTU Count Differences:
+  - Total tactic_results: 2,604 ZOTUs
+  - Total raw_data: 3,333 ZOTUs
+  - Difference: +729 ZOTUs (+28%)
+  
+  Most of this difference comes from:
+    • mock-20: +1,059
+    • mock-21: +657
+    • mock-4: +33
+    = +1,749 total inflation
+
+Sequence Length Differences:
+  - tactic_results range: 212-429 bp
+  - raw_data range: 203-266 bp
+  - Difference: raw_data excludes long sequences (>266 bp)
+
+===============================================================================
+DATA QUALITY ASSESSMENT
+===============================================================================
+
+HIGH CONFIDENCE (Same results in both locations):
+  ✓ mock-12, mock-13, mock-14, mock-15
+  ✓ ZIEL_1, ZIEL_2, ZYMO (reference mocks)
+  
+  → These mocks are RELIABLE for benchmarking
+
+MODERATE CONFIDENCE (Minor length differences):
+  ⚠ mock-16, mock-18, mock-19, mock-4, mock-5
+  
+  → Differences are systematic but within ~40 bp range
+  → Could indicate different trimming parameters
+  → Should document which version is used
+
+LOW CONFIDENCE (Major discrepancies):
+  ✗ mock-20, mock-21, mock-22, mock-23
+  
+  → ZOTU counts differ by 70-1,200%
+  → Likely different preprocessing or analysis parameters
+  → DO NOT mix between locations
+
+MISSING DATA:
+  ✗ mock-HC227
+  
+  → Only in tactic_results, absent from raw_data
+  → May indicate deliberate exclusion or incomplete analysis
+
+===============================================================================
+RECOMMENDATIONS
+===============================================================================
+
+IMMEDIATE ACTIONS:
+  1. Choose ONE authoritative data location for publication
+  2. Document which location was used in methods section
+  3. Verify mock-20, mock-21 ZOTU inflation is intentional
+  4. Investigate why mock-HC227 is missing from raw_data
+
+FOR PUBLICATION:
+  • Include this analysis as supplementary material
+  • Note data source for each result reported
+  • Do NOT mix results from both locations
+  • Consider re-running with consistent parameters
+
+FOR FUTURE ANALYSES:
+  • Standardize TACTIC parameters across all runs
+  • Version control analysis pipelines
+  • Document reason for raw_data creation (updates, bug fixes, etc.)
+  • Keep detailed provenance records
+
+===============================================================================
+FILES GENERATED
+===============================================================================
+
+1. zotu_comparison_tactic_vs_raw.csv
+   - Detailed file-by-file comparison (116 rows)
+   - Includes: location, mock, analysis, ZOTU count, sequence lengths, stats
+
+2. zotu_comparison_by_mock.csv
+   - Aggregated by mock community (32 rows)
+   - Includes: mock name, location, file count, ZOTU stats
+
+3. ZOTU_LOCATION_COMPARISON_REPORT.txt
+   - Comprehensive analysis with interpretations
+   - Includes: patterns, causes, recommendations
+
+4. This file (ZOTU_COMPARISON_EXECUTIVE_SUMMARY.txt)
+   - Quick reference and key findings
+
+===============================================================================
+CONCLUSION
+===============================================================================
+
+⚠ CRITICAL FINDING: The two data locations are NOT INTERCHANGEABLE
+
+While 44% of mock communities show perfect consistency, 56% show significant
+differences ranging from minor length variation (~15 bp) to massive ZOTU count
+inflation (>1,000 additional ZOTUs).
+
+These differences preclude mixing data from both locations in the same
+benchmark. A clear decision on which source is authoritative is essential
+for publication.
+
+The reference mocks (ZIEL_1/2, ZYMO) all show perfect length consistency,
+suggesting they are reliably curated. However, mocks-20 and mocks-21 show
+extreme discrepancies that warrant investigation before publication.
+
+===============================================================================

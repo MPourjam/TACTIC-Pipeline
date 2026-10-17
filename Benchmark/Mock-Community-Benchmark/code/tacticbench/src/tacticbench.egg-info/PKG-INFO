@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: tacticbench
+Version: 0.2.0
+Summary: Benchmarking toolkit for comparing DADA2 vs TACTIC outputs on mock communities.
+Author: TACTIC Paper
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.0
+Requires-Dist: numpy>=1.24
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: matplotlib>=3.7
+Requires-Dist: seaborn>=0.13
+Requires-Dist: biopython>=1.80
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: ruff>=0.3; extra == "dev"

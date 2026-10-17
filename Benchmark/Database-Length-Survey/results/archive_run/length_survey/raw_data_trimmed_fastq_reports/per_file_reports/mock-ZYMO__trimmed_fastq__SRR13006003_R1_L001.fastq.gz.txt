@@ -1,0 +1,19 @@
+FASTQ FILE REPORT
+================================================================================
+File: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/raw_data/mock-ZYMO/trimmed_fastq/SRR13006003_R1_L001.fastq.gz
+Mock: mock-ZYMO
+Directory: trimmed_fastq
+Total reads: 58644
+Length range: 280-300 bp
+Mean length: 282.10 bp
+Median length: 281.00 bp
+Std dev: 4.24
+Unique lengths: 4
+
+Length distribution:
+  280 bp: 58 reads (0.10%)
+  281 bp: 49475 reads (84.36%)
+  282 bp: 6014 reads (10.26%)
+  300 bp: 3097 reads (5.28%)
+
+Consistency: VARIABLE (4 lengths observed)

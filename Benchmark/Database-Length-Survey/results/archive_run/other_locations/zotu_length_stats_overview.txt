@@ -1,0 +1,34 @@
+ZOTU Length Statistics Overview
+Generated: 2026-05-06 18:49:52
+
+Total Analyses: 80
+Total ZOTUs: 3668
+Unique Mock Communities: 20
+
+Sequence Length Statistics (Across All Analyses):
+  Minimum: 203 bp
+  Maximum: 429 bp
+  Mean: 275.70 bp
+  Average ZOTUs per Analysis: 45.9
+
+Mock Community Breakdown:
+  V4_ZIEL_1           :   1 analyses,     18 total ZOTUs
+  V4_ZIEL_2           :   1 analyses,     27 total ZOTUs
+  V4_ZYMO             :   1 analyses,     10 total ZOTUs
+  ZIEL_1              :   2 analyses,     46 total ZOTUs
+  ZIEL_2              :   2 analyses,     72 total ZOTUs
+  ZYMO                :   2 analyses,     32 total ZOTUs
+  mock-12             :   1 analyses,     29 total ZOTUs
+  mock-13             :   1 analyses,     27 total ZOTUs
+  mock-14             :   1 analyses,     32 total ZOTUs
+  mock-15             :   1 analyses,     46 total ZOTUs
+  mock-16             :   1 analyses,     78 total ZOTUs
+  mock-18             :   1 analyses,     19 total ZOTUs
+  mock-19             :   1 analyses,     25 total ZOTUs
+  mock-20             :   2 analyses,     52 total ZOTUs
+  mock-21             :   2 analyses,     60 total ZOTUs
+  mock-22             :   1 analyses,     55 total ZOTUs
+  mock-23             :   1 analyses,     44 total ZOTUs
+  mock-4              :   1 analyses,     29 total ZOTUs
+  mock-5              :   1 analyses,     25 total ZOTUs
+  mocks               :  38 analyses,   1973 total ZOTUs

@@ -1,0 +1,18 @@
+{
+  "archive": "length_survey_inputs.zip",
+  "verified_payload_and_manifest_files": 275,
+  "zip_members": 276,
+  "verified_uncompressed_bytes": 22370481516,
+  "zip_crc_and_sha256": "passed",
+  "elapsed_seconds": 118.89,
+  "archive_bytes": 21833283472,
+  "archive_sha256": "d7a1da223d1509649008df655087d12a14d9b2d5d95734186d8315f0e7f3ec1d",
+  "source_paths": 506,
+  "observations": 541,
+  "unique_fastq_payloads": 268,
+  "unique_fasta_payloads": 62,
+  "historical_statistic_checks": "all included observations passed; unavailable inputs documented separately",
+  "historical_measurements_not_recovered": 94,
+  "recovery_candidates_rejected": 16,
+  "historical_reproduction_complete": false
+}

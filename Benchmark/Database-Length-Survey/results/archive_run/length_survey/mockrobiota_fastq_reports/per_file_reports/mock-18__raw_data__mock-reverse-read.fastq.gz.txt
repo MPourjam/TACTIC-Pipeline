@@ -1,0 +1,32 @@
+FASTQ FILE REPORT
+================================================================================
+File: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Picked DO NOT ENTER ME DO NOT ENTER ME DO NOT ENTER ME/mockrobiota/data/mock-18/raw_data/mock-reverse-read.fastq.gz
+Mock group: mock-18
+Total reads: 169516
+Length range: 35-251 bp
+Mean length: 247.89 bp
+Median length: 251.00 bp
+Std dev: 25.57
+Unique lengths: 18
+
+Length distribution:
+  35 bp: 2404 reads (1.42%)
+  37 bp: 1 reads (0.00%)
+  48 bp: 2 reads (0.00%)
+  50 bp: 1 reads (0.00%)
+  61 bp: 2 reads (0.00%)
+  63 bp: 1 reads (0.00%)
+  158 bp: 1 reads (0.00%)
+  194 bp: 2 reads (0.00%)
+  198 bp: 2 reads (0.00%)
+  199 bp: 4 reads (0.00%)
+  200 bp: 1 reads (0.00%)
+  245 bp: 2 reads (0.00%)
+  246 bp: 1 reads (0.00%)
+  247 bp: 1 reads (0.00%)
+  248 bp: 139 reads (0.08%)
+  249 bp: 184 reads (0.11%)
+  250 bp: 5958 reads (3.51%)
+  251 bp: 160810 reads (94.86%)
+
+Consistency: VARIABLE (18 lengths observed)

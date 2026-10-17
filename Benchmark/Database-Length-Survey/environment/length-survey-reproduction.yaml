@@ -1,0 +1,5 @@
+name: length-survey-reproduction
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10

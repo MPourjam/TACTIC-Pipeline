@@ -1,0 +1,15 @@
+FASTQ FILE REPORT
+================================================================================
+File: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Picked DO NOT ENTER ME DO NOT ENTER ME DO NOT ENTER ME/mockrobiota/data/mock-5/untrimmed_fastq/HMPMockV1.2.Staggered1_3_L001_R1_001.fastq.gz
+Mock group: mock-5
+Total reads: 1797246
+Length range: 251-251 bp
+Mean length: 251.00 bp
+Median length: 251.00 bp
+Std dev: 0.00
+Unique lengths: 1
+
+Length distribution:
+  251 bp: 1797246 reads (100.00%)
+
+Consistency: CONSISTENT (251 bp only)

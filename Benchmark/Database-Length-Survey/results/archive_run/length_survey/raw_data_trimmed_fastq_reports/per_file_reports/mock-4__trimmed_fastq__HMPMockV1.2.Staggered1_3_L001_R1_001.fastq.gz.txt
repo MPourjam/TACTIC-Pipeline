@@ -1,0 +1,16 @@
+FASTQ FILE REPORT
+================================================================================
+File: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/raw_data/mock-4/trimmed_fastq/HMPMockV1.2.Staggered1_3_L001_R1_001.fastq.gz
+Mock: mock-4
+Directory: trimmed_fastq
+Total reads: 960611
+Length range: 151-151 bp
+Mean length: 151.00 bp
+Median length: 151.00 bp
+Std dev: 0.00
+Unique lengths: 1
+
+Length distribution:
+  151 bp: 960611 reads (100.00%)
+
+Consistency: CONSISTENT (151 bp only)

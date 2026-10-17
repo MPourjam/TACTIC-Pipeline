@@ -1,0 +1,10 @@
+pandas>=2.0
+numpy>=1.24
+pyyaml>=6.0
+matplotlib>=3.7
+seaborn>=0.13
+biopython>=1.80
+
+[dev]
+pytest>=7.0
+ruff>=0.3

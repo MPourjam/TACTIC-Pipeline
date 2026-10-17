@@ -1,0 +1,11 @@
+{
+  "script_selection": "generate_zotu_stats",
+  "smoke_test": false,
+  "source_paths_measured": 61,
+  "observations": 64,
+  "saved_historical_checks": 64,
+  "mismatches": 0,
+  "missing_historical_measurements": 16,
+  "missing_historical_measurements_all_scripts": 94,
+  "note": "Per-file and sampled statistics are repeated; narrative interpretations and legacy approximate pooled statistics are not recomputed."
+}

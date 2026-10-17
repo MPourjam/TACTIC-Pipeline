@@ -1,0 +1,5 @@
+#SampleID	SpikeReads	spikes_total_weight_in_g	spike_amount	parent_path
+mock-4-Even2	0	nan	0.0	mock-4-Even2__processed/20260511_173107
+mock-4-Staggered1	0	nan	0.0	mock-4-Staggered1__processed/20260511_173107
+mock-4-Staggered2	1	nan	0.0	mock-4-Staggered2__processed/20260511_173107
+mock-4-Even1	0	nan	0.0	mock-4-Even1__processed/20260511_173107

@@ -1,0 +1,3 @@
+observation_id	script	input_id	mock	max_records	historical_check	expected_available	fields_differing	count	min	max	mean	median	stdev	unique_lengths	q1	q3
+observation_0408	analyze_raw_read_lengths	input_0408	ZIEL_1	10000	passed	True		10000	301	301	301.0	301.0	0.0	1	301	301
+observation_0410	analyze_raw_read_lengths	input_0409	ZIEL_1	10000	passed	True		10000	301	301	301.0	301.0	0.0	1	301	301

@@ -1,0 +1,71 @@
+FASTQ FILE REPORT
+================================================================================
+File: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Picked DO NOT ENTER ME DO NOT ENTER ME DO NOT ENTER ME/mockrobiota/data/mock-15/dada2_results/trimmed/mock-15_R1_trim.fastq.gz
+Mock group: mock-15
+Total reads: 1012097
+Length range: 0-251 bp
+Mean length: 244.13 bp
+Median length: 251.00 bp
+Std dev: 32.85
+Unique lengths: 57
+
+Length distribution:
+  0 bp: 152 reads (0.02%)
+  1 bp: 4 reads (0.00%)
+  2 bp: 2 reads (0.00%)
+  3 bp: 1 reads (0.00%)
+  5 bp: 1 reads (0.00%)
+  6 bp: 1 reads (0.00%)
+  9 bp: 3 reads (0.00%)
+  12 bp: 1 reads (0.00%)
+  49 bp: 1 reads (0.00%)
+  68 bp: 1 reads (0.00%)
+  70 bp: 14 reads (0.00%)
+  71 bp: 5 reads (0.00%)
+  72 bp: 119 reads (0.01%)
+  73 bp: 1 reads (0.00%)
+  74 bp: 6538 reads (0.65%)
+  75 bp: 9052 reads (0.89%)
+  76 bp: 19 reads (0.00%)
+  77 bp: 1758 reads (0.17%)
+  78 bp: 27 reads (0.00%)
+  79 bp: 17 reads (0.00%)
+  80 bp: 4530 reads (0.45%)
+  81 bp: 48 reads (0.00%)
+  82 bp: 232 reads (0.02%)
+  83 bp: 3 reads (0.00%)
+  84 bp: 5 reads (0.00%)
+  86 bp: 1 reads (0.00%)
+  87 bp: 394 reads (0.04%)
+  88 bp: 704 reads (0.07%)
+  89 bp: 1 reads (0.00%)
+  91 bp: 1 reads (0.00%)
+  94 bp: 119 reads (0.01%)
+  95 bp: 523 reads (0.05%)
+  96 bp: 27 reads (0.00%)
+  97 bp: 11646 reads (1.15%)
+  98 bp: 523 reads (0.05%)
+  99 bp: 1951 reads (0.19%)
+  100 bp: 2681 reads (0.26%)
+  101 bp: 132 reads (0.01%)
+  102 bp: 3 reads (0.00%)
+  107 bp: 1 reads (0.00%)
+  110 bp: 2 reads (0.00%)
+  122 bp: 2 reads (0.00%)
+  165 bp: 2 reads (0.00%)
+  167 bp: 4 reads (0.00%)
+  210 bp: 1 reads (0.00%)
+  221 bp: 1 reads (0.00%)
+  239 bp: 1 reads (0.00%)
+  242 bp: 36 reads (0.00%)
+  243 bp: 2 reads (0.00%)
+  244 bp: 3 reads (0.00%)
+  245 bp: 9 reads (0.00%)
+  246 bp: 13 reads (0.00%)
+  247 bp: 83 reads (0.01%)
+  248 bp: 2595 reads (0.26%)
+  249 bp: 220 reads (0.02%)
+  250 bp: 104378 reads (10.31%)
+  251 bp: 863503 reads (85.32%)
+
+Consistency: VARIABLE (57 lengths observed)

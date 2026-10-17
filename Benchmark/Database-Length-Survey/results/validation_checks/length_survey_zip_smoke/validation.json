@@ -1,0 +1,11 @@
+{
+  "script_selection": "analyze_raw_read_lengths",
+  "smoke_test": true,
+  "source_paths_measured": 2,
+  "observations": 2,
+  "saved_historical_checks": 2,
+  "mismatches": 0,
+  "missing_historical_measurements": 0,
+  "missing_historical_measurements_all_scripts": 94,
+  "note": "Per-file and sampled statistics are repeated; narrative interpretations and legacy approximate pooled statistics are not recomputed."
+}

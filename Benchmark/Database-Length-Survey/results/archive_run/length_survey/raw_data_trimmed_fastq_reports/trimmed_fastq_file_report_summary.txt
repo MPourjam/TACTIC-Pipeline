@@ -1,0 +1,12 @@
+TRIMMED FASTQ FILE REPORT SUMMARY
+================================================================================
+Input directory: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Benchmark_git/All_Analyses/mocks/raw_data
+Trimmed_fastq directories found: 16
+FASTQ files reported: 54
+Total reads parsed: 36353094
+Files with variable lengths: 35
+Per-file reports: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/length_survey/mockrobiota_trimmed_fastq_reports/per_file_reports
+Index CSV: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/length_survey/mockrobiota_trimmed_fastq_reports/trimmed_fastq_file_report_index.csv
+
+Scope constraint:
+  Only files directly inside each mock's trimmed_fastq folder were processed.

@@ -1,0 +1,26 @@
+{
+  "created_utc": "2026-10-16T10:26:30.949395+00:00",
+  "communities": 16,
+  "samples": 27,
+  "direct_benchmark_input_files": 192,
+  "direct_benchmark_input_copies_identical": true,
+  "original_fastq_locations": 249,
+  "distinct_fastq_payloads": 119,
+  "fastq_pairs_checked_in_original_layouts": 122,
+  "fastq_pair_checks_passed": true,
+  "invalid_fastq_records": 0,
+  "tactic_samples_matching_logged_read_count": 27,
+  "sample_method_input_links": 135,
+  "benchmark_preparation_artifacts_matching_archive": 274,
+  "fastq_stages": {
+    "trimmed_fastq": 54,
+    "untrimmed_fastq": 55,
+    "trimmed_but_spiked": 4,
+    "raw_data": 22,
+    "dada2_results/trimmed": 54,
+    "dada2_results/work": 54,
+    "emp-paired-end-sequences": 6
+  },
+  "upstream_tactic_or_dada2_executed": false,
+  "errors": []
+}
