@@ -1,2 +1,0 @@
-observation_id	script	input_id	mock	max_records	historical_check	expected_available	fields_differing	count	min	max	mean	median	stdev	unique_lengths	q1	q3
-observation_0409	analyze_ziel1_comprehensive	input_0408	ZIEL_1	0	passed	False		22197	301	301	301.0	301.0	0.0	1	301	301

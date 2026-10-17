@@ -1,2 +1,0 @@
-observation_id	script	input_id	mock	max_records	historical_check	expected_available	fields_differing	count	min	max	mean	median	stdev	unique_lengths	q1	q3
-observation_0001	generate_fastq_file_reports	input_0001	mock-12	0	passed	True		1174149	240	240	240.0	240.0	0.0	1	240	240

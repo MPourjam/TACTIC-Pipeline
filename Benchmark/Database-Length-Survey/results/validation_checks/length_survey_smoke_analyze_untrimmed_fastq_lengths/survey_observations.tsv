@@ -1,2 +1,0 @@
-observation_id	script	input_id	mock	max_records	historical_check	expected_available	fields_differing	count	min	max	mean	median	stdev	unique_lengths	q1	q3
-observation_0354	analyze_untrimmed_fastq_lengths	input_0354	mock-12	1000	passed	True		1000	251	251	251.0	251.0	0.0	1	251	251

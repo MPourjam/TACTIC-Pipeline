@@ -1,6 +1,0 @@
-FASTQ FILE REPORT
-================================================================================
-File: /media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/Mocks/Picked DO NOT ENTER ME DO NOT ENTER ME DO NOT ENTER ME/mockrobiota/data/mock-12/untrimmed_fastq/Analysis_20260102_125438/sorted.fastq
-Mock group: mock-12
-Total reads: 0
-Status: EMPTY OR UNREADABLE

@@ -1,2 +1,0 @@
-input_id	data_path	count	min	max	mean	median	stdev	unique_lengths	q1	q3
-input_0263	payloads/3e9a140d0ab93d464f66d3d3522bfc87adf1d3df9104c3be44af868a86028166.fastq.gz	2040485	251	251	251.0	251.0	0.0	1	251	251
