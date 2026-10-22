@@ -1,0 +1,40 @@
+{
+  "mode": "reproduce",
+  "smoke_records": 64,
+  "datasets": {
+    "silva": {
+      "passed": true,
+      "observed_rows": 22,
+      "expected_rows": 22,
+      "input_records": 64,
+      "input_subset_sha256": "fb5feaa119672409e5382574001279915b9bb469b0848e830fee31227e65da82",
+      "source": "first eligible input records; all window lengths and identity thresholds",
+      "output_table": "silva/run_20261017_clust0p987-0p97/start1159_end43016_step2000/silva_amplicon_overall_stats.tsv",
+      "taxonomy_profile": "legacy_species_name",
+      "usearch_threads": 19
+    },
+    "ltp": {
+      "passed": true,
+      "observed_rows": 22,
+      "expected_rows": 22,
+      "input_records": 64,
+      "input_subset_sha256": "890dc745db67cdc2e545692282c6a9a4f5a11cd0ecdc56228cefbb9ce6d7474b",
+      "source": "first eligible input records; all window lengths and identity thresholds",
+      "output_table": "ltp/run_20261017_clust0p987-0p97/start1150_end43026_step2000/silva_amplicon_overall_stats.tsv",
+      "taxonomy_profile": "legacy_species_name",
+      "usearch_threads": 19
+    },
+    "gg2": {
+      "passed": true,
+      "observed_rows": 22,
+      "expected_rows": 22,
+      "input_records": 64,
+      "input_subset_sha256": "cba80169b2ffc23265f42366e2eedd48fdee26a9639f44f20317f21913a2e8dd",
+      "source": "first eligible input records; all window lengths and identity thresholds",
+      "output_table": "gg2/run_20261017_clust0p995-0p987-0p97/start1150_end43026_step2000/silva_amplicon_overall_stats.tsv",
+      "taxonomy_profile": "strict_full_taxonomy",
+      "usearch_threads": 19
+    }
+  },
+  "passed": true
+}

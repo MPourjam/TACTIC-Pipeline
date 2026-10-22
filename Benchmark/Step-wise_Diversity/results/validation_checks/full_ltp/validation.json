@@ -1,0 +1,16 @@
+{
+  "mode": "reproduce",
+  "smoke_records": 0,
+  "datasets": {
+    "ltp": {
+      "passed": true,
+      "expected_rows": 22,
+      "observed_rows": 22,
+      "differences": [],
+      "output_table": "ltp/run_20261017_clust0p987-0p97/start1150_end43026_step2000/silva_amplicon_overall_stats.tsv",
+      "taxonomy_profile": "legacy_species_name",
+      "usearch_threads": 19
+    }
+  },
+  "passed": true
+}

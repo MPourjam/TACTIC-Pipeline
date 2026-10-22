@@ -1,0 +1,23 @@
+FASTA File	Number of Sequences	Minimum Length	Maximum Length	Average Length	Fragment Length	Target Fragment Length	Number of SILVA Species	Number of Unique Aligned Sequences	Number of Unique Sequences	Number of Clusters at 0.995	Number of Clusters at 0.987	Number of Clusters at 0.97
+silva_full_length_valid_taxonomy_aligned.fasta	64	50000	50000	50000.0	50000	1492.8	24	63	63	46	32	26
+silva_v1-v9_alignment_1250-1650_filtered.fasta	64	41877	41877	41877.0	41877	1381.2	24	63	63	48	35	26
+silva_align_amplicon_1_2000.fasta	64	2000	2000	2000.0	2000	103.6	24	41	41	41	36	31
+silva_align_amplicon_1_4000.fasta	64	4000	4000	4000.0	4000	149.8	24	52	52	52	47	36
+silva_align_amplicon_1_6000.fasta	64	6000	6000	6000.0	6000	305.8	24	56	56	51	41	29
+silva_align_amplicon_1_8000.fasta	64	8000	8000	8000.0	8000	360.4	24	57	57	51	42	29
+silva_align_amplicon_1_10000.fasta	64	10000	10000	10000.0	10000	423.2	24	57	57	47	39	27
+silva_align_amplicon_1_12000.fasta	64	12000	12000	12000.0	12000	440.2	24	58	58	47	40	26
+silva_align_amplicon_1_14000.fasta	64	14000	14000	14000.0	14000	482.2	24	58	58	47	37	27
+silva_align_amplicon_1_16000.fasta	64	16000	16000	16000.0	16000	564.7	24	60	60	48	36	26
+silva_align_amplicon_1_18000.fasta	64	18000	18000	18000.0	18000	564.7	24	60	60	48	36	26
+silva_align_amplicon_1_20000.fasta	64	20000	20000	20000.0	20000	564.7	24	60	60	48	36	26
+silva_align_amplicon_1_22000.fasta	64	22000	22000	22000.0	22000	695.5	24	60	60	46	33	25
+silva_align_amplicon_1_24000.fasta	64	24000	24000	24000.0	24000	707.5	24	60	60	47	34	25
+silva_align_amplicon_1_26000.fasta	64	26000	26000	26000.0	26000	797.3	24	60	60	46	33	26
+silva_align_amplicon_1_28000.fasta	64	28000	28000	28000.0	28000	854.8	24	60	60	45	32	25
+silva_align_amplicon_1_30000.fasta	64	30000	30000	30000.0	30000	882.5	24	60	60	45	31	25
+silva_align_amplicon_1_32000.fasta	64	32000	32000	32000.0	32000	953.9	24	61	61	49	36	26
+silva_align_amplicon_1_34000.fasta	64	34000	34000	34000.0	34000	1009.7	24	61	61	49	36	27
+silva_align_amplicon_1_36000.fasta	64	36000	36000	36000.0	36000	1046.9	24	61	61	49	35	27
+silva_align_amplicon_1_38000.fasta	64	38000	38000	38000.0	38000	1113.4	24	61	61	49	35	26
+silva_align_amplicon_1_40000.fasta	64	40000	40000	40000.0	40000	1230.5	24	62	62	49	34	27

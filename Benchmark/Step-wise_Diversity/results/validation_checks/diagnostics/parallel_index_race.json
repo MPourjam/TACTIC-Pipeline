@@ -1,0 +1,43 @@
+{
+  "relocated_collection": "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-historical/collection",
+  "commands": [
+    {
+      "name": "check",
+      "command": [
+        "/tmp/stepwise-diversity-reproduction-env/bin/python",
+        "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-historical/collection/scripts/run_stepwise.py",
+        "check",
+        "--outdir",
+        "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-historical/check"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "plots",
+      "command": [
+        "/tmp/stepwise-diversity-reproduction-env/bin/python",
+        "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-historical/collection/scripts/run_stepwise.py",
+        "plots",
+        "--outdir",
+        "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-historical/plots"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "smoke",
+      "command": [
+        "/tmp/stepwise-diversity-reproduction-env/bin/python",
+        "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-historical/collection/scripts/run_stepwise.py",
+        "reproduce",
+        "--data-dir",
+        "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/inputs",
+        "--outdir",
+        "/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-historical/smoke",
+        "--smoke-records",
+        "64"
+      ],
+      "returncode": 1
+    }
+  ],
+  "passed": false
+}

@@ -1,0 +1,2 @@
+file                                                                                                                                                                                                                             format  type  num_seqs  sum_len  min_len  avg_len  max_len
+/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-confirmed/smoke/silva/run_20261017_clust0p987-0p97/start1159_end43016_step2000/silva_v1-v9_alignment_1250-1650_filtered_nogap.fasta  FASTA   DNA         64   88,427    1,250  1,381.7    1,572
