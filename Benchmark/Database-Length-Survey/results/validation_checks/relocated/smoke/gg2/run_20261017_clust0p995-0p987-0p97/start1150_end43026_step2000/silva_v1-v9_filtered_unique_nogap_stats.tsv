@@ -1,2 +1,0 @@
-file                                                                                                                                                                                                                    format  type  num_seqs  sum_len  min_len  avg_len  max_len
-/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-confirmed/smoke/gg2/run_20261017_clust0p995-0p987-0p97/start1150_end43026_step2000/silva_v1-v9_filtered_unique_nogap.fasta  FASTA   RNA         63   87,053    1,344  1,381.8    1,555

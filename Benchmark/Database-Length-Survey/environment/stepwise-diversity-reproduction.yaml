@@ -1,9 +1,0 @@
-name: stepwise-diversity-reproduction
-channels:
-  - conda-forge
-  - bioconda
-dependencies:
-  - python=3.11
-  - numpy=2.1.3
-  - matplotlib-base=3.9.2
-  - seqkit=2.12.0

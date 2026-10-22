@@ -1,2 +1,0 @@
-file                                                                                                                      format  type  num_seqs     sum_len  min_len  avg_len  max_len
-outputs_silva_cut_clust20260316_clust0p987-0p97/start1150_end43026_step2000/silva_full_length_valid_taxonomy_nogap.fasta  FASTA   DNA     19,601  28,665,627      416  1,462.5    3,588

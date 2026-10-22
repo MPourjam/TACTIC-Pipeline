@@ -1,2 +1,0 @@
-file                                                                                                                           format  type  num_seqs      sum_len  min_len  avg_len  max_len
-outputs_silva_cut_clust20260222_clust0p987-0p97/start1159_end43016_step2000/amplicon_1_8000/silva_align_amplicon_1_8000.fasta  FASTA   DNA    111,652  893,216,000    8,000    8,000    8,000

@@ -1,2 +1,0 @@
-file                                                                                                                               format  type  num_seqs      sum_len  min_len  avg_len  max_len
-outputs_GG2_cut_clust20260318_clust0p995-0p987-0p97/start1150_end43026_step2000/amplicon_1_4000/silva_align_amplicon_1_4000.fasta  FASTA   RNA    125,648  502,592,000    4,000    4,000    4,000

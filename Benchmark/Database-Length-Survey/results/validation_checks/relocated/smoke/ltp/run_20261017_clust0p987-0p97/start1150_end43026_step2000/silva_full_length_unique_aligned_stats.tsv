@@ -1,2 +1,0 @@
-file                                                                                                                                                                                                             format  type  num_seqs    sum_len  min_len  avg_len  max_len
-/media/adminuser/MSD-Storage/Mohsen/TACTIC_Benchmark/.reproduction-tests/stepwise/relocated-confirmed/smoke/ltp/run_20261017_clust0p987-0p97/start1150_end43026_step2000/silva_full_length_unique_aligned.fasta  FASTA   DNA         64  3,200,000   50,000   50,000   50,000

@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-data/*.zip
-data/*.zip.partial
-data/DBs/
-data/input_verification.json
-results/reproduced*/
-results/smoke_run/
-results/validation_checks/**/.matplotlib/
