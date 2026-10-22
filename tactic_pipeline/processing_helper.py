@@ -165,6 +165,18 @@ class SpikeRemovalException(Exception):
     pass
 
 
+class DatabaseUnavailableException(Exception):
+    """Raised when SILVA database cannot be downloaded and no local copy is available."""
+    pass
+
+
+# BiotaWiz parses this message (BiotaWiz's tacticLog.ts, DATABASE_OFFLINE_PREFIX)
+# and the two must stay identical.
+SILVA_OFFLINE_PREFIX = (
+    "Could not check for SILVA database updates. Using local SILVA database version: "
+)
+
+
 def calc_covered_region(start: int, end: int, regions_dict: dict = SixteenS_regions_dict):
     # Calculating Regions
     regions_coved = "NA"
@@ -2288,6 +2300,9 @@ def download_silva_databases(
     and downloads the SILVA ARB file of the given version.
     """
     all_silva_versions_urls = get_silva_release_urls(version=version)
+    if not all_silva_versions_urls:
+        raise IndexError("No accessible SILVA releases found.")
+
     def _version_key(version_text: str):
         normalized = str(version_text).strip().replace("_", ".")
         parts = []
@@ -2320,7 +2335,7 @@ def download_silva_databases(
     # md5 check
     md5_url = silva_file_base_url + ".md5"
     try:
-        response_md5 = requests.get(md5_url)
+        response_md5 = requests.get(md5_url, timeout=30)
         response_md5.raise_for_status()
         md5_content = response_md5.text.strip()
         expected_md5 = md5_content.split()[0] if md5_content else ""
@@ -2331,16 +2346,22 @@ def download_silva_databases(
     # Download the SILVA ARB file if not present or md5sum does not match
     if not check_md5sum(str(silva_filepath), expected_md5):
         # Downloading the SILVA ARB file to the download_dir
-        response = requests.get(silva_file_base_url, stream=True)
+        response = requests.get(silva_file_base_url, stream=True, timeout=(30, 300))
         response.raise_for_status()
         total_size_in_bytes = int(response.headers.get('content-length', 0))
         block_size = 1024 * 1024  # 1 MB
 
-        logger_obj.info(f"Downloading SILVA database to {silva_filepath} ({total_size_in_bytes / (1024*1024):.2f} MB)")
+        logger_obj.info(
+            f"Downloading SILVA database to {silva_filepath} "
+            f"({total_size_in_bytes / (1024*1024):.2f} MB)"
+        )
         with open(silva_filepath, 'wb') as silva_file:
             for data in response.iter_content(block_size):
                 silva_file.write(data)
-        logger_obj.info(f"Downloaded SILVA database to {silva_filepath} ({total_size_in_bytes / (1024*1024):.2f} MB)")
+        logger_obj.info(
+            f"Downloaded SILVA database to {silva_filepath} "
+            f"({total_size_in_bytes / (1024*1024):.2f} MB)"
+        )
     else:
         logger_obj.info(f"SILVA database already present and verified at {silva_filepath}")
     # Download the md5sum file and verify the downloaded file
@@ -2354,6 +2375,73 @@ def download_silva_databases(
         raise ValueError("MD5 checksum verification failed.")
     logger_obj.info("MD5 checksum verification passed.")
     return str(silva_filepath), silva_version_tup[0]
+
+
+def find_local_silva_database(dest_dir):
+    """
+    Look for usable SILVA releases under <dest_dir>/SILVA/.
+    A release counts as usable only if SILVA.arb exists AND SILVA.sidx.success exists AND
+    that file contains SUCCESS_MARKER (the constant already used for the marker). This
+    excludes interrupted or unverified downloads.
+
+    Returns the newest usable release (directory: str, version: str) comparing versions
+    numerically (split on "." and "_", so 138.2 > 138.1 and 139 > 138.2), or None if
+    <dest_dir>/SILVA does not exist or no release qualifies.
+    """
+    if not dest_dir:
+        return None
+    silva_root = Path(dest_dir) / "SILVA"
+    try:
+        if not silva_root.is_dir():
+            return None
+        entries = list(silva_root.iterdir())
+    except OSError:
+        return None
+
+    def _version_key(version_text: str):
+        cleaned = str(version_text).strip()
+        if cleaned.lower().startswith("release_"):
+            cleaned = cleaned[len("release_"):]
+        elif cleaned.lower().startswith("v"):
+            cleaned = cleaned.lstrip("vV")
+        parts = []
+        for part in re.split(r"[._]+", cleaned):
+            if not part:
+                continue
+            if part.isdigit():
+                parts.append((0, int(part), ""))
+            else:
+                parts.append((1, 0, part))
+        return tuple(parts)
+
+    candidates = []
+    for child in entries:
+        try:
+            if not child.is_dir():
+                continue
+            arb_path = child / "SILVA.arb"
+            success_path = child / "SILVA.sidx.success"
+            if not arb_path.is_file() or not success_path.is_file():
+                continue
+            try:
+                with open(success_path, "r", encoding="utf-8") as sf:
+                    content = sf.read()
+                if SUCCESS_MARKER not in content:
+                    continue
+            except Exception:
+                continue
+
+            v_key = _version_key(child.name)
+            candidates.append((v_key, str(child), child.name))
+        except OSError:
+            continue
+
+    if not candidates:
+        return None
+
+    candidates.sort(key=lambda c: (c[0], c[2]), reverse=True)
+    best = candidates[0]
+    return best[1], best[2]
 
 
 def prepare_silva_database(
@@ -2390,13 +2478,25 @@ def prepare_silva_database(
         raise ValueError("SILVA_SOURCE must be 'worker' or 'ftp'")
 
     # Download from SILVA FTP when requested or when the remote index is unavailable.
-    silva_db_path, version = download_silva_databases(
-        download_dir=dest_dir,
-        version=version,
-        md5_check=md5_check,
-        expected_file_basename="SILVA",
-        logger_obj=logger_obj
-    )
+    try:
+        silva_db_path, version = download_silva_databases(
+            download_dir=dest_dir,
+            version=version,
+            md5_check=md5_check,
+            expected_file_basename="SILVA",
+            logger_obj=logger_obj
+        )
+    except (requests.RequestException, IndexError, ValueError) as exc:
+        local_db = find_local_silva_database(dest_dir)
+        if local_db is not None:
+            directory, version = local_db
+            logger_obj.warning(f"Could not reach the SILVA server: {exc}")
+            logger_obj.warning(f"{SILVA_OFFLINE_PREFIX}{version}")
+            return directory, version
+        raise DatabaseUnavailableException(
+            f"Could not reach the SILVA server ({exc}) and no usable local database "
+            f"was found in {dest_dir}. Please check your internet connection."
+        ) from exc
     # Index the SILVA database
     index_silva_database(
         silva_arb_file=silva_db_path,

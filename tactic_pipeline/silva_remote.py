@@ -17,6 +17,9 @@ import zstandard
 
 DEFAULT_WORKER_URL = "https://silva-downloads-worker.mohsenpm50.workers.dev"
 SINA_VERSION = "1.6.0"
+# NOTE: The success marker is an MD5 hash of the string "SILVA index verified" to
+# avoid accidental collisions with other files. BiotaWiz uses this exact marker to
+# verify SILVA index integrity, so it must remain unchanged.
 SUCCESS_MARKER = "d3fa056627656a96abf4006b9f5d928b"
 CHUNK_SIZE = 1024 * 1024
 MAX_MANIFEST_BYTES = 65536

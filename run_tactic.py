@@ -1051,6 +1051,25 @@ def copy_pipeline_log_to_analysis(analysis_dir: Path, fastq_file_dir: Path, logg
         logger.warning("Pipeline_log.txt not found; skipping copy to Analysis directory.")
 
 
+def prepare_silva_db(db_directory: str, logger: logging.Logger = None) -> Tuple[str, str]:
+    """
+    Prepare the SILVA database. If the database is unavailable (offline and no local copy),
+    log the error and exit with code 172.
+    """
+    if logger is None:
+        logger = PREP_LOG
+    try:
+        return proc_helper.prepare_silva_database(
+            version="latest",
+            md5_check=True,
+            dest_dir=str(db_directory),
+            logger_obj=logger
+        )
+    except proc_helper.DatabaseUnavailableException as db_exc:
+        logger.error(str(db_exc))
+        sys.exit(172)
+
+
 def run_tactic(
         fastq_file_dir: str,
         usearch_11_bin: str = str(USEARCH_11_BIN),
@@ -1066,6 +1085,25 @@ def run_tactic(
         skip_non_bacterial_filter: bool = False,
         spikes_references_dir: str = SPIKESIDX_PARENT,
         threads: int = POOL_SIZE) -> str:
+    """
+    Execute the TACTIC pipeline on given fastq directory.
+
+    Custom Exit Codes:
+        160: MemoryError during preprocessing or analysis
+        161: Binary file not found
+        162: Binary version mismatch
+        163: Failed to copy arguments file to input directory
+        164: Argument parsing or validation error
+        165: Preprocessing failed
+        166: Analysis stopped with unexpected exception
+        167: Some samples failed preprocessing (partial success)
+        168: All samples failed preprocessing / no samples processed
+        169: Analysis step skipped
+        170: Invalid or unsupported analysis mode
+        171: Spike removal or spike reference indexing failure
+        172: SILVA database unavailable (offline, no local copy)
+        176: Inconsistent processed sample counts
+    """
     global USEARCH_11_BIN, FASTQ_DIR, POOL_SIZE, DBS_DIR
     if dbs_dir:
         DBS_DIR = dbs_dir
@@ -1482,12 +1520,7 @@ if __name__ == "__main__":
         PREP_LOG.info(
             "# Downloading and preparing necessary databases."
         )
-        silva_db_dir, silva_version = proc_helper.prepare_silva_database(
-            version="latest",
-            md5_check=True,
-            dest_dir=str(args.db_directory),
-            logger_obj=PREP_LOG
-        )
+        silva_db_dir, silva_version = prepare_silva_db(args.db_directory, logger=PREP_LOG)
         # PREP_LOG.info(f"SILVA database version {silva_version} is downloaded.")
         # gunzip sortmerna files
         PREP_LOG.info("Preparing SILVA archaeal and bacterial reference database files")
