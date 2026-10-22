@@ -9,9 +9,16 @@
     "test": "node --test"
   },
   "dependencies": {
-    "aws4fetch": "^1.0.20"
+    "aws4fetch": "^1.0.20",
+    "undici": ">=7.29.1"
   },
   "devDependencies": {
-    "wrangler": "^4.135.0"
+    "sharp": ">=0.35.5",
+    "wrangler": "^4.135.0",
+    "undici": ">=7.29.1"
+  },
+  "overrides": {
+    "sharp": ">=0.35.5",
+    "undici": ">=7.29.1"
   }
 }
