@@ -366,6 +366,73 @@ def check_expected_files_exist(analysis_folder: str, analysis_mode: str = "TIC")
     return len(missing_patterns) == 0
 
 
+def validate_taxonomy_formatting(file_path: str) -> None:
+    """
+    Validate that every taxonomy entry in a table (.tab) or FASTA (.fasta)
+    file adheres to the semicolon separator rule:
+    - 7 levels: exactly 6 ';' (Domain;Phylum;Class;Order;Family;Genus;Species)
+    - 8 levels: exactly 7 ';' (Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species)
+    """
+    path = Path(file_path)
+    if not path.is_file():
+        return
+
+    is_8levels = "8levels" in path.name.lower()
+    expected_colons = 7 if is_8levels else 6
+    expected_levels = 8 if is_8levels else 7
+
+    if path.suffix.lower() == ".tab":
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            header_line = f.readline()
+            if not header_line:
+                return
+            header = header_line.rstrip("\r\n").split("\t")
+            if "Taxonomy" not in header:
+                return
+            tax_idx = header.index("Taxonomy")
+            for line_idx, line in enumerate(f, start=2):
+                line = line.rstrip("\r\n")
+                if not line or line.startswith("#"):
+                    continue
+                cols = line.split("\t")
+                if tax_idx < len(cols):
+                    tax = cols[tax_idx].strip()
+                    if tax:
+                        colon_count = tax.count(";")
+                        parts_count = len(tax.split(";"))
+                        assert colon_count == expected_colons, (
+                            f"File {path.name} line {line_idx} has {colon_count} ';' "
+                            f"(expected {expected_colons} for {expected_levels}-level "
+                            f"taxonomy): '{tax}'"
+                        )
+                        assert parts_count == expected_levels, (
+                            f"File {path.name} line {line_idx} has {parts_count} levels "
+                            f"(expected {expected_levels}): '{tax}'"
+                        )
+    elif path.suffix.lower() in {".fasta", ".fa", ".fna"}:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            for line_idx, line in enumerate(f, start=1):
+                if line.startswith(">") and "tax=" in line:
+                    match = re.search(
+                        r"(?:^>[^\n]*?[\s;]tax=)(?P<tax>.*?)(?=(?:\s+[a-zA-Z_][a-zA-Z0-9_]*=)|$)",
+                        line,
+                        re.IGNORECASE,
+                    )
+                    if match:
+                        tax = match.group("tax").strip()
+                        colon_count = tax.count(";")
+                        parts_count = len(tax.split(";"))
+                        assert colon_count == expected_colons, (
+                            f"File {path.name} line {line_idx} has {colon_count} ';' "
+                            f"(expected {expected_colons} for {expected_levels}-level "
+                            f"taxonomy): '{tax}'"
+                        )
+                        assert parts_count == expected_levels, (
+                            f"File {path.name} line {line_idx} has {parts_count} levels "
+                            f"(expected {expected_levels}): '{tax}'"
+                        )
+
+
 def check_otutable_format(otu_table: str, argument_set: ArgumentSet, run_dir: str) -> bool:
     # Find all files named "spike_mapping_file.csv in fastq_dir which has a parent folder ending in "__processed"
     fastq_dir = os.path.join(os.path.abspath(run_dir), argument_set.fastq_dir)
@@ -392,6 +459,7 @@ def check_otutable_format(otu_table: str, argument_set: ArgumentSet, run_dir: st
             if sample not in header:
                 return False
 
+    validate_taxonomy_formatting(otu_table)
     return True
 
 
@@ -485,6 +553,13 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
 
             file_set_complete = check_expected_files_exist(latest_analysis_folder, selected_modes)
             assert file_set_complete, f"Some files are missing in the analysis folder for modes: {selected_modes}"
+
+            # Validate semicolon separator formatting in all generated tables and FASTA files
+            for root, _, files in os.walk(latest_analysis_folder):
+                for fname in files:
+                    if fname.endswith((".tab", ".fasta")):
+                        validate_taxonomy_formatting(os.path.join(root, fname))
+
             # Test return code
             assert result.returncode == 0, f"Command failed with return code {result.returncode}"
         elif not arg_set.skip_preprocess and arg_set.skip_analysis:
@@ -1014,3 +1089,89 @@ def test_targeted_fastq_lookup_with_mapping_file(build_image):
             assert "Gathering sequence files in" not in log_content
         finally:
             shutil.rmtree(run_dir, ignore_errors=True)
+
+
+@pytest.mark.pre_publish
+def test_taxonomy_semicolon_format_rule(tmp_path):
+    """
+    Verify the taxonomy semicolon separator rule:
+    - 7 levels: exactly 6 ';' (Domain;Phylum;Class;Order;Family;Genus;Species)
+    - 8 levels: exactly 7 ';' (Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species)
+    Checks both tables and FASTA files, including taxa with spaces and unassigned ranks,
+    and ensures invalid semicolon counts raise an AssertionError.
+    """
+    # 1. Valid 7-level table (6 semicolons)
+    valid_7tab = tmp_path / "OTUs-Table.tab"
+    valid_7tab.write_text(
+        "#OTU ID\tSample1\tTaxonomy\n"
+        "OTU1\t10\tBacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;subtilis\n"
+        "OTU2\t20\tBacteria;Bacteroidota;Bacteroidia;Bacteroidales;"
+        "Muribaculaceae;Incertae Sedis;\n"
+        "OTU3\t30\tBacteria;Firmicutes;;;;;\n",
+        encoding="utf-8",
+    )
+    validate_taxonomy_formatting(str(valid_7tab))
+
+    # 2. Valid 8-level table (7 semicolons)
+    valid_8tab = tmp_path / "OTUs-Table-8Levels.tab"
+    valid_8tab.write_text(
+        "#OTU ID\tSample1\tTaxonomy\n"
+        "OTU1\t10\tBacteria;Bacillati;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;subtilis\n"
+        "OTU2\t20\tBacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;"
+        "Muribaculaceae;Incertae Sedis;\n"
+        "OTU3\t30\tBacteria;Bacillati;Firmicutes;;;;;\n",
+        encoding="utf-8",
+    )
+    validate_taxonomy_formatting(str(valid_8tab))
+
+    # 3. Valid 7-level and 8-level FASTA files
+    valid_7fa = tmp_path / "OTUs-Seqs.fasta"
+    valid_7fa.write_text(
+        ">OTU1 tax=Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;subtilis\nACGT\n"
+        ">OTU2 tax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;"
+        "Muribaculaceae;Incertae Sedis; size=42;\nACGT\n"
+        ">OTU3 tax=Bacteria;Firmicutes;;;;;\nACGT\n",
+        encoding="utf-8",
+    )
+    validate_taxonomy_formatting(str(valid_7fa))
+
+    valid_8fa = tmp_path / "OTUs-Seqs-8Levels.fasta"
+    valid_8fa.write_text(
+        ">OTU1 tax=Bacteria;Bacillati;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;subtilis\n"
+        "ACGT\n"
+        ">OTU2 tax=Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;"
+        "Muribaculaceae;Incertae Sedis;\nACGT\n"
+        ">OTU3 tax=Bacteria;Bacillati;Firmicutes;;;;;\nACGT\n",
+        encoding="utf-8",
+    )
+    validate_taxonomy_formatting(str(valid_8fa))
+
+    # 4. Invalid 7-level table (trailing semicolon giving 7 semicolons instead of 6)
+    invalid_7tab = tmp_path / "Invalid-OTUs-Table.tab"
+    invalid_7tab.write_text(
+        "#OTU ID\tSample1\tTaxonomy\n"
+        "OTU1\t10\tBacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;subtilis;\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(AssertionError, match=r"expected 6 for 7-level taxonomy"):
+        validate_taxonomy_formatting(str(invalid_7tab))
+
+    # 5. Invalid 8-level table (trailing semicolon giving 8 semicolons instead of 7)
+    invalid_8tab = tmp_path / "Invalid-OTUs-Table-8Levels.tab"
+    invalid_8tab.write_text(
+        "#OTU ID\tSample1\tTaxonomy\n"
+        "OTU1\t10\tBacteria;Bacillati;Firmicutes;Bacilli;Bacillales;Bacillaceae;"
+        "Bacillus;subtilis;\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(AssertionError, match=r"expected 7 for 8-level taxonomy"):
+        validate_taxonomy_formatting(str(invalid_8tab))
+
+    # 6. Invalid FASTA (7 levels with trailing semicolon)
+    invalid_7fa = tmp_path / "Invalid-OTUs-Seqs.fasta"
+    invalid_7fa.write_text(
+        ">OTU1 tax=Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;subtilis;\nACGT\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(AssertionError, match=r"expected 6 for 7-level taxonomy"):
+        validate_taxonomy_formatting(str(invalid_7fa))

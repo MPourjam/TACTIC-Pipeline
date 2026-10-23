@@ -48,11 +48,12 @@ def test_detect_silva_version_and_is_silva_144_or_newer(tmp_path):
 
 
 def test_parse_sina_taxonomy_pre144_and_144_plus():
-    # Pre-144 (6 ranks from SINA -> 7 levels, 7 semicolons)
+    # Pre-144 (6 ranks from SINA -> 7 levels, 6 semicolons)
     raw_138 = "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;"
     tax_138, dom_138, kng_138 = parse_sina_taxonomy(raw_138, is_v144_plus=False)
-    assert tax_138 == "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;;"
-    assert tax_138.count(";") == 7
+    assert tax_138 == "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;"
+    assert tax_138.count(";") == 6
+    assert len(tax_138.split(";")) == 7
     assert dom_138 == "Bacteria"
     assert kng_138 == ""
 
@@ -62,8 +63,9 @@ def test_parse_sina_taxonomy_pre144_and_144_plus():
         "Acetivibrionales;Lachnospiraceae;Incertae Sedis;metagenome"
     )
     tax_144, dom_144, kng_144 = parse_sina_taxonomy(raw_144, is_v144_plus=True)
-    assert tax_144 == "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;;"
-    assert tax_144.count(";") == 7
+    assert tax_144 == "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;"
+    assert tax_144.count(";") == 6
+    assert len(tax_144.split(";")) == 7
     assert dom_144 == "Bacteria"
     assert kng_144 == "Bacillati"
 
@@ -73,15 +75,17 @@ def test_parse_sina_taxonomy_pre144_and_144_plus():
         "Bacteroidales;Odoribacteraceae;Odoribacter;"
     )
     tax_other, dom_other, kng_other = parse_sina_taxonomy(raw_144_other, is_v144_plus=True)
-    assert tax_other == "Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Odoribacteraceae;Odoribacter;;"
-    assert tax_other.count(";") == 7
+    assert tax_other == "Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Odoribacteraceae;Odoribacter;"
+    assert tax_other.count(";") == 6
+    assert len(tax_other.split(";")) == 7
     assert dom_other == "Bacteria"
     assert kng_other == "Pseudomonadati--other"
 
     # Empty / unclassified
     empty_tax, _, _ = parse_sina_taxonomy("", is_v144_plus=True)
-    assert empty_tax == ";;;;;;;"
-    assert empty_tax.count(";") == 7
+    assert empty_tax == ";;;;;;"
+    assert empty_tax.count(";") == 6
+    assert len(empty_tax.split(";")) == 7
 
 
 def test_restore_kingdom_in_7level_and_8level_outputs(tmp_path):
@@ -102,8 +106,8 @@ def test_restore_kingdom_in_7level_and_8level_outputs(tmp_path):
     assert phylum_k_map[("Bacteria", "Clostridiota")] == "Bacillati"
     assert phylum_k_map[("Bacteria", "Bacteroidota")] == "Pseudomonadati--other"
 
-    # 7-level restoration for ZOTU/OTU (Domain..Genus, 7 semicolons)
-    zotu1_classic = "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;;"
+    # 7-level restoration for ZOTU/OTU (Domain..Genus, 6 semicolons)
+    zotu1_classic = "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;"
     zotu1_7lvl = restore_kingdom_in_taxonomy(
         zotu1_classic,
         seq_id="Zotu1",
@@ -111,11 +115,12 @@ def test_restore_kingdom_in_7level_and_8level_outputs(tmp_path):
         phylum_kingdom_map=phylum_k_map,
         target_levels=7,
     )
-    assert zotu1_7lvl == "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis;"
-    assert zotu1_7lvl.count(";") == 7
+    assert zotu1_7lvl == "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Incertae Sedis"
+    assert zotu1_7lvl.count(";") == 6
+    assert len(zotu1_7lvl.split(";")) == 7
 
     # Kingdom-only classified ZOTU3 restored via seq_id map
-    zotu3_classic = "Bacteria;;;;;;;"
+    zotu3_classic = "Bacteria;;;;;;"
     zotu3_7lvl = restore_kingdom_in_taxonomy(
         zotu3_classic,
         seq_id="Zotu3",
@@ -123,10 +128,11 @@ def test_restore_kingdom_in_7level_and_8level_outputs(tmp_path):
         phylum_kingdom_map=phylum_k_map,
         target_levels=7,
     )
-    assert zotu3_7lvl == "Bacteria;Fusobacteriati;;;;;;"
-    assert zotu3_7lvl.count(";") == 7
+    assert zotu3_7lvl == "Bacteria;Fusobacteriati;;;;;"
+    assert zotu3_7lvl.count(";") == 6
+    assert len(zotu3_7lvl.split(";")) == 7
 
-    # 8-level restoration for TIC SOTU (Domain..SOTU, 8 semicolons)
+    # 8-level restoration for TIC SOTU (Domain..SOTU, 7 semicolons)
     sotu_map_file = tmp_path / "Map-SOTU-ZOTU.tab"
     sotu_map_file.write_text(
         "SOTU\tZOTU\n"
@@ -135,7 +141,7 @@ def test_restore_kingdom_in_7level_and_8level_outputs(tmp_path):
         encoding="utf-8",
     )
     tic_k_map = build_cluster_id_kingdom_map(str(sotu_map_file), seq_k_map)
-    sotu1_classic = "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;GOTU101;SOTU101;"
+    sotu1_classic = "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;GOTU101;SOTU101"
     sotu1_8lvl = restore_kingdom_in_taxonomy(
         sotu1_classic,
         seq_id="SOTU101",
@@ -145,12 +151,13 @@ def test_restore_kingdom_in_7level_and_8level_outputs(tmp_path):
     )
     assert sotu1_8lvl == (
         "Bacteria;Bacillati;Clostridiota;Clostridia;"
-        "Acetivibrionales;Lachnospiraceae;GOTU101;SOTU101;"
+        "Acetivibrionales;Lachnospiraceae;GOTU101;SOTU101"
     )
-    assert sotu1_8lvl.count(";") == 8
+    assert sotu1_8lvl.count(";") == 7
+    assert len(sotu1_8lvl.split(";")) == 8
 
-    # FullTaxonomy NA-Kingdom expansion -> NA-Domain;NA-Kingdom;... (8 semicolons)
-    na_classic = "NA-Kingdom;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species;"
+    # FullTaxonomy NA-Kingdom expansion -> NA-Domain;NA-Kingdom;... (7 semicolons)
+    na_classic = "NA-Kingdom;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species"
     na_8lvl = restore_kingdom_in_taxonomy(
         na_classic,
         seq_id="Zotu4",
@@ -158,8 +165,9 @@ def test_restore_kingdom_in_7level_and_8level_outputs(tmp_path):
         phylum_kingdom_map=phylum_k_map,
         target_levels=8,
     )
-    assert na_8lvl == "NA-Domain;NA-Kingdom;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species;"
-    assert na_8lvl.count(";") == 8
+    assert na_8lvl == "NA-Domain;NA-Kingdom;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species"
+    assert na_8lvl.count(";") == 7
+    assert len(na_8lvl.split(";")) == 8
 
 
 def test_tic_analysis_and_dual_output_generation_with_silva_144(tmp_path):
@@ -215,8 +223,8 @@ def test_tic_analysis_and_dual_output_generation_with_silva_144(tmp_path):
     assert (zotu_dir / "ZOTUs-Table-8Levels.tab").is_file()
     assert (zotu_dir / "ZOTUs-Seqs-8Levels.fasta").is_file()
     zotu_8lvl_text = (zotu_dir / "ZOTUs-Table-8Levels.tab").read_text(encoding="utf-8")
-    assert "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;;" in zotu_8lvl_text
-    assert "Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;;" in zotu_8lvl_text
+    assert "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;" in zotu_8lvl_text
+    assert "Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;" in zotu_8lvl_text
 
     # Stage into TIC_Pipeline and run TICAnalysis directly
     staged_fasta = tic_dir / "ZOTUs-Seqs.fasta"
@@ -262,20 +270,22 @@ def test_tic_analysis_and_dual_output_generation_with_silva_144(tmp_path):
     assert not (tic_dir / "ZOTUs-Table-8Levels.tab").exists()
     assert not (tic_dir / "ZOTUs-Seqs-8Levels.fasta").exists()
 
-    # TIC 7-level standard table has 7 semicolons per taxonomy
+    # TIC 7-level standard table has 6 semicolons per taxonomy (7 levels)
     sotu_std_lines = (tic_dir / "SOTUs-Table-TIC.tab").read_text(encoding="utf-8").strip().splitlines()[1:]
     assert len(sotu_std_lines) == 2
     for row in sotu_std_lines:
         tax_col = row.split("\t")[-1]
-        assert tax_col.count(";") == 7
+        assert tax_col.count(";") == 6
+        assert len(tax_col.split(";")) == 7
 
-    # TIC 8-level enriched table has 8 semicolons per taxonomy and includes Kingdom + SOTU
+    # TIC 8-level enriched table has 7 semicolons per taxonomy (8 levels)
     sotu_8lvl_text = (tic_dir / "SOTUs-Table-TIC-8Levels.tab").read_text(encoding="utf-8")
     sotu_8lvl_lines = sotu_8lvl_text.strip().splitlines()[1:]
     assert len(sotu_8lvl_lines) == 2
     for row in sotu_8lvl_lines:
         tax_col = row.split("\t")[-1]
-        assert tax_col.count(";") == 8
+        assert tax_col.count(";") == 7
+        assert len(tax_col.split(";")) == 8
     assert "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;SOTU" in sotu_8lvl_text
     assert "Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;SOTU" in sotu_8lvl_text
 
@@ -362,49 +372,57 @@ def test_parse_sina_taxonomy_deep_edge_cases():
     # Null and blank strings
     for is_v144 in (False, True):
         tax, dom, kng = parse_sina_taxonomy(None, is_v144_plus=is_v144)
-        assert tax == ";;;;;;;"
-        assert tax.count(";") == 7
+        assert tax == ";;;;;;"
+        assert tax.count(";") == 6
+        assert len(tax.split(";")) == 7
         assert dom == ""
         assert kng == ""
 
         tax, dom, kng = parse_sina_taxonomy("   ", is_v144_plus=is_v144)
-        assert tax == ";;;;;;;"
-        assert tax.count(";") == 7
+        assert tax == ";;;;;;"
+        assert tax.count(";") == 6
+        assert len(tax.split(";")) == 7
 
         tax, dom, kng = parse_sina_taxonomy(";;;;", is_v144_plus=is_v144)
-        assert tax == ";;;;;;;"
-        assert tax.count(";") == 7
+        assert tax == ";;;;;;"
+        assert tax.count(";") == 6
+        assert len(tax.split(";")) == 7
 
     # Deeply incomplete taxonomies with SILVA >= 144
     tax1, dom1, kng1 = parse_sina_taxonomy("Bacteria", is_v144_plus=True)
-    assert tax1 == "Bacteria;;;;;;;"
-    assert tax1.count(";") == 7
+    assert tax1 == "Bacteria;;;;;;"
+    assert tax1.count(";") == 6
+    assert len(tax1.split(";")) == 7
     assert dom1 == "Bacteria"
     assert kng1 == ""
 
     tax2, dom2, kng2 = parse_sina_taxonomy("Bacteria;Bacillati", is_v144_plus=True)
-    assert tax2 == "Bacteria;;;;;;;"
-    assert tax2.count(";") == 7
+    assert tax2 == "Bacteria;;;;;;"
+    assert tax2.count(";") == 6
+    assert len(tax2.split(";")) == 7
     assert dom2 == "Bacteria"
     assert kng2 == "Bacillati"
 
     tax3, dom3, kng3 = parse_sina_taxonomy("Bacteria;Bacillati;Firmicutes", is_v144_plus=True)
-    assert tax3 == "Bacteria;Firmicutes;;;;;;"
-    assert tax3.count(";") == 7
+    assert tax3 == "Bacteria;Firmicutes;;;;;"
+    assert tax3.count(";") == 6
+    assert len(tax3.split(";")) == 7
     assert dom3 == "Bacteria"
     assert kng3 == "Bacillati"
 
     tax4, dom4, kng4 = parse_sina_taxonomy("Bacteria;Bacillati;Firmicutes;Bacilli", is_v144_plus=True)
-    assert tax4 == "Bacteria;Firmicutes;Bacilli;;;;;"
-    assert tax4.count(";") == 7
+    assert tax4 == "Bacteria;Firmicutes;Bacilli;;;;"
+    assert tax4.count(";") == 6
+    assert len(tax4.split(";")) == 7
     assert dom4 == "Bacteria"
     assert kng4 == "Bacillati"
 
     # Whitespace surrounding each token
     messy_144 = " Bacteria ;  Bacillati ; Firmicutes ; Bacilli ; Bacillales ; Bacillaceae ; Bacillus ; metagenome "
     clean_tax, clean_dom, clean_kng = parse_sina_taxonomy(messy_144, is_v144_plus=True)
-    assert clean_tax == "Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;"
-    assert clean_tax.count(";") == 7
+    assert clean_tax == "Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;"
+    assert clean_tax.count(";") == 6
+    assert len(clean_tax.split(";")) == 7
     assert clean_dom == "Bacteria"
     assert clean_kng == "Bacillati"
 
@@ -414,16 +432,18 @@ def test_parse_sina_taxonomy_deep_edge_cases():
         "subsp_subtilis;metagenome;extra_flag_1;extra_flag_2"
     )
     long_tax, long_dom, long_kng = parse_sina_taxonomy(long_144, is_v144_plus=True)
-    assert long_tax == "Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;"
-    assert long_tax.count(";") == 7
+    assert long_tax == "Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;"
+    assert long_tax.count(";") == 6
+    assert len(long_tax.split(";")) == 7
     assert long_dom == "Bacteria"
     assert long_kng == "Bacillati"
 
     # Excessive tokens in Pre-144 (>6 ranks)
     long_138 = "Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;subsp_subtilis;extra_flag"
     p138_tax, p138_dom, p138_kng = parse_sina_taxonomy(long_138, is_v144_plus=False)
-    assert p138_tax == "Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;"
-    assert p138_tax.count(";") == 7
+    assert p138_tax == "Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;"
+    assert p138_tax.count(";") == 6
+    assert len(p138_tax.split(";")) == 7
     assert p138_dom == "Bacteria"
     assert p138_kng == ""
 
@@ -484,7 +504,7 @@ def test_restore_kingdom_in_taxonomy_edge_cases():
     phylum_k_map = {("Bacteria", "Clostridiota"): "Bacillati"}
 
     # Fallback to phylum_kingdom_map when seq_id is not in seq_kingdom_map
-    classic_tax = "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;;"
+    classic_tax = "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;"
     restored_by_phylum = restore_kingdom_in_taxonomy(
         classic_tax,
         seq_id="Zotu_Unseen",
@@ -492,8 +512,9 @@ def test_restore_kingdom_in_taxonomy_edge_cases():
         phylum_kingdom_map=phylum_k_map,
         target_levels=7,
     )
-    assert restored_by_phylum == "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;"
-    assert restored_by_phylum.count(";") == 7
+    assert restored_by_phylum == "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia"
+    assert restored_by_phylum.count(";") == 6
+    assert len(restored_by_phylum.split(";")) == 7
 
     # Handles seq_id with leading '>' character
     restored_by_fasta_id = restore_kingdom_in_taxonomy(
@@ -503,10 +524,10 @@ def test_restore_kingdom_in_taxonomy_edge_cases():
         phylum_kingdom_map=phylum_k_map,
         target_levels=7,
     )
-    assert restored_by_fasta_id == "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;"
+    assert restored_by_fasta_id == "Bacteria;Bacillati;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia"
 
     # Neither seq_id nor phylum is known: preserves slot as empty with exact semicolon count
-    unknown_tax = "Bacteria;UnknownPhylum;UnknownClass;UnknownOrder;UnknownFamily;UnknownGenus;;"
+    unknown_tax = "Bacteria;UnknownPhylum;UnknownClass;UnknownOrder;UnknownFamily;UnknownGenus;"
     restored_unknown_7 = restore_kingdom_in_taxonomy(
         unknown_tax,
         seq_id="Zotu_Unknown",
@@ -514,8 +535,9 @@ def test_restore_kingdom_in_taxonomy_edge_cases():
         phylum_kingdom_map=phylum_k_map,
         target_levels=7,
     )
-    assert restored_unknown_7 == "Bacteria;;UnknownPhylum;UnknownClass;UnknownOrder;UnknownFamily;UnknownGenus;"
-    assert restored_unknown_7.count(";") == 7
+    assert restored_unknown_7 == "Bacteria;;UnknownPhylum;UnknownClass;UnknownOrder;UnknownFamily;UnknownGenus"
+    assert restored_unknown_7.count(";") == 6
+    assert len(restored_unknown_7.split(";")) == 7
 
     restored_unknown_8 = restore_kingdom_in_taxonomy(
         unknown_tax,
@@ -524,12 +546,13 @@ def test_restore_kingdom_in_taxonomy_edge_cases():
         phylum_kingdom_map=phylum_k_map,
         target_levels=8,
     )
-    assert restored_unknown_8 == "Bacteria;;UnknownPhylum;UnknownClass;UnknownOrder;UnknownFamily;UnknownGenus;;"
-    assert restored_unknown_8.count(";") == 8
+    assert restored_unknown_8 == "Bacteria;;UnknownPhylum;UnknownClass;UnknownOrder;UnknownFamily;UnknownGenus;"
+    assert restored_unknown_8.count(";") == 7
+    assert len(restored_unknown_8.split(";")) == 8
 
     # Empty taxonomy input
-    assert restore_kingdom_in_taxonomy("", target_levels=7) == ";;;;;;;"
-    assert restore_kingdom_in_taxonomy("", target_levels=8) == ";;;;;;;;"
+    assert restore_kingdom_in_taxonomy("", target_levels=7) == ";;;;;;"
+    assert restore_kingdom_in_taxonomy("", target_levels=8) == ";;;;;;;"
 
     # Incomplete taxonomy (padded up to target levels with kingdom inserted at index 1)
     short_tax = "Bacteria;Clostridiota;"
@@ -540,19 +563,21 @@ def test_restore_kingdom_in_taxonomy_edge_cases():
         phylum_kingdom_map=phylum_k_map,
         target_levels=7,
     )
-    assert restored_short_7 == "Bacteria;Bacillati;Clostridiota;;;;;"
-    assert restored_short_7.count(";") == 7
+    assert restored_short_7 == "Bacteria;Bacillati;Clostridiota;;;;"
+    assert restored_short_7.count(";") == 6
+    assert len(restored_short_7.split(";")) == 7
 
     # NA-taxonomies: sequence with known kingdom in seq_k_map
-    na_tax = "NA-Kingdom;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species;"
+    na_tax = "NA-Kingdom;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species"
     restored_na_known = restore_kingdom_in_taxonomy(
         na_tax,
         seq_id="Zotu1",
         seq_kingdom_map=seq_k_map,
         target_levels=8,
     )
-    assert restored_na_known == "NA-Domain;Bacillati;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species;"
-    assert restored_na_known.count(";") == 8
+    assert restored_na_known == "NA-Domain;Bacillati;NA-Phylum;NA-Class;NA-Order;NA-Family;NA-Genus;NA-Species"
+    assert restored_na_known.count(";") == 7
+    assert len(restored_na_known.split(";")) == 8
 
 
 def test_ensure_7level_semicolons_in_table_and_fasta_edge_cases(tmp_path):
@@ -567,7 +592,7 @@ def test_ensure_7level_semicolons_in_table_and_fasta_edge_cases(tmp_path):
     ensure_7level_semicolons_in_table(str(count_table))
     assert count_table.read_text(encoding="utf-8") == original_counts
 
-    # Table with uppercase TAXONOMY column and 6-semicolon entries converted to 7 semicolons
+    # Table with uppercase TAXONOMY column (6-semicolon entries preserved / normalized)
     tax_table = tmp_path / "tax_table.tab"
     tax_table.write_text(
         "#OTU ID\tSampleA\tTAXONOMY\n"
@@ -577,28 +602,41 @@ def test_ensure_7level_semicolons_in_table_and_fasta_edge_cases(tmp_path):
     )
     ensure_7level_semicolons_in_table(str(tax_table))
     updated_lines = tax_table.read_text(encoding="utf-8").strip().splitlines()
-    assert updated_lines[2].split("\t")[2] == "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;SpeciesA;"
-    assert updated_lines[2].split("\t")[2].count(";") == 7
+    assert updated_lines[2].split("\t")[2] == "Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;SpeciesA"
+    assert updated_lines[2].split("\t")[2].count(";") == 6
+    assert len(updated_lines[2].split("\t")[2].split(";")) == 7
 
     # Running ensure_7level_semicolons_in_table again is idempotent
     ensure_7level_semicolons_in_table(str(tax_table))
     idempotent_lines = tax_table.read_text(encoding="utf-8").strip().splitlines()
-    assert idempotent_lines[2].split("\t")[2].count(";") == 7
+    assert idempotent_lines[2].split("\t")[2].count(";") == 6
+    assert len(idempotent_lines[2].split("\t")[2].split(";")) == 7
 
-    # FASTA with mixed headers (some with tax=, some without, some with extra attributes)
+    # FASTA with mixed headers (tax=, no tax, extra attributes, spaces in taxa)
     fasta_file = tmp_path / "test_mixed.fasta"
     fasta_file.write_text(
         ">Seq_no_tax\nATCG\n"
-        ">Zotu1 tax=Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;\nATCG\n"
-        ">Zotu2 tax=Bacteria;Firmicutes; size=42;\nATCG\n",
+        ">Zotu1 tax=Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;\n"
+        "ATCG\n"
+        ">Zotu2 tax=Bacteria;Firmicutes; size=42;\nATCG\n"
+        ">Zotu3 tax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;"
+        "Muribaculaceae;Incertae Sedis;\nATCG\n",
         encoding="utf-8",
     )
     ensure_7level_semicolons_in_fasta(str(fasta_file))
     fasta_lines = fasta_file.read_text(encoding="utf-8").strip().splitlines()
     assert fasta_lines[0] == ">Seq_no_tax"
-    assert "tax=Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia;; " in fasta_lines[2] or fasta_lines[2].endswith(";;")
-    assert fasta_lines[2].count(";") == 7
-    assert "tax=Bacteria;Firmicutes;;;;;; size=42;" in fasta_lines[4]
+    expected_zotu1 = (
+        "tax=Bacteria;Clostridiota;Clostridia;Acetivibrionales;Lachnospiraceae;Roseburia; "
+    )
+    assert expected_zotu1 in fasta_lines[2] or fasta_lines[2].endswith(";")
+    assert fasta_lines[2].count(";") == 6
+    assert "tax=Bacteria;Firmicutes;;;;; size=42;" in fasta_lines[4]
+    expected_zotu3 = (
+        "tax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Muribaculaceae;Incertae Sedis;"
+    )
+    assert expected_zotu3 in fasta_lines[6]
+    assert fasta_lines[6].count(";") == 6
 
 
 def test_tac_pipeline_full_enrichment_flow(tmp_path):
@@ -620,18 +658,18 @@ def test_tac_pipeline_full_enrichment_flow(tmp_path):
     assert tac_k_map["OTU1"] == "Bacillati"
     assert tac_k_map["OTU2"] == "Pseudomonadati--other"
 
-    # Simulate standard TAC outputs (7 levels, 7 semicolons)
+    # Simulate standard TAC outputs (7 levels, 6 semicolons)
     tac_table = tac_dir / "OTUs-Table-TAC.tab"
     tac_table.write_text(
         "#OTU ID\tSample1\tTaxonomy\n"
-        "OTU1\t100\tBacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;\n"
-        "OTU2\t50\tBacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;;\n",
+        "OTU1\t100\tBacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;\n"
+        "OTU2\t50\tBacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;\n",
         encoding="utf-8",
     )
     tac_fasta = tac_dir / "OTUs-Seqs-TAC.fasta"
     tac_fasta.write_text(
-        ">OTU1 tax=Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;\nATGC\n"
-        ">OTU2 tax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;;\nGCAT\n",
+        ">OTU1 tax=Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;\nATGC\n"
+        ">OTU2 tax=Bacteria;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;\nGCAT\n",
         encoding="utf-8",
     )
     krona_html = tac_dir / "OTUs-Krona.html"
@@ -645,6 +683,7 @@ def test_tac_pipeline_full_enrichment_flow(tmp_path):
 
     # Mock Krona creator function
     created_krona_calls = []
+
     def mock_create_krona(tool, table_path, out_html):
         created_krona_calls.append((tool, table_path, out_html))
         (tac_dir / out_html).write_text("<html>Krona 8-level</html>", encoding="utf-8")
@@ -675,14 +714,15 @@ def test_tac_pipeline_full_enrichment_flow(tmp_path):
     enriched_tab_text = (tac_dir / "OTUs-Table-TAC-8Levels.tab").read_text(encoding="utf-8")
     for row in enriched_tab_text.strip().splitlines()[1:]:
         tax = row.split("\t")[-1]
-        assert tax.count(";") == 8
-    assert "Bacteria;Bacillati;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;" in enriched_tab_text
-    assert "Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;;" in enriched_tab_text
+        assert tax.count(";") == 7
+        assert len(tax.split(";")) == 8
+    assert "Bacteria;Bacillati;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;" in enriched_tab_text
+    assert "Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;" in enriched_tab_text
 
     # Check 8-level taxonomies and semicolon counts in FASTA
     enriched_fa_text = (tac_dir / "OTUs-Seqs-TAC-8Levels.fasta").read_text(encoding="utf-8")
-    assert ">OTU1 tax=Bacteria;Bacillati;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;" in enriched_fa_text
-    assert ">OTU2 tax=Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;;" in enriched_fa_text
+    assert ">OTU1 tax=Bacteria;Bacillati;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;" in enriched_fa_text
+    assert ">OTU2 tax=Bacteria;Pseudomonadati--other;Bacteroidota;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;" in enriched_fa_text
 
 
 def test_write_taxonomy_levels_readme(tmp_path):
@@ -694,7 +734,8 @@ def test_write_taxonomy_levels_readme(tmp_path):
     assert "SILVA reference database version >= 144" in text
     assert "Standard Outputs" in text
     assert "*-8Levels.*" in text
-    assert "Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species;" in text
+    assert "Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species" in text
+    assert "(8 levels, 7 ';')" in text
     assert "Which file should I use?" in text
     assert "PICRUSt2" in text
 
@@ -731,16 +772,26 @@ def test_tic_pipeline_full_taxonomy_table_when_no_non_bacteria(tmp_path):
     assert not has_fasta_records(invalid_tax_fa)
 
     # When no non-bacterial sequences exist, All-FullTaxonomy is redundant and must be dropped
-    assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy.tab").is_file()
+    bact_tab = tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy.tab"
+    assert bact_tab.is_file()
     assert not (tic_dir / "ZOTU-Table-All-FullTaxonomy.tab").exists()
+    for row in bact_tab.read_text(encoding="utf-8").strip().splitlines()[1:]:
+        tax = row.split("\t")[-1]
+        assert tax.count(";") == 6
+        assert len(tax.split(";")) == 7
 
     # Downstream Kingdom enrichment creates OnlyBacteria-8Levels, but not All-8Levels
     generate_kingdom_enriched_pipeline_outputs(
         str(tic_dir),
         target_levels=8,
     )
-    assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab").is_file()
+    bact_tab_8 = tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab"
+    assert bact_tab_8.is_file()
     assert not (tic_dir / "ZOTU-Table-All-FullTaxonomy-8Levels.tab").exists()
+    for row in bact_tab_8.read_text(encoding="utf-8").strip().splitlines()[1:]:
+        tax = row.split("\t")[-1]
+        assert tax.count(";") == 7
+        assert len(tax.split(";")) == 8
 
     # PICRUSt2 preparation creates OnlyBacteria input, but not All input
     prepare_picrust2_input(str(tmp_path))
@@ -797,18 +848,37 @@ def test_tic_pipeline_full_taxonomy_table_when_non_bacteria_present(tmp_path):
     assert "ZOTU3" not in bact_tab_text  # only bacteria
     assert "ZOTU1" in all_tab_text and "ZOTU2" in all_tab_text and "ZOTU3" in all_tab_text  # all
 
+    for row in bact_tab_text.strip().splitlines()[1:]:
+        tax = row.split("\t")[-1]
+        assert tax.count(";") == 6
+        assert len(tax.split(";")) == 7
+    for row in all_tab_text.strip().splitlines()[1:]:
+        tax = row.split("\t")[-1]
+        assert tax.count(";") == 6
+        assert len(tax.split(";")) == 7
+
     # Downstream Kingdom enrichment creates both -8Levels files
     generate_kingdom_enriched_pipeline_outputs(
         str(tic_dir),
         target_levels=8,
     )
-    assert (tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab").is_file()
-    assert (tic_dir / "ZOTU-Table-All-FullTaxonomy-8Levels.tab").is_file()
+    bact_8 = tic_dir / "ZOTU-Table-OnlyBacteria-FullTaxonomy-8Levels.tab"
+    all_8 = tic_dir / "ZOTU-Table-All-FullTaxonomy-8Levels.tab"
+    assert bact_8.is_file()
+    assert all_8.is_file()
+
+    for row in bact_8.read_text(encoding="utf-8").strip().splitlines()[1:]:
+        tax = row.split("\t")[-1]
+        assert tax.count(";") == 7
+        assert len(tax.split(";")) == 8
+    for row in all_8.read_text(encoding="utf-8").strip().splitlines()[1:]:
+        tax = row.split("\t")[-1]
+        assert tax.count(";") == 7
+        assert len(tax.split(";")) == 8
 
     # PICRUSt2 preparation creates inputs for both tables
     prepare_picrust2_input(str(tmp_path))
     picrust_dir = tmp_path / "PICRUSt2-Inputs"
     assert (picrust_dir / "TIC_Pipeline__ZOTU-Table-OnlyBacteria-FullTaxonomy-For-PICRUSt2.tab").is_file()
     assert (picrust_dir / "TIC_Pipeline__ZOTU-Table-All-FullTaxonomy-For-PICRUSt2.tab").is_file()
-
 

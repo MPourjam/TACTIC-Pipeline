@@ -5,12 +5,15 @@ All notable changes to the TACTIC pipeline will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1] - 2026-10-23
+## [1.0.0] - 2026-10-23
 
 ### Output Documentation & Usability
 - **Simple-Language Pipeline Output Guides (`Output files explanation.txt`)**: Automatically writes a clear, plain-language `Output files explanation.txt` file into the root `Analysis_<timestamp>/` results directory and each active pipeline folder (`OTU_Pipeline`, `ZOTU_Pipeline`, `TAC_Pipeline`, `TIC_Pipeline`, `PICRUSt2-Inputs`, and `Shared`). Explains what each file is, how to open it (e.g. interactive Krona HTML charts in a web browser, abundance tables in Excel/R), and its intended scientific usage.
 - **TIC Full-Taxonomy Guidance**: Clearly documents the role and conditional generation of `ZOTU-Table-All-FullTaxonomy.tab` (retained when non-bacterial sequences are detected for broad-domain studies and contamination auditing) versus `ZOTU-Table-OnlyBacteria-FullTaxonomy.tab` (default for standard bacterial diversity and functional predictions with PICRUSt2).
 - **PICRUSt2 Input Guidance**: Added dedicated documentation in `PICRUSt2-Inputs/Output files explanation.txt` explaining pre-formatted inputs and providing exact CLI syntax for running `picrust2_pipeline.py`.
+
+### Taxonomy Formatting Logic
+- **Semicolon Separator Format**: Standardized taxonomy formatting to use `;` as a level separator. Standard 7-level outputs contain exactly 6 semicolons (`Domain;Phylum;Class;Order;Family;Genus;Species`), and SILVA 144+ 8-level outputs contain exactly 7 semicolons (`Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species`).
 
 ### Security & Dependencies
 - **Cloudflare SILVA Downloads Worker**: Upgraded `sharp` dependency to `>=0.35.5` (and updated `undici`) in `cloudflare/silva-downloads-worker/package-lock.json` to resolve security advisories.
@@ -22,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Benchmark Data & Documentation
 - **Paper Benchmarks & DOI References**: Updated step-wise and length-based 16S rRNA diversity survey benchmark datasets and documentation accompanying the TACTIC paper, including Zenodo DOI references.
 
-## [1.0.0] - 2026-10-16
 
 ### FASTQ Detection & Pairing
 - **Robust Read Direction & Marker Matching**: Read direction is now determined by the rightmost marker in the filename, supporting standard R1/R2 (and r1/r2), read1/read2, forward/reverse, SRA/ENA `_1`/`_2` directly before file extension, and F/R tags.
@@ -35,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Taxonomy & SILVA 144+ Support
 - **SILVA 144+ Kingdom Classification**: Fully compatible with SILVA release 144+ databases by detecting and handling the formal bacterial Kingdom rank (ending in `-ati` / `-ati--other`) between Domain and Phylum, while ignoring 8th-level source tags (such as `metagenome`).
 - **Dual Taxonomy Outputs**: Simultaneously produces classic 7-level files (`Domain..Species;`) for backward compatibility with legacy tools (PICRUSt2, classic R/QIIME scripts) alongside 8-level enriched files (`*-8Levels.*` across TIC, TAC, ZOTU, OTU, and `-iz`) containing the full SILVA 144+ bacterial Kingdom resolution down to Species.
-- **Strict Trailing Semicolon Normalization**: Every taxonomic rank cleanly terminates with a trailing semicolon across all abundance tables and FASTA headers (7 semicolons for 7 levels, 8 semicolons for 8 levels), preventing rank-shifting issues in downstream parsers.
+- **Consistent Semicolon Separator Normalization**: Standardized taxonomic level formatting across all abundance tables and FASTA headers using ';' as a separator (6 semicolons for 7 levels, 7 semicolons for 8 levels), preventing rank-shifting issues in downstream parsers.
 - **Automatic Output Guidance**: Automatically writes a clear `README_Taxonomy_Levels.txt` guide into each `Analysis_<timestamp>/` results directory and logs an explanatory summary banner in `Analysis_log.txt` detailing output files and tool compatibility.
 
 ### Clustering & Output Refinements

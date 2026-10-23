@@ -79,8 +79,8 @@ TACTIC automatically detects when SILVA $\ge 144$ is in use and generates parall
 
 | File Suffix | Analysis Pipelines | Taxonomic Levels | Description & Recommended Use |
 | :--- | :--- | :--- | :--- |
-| *(None / standard)* | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`, `-iz`) | 7 levels: `Domain;Phylum;Class;Order;Family;Genus;Species;` | **Backward compatibility**: Classic 7 ranks down to Species (Kingdom temporarily excluded; unassigned lower ranks left empty). Use for downstream tools strictly expecting classic 7-level taxonomies (e.g., PICRUSt2, legacy QIIME / R scripts). |
-| `*-8Levels.*` | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`, `-iz`) | 8 levels: `Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species;` | **Full SILVA 144+ taxonomy**: Includes the bacterial Kingdom rank (`*-ati`) down to Species (unassigned lower ranks left empty in modes without species imputation). Recommended for detailed taxonomic profiling, Rhea, Namco, and 8-ring Krona charts. |
+| *(None / standard)* | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`, `-iz`) | 7 levels: `Domain;Phylum;Class;Order;Family;Genus;Species` (6 ';') | **Backward compatibility**: Classic 7 ranks down to Species (Kingdom temporarily excluded; unassigned lower ranks left empty). Use for downstream tools strictly expecting classic 7-level taxonomies (e.g., PICRUSt2, legacy QIIME / R scripts). |
+| `*-8Levels.*` | All modes (`TIC`, `TAC`, `ZOTU`, `OTU`, `-iz`) | 8 levels: `Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species` (7 ';') | **Full SILVA 144+ taxonomy**: Includes the bacterial Kingdom rank (`*-ati`) down to Species (unassigned lower ranks left empty in modes without species imputation). Recommended for detailed taxonomic profiling, Rhea, Namco, and 8-ring Krona charts. |
 
 > 💡 **Notice**: A descriptive `README_Taxonomy_Levels.txt` file is automatically placed in your `Analysis_*` results folder detailing the level mapping and tool recommendations.
 

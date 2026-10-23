@@ -13,7 +13,10 @@ _SILVA_PATH_VERSION_RE = re.compile(
 )
 _EXPLICIT_LEVEL_SUFFIX_RE = re.compile(r"-[78]Levels\.(?:tab|fasta|html)$", re.IGNORECASE)
 _FASTA_SEQ_ID_RE = re.compile(r"^>(?P<seq_id>[^\s;]+)", re.IGNORECASE)
-_FASTA_TAX_RE = re.compile(r"(?P<prefix>^(?:>[^\n]*?[\s;])tax=)(?P<tax>[^\s]*)", re.IGNORECASE)
+_FASTA_TAX_RE = re.compile(
+    r"(?P<prefix>^(?:>[^\n]*?[\s;])tax=)(?P<tax>.*?)(?=(?:\s+[a-zA-Z_][a-zA-Z0-9_]*=)|$)",
+    re.IGNORECASE,
+)
 
 
 def _parse_version_tuple(version_str: str) -> Optional[Tuple[int, ...]]:
@@ -99,11 +102,12 @@ def is_silva_144_or_newer(
 def format_taxonomy_levels(levels: Sequence[str], num_levels: int) -> str:
     """
     Format a sequence of taxonomic ranks to exactly `num_levels` levels where
-    every level ends with a semicolon ';' (so an N-level taxonomy contains N ';').
+    ';' is used as a separator between ranks (an N-level taxonomy contains
+    exactly N - 1 semicolons ';').
     """
-    cleaned = [str(lvl).strip() for lvl in levels]
+    cleaned = [str(lvl).strip().rstrip(";") for lvl in levels]
     padded = (cleaned + [""] * num_levels)[:num_levels]
-    return ";".join(padded) + ";"
+    return ";".join(padded)
 
 
 def parse_sina_taxonomy(
@@ -112,7 +116,7 @@ def parse_sina_taxonomy(
 ) -> Tuple[str, str, str]:
     """
     Normalize a raw SINA `lca_tax_slv` taxonomy string into the classic 7-level
-    format (`Domain;Phylum;Class;Order;Family;Genus;Species;`, with 7 semicolons
+    format (`Domain;Phylum;Class;Order;Family;Genus;Species`, with 6 semicolons
     and an empty 7th Species slot) so downstream tools (`ticlust`, etc.) run on
     a uniform 7-level hierarchy.
 
@@ -226,22 +230,29 @@ def build_cluster_id_kingdom_map(
     return cluster_kingdom_map
 
 
-def ensure_trailing_semicolon_on_7level_tax(tax_str: str) -> str:
+def ensure_7level_tax(tax_str: str) -> str:
     """
-    Ensure a 7-level taxonomy string has 7 levels and ends with a semicolon
-    (7 semicolons total).
+    Ensure a 7-level taxonomy string has exactly 7 levels separated by ';'
+    (6 semicolons total).
     """
     raw = str(tax_str or "").strip()
     if not raw:
         return format_taxonomy_levels([], 7)
-    levels = [lvl.strip() for lvl in raw.split(";")]
-    return format_taxonomy_levels(levels[:7], 7)
+    tax_prefix = ""
+    if raw.lower().startswith("tax="):
+        tax_prefix = raw[:4]
+        raw = raw[4:]
+    levels = [lvl.strip().rstrip(";") for lvl in raw.split(";")]
+    return tax_prefix + format_taxonomy_levels(levels[:7], 7)
+
+
+ensure_trailing_semicolon_on_7level_tax = ensure_7level_tax
 
 
 def ensure_7level_semicolons_in_table(table_path: str, sep: str = "\t") -> None:
     """
     Normalize the Taxonomy column of an existing 7-level table file in-place so
-    each of the 7 levels ends with ';' (7 semicolons total).
+    each entry contains exactly 7 levels separated by ';' (6 semicolons total).
     """
     path = Path(PurePath(table_path)).resolve()
     if not path.is_file():
@@ -265,7 +276,7 @@ def ensure_7level_semicolons_in_table(table_path: str, sep: str = "\t") -> None:
             continue
         cols = line.split(sep)
         if tax_idx < len(cols):
-            cols[tax_idx] = ensure_trailing_semicolon_on_7level_tax(cols[tax_idx])
+            cols[tax_idx] = ensure_7level_tax(cols[tax_idx])
         out_lines.append(sep.join(cols))
 
     with open(path, "w", encoding="utf-8") as fio:
@@ -275,7 +286,7 @@ def ensure_7level_semicolons_in_table(table_path: str, sep: str = "\t") -> None:
 def ensure_7level_semicolons_in_fasta(fasta_path: str) -> None:
     """
     Normalize `tax=...` headers in an existing 7-level FASTA file in-place so
-    each of the 7 levels ends with ';' (7 semicolons total).
+    each entry contains exactly 7 levels separated by ';' (6 semicolons total).
     """
     path = Path(PurePath(fasta_path)).resolve()
     if not path.is_file():
@@ -288,7 +299,7 @@ def ensure_7level_semicolons_in_fasta(fasta_path: str) -> None:
         if line.startswith(">"):
             match = _FASTA_TAX_RE.search(line)
             if match:
-                norm_tax = ensure_trailing_semicolon_on_7level_tax(match.group("tax"))
+                norm_tax = ensure_7level_tax(match.group("tax"))
                 line = (
                     line[:match.start("tax")]
                     + norm_tax
@@ -311,9 +322,9 @@ def restore_kingdom_in_taxonomy(
     """
     Re-insert the SILVA >= 144 Kingdom rank between Domain (index 0) and Phylum
     (index 1) of a classic 7-level taxonomy string
-    (`Domain;Phylum;Class;Order;Family;Genus;Species;`),
+    (`Domain;Phylum;Class;Order;Family;Genus;Species`),
     formatting the output to `target_levels` (7 for ZOTU/OTU, 8 for TAC/TIC) with
-    each level terminated by ';'.
+    levels separated by ';'.
     """
     seq_kingdom_map = seq_kingdom_map or {}
     phylum_kingdom_map = phylum_kingdom_map or {}
@@ -322,7 +333,12 @@ def restore_kingdom_in_taxonomy(
     if not raw:
         return format_taxonomy_levels([], target_levels)
 
-    classic_levels = ([lvl.strip() for lvl in raw.split(";")] + [""] * 7)[:7]
+    tax_prefix = ""
+    if raw.lower().startswith("tax="):
+        tax_prefix = raw[:4]
+        raw = raw[4:]
+
+    classic_levels = ([lvl.strip().rstrip(";") for lvl in raw.split(";")] + [""] * 7)[:7]
     uses_na_placeholders = any(lvl.startswith("NA-") for lvl in classic_levels)
 
     clean_seq_id = str(seq_id or "").strip().lstrip(">")
@@ -341,7 +357,7 @@ def restore_kingdom_in_taxonomy(
             kingdom = "NA-Kingdom"
 
     enriched_levels = [domain, kingdom] + classic_levels[1:7]
-    return format_taxonomy_levels(enriched_levels[:target_levels], target_levels)
+    return tax_prefix + format_taxonomy_levels(enriched_levels[:target_levels], target_levels)
 
 
 def write_kingdom_enriched_table(
@@ -354,7 +370,7 @@ def write_kingdom_enriched_table(
 ) -> None:
     """
     Write a copy of `input_table` to `output_table` with the Kingdom rank
-    restored in the Taxonomy column (`target_levels` levels, each ending in ';').
+    restored in the Taxonomy column (`target_levels` levels separated by ';').
     """
     in_path = Path(PurePath(input_table)).resolve()
     out_path = Path(PurePath(output_table)).resolve()
@@ -398,7 +414,7 @@ def write_kingdom_enriched_fasta(
 ) -> None:
     """
     Write a copy of `input_fasta` to `output_fasta` with the Kingdom rank
-    restored in `tax=...` headers (`target_levels` levels, each ending in ';').
+    restored in `tax=...` headers (`target_levels` levels separated by ';').
     """
     in_path = Path(PurePath(input_fasta)).resolve()
     out_path = Path(PurePath(output_fasta)).resolve()
@@ -546,13 +562,13 @@ def write_taxonomy_levels_readme(output_dir: str) -> str:
         "and updated taxonomy standards, TACTIC generates parallel sets of output files:\n\n"
         "1. Standard Outputs (e.g., SOTUs-Table-TIC.tab, OTUs-Table-TAC.tab,\n"
         "   ZOTUs-Table-OnlyBacteria-FullTaxonomy.tab, OTUs-Table.tab):\n"
-        "   - Format: Domain;Phylum;Class;Order;Family;Genus;Species; (7 levels, 7 ';')\n"
+        "   - Format: Domain;Phylum;Class;Order;Family;Genus;Species (7 levels, 6 ';')\n"
         "   - Note: In pipelines without species-level taxonomy imputation (ZOTU, OTU, TAC),\n"
         "     unassigned lower ranks such as Species remain empty between semicolons.\n"
         "   - Purpose: Direct compatibility with legacy tools, QIIME, PICRUSt2, and R\n"
         "     packages that strictly expect traditional 7-level taxonomies without Kingdom.\n\n"
         "2. Enriched '*-8Levels.*' Output Files (generated across TIC, TAC, ZOTU, OTU, and -iz):\n"
-        "   - Format: Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species; (8 levels, 8 ';')\n"
+        "   - Format: Domain;Kingdom;Phylum;Class;Order;Family;Genus;Species (8 levels, 7 ';')\n"
         "   - Includes the bacterial Kingdom rank between Domain and Phylum down to Species\n"
         "     (with unassigned ranks left empty between semicolons).\n\n"
         "Which file should I use?\n"
