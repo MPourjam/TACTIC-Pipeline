@@ -75,6 +75,7 @@ def test_get_pipeline_readme_content_shared():
 def test_get_pipeline_readme_content_root():
     content = get_pipeline_readme_content("root")
     assert "Analysis Results Directory Overview" in content
+    assert "Output files explanation.txt" in content
     assert "OTU_Pipeline/" in content
     assert "ZOTU_Pipeline/" in content
     assert "TAC_Pipeline/" in content
@@ -89,7 +90,7 @@ def test_write_pipeline_readme(tmp_path):
     readme_path_str = write_pipeline_readme(str(tmp_path), "otu")
     readme_path = Path(readme_path_str)
     assert readme_path.is_file()
-    assert readme_path.name == "README.txt"
+    assert readme_path.name == "Output files explanation.txt"
     text = readme_path.read_text(encoding="utf-8")
     assert "TACTIC Pipeline — OTU Pipeline Output Files" in text
 
@@ -100,17 +101,21 @@ def test_write_all_pipeline_readmes_with_active_pipelines(tmp_path):
     assert len(created) == 3
     assert all(Path(p).is_file() for p in created)
 
-    assert (tmp_path / "README.txt").is_file()
-    assert (tmp_path / "OTU_Pipeline" / "README.txt").is_file()
-    assert (tmp_path / "TAC_Pipeline" / "README.txt").is_file()
-    # Inactive and empty should not have README.txt
-    assert not (tmp_path / "TIC_Pipeline" / "README.txt").exists()
+    assert (tmp_path / "Output files explanation.txt").is_file()
+    assert (tmp_path / "OTU_Pipeline" / "Output files explanation.txt").is_file()
+    assert (tmp_path / "TAC_Pipeline" / "Output files explanation.txt").is_file()
+    # Inactive and empty should not have Output files explanation.txt
+    assert not (tmp_path / "TIC_Pipeline" / "Output files explanation.txt").exists()
 
-    otu_text = (tmp_path / "OTU_Pipeline" / "README.txt").read_text(encoding="utf-8")
+    otu_text = (tmp_path / "OTU_Pipeline" / "Output files explanation.txt").read_text(
+        encoding="utf-8"
+    )
     assert "OTU Pipeline Output Files" in otu_text
     assert "OTUs-Table.tab" in otu_text
 
-    tac_text = (tmp_path / "TAC_Pipeline" / "README.txt").read_text(encoding="utf-8")
+    tac_text = (tmp_path / "TAC_Pipeline" / "Output files explanation.txt").read_text(
+        encoding="utf-8"
+    )
     assert "TAC Pipeline Output Files" in tac_text
     assert "OTUs-Table-TAC.tab" in tac_text
 
@@ -132,12 +137,12 @@ def test_write_all_pipeline_readmes_auto_discovers_existing_dirs_with_files(tmp_
     assert len(created) == 3
     assert all(Path(p).is_file() for p in created)
 
-    assert (tmp_path / "README.txt").is_file()
-    assert (tic_dir / "README.txt").is_file()
-    assert (shared_dir / "README.txt").is_file()
-    assert not (empty_zotu_dir / "README.txt").exists()
+    assert (tmp_path / "Output files explanation.txt").is_file()
+    assert (tic_dir / "Output files explanation.txt").is_file()
+    assert (shared_dir / "Output files explanation.txt").is_file()
+    assert not (empty_zotu_dir / "Output files explanation.txt").exists()
 
-    tic_text = (tic_dir / "README.txt").read_text(encoding="utf-8")
+    tic_text = (tic_dir / "Output files explanation.txt").read_text(encoding="utf-8")
     assert "TIC Pipeline Output Files" in tic_text
 
 
@@ -157,7 +162,7 @@ def test_prepare_picrust2_input_creates_picrust2_readme(tmp_path):
 
     picrust_dir = tmp_path / "PICRUSt2-Inputs"
     assert picrust_dir.is_dir()
-    readme_file = picrust_dir / "README.txt"
+    readme_file = picrust_dir / "Output files explanation.txt"
     assert readme_file.is_file()
     text = readme_file.read_text(encoding="utf-8")
     assert "PICRUSt2 Input Files" in text

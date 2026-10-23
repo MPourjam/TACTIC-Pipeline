@@ -1912,7 +1912,8 @@ def main(
             "    -> Recommended for: PICRUSt2 and tools expecting classic 7-level taxonomies.",
             "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab, ZOTUs-Table-8Levels.tab): 8 levels (Domain..Kingdom..Species)",
             "    -> Recommended for: SILVA 144+ bacterial kingdom analysis (Bacillati, etc.).",
-            "  • Refer to README.txt in each pipeline folder for a description of each file.",
+            "  • Refer to Output files explanation.txt in each pipeline folder",
+            "    for a description of each file.",
             "  • Refer to README_Taxonomy_Levels.txt in analysis folder for taxonomy details.",
             sep_line,
         ])
@@ -1934,7 +1935,8 @@ def main(
     )
     if created_readmes:
         ANA_LOG.info(
-            f"Output file descriptions written to {len(created_readmes)} README.txt file(s)."
+            f"Output file descriptions written to {len(created_readmes)} "
+            "Output files explanation.txt file(s)."
         )
 
     ANA_LOG.info('ANALYSIS DONE')

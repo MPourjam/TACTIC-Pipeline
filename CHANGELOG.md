@@ -5,6 +5,23 @@ All notable changes to the TACTIC pipeline will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-10-23
+
+### Output Documentation & Usability
+- **Simple-Language Pipeline Output Guides (`Output files explanation.txt`)**: Automatically writes a clear, plain-language `Output files explanation.txt` file into the root `Analysis_<timestamp>/` results directory and each active pipeline folder (`OTU_Pipeline`, `ZOTU_Pipeline`, `TAC_Pipeline`, `TIC_Pipeline`, `PICRUSt2-Inputs`, and `Shared`). Explains what each file is, how to open it (e.g. interactive Krona HTML charts in a web browser, abundance tables in Excel/R), and its intended scientific usage.
+- **TIC Full-Taxonomy Guidance**: Clearly documents the role and conditional generation of `ZOTU-Table-All-FullTaxonomy.tab` (retained when non-bacterial sequences are detected for broad-domain studies and contamination auditing) versus `ZOTU-Table-OnlyBacteria-FullTaxonomy.tab` (default for standard bacterial diversity and functional predictions with PICRUSt2).
+- **PICRUSt2 Input Guidance**: Added dedicated documentation in `PICRUSt2-Inputs/Output files explanation.txt` explaining pre-formatted inputs and providing exact CLI syntax for running `picrust2_pipeline.py`.
+
+### Security & Dependencies
+- **Cloudflare SILVA Downloads Worker**: Upgraded `sharp` dependency to `>=0.35.5` (and updated `undici`) in `cloudflare/silva-downloads-worker/package-lock.json` to resolve security advisories.
+
+### Environment & Database Reliability
+- **SINA Binary Shared Library Link Restoration**: Fixed path resolution for the SINA binary and `libsina.so.0`, resolving shared library loading issues in containerized Docker environments.
+- **Offline Fallback for Local SILVA Database**: Added automatic fallback to local SILVA database files when remote download endpoints or Cloudflare R2 worker connections are inaccessible or in air-gapped environments.
+
+### Benchmark Data & Documentation
+- **Paper Benchmarks & DOI References**: Updated step-wise and length-based 16S rRNA diversity survey benchmark datasets and documentation accompanying the TACTIC paper, including Zenodo DOI references.
+
 ## [1.0.0] - 2026-10-16
 
 ### FASTQ Detection & Pairing

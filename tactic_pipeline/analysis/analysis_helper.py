@@ -829,9 +829,9 @@ def get_pipeline_readme_content(pipeline_type: str) -> str:
             "sequence similarity thresholds AND taxonomic classifications simultaneously.\n\n"
             "Sequences sharing common taxonomy are clustered hierarchically at three\n"
             "biologically validated similarity thresholds:\n"
-            "  • Family level  : 90% sequence similarity (default unless changed)  -> FOTUs\n"
-            "  • Genus level   : 95% sequence similarity (default unless changed)  -> GOTUs\n"
-            "  • Species level : 98.7% sequence similarity (default unless changed) -> SOTUs (Species-level OTUs)\n\n"
+            "  • Family level  : 90% sequence similarity -> FOTUs\n"
+            "  • Genus level   : 95% sequence similarity -> GOTUs\n"
+            "  • Species level : 98.7% sequence similarity -> SOTUs (Species-level OTUs)\n\n"
             "This prevents unrelated organisms that happen to share sequence similarity\n"
             "from being incorrectly merged, while accurately grouping true species variants.\n\n"
             "Below is an explanation of each output file in this folder and how to use it.\n\n\n"
@@ -998,27 +998,32 @@ def get_pipeline_readme_content(pipeline_type: str) -> str:
             "of the following pipeline folders are present:\n\n"
             "• OTU_Pipeline/\n"
             "  - Results from 97% sequence similarity clustering (classic OTUs).\n"
-            "  - See OTU_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "  - See OTU_Pipeline/Output files explanation.txt for descriptions\n"
+            "    of every file in that folder.\n\n"
             "• ZOTU_Pipeline/\n"
             "  - Results from exact sequence variant denoising (ZOTUs / ASVs).\n"
-            "  - See ZOTU_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "  - See ZOTU_Pipeline/Output files explanation.txt for descriptions\n"
+            "    of every file in that folder.\n\n"
             "• TAC_Pipeline/\n"
             "  - Results from Taxonomy-Agnostic Clustering at 98.7% similarity.\n"
-            "  - See TAC_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "  - See TAC_Pipeline/Output files explanation.txt for descriptions\n"
+            "    of every file in that folder.\n\n"
             "• TIC_Pipeline/\n"
             "  - Results from Taxonomy-Informed Clustering into Species-level OTUs (SOTUs).\n"
-            "  - See TIC_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "  - See TIC_Pipeline/Output files explanation.txt for descriptions\n"
+            "    of every file in that folder.\n\n"
             "• PICRUSt2-Inputs/\n"
             "  - Pre-formatted abundance tables and FASTA files ready for functional\n"
             "    metabolic pathway prediction with PICRUSt2.\n"
-            "  - See PICRUSt2-Inputs/README.txt for instructions on running PICRUSt2.\n\n"
+            "  - See PICRUSt2-Inputs/Output files explanation.txt for instructions\n"
+            "    on running PICRUSt2.\n\n"
             "• Shared/\n"
             "  - Pooled, dereplicated, and abundance-sorted sequences used as input for\n"
             "    the clustering algorithms.\n"
-            "  - See Shared/README.txt for details.\n\n\n"
+            "  - See Shared/Output files explanation.txt for details.\n\n\n"
             "2. Root Directory Files\n"
             "-----------------------\n"
-            "• README.txt\n"
+            "• Output files explanation.txt\n"
             "  - This overview file explaining the results folder structure and files.\n\n"
             "• README_Taxonomy_Levels.txt (present when SILVA >= 144 is used)\n"
             "  - Detailed guide explaining the difference between standard (7-level) outputs\n"
@@ -1050,9 +1055,9 @@ def get_pipeline_readme_content(pipeline_type: str) -> str:
 def write_pipeline_readme(
         output_dir: str,
         pipeline_type: str,
-        filename: str = "README.txt") -> str:
+        filename: str = "Output files explanation.txt") -> str:
     """
-    Write a simple-language README.txt file into `output_dir` explaining what information
+    Write a simple-language explanation file into `output_dir` explaining what information
     each file contains and for what it is used.
     """
     dest_dir = Path(PurePath(output_dir)).resolve()
@@ -1067,11 +1072,11 @@ def write_pipeline_readme(
 def write_all_pipeline_readmes(
         analysis_dir: str,
         active_pipelines: Optional[Sequence[str]] = None,
-        filename: str = "README.txt") -> List[str]:
+        filename: str = "Output files explanation.txt") -> List[str]:
     """
-    Write README.txt documentation into the root analysis directory and each pipeline
-    subdirectory (OTU_Pipeline, ZOTU_Pipeline, TAC_Pipeline, TIC_Pipeline, PICRUSt2-Inputs, Shared)
-    that exists or was active.
+    Write explanation files into the root analysis directory and each pipeline
+    subdirectory (OTU_Pipeline, ZOTU_Pipeline, TAC_Pipeline, TIC_Pipeline,
+    PICRUSt2-Inputs, Shared) that exists or was active.
     """
     root_dir = Path(PurePath(analysis_dir)).resolve()
     root_dir.mkdir(parents=True, exist_ok=True)
