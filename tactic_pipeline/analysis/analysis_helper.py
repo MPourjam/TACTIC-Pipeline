@@ -310,7 +310,8 @@ def restore_kingdom_in_taxonomy(
 ) -> str:
     """
     Re-insert the SILVA >= 144 Kingdom rank between Domain (index 0) and Phylum
-    (index 1) of a classic 7-level taxonomy string (`Domain;Phylum;Class;Order;Family;Genus;Species;`),
+    (index 1) of a classic 7-level taxonomy string
+    (`Domain;Phylum;Class;Order;Family;Genus;Species;`),
     formatting the output to `target_levels` (7 for ZOTU/OTU, 8 for TAC/TIC) with
     each level terminated by ';'.
     """
@@ -484,7 +485,10 @@ def generate_kingdom_enriched_pipeline_outputs(
                     primary_table_for_krona = out_tab
 
         # FASTA files containing tax= headers (or TIC invalid-taxonomy output)
-        elif item.suffix.lower() == ".fasta" and not item.name.startswith(("test_", "shortened_algn_", "filtered_by_abundance_")):
+        elif (
+            item.suffix.lower() == ".fasta"
+            and not item.name.startswith(("test_", "shortened_algn_", "filtered_by_abundance_"))
+        ):
             is_tic_invalid_fasta = item.name.lower() == "invalid-tax-seqs-tic.fasta"
             has_tax = False
             with open(item, "r", encoding="utf-8") as fio:
@@ -506,7 +510,12 @@ def generate_kingdom_enriched_pipeline_outputs(
                 )
                 created_files.append(str(out_fasta))
 
-    if create_krona_fn and krona_tool and primary_table_for_krona and primary_table_for_krona.is_file():
+    has_krona_prereqs = (
+        bool(create_krona_fn and krona_tool)
+        and primary_table_for_krona is not None
+        and primary_table_for_krona.is_file()
+    )
+    if has_krona_prereqs:
         for html_item in sorted(dir_path.glob("*Krona.html")):
             if _EXPLICIT_LEVEL_SUFFIX_RE.search(html_item.name):
                 continue
@@ -535,7 +544,8 @@ def write_taxonomy_levels_readme(output_dir: str) -> str:
         "was introduced between Domain and Phylum.\n\n"
         "To guarantee seamless compatibility with both traditional bioinformatics tools\n"
         "and updated taxonomy standards, TACTIC generates parallel sets of output files:\n\n"
-        "1. Standard Outputs (e.g., SOTUs-Table-TIC.tab, OTUs-Table-TAC.tab, ZOTUs-Table.tab, OTUs-Table.tab):\n"
+        "1. Standard Outputs (e.g., SOTUs-Table-TIC.tab, OTUs-Table-TAC.tab,\n"
+        "   ZOTUs-Table-OnlyBacteria-FullTaxonomy.tab, OTUs-Table.tab):\n"
         "   - Format: Domain;Phylum;Class;Order;Family;Genus;Species; (7 levels, 7 ';')\n"
         "   - Note: In pipelines without species-level taxonomy imputation (ZOTU, OTU, TAC),\n"
         "     unassigned lower ranks such as Species remain empty between semicolons.\n"
@@ -558,10 +568,550 @@ def write_taxonomy_levels_readme(output_dir: str) -> str:
     return str(readme_path)
 
 
+def get_pipeline_readme_content(pipeline_type: str) -> str:
+    """
+    Return simple-language text documentation for the requested pipeline output
+    directory ('otu', 'zotu', 'tac', 'tic', 'picrust2', 'shared', or 'root'/'analysis').
+    """
+    norm = str(pipeline_type).strip().lower().replace("-", "_")
+    if norm in {"otu", "otu_pipeline", "de_novo"}:
+        return (
+            "===============================================================================\n"
+            "TACTIC Pipeline — OTU Pipeline Output Files\n"
+            "===============================================================================\n\n"
+            "What is the OTU Pipeline?\n"
+            "-------------------------\n"
+            "The OTU (Operational Taxonomic Unit) pipeline clusters closely related 16S rRNA\n"
+            "gene sequences together at 97% sequence similarity. Sequences that are 97%\n"
+            "identical or higher are grouped into a single representative unit (an OTU).\n"
+            "This is the classic, widely established approach for studying microbial\n"
+            "communities.\n\n"
+            "Below is an explanation of each output file in this folder and how to use it.\n\n\n"
+            "1. Primary Abundance Tables\n"
+            "---------------------------\n"
+            "• OTUs-Table.tab\n"
+            "  - What it is: A tab-separated text table containing the count (abundance) of\n"
+            "    each 97% OTU across all your samples. Rows represent OTU clusters, columns\n"
+            "    represent your sample IDs, and the final column shows the assigned\n"
+            "    taxonomy (Domain down to Species).\n"
+            "  - What it is used for: This is the main data table for your downstream\n"
+            "    analysis. You can open it in Microsoft Excel, Google Sheets, R (using\n"
+            "    packages like phyloseq, vegan, or DESeq2), Python, or statistical software\n"
+            "    to compare microbial composition, calculate diversity metrics, and identify\n"
+            "    differentially abundant bacteria between sample groups.\n\n"
+            "• SampleMinCount_Normalized-OTUs-Table.tab\n"
+            "  - What it is: The OTU abundance table normalized by subsampling (rarefying)\n"
+            "    every sample to match the sample with the lowest total read count.\n"
+            "  - What it is used for: Fair comparison between samples. Because sequencing\n"
+            "    depth often varies between samples, this normalized table helps remove\n"
+            "    library-size bias before computing alpha and beta diversity.\n\n"
+            "• Spike_Normalized-OTUs-Table.tab (present only if spike-ins were used)\n"
+            "  - What it is: The OTU abundance table normalized against the internal spike-in\n"
+            "    DNA standards added to your samples before sequencing.\n"
+            "  - What it is used for: Absolute quantification. While standard tables provide\n"
+            "    relative percentages, this table allows you to estimate absolute microbial\n"
+            "    loads (e.g., cell counts or copy numbers per gram of sample).\n\n\n"
+            "2. Representative Sequences\n"
+            "---------------------------\n"
+            "• OTUs-Seqs.fasta\n"
+            "  - What it is: A standard FASTA file containing the representative (centroid)\n"
+            "    DNA sequence for each 97% OTU cluster. The header line for each sequence\n"
+            "    contains the OTU identifier and its assigned taxonomy.\n"
+            "  - What it is used for: Inspecting the actual DNA sequences of your OTUs. Use\n"
+            "    this file for sequence alignments, BLAST searches against NCBI, designing\n"
+            "    targeted PCR primers, or constructing custom phylogenetic trees.\n\n\n"
+            "3. Phylogenetic Trees\n"
+            "---------------------\n"
+            "• OTUs-Tree-nj.tre\n"
+            "  - What it is: A phylogenetic tree of the OTU representative sequences saved\n"
+            "    in standard Newick format (.tre), constructed using the Neighbor-Joining\n"
+            "    algorithm.\n"
+            "  - What it is used for: Phylogeny-aware microbiome analyses, such as calculating\n"
+            "    UniFrac distances (weighted or unweighted) in QIIME 2 or phyloseq. You can\n"
+            "    also visualize this tree in interactive viewers like FigTree, iTOL, or\n"
+            "    Microreact.\n\n\n"
+            "4. Interactive Visualizations\n"
+            "-----------------------------\n"
+            "• OTUs-Krona.html\n"
+            "  - What it is: An interactive, visual taxonomy chart (Krona plot) that opens in\n"
+            "    any web browser.\n"
+            "  - What it is used for: Exploring the bacterial composition of your samples\n"
+            "    visually without any coding. Simply double-click the file to open it in\n"
+            "    Chrome, Firefox, Safari, or Edge. You can click on the colored concentric\n"
+            "    rings to zoom in and out through Domain, Phylum, Class, Order, Family,\n"
+            "    Genus, and Species.\n\n\n"
+            "5. SILVA 144+ Dual Outputs (*-8Levels.*)\n"
+            "----------------------------------------\n"
+            "(Generated when a reference database with bacterial kingdoms is used,\n"
+            "e.g. SILVA >= 144)\n\n"
+            "• OTUs-Table-8Levels.tab\n"
+            "• OTUs-Seqs-8Levels.fasta\n"
+            "• OTUs-Krona-8Levels.html\n"
+            "• SampleMinCount_Normalized-OTUs-Table-8Levels.tab\n"
+            "• Spike_Normalized-OTUs-Table-8Levels.tab (if spike-ins were used)\n"
+            "  - What they are: The exact same OTU results as above, but with 8 taxonomic\n"
+            "    ranks that explicitly include the bacterial Kingdom rank (e.g., Bacillati,\n"
+            "    Pseudomonadati, Fusobacteriati) between Domain and Phylum.\n"
+            "  - What they are used for: Use the *-8Levels files if you need the latest SILVA\n"
+            "    144+ kingdom classification (e.g., for Namco, Rhea, or Krona). Use the\n"
+            "    standard (7-level) files above if your downstream software (like PICRUSt2\n"
+            "    or older R scripts) expects classic 7-level taxonomies.\n"
+            "===============================================================================\n"
+        )
+    elif norm in {"zotu", "zotu_pipeline", "asv"}:
+        return (
+            "===============================================================================\n"
+            "TACTIC Pipeline — ZOTU Pipeline Output Files\n"
+            "===============================================================================\n\n"
+            "What is the ZOTU Pipeline?\n"
+            "--------------------------\n"
+            "The ZOTU (Zero-radius Operational Taxonomic Unit) pipeline performs denoising\n"
+            "on your amplicon sequencing data to identify true, exact biological sequences\n"
+            "(also widely known as Amplicon Sequence Variants, or ASVs).\n\n"
+            "Unlike traditional 97% OTUs, ZOTUs are resolved down to 100% sequence identity.\n"
+            "Sequences that differ by even a single nucleotide are kept separate as distinct\n"
+            "biological variants, eliminating artificial clustering and preserving maximum\n"
+            "biological resolution.\n\n"
+            "Below is an explanation of each output file in this folder and how to use it.\n\n\n"
+            "1. Primary Abundance Tables\n"
+            "---------------------------\n"
+            "• ZOTUs-Table.tab\n"
+            "  - What it is: A tab-separated text table showing the exact number of times\n"
+            "    each ZOTU sequence was observed in each sample. Rows represent unique\n"
+            "    ZOTUs (ASVs), columns represent your samples, and the final column provides\n"
+            "    the assigned taxonomic classification (Domain down to Species).\n"
+            "  - What it is used for: This is your high-resolution abundance table. Open it\n"
+            "    in Microsoft Excel, R, Python, or statistical software to analyze community\n"
+            "    structure, detect strain-level differences between groups, and perform\n"
+            "    differential abundance testing.\n\n"
+            "• SampleMinCount_Normalized-ZOTUs-Table.tab\n"
+            "  - What it is: A depth-normalized version of the ZOTU abundance table where\n"
+            "    all samples are subsampled (rarefied) to match the sequencing depth of the\n"
+            "    sample with the fewest reads.\n"
+            "  - What it is used for: Fair, unbiased statistical comparisons of diversity\n"
+            "    (such as Shannon diversity or Bray-Curtis dissimilarity) without being\n"
+            "    distorted by differences in sequencing depth between samples.\n\n"
+            "• Spike_Normalized-ZOTUs-Table.tab (present only if spike-ins were used)\n"
+            "  - What it is: An abundance table normalized against the known concentration of\n"
+            "    internal DNA spike-in standards added to your samples.\n"
+            "  - What it is used for: Absolute quantification. This allows you to estimate\n"
+            "    absolute microbial abundance (e.g., bacterial cells or copies per unit of\n"
+            "    sample) rather than relying only on relative percentages.\n\n\n"
+            "2. Representative Sequences\n"
+            "---------------------------\n"
+            "• ZOTUs-Seqs.fasta\n"
+            "  - What it is: A standard FASTA file containing the exact, full-length DNA\n"
+            "    sequence for every identified ZOTU. Each sequence header includes the ZOTU\n"
+            "    identifier and its taxonomic assignment.\n"
+            "  - What it is used for: Sequence-level investigations. You can use these\n"
+            "    sequences to query public databases (NCBI BLAST), align against specific\n"
+            "    reference genomes, construct phylogenetic trees, or design targeted primers.\n\n\n"
+            "3. Phylogenetic Trees\n"
+            "---------------------\n"
+            "• ZOTUs-Tree-nj.tre\n"
+            "  - What it is: A phylogenetic tree of all ZOTU sequences in standard Newick\n"
+            "    format (.tre), built using the Neighbor-Joining method.\n"
+            "  - What it is used for: Phylogeny-aware analyses, such as calculating weighted\n"
+            "    and unweighted UniFrac distances in QIIME 2, phyloseq, or R packages, and\n"
+            "    visualizing evolutionary relationships in tree viewers like FigTree or iTOL.\n\n\n"
+            "4. Interactive Visualizations\n"
+            "-----------------------------\n"
+            "• ZOTUs-Krona.html\n"
+            "  - What it is: An interactive, visual taxonomy chart (Krona plot) that opens in\n"
+            "    any web browser.\n"
+            "  - What it is used for: Visually browsing the taxonomic composition of your\n"
+            "    ZOTUs. Double-click the file to open it in Chrome, Firefox, Safari, or Edge.\n"
+            "    Click through the concentric rings to easily explore proportions from\n"
+            "    Domain down to Species.\n\n\n"
+            "5. SILVA 144+ Dual Outputs (*-8Levels.*)\n"
+            "----------------------------------------\n"
+            "(Generated when a reference database with bacterial kingdoms is used,\n"
+            "e.g. SILVA >= 144)\n\n"
+            "• ZOTUs-Table-8Levels.tab\n"
+            "• ZOTUs-Seqs-8Levels.fasta\n"
+            "• ZOTUs-Krona-8Levels.html\n"
+            "• SampleMinCount_Normalized-ZOTUs-Table-8Levels.tab\n"
+            "• Spike_Normalized-ZOTUs-Table-8Levels.tab (if spike-ins were used)\n"
+            "  - What they are: The exact same ZOTU results as above, but with 8 taxonomic\n"
+            "    ranks that include the bacterial Kingdom rank (e.g., Bacillati,\n"
+            "    Pseudomonadati, Fusobacteriati) between Domain and Phylum.\n"
+            "  - What they are used for: Use the *-8Levels files if you need the latest SILVA\n"
+            "    144+ kingdom classification. Use the standard (7-level) files above if\n"
+            "    downstream software (like PICRUSt2 or older R scripts) strictly requires\n"
+            "    classic 7-level taxonomies.\n"
+            "===============================================================================\n"
+        )
+    elif norm in {"tac", "tac_pipeline"}:
+        return (
+            "===============================================================================\n"
+            "TACTIC Pipeline — TAC Pipeline Output Files\n"
+            "===============================================================================\n\n"
+            "What is the TAC Pipeline?\n"
+            "-------------------------\n"
+            "The TAC (Taxonomy-Agnostic Clustering) pipeline takes the clean, denoised\n"
+            "ZOTUs (Amplicon Sequence Variants) and clusters them at 98.7% sequence\n"
+            "similarity — the standard threshold for bacterial species — without using any\n"
+            "prior taxonomy labels.\n\n"
+            "This approach gives you the best of both worlds: it eliminates sequencing noise\n"
+            "and PCR errors via denoising first, and then groups closely related variants\n"
+            "into biologically sensible, species-level operational units.\n\n"
+            "Below is an explanation of each output file in this folder and how to use it.\n\n\n"
+            "1. Primary Abundance Tables\n"
+            "---------------------------\n"
+            "• OTUs-Table-TAC.tab\n"
+            "  - What it is: A tab-separated text table containing the abundance count of\n"
+            "    each TAC OTU cluster in each sample. Rows are TAC OTUs (clustered at 98.7%\n"
+            "    similarity), columns are your sample IDs, and the last column shows the\n"
+            "    assigned taxonomy (Domain down to Species).\n"
+            "  - What it is used for: This is the primary abundance table for TAC mode.\n"
+            "    Open it in Microsoft Excel, R, Python, or statistical software to analyze\n"
+            "    microbiome diversity and compare microbial communities between sample groups.\n\n"
+            "• SampleMinCount_Normalized-OTUs-Table-TAC.tab\n"
+            "  - What it is: A depth-normalized version of the TAC abundance table where\n"
+            "    all samples are subsampled (rarefied) to match the sequencing depth of the\n"
+            "    sample with the fewest reads.\n"
+            "  - What it is used for: Unbiased statistical comparisons of alpha and beta\n"
+            "    diversity across samples with different library sizes.\n\n"
+            "• Spike_Normalized-OTUs-Table-TAC.tab (present only if spike-ins were used)\n"
+            "  - What it is: An abundance table normalized against internal DNA spike-in\n"
+            "    standards added to your samples before sequencing.\n"
+            "  - What it is used for: Estimating absolute microbial abundance (cell or copy\n"
+            "    numbers per unit of sample) instead of relative percentages.\n\n\n"
+            "2. Sequence Files and Traceability Mappings\n"
+            "-------------------------------------------\n"
+            "• OTUs-Seqs-TAC.fasta\n"
+            "  - What it is: A FASTA file containing the representative (centroid) DNA\n"
+            "    sequence for each TAC OTU cluster, with taxonomy in the headers.\n"
+            "  - What it is used for: Sequence searches (BLAST), alignments, and phylogenetic\n"
+            "    analyses of the clustered representative sequences.\n\n"
+            "• Map-ZOTUs-OTUs-TAC.tab\n"
+            "  - What it is: A two-column mapping table that connects each original ZOTU\n"
+            "    identifier to the TAC OTU cluster it was assigned to.\n"
+            "  - What it is used for: Full traceability. Use this file if you need to know\n"
+            "    which exact sequence variants (ZOTUs) were merged into a given TAC OTU.\n\n\n"
+            "3. Phylogenetic Trees\n"
+            "---------------------\n"
+            "• OTUs-Tree-nj-TAC.tre\n"
+            "  - What it is: A phylogenetic tree of the TAC OTU centroid sequences in\n"
+            "    standard Newick format (.tre), built using Neighbor-Joining.\n"
+            "  - What it is used for: Tree-based diversity analyses (such as UniFrac) in\n"
+            "    QIIME 2 or phyloseq, and visualization in tree viewers like FigTree or iTOL.\n\n\n"
+            "4. Interactive Visualizations\n"
+            "-----------------------------\n"
+            "• OTUs-Krona.html\n"
+            "  - What it is: An interactive Krona plot chart of taxonomic proportions.\n"
+            "  - What it is used for: Double-click to open in any web browser and explore\n"
+            "    the taxonomic breakdown of your TAC OTUs visually.\n\n\n"
+            "5. SILVA 144+ Dual Outputs (*-8Levels.*)\n"
+            "----------------------------------------\n"
+            "(Generated when a reference database with bacterial kingdoms is used,\n"
+            "e.g. SILVA >= 144)\n\n"
+            "• OTUs-Table-TAC-8Levels.tab\n"
+            "• OTUs-Seqs-TAC-8Levels.fasta\n"
+            "• OTUs-Krona-8Levels.html\n"
+            "• SampleMinCount_Normalized-OTUs-Table-TAC-8Levels.tab\n"
+            "• Spike_Normalized-OTUs-Table-TAC-8Levels.tab (if spike-ins were used)\n"
+            "  - What they are: The exact same TAC results as above, but with 8 taxonomic\n"
+            "    ranks including the bacterial Kingdom rank (e.g., Bacillati, Pseudomonadati).\n"
+            "  - What they are used for: Use the *-8Levels files for the latest SILVA 144+\n"
+            "    taxonomy, or use the standard files for downstream tools expecting 7 levels.\n"
+            "===============================================================================\n"
+        )
+    elif norm in {"tic", "tic_pipeline"}:
+        return (
+            "===============================================================================\n"
+            "TACTIC Pipeline — TIC Pipeline Output Files\n"
+            "===============================================================================\n\n"
+            "What is the TIC Pipeline?\n"
+            "-------------------------\n"
+            "The TIC (Taxonomy-Informed Clustering) pipeline groups amplicon sequence\n"
+            "variants (ZOTUs) into biologically meaningful taxonomic units by using BOTH\n"
+            "sequence similarity thresholds AND taxonomic classifications simultaneously.\n\n"
+            "Sequences sharing common taxonomy are clustered hierarchically at three\n"
+            "biologically validated similarity thresholds:\n"
+            "  • Family level  : 90% sequence similarity (default unless changed)  -> FOTUs\n"
+            "  • Genus level   : 95% sequence similarity (default unless changed)  -> GOTUs\n"
+            "  • Species level : 98.7% sequence similarity (default unless changed) -> SOTUs (Species-level OTUs)\n\n"
+            "This prevents unrelated organisms that happen to share sequence similarity\n"
+            "from being incorrectly merged, while accurately grouping true species variants.\n\n"
+            "Below is an explanation of each output file in this folder and how to use it.\n\n\n"
+            "1. Primary Abundance Tables\n"
+            "---------------------------\n"
+            "• SOTUs-Table-TIC.tab\n"
+            "  - What it is: The primary abundance table for TIC mode. Each row represents a\n"
+            "    Species-level OTU (SOTU), columns represent your samples, and the final\n"
+            "    column provides the complete imputed taxonomy down to species level.\n"
+            "  - What it is used for: This is the main data table for TIC analysis. Open it\n"
+            "    in Microsoft Excel, R, Python, or statistical packages for community\n"
+            "    composition analysis, diversity calculations, and biomarker discovery.\n\n"
+            "• SampleMinCount_Normalized-SOTUs-Table-TIC.tab\n"
+            "  - What it is: The SOTU abundance table normalized by subsampling (rarefying)\n"
+            "    every sample to the lowest sample sequencing depth.\n"
+            "  - What it is used for: Unbiased alpha and beta diversity comparisons without\n"
+            "    sequencing depth artifacts.\n\n"
+            "• Spike_Normalized-SOTUs-Table-TIC.tab (present only if spike-ins were used)\n"
+            "  - What it is: The SOTU abundance table normalized using internal DNA spike-in\n"
+            "    standards.\n"
+            "  - What it is used for: Absolute microbial abundance quantification (e.g.,\n"
+            "    cell or copy numbers per gram/ml of sample).\n\n"
+            "• ZOTU-Table-OnlyBacteria-FullTaxonomy.tab\n"
+            "  - What it is: A high-resolution ZOTU table containing only validated bacterial\n"
+            "    sequences with full taxonomic annotations.\n"
+            "  - What it is used for: Recommended for standard bacterial diversity and functional\n"
+            "    analyses (e.g., PICRUSt2). It excludes non-target amplicon noise, host\n"
+            "    mitochondrial/chloroplast contamination, and archaea.\n\n"
+            "• ZOTU-Table-All-FullTaxonomy.tab (present if non-bacterial sequences were detected)\n"
+            "  - What it is: A full ZOTU table containing all sequence variants, including\n"
+            "    bacteria, archaea, and unassigned/non-bacterial sequences.\n"
+            "  - What it is used for: Quality control and broad-domain studies. Use this table\n"
+            "    if you want to quantify non-bacterial organisms (such as Archaea) or check what\n"
+            "    fraction of sequencing reads were non-bacterial or off-target.\n"
+            "    (Note: If no non-bacterial sequences are detected in your dataset, this table\n"
+            "    is identical to ZOTU-Table-OnlyBacteria-FullTaxonomy.tab and is automatically\n"
+            "    omitted to avoid redundant duplicate files).\n\n\n"
+            "2. Representative Sequences & Quality Control\n"
+            "---------------------------------------------\n"
+            "• SOTUs-Seqs-TIC.fasta\n"
+            "  - What it is: A standard FASTA file containing the representative (centroid)\n"
+            "    DNA sequence for each Species-level OTU (SOTU), with taxonomy in the headers.\n"
+            "  - What it is used for: Sequence alignments, database queries (BLAST), and\n"
+            "    verifying representative sequences.\n\n"
+            "• Invalid-Tax-Seqs-TIC.fasta\n"
+            "  - What it is: A FASTA file containing sequences that failed taxonomic\n"
+            "    validation (e.g., non-bacterial reads, mitochondrial/chloroplast DNA, or\n"
+            "    sequences that could not be assigned valid 16S taxonomy).\n"
+            "  - What it is used for: Quality control. Inspect this file to see which reads\n"
+            "    were filtered out and ensure your primers did not amplify off-target DNA.\n\n\n"
+            "3. Hierarchical Mapping Tables\n"
+            "------------------------------\n"
+            "• Map-SOTU-ZOTU.tab\n"
+            "  - What it is: A mapping table showing which exact ZOTUs were clustered into\n"
+            "    each SOTU (Species-level OTU).\n"
+            "  - What it is used for: Investigating within-species sequence diversity and\n"
+            "    tracking which sequence variants belong to which species cluster.\n\n"
+            "• Map-GOTU-SOTU.tab\n"
+            "  - What it is: A mapping table showing how SOTUs cluster into Genus-level\n"
+            "    OTUs (GOTUs, 95% similarity).\n"
+            "  - What it is used for: Exploring genus-level groupings and relationships.\n\n"
+            "• Map-FOTU-GOTU.tab\n"
+            "  - What it is: A mapping table showing how Genus-level OTUs cluster into\n"
+            "    Family-level OTUs (FOTUs, 90% similarity).\n"
+            "  - What it is used for: Exploring family-level groupings and relationships.\n\n\n"
+            "4. Phylogenetic Trees\n"
+            "---------------------\n"
+            "• SOTUs-Tree-nj-TIC.tre\n"
+            "  - What it is: A phylogenetic tree of SOTU centroids in Newick format (.tre),\n"
+            "    built using Neighbor-Joining.\n"
+            "  - What it is used for: Phylogeny-aware diversity calculations (UniFrac) in\n"
+            "    QIIME 2 or phyloseq, and visualization in tree viewers like FigTree or iTOL.\n\n\n"
+            "5. Interactive Visualizations\n"
+            "-----------------------------\n"
+            "• SOTUs-Krona.html\n"
+            "  - What it is: An interactive Krona taxonomy chart that opens in your browser.\n"
+            "  - What it is used for: Double-click to view the taxonomic hierarchy of your\n"
+            "    SOTUs in Chrome, Firefox, Safari, or Edge.\n\n\n"
+            "6. SILVA 144+ Dual Outputs (*-8Levels.*)\n"
+            "----------------------------------------\n"
+            "(Generated when a reference database with bacterial kingdoms is used,\n"
+            "e.g. SILVA >= 144)\n\n"
+            "• SOTUs-Table-TIC-8Levels.tab\n"
+            "• SOTUs-Seqs-TIC-8Levels.fasta\n"
+            "• SOTUs-Krona-8Levels.html\n"
+            "• Invalid-Tax-Seqs-TIC-8Levels.fasta\n"
+            "• SampleMinCount_Normalized-SOTUs-Table-TIC-8Levels.tab\n"
+            "• Spike_Normalized-SOTUs-Table-TIC-8Levels.tab (if spike-ins were used)\n"
+            "  - What they are: The exact same TIC results as above, but with 8 taxonomic\n"
+            "    ranks including the bacterial Kingdom rank (e.g., Bacillati, Pseudomonadati).\n"
+            "  - What they are used for: Use the *-8Levels files for the latest SILVA 144+\n"
+            "    kingdom taxonomy, or use the standard files for tools requiring 7 levels.\n"
+            "===============================================================================\n"
+        )
+    elif norm in {"picrust2", "picrust2_inputs", "picrust"}:
+        return (
+            "===============================================================================\n"
+            "TACTIC Pipeline — PICRUSt2 Input Files\n"
+            "===============================================================================\n\n"
+            "What is PICRUSt2?\n"
+            "-----------------\n"
+            "PICRUSt2 (Phylogenetic Investigation of Communities by Reconstruction of\n"
+            "Unobserved States) is a bioinformatics tool used to predict the functional\n"
+            "metabolic potential (enzymes, gene families, and metabolic pathways) of a\n"
+            "microbial community from 16S rRNA sequencing data.\n\n"
+            "To run PICRUSt2, you need two clean input files:\n"
+            "  1. An abundance table of sequence counts across samples.\n"
+            "  2. A matching FASTA file of the representative DNA sequences.\n\n"
+            "The files in this folder have been specially pre-formatted to be 100%\n"
+            "compatible with the official PICRUSt2 pipeline (picrust2_pipeline.py).\n\n\n"
+            "Files in this Folder\n"
+            "--------------------\n"
+            "• <Pipeline>__*OTUs-Table*-For-PICRUSt2.tab\n"
+            "  - What it is: Clean abundance tables in tab-separated format where the\n"
+            "    taxonomy column has been removed and sequence identifiers match the FASTA.\n"
+            "  - What it is used for: Provide this file to the `--input` (-i) argument of\n"
+            "    PICRUSt2:\n"
+            "      picrust2_pipeline.py -s <Seqs.fasta> -i <Table.tab> -o picrust2_out ...\n\n"
+            "• <Pipeline>__*OTUs-Seqs*-For-PICRUSt2.fasta\n"
+            "  - What it is: Clean FASTA files containing only the sequence identifier and\n"
+            "    the DNA sequence (all spaces, descriptions, and taxonomy headers removed).\n"
+            "  - What it is used for: Provide this file to the `--study_fasta` (-s) argument\n"
+            "    of PICRUSt2 for sequence alignment and phylogenetic placement.\n"
+            "===============================================================================\n"
+        )
+    elif norm in {"shared", "shared_pipeline"}:
+        return (
+            "===============================================================================\n"
+            "TACTIC Pipeline — Shared Intermediate Sequence Files\n"
+            "===============================================================================\n\n"
+            "What is the Shared Folder?\n"
+            "--------------------------\n"
+            "This folder contains pooled and prepared sequence files that serve as the common\n"
+            "starting input for the downstream clustering pipelines (OTU, ZOTU, TAC, TIC).\n\n\n"
+            "Files in this Folder\n"
+            "--------------------\n"
+            "• sorted.fasta\n"
+            "  - What it is: The combined unique DNA sequences from all samples, sorted by\n"
+            "    their abundance (sequence count) across the entire dataset.\n"
+            "  - What it is used for: Input to clustering algorithms (e.g., USEARCH cluster_otus\n"
+            "    and unoise3), which require sequences sorted from highest to lowest abundance.\n\n"
+            "• derep.fasta\n"
+            "  - What it is: Dereplicated sequences containing size annotations indicating\n"
+            "    how many times each sequence was observed.\n"
+            "  - What it is used for: High-speed sequence dereplication and table building.\n\n"
+            "• relabel.tab\n"
+            "  - What it is: A mapping table connecting internal sequence labels to original\n"
+            "    sample identifiers and read IDs.\n"
+            "  - What it is used for: Traceability back to the original FASTQ read headers.\n"
+            "===============================================================================\n"
+        )
+    else:  # root / analysis
+        return (
+            "===============================================================================\n"
+            "TACTIC Pipeline — Analysis Results Directory Overview\n"
+            "===============================================================================\n\n"
+            "Welcome to your TACTIC analysis results! This directory contains all output\n"
+            "files, abundance tables, representative sequences, phylogenetic trees, and\n"
+            "interactive visualizations generated from your 16S rRNA sequencing data.\n\n"
+            "Below is an overview of the folder organization and what each file contains.\n\n\n"
+            "1. Pipeline Output Subdirectories\n"
+            "---------------------------------\n"
+            "Depending on the analysis mode(s) you selected (--analysis-mode), one or more\n"
+            "of the following pipeline folders are present:\n\n"
+            "• OTU_Pipeline/\n"
+            "  - Results from 97% sequence similarity clustering (classic OTUs).\n"
+            "  - See OTU_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "• ZOTU_Pipeline/\n"
+            "  - Results from exact sequence variant denoising (ZOTUs / ASVs).\n"
+            "  - See ZOTU_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "• TAC_Pipeline/\n"
+            "  - Results from Taxonomy-Agnostic Clustering at 98.7% similarity.\n"
+            "  - See TAC_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "• TIC_Pipeline/\n"
+            "  - Results from Taxonomy-Informed Clustering into Species-level OTUs (SOTUs).\n"
+            "  - See TIC_Pipeline/README.txt for descriptions of every file in that folder.\n\n"
+            "• PICRUSt2-Inputs/\n"
+            "  - Pre-formatted abundance tables and FASTA files ready for functional\n"
+            "    metabolic pathway prediction with PICRUSt2.\n"
+            "  - See PICRUSt2-Inputs/README.txt for instructions on running PICRUSt2.\n\n"
+            "• Shared/\n"
+            "  - Pooled, dereplicated, and abundance-sorted sequences used as input for\n"
+            "    the clustering algorithms.\n"
+            "  - See Shared/README.txt for details.\n\n\n"
+            "2. Root Directory Files\n"
+            "-----------------------\n"
+            "• README.txt\n"
+            "  - This overview file explaining the results folder structure and files.\n\n"
+            "• README_Taxonomy_Levels.txt (present when SILVA >= 144 is used)\n"
+            "  - Detailed guide explaining the difference between standard (7-level) outputs\n"
+            "    and SILVA 144+ kingdom-enriched (8-level) outputs, and which one to use.\n\n"
+            "• Pipeline_log.txt\n"
+            "  - Complete log of all preprocessing steps: quality trimming, pair merging,\n"
+            "    read filtering, spike-in removal, and read count statistics.\n\n"
+            "• Analysis_log.txt\n"
+            "  - Complete log of all clustering, taxonomic classification, normalization,\n"
+            "    and tree-building steps.\n\n"
+            "• spike_mapping_file.csv (if a mapping file was provided)\n"
+            "  - A summary table listing all processed samples, total weights, spike amounts,\n"
+            "    and input paths.\n\n\n"
+            "Quick Guide: Which file should I open first?\n"
+            "-------------------------------------------\n"
+            "1. For visual exploration:\n"
+            "   Open any *.html file (e.g., OTUs-Krona.html or SOTUs-Krona.html) directly in\n"
+            "   your web browser to explore your samples' taxonomy interactively.\n\n"
+            "2. For statistical analysis in Excel / R / Python:\n"
+            "   Open the primary *.tab abundance table inside your chosen pipeline folder\n"
+            "   (e.g., OTUs-Table.tab, ZOTUs-Table.tab, OTUs-Table-TAC.tab, or\n"
+            "   SOTUs-Table-TIC.tab).\n\n"
+            "3. For functional prediction:\n"
+            "   Use the matching files inside PICRUSt2-Inputs/ with PICRUSt2.\n"
+            "===============================================================================\n"
+        )
+
+
+def write_pipeline_readme(
+        output_dir: str,
+        pipeline_type: str,
+        filename: str = "README.txt") -> str:
+    """
+    Write a simple-language README.txt file into `output_dir` explaining what information
+    each file contains and for what it is used.
+    """
+    dest_dir = Path(PurePath(output_dir)).resolve()
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    readme_path = dest_dir / filename
+    content = get_pipeline_readme_content(pipeline_type)
+    with open(readme_path, "w", encoding="utf-8") as fio:
+        fio.write(content)
+    return str(readme_path)
+
+
+def write_all_pipeline_readmes(
+        analysis_dir: str,
+        active_pipelines: Optional[Sequence[str]] = None,
+        filename: str = "README.txt") -> List[str]:
+    """
+    Write README.txt documentation into the root analysis directory and each pipeline
+    subdirectory (OTU_Pipeline, ZOTU_Pipeline, TAC_Pipeline, TIC_Pipeline, PICRUSt2-Inputs, Shared)
+    that exists or was active.
+    """
+    root_dir = Path(PurePath(analysis_dir)).resolve()
+    root_dir.mkdir(parents=True, exist_ok=True)
+    created: List[str] = []
+
+    # Write root README
+    created.append(write_pipeline_readme(str(root_dir), "root", filename=filename))
+
+    active_set = {
+        str(p).strip().lower().replace("-", "_")
+        for p in active_pipelines
+    } if active_pipelines else set()
+
+    sub_dirs = [
+        ("otu", root_dir / "OTU_Pipeline"),
+        ("zotu", root_dir / "ZOTU_Pipeline"),
+        ("tac", root_dir / "TAC_Pipeline"),
+        ("tic", root_dir / "TIC_Pipeline"),
+        ("picrust2", root_dir / "PICRUSt2-Inputs"),
+        ("shared", root_dir / "Shared"),
+    ]
+
+    for p_type, p_dir in sub_dirs:
+        is_active = p_type in active_set
+        has_content = False
+        if p_dir.is_dir():
+            has_content = any(
+                item.is_file() and item.name != filename
+                for item in p_dir.iterdir()
+            )
+        if is_active or has_content:
+            p_dir.mkdir(parents=True, exist_ok=True)
+            created.append(write_pipeline_readme(str(p_dir), p_type, filename=filename))
+
+    return created
+
+
 def onelinefasta(fastafilepath):
     proper_filepath = Path(fastafilepath).resolve()
     dirpath = proper_filepath.parent
-    filename = proper_filepath.name
     with tempfile.NamedTemporaryFile(
             delete=False,
             suffix=str(proper_filepath.suffix),
@@ -650,8 +1200,10 @@ def prepare_picrust2_input(analysis_dir: str) -> None:
     """
     It finds all OTU tables and sequnces fasta files and deletes taxonomy
     from them and only keeps the sequence id in the fastas.
-    Any file following the naming pattern '.*[ZS]?OTUs?-Table.*.tab' will be considered as an OTU table
-    Any file following the naming pattern '.*[ZS]?OTUs?-Seqs.*.fasta' will be considered as a sequences fasta file
+    Any file following the naming pattern '.*[ZS]?OTUs?-Table.*.tab' will be
+    considered as an OTU table.
+    Any file following the naming pattern '.*[ZS]?OTUs?-Seqs.*.fasta' will be
+    considered as a sequences fasta file.
     """
     analysis_dir = Path(PurePath(analysis_dir)).absolute()
     otu_table_pattern = re.compile(r"(?P<prefix>.*[ZS]?OTUs?-Table.*)\.tab$", re.IGNORECASE)
@@ -691,3 +1243,5 @@ def prepare_picrust2_input(analysis_dir: str) -> None:
                 keep_seq_id_only(otu_fasta_file, picrust2_otu_fasta_file)
                 onelinefasta(picrust2_otu_fasta_file)
 
+    if any(picrust2_inputs_dir.glob("*-For-PICRUSt2.*")):
+        write_pipeline_readme(str(picrust2_inputs_dir), "picrust2")

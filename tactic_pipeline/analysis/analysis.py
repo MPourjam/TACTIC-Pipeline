@@ -24,6 +24,8 @@ from .analysis_helper import (
     onelinefasta,
     parse_sina_taxonomy,
     prepare_picrust2_input,
+    write_all_pipeline_readmes,
+    write_pipeline_readme,
     write_taxonomy_levels_readme,
 )
 import logging
@@ -1314,6 +1316,7 @@ def zotu_pipeline(
         zotu_tab_file,
         output_html_name="ZOTUs-Krona.html"
     )
+    write_pipeline_readme(".", "zotu")
     # ZOTU_P_LOGGER.info('# Starting OTU pipeline')
     return (
         str(Path(PurePath(zotu_tab_file)).absolute()),
@@ -1380,6 +1383,7 @@ def otu_pipeline(
         otu_tab_file,
         output_html_name="OTUs-Krona.html"
     )
+    write_pipeline_readme(".", "otu")
     return (
         str(Path(PurePath(otu_tab_file)).absolute()),
         str(Path(PurePath(non_human_otus_file)).absolute())
@@ -1452,6 +1456,7 @@ def tac_pipeline(
         str(otu_table_path),
         output_html_name="OTUs-Krona.html"
     )
+    write_pipeline_readme(str(otu_table_path.parent), "tac")
 
     return (
         str(otu_table_path),
@@ -1560,6 +1565,7 @@ def tic_pipeline(
         all_full_tax_file.unlink()
 
     move_content_to_parent_directory(tic_analysis.tic_wd)
+    write_pipeline_readme(str(tic_analysis.tic_wd.parent), "tic")
 
     return (
         str(tic_analysis.tic_wd.parent / "SOTUs-Table-TIC.tab"),
@@ -1906,10 +1912,30 @@ def main(
             "    -> Recommended for: PICRUSt2 and tools expecting classic 7-level taxonomies.",
             "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab, ZOTUs-Table-8Levels.tab): 8 levels (Domain..Kingdom..Species)",
             "    -> Recommended for: SILVA 144+ bacterial kingdom analysis (Bacillati, etc.).",
-            "  • Refer to README_Taxonomy_Levels.txt in the analysis folder for full details.",
+            "  • Refer to README.txt in each pipeline folder for a description of each file.",
+            "  • Refer to README_Taxonomy_Levels.txt in analysis folder for taxonomy details.",
             sep_line,
         ])
         ANA_LOG.info(banner_msg)
+
+    active_pipelines = []
+    if run_zotu_pipeline:
+        active_pipelines.append("zotu")
+    if run_otu_pipeline:
+        active_pipelines.append("otu")
+    if run_tac_pipeline:
+        active_pipelines.append("tac")
+    if run_tic_pipeline:
+        active_pipelines.append("tic")
+
+    created_readmes = write_all_pipeline_readmes(
+        str(ANALYSIS_DIR),
+        active_pipelines=active_pipelines
+    )
+    if created_readmes:
+        ANA_LOG.info(
+            f"Output file descriptions written to {len(created_readmes)} README.txt file(s)."
+        )
 
     ANA_LOG.info('ANALYSIS DONE')
     # to keep the same return value as the main function
