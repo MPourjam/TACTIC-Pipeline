@@ -24,6 +24,7 @@ from .analysis_helper import (
     onelinefasta,
     parse_sina_taxonomy,
     prepare_picrust2_input,
+    remove_intermediate_files,
     write_all_pipeline_readmes,
     write_pipeline_readme,
     write_taxonomy_levels_readme,
@@ -1912,12 +1913,17 @@ def main(
             "    -> Recommended for: PICRUSt2 and tools expecting classic 7-level taxonomies.",
             "  • *-8Levels files (e.g. SOTUs-Table-TIC-8Levels.tab, ZOTUs-Table-8Levels.tab): 8 levels (Domain..Kingdom..Species)",
             "    -> Recommended for: SILVA 144+ bacterial kingdom analysis (Bacillati, etc.).",
-            "  • Refer to Output files explanation.txt in each pipeline folder",
+            "  • Refer to Output files explanation.html in each pipeline folder",
             "    for a description of each file.",
             "  • Refer to README_Taxonomy_Levels.txt in analysis folder for taxonomy details.",
             sep_line,
         ])
         ANA_LOG.info(banner_msg)
+
+    # SINA outputs (test_*) and tree building inputs (shortened_algn_*) are not needed from here on
+    for pipeline_dir in pipeline_dirs.values():
+        for removed_file in remove_intermediate_files(str(pipeline_dir)):
+            ANA_LOG.debug(f"Removed intermediate file {removed_file}")
 
     active_pipelines = []
     if run_zotu_pipeline:
@@ -1935,8 +1941,8 @@ def main(
     )
     if created_readmes:
         ANA_LOG.info(
-            f"Output file descriptions written to {len(created_readmes)} "
-            "Output files explanation.txt file(s)."
+            f"Output file descriptions written to {len(created_readmes)} folder(s): "
+            + ", ".join(sorted({Path(p).name for p in created_readmes}))
         )
 
     ANA_LOG.info('ANALYSIS DONE')

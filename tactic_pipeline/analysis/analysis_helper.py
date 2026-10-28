@@ -1,9 +1,11 @@
 import csv
+import logging
 import os
 import re
 from pathlib import Path, PurePath
 import tempfile
 from typing import Callable, Dict, Iterable, List, Optional, Sequence, Tuple, Union
+from .readme_html import render_readme_html
 
 
 _KINGDOM_ATI_RE = re.compile(r"^[A-Za-z]+ati(?:--other)?$", re.IGNORECASE)
@@ -12,6 +14,12 @@ _SILVA_PATH_VERSION_RE = re.compile(
     re.IGNORECASE,
 )
 _EXPLICIT_LEVEL_SUFFIX_RE = re.compile(r"-[78]Levels\.(?:tab|fasta|html)$", re.IGNORECASE)
+# Intermediate files written into pipeline folders: SINA outputs (test_*), tree building inputs
+# (shortened_algn_*) and abundance filtering leftovers. They are not pipeline outputs.
+_INTERMEDIATE_FILE_PREFIXES = ("test_", "shortened_algn_", "filtered_by_abundance_")
+# Output explanations are written as <stem>.html, or as <stem>.txt if the HTML page cannot be created
+EXPLANATION_FILE_STEM = "Output files explanation"
+README_LOG = logging.getLogger("run_tactic.analysis.readme")
 _FASTA_SEQ_ID_RE = re.compile(r"^>(?P<seq_id>[^\s;]+)", re.IGNORECASE)
 _FASTA_TAX_RE = re.compile(
     r"(?P<prefix>^(?:>[^\n]*?[\s;])tax=)(?P<tax>.*?)(?=(?:\s+[a-zA-Z_][a-zA-Z0-9_]*=)|$)",
@@ -503,7 +511,7 @@ def generate_kingdom_enriched_pipeline_outputs(
         # FASTA files containing tax= headers (or TIC invalid-taxonomy output)
         elif (
             item.suffix.lower() == ".fasta"
-            and not item.name.startswith(("test_", "shortened_algn_", "filtered_by_abundance_"))
+            and not item.name.startswith(_INTERMEDIATE_FILE_PREFIXES)
         ):
             is_tic_invalid_fasta = item.name.lower() == "invalid-tax-seqs-tic.fasta"
             has_tax = False
@@ -1014,33 +1022,35 @@ def get_pipeline_readme_content(pipeline_type: str) -> str:
             "of the following pipeline folders are present:\n\n"
             "• OTU_Pipeline/\n"
             "  - Results from 97% sequence similarity clustering (classic OTUs).\n"
-            "  - See OTU_Pipeline/Output files explanation.txt for descriptions\n"
+            "  - See OTU_Pipeline/Output files explanation.html for descriptions\n"
             "    of every file in that folder.\n\n"
             "• ZOTU_Pipeline/\n"
             "  - Results from exact sequence variant denoising (ZOTUs / ASVs).\n"
-            "  - See ZOTU_Pipeline/Output files explanation.txt for descriptions\n"
+            "  - See ZOTU_Pipeline/Output files explanation.html for descriptions\n"
             "    of every file in that folder.\n\n"
             "• TAC_Pipeline/\n"
             "  - Results from Taxonomy-Agnostic Clustering at 98.7% similarity.\n"
-            "  - See TAC_Pipeline/Output files explanation.txt for descriptions\n"
+            "  - See TAC_Pipeline/Output files explanation.html for descriptions\n"
             "    of every file in that folder.\n\n"
             "• TIC_Pipeline/\n"
             "  - Results from Taxonomy-Informed Clustering into Species-level OTUs (SOTUs).\n"
-            "  - See TIC_Pipeline/Output files explanation.txt for descriptions\n"
+            "  - See TIC_Pipeline/Output files explanation.html for descriptions\n"
             "    of every file in that folder.\n\n"
             "• PICRUSt2-Inputs/\n"
             "  - Pre-formatted abundance tables and FASTA files ready for functional\n"
             "    metabolic pathway prediction with PICRUSt2.\n"
-            "  - See PICRUSt2-Inputs/Output files explanation.txt for instructions\n"
+            "  - See PICRUSt2-Inputs/Output files explanation.html for instructions\n"
             "    on running PICRUSt2.\n\n"
             "• Shared/\n"
             "  - Pooled, dereplicated, and abundance-sorted sequences used as input for\n"
             "    the clustering algorithms.\n"
-            "  - See Shared/Output files explanation.txt for details.\n\n\n"
+            "  - See Shared/Output files explanation.html for details.\n\n\n"
             "2. Root Directory Files\n"
             "-----------------------\n"
-            "• Output files explanation.txt\n"
-            "  - This overview file explaining the results folder structure and files.\n\n"
+            "• Output files explanation.html\n"
+            "  - This overview page explaining the results folder structure and files.\n"
+            "    Double-click it to open it in any web browser. Every pipeline folder\n"
+            "    contains one as well.\n\n"
             "• README_Taxonomy_Levels.txt (present when SILVA >= 144 is used)\n"
             "  - Detailed guide explaining the difference between standard (7-level) outputs\n"
             "    and SILVA 144+ kingdom-enriched (8-level) outputs, and which one to use.\n\n"
@@ -1071,35 +1081,49 @@ def get_pipeline_readme_content(pipeline_type: str) -> str:
 def write_pipeline_readme(
         output_dir: str,
         pipeline_type: str,
-        filename: str = "Output files explanation.txt") -> str:
+        filename: str = EXPLANATION_FILE_STEM) -> str:
     """
-    Write a simple-language explanation file into `output_dir` explaining what information
-    each file contains and for what it is used.
+    Write a simple-language explanation page (<filename>.html) into `output_dir` explaining what
+    information each file contains and for what it is used. If the HTML page cannot be created,
+    the plain-text explanation (<filename>.txt) is written instead.
+
+    Returns the path to the written file.
     """
     dest_dir = Path(PurePath(output_dir)).resolve()
     dest_dir.mkdir(parents=True, exist_ok=True)
-    readme_path = dest_dir / filename
+    html_path = dest_dir / f"{filename}.html"
+    txt_path = dest_dir / f"{filename}.txt"
     content = get_pipeline_readme_content(pipeline_type)
-    with open(readme_path, "w", encoding="utf-8") as fio:
-        fio.write(content)
-    return str(readme_path)
+    try:
+        page = render_readme_html(content, output_dir=str(dest_dir))
+        with open(html_path, "w", encoding="utf-8") as fio:
+            fio.write(page)
+    except Exception as exc:
+        README_LOG.warning(f"Could not create {html_path.name} in {dest_dir}: {exc}. Writing {txt_path.name} instead.")
+        if html_path.is_file():
+            html_path.unlink()
+        with open(txt_path, "w", encoding="utf-8") as fio:
+            fio.write(content)
+        return str(txt_path)
+    # A text fallback from an earlier failed attempt is outdated now
+    if txt_path.is_file():
+        txt_path.unlink()
+    return str(html_path)
 
 
 def write_all_pipeline_readmes(
         analysis_dir: str,
         active_pipelines: Optional[Sequence[str]] = None,
-        filename: str = "Output files explanation.txt") -> List[str]:
+        filename: str = EXPLANATION_FILE_STEM) -> List[str]:
     """
-    Write explanation files into the root analysis directory and each pipeline
+    Write explanation pages into the root analysis directory and each pipeline
     subdirectory (OTU_Pipeline, ZOTU_Pipeline, TAC_Pipeline, TIC_Pipeline,
     PICRUSt2-Inputs, Shared) that exists or was active.
     """
     root_dir = Path(PurePath(analysis_dir)).resolve()
     root_dir.mkdir(parents=True, exist_ok=True)
     created: List[str] = []
-
-    # Write root README
-    created.append(write_pipeline_readme(str(root_dir), "root", filename=filename))
+    explanation_names = {f"{filename}.html", f"{filename}.txt"}
 
     active_set = {
         str(p).strip().lower().replace("-", "_")
@@ -1120,14 +1144,33 @@ def write_all_pipeline_readmes(
         has_content = False
         if p_dir.is_dir():
             has_content = any(
-                item.is_file() and item.name != filename
+                item.is_file() and item.name not in explanation_names
                 for item in p_dir.iterdir()
             )
         if is_active or has_content:
             p_dir.mkdir(parents=True, exist_ok=True)
             created.append(write_pipeline_readme(str(p_dir), p_type, filename=filename))
 
+    # Root README is written last so that its HTML version can link to the subdirectory pages
+    created.insert(0, write_pipeline_readme(str(root_dir), "root", filename=filename))
+
     return created
+
+
+def remove_intermediate_files(pipeline_dir: str) -> List[str]:
+    """
+    Removes intermediate files (see _INTERMEDIATE_FILE_PREFIXES) from a pipeline output folder.
+    Returns the paths of the removed files.
+    """
+    dir_path = Path(PurePath(pipeline_dir)).resolve()
+    removed: List[str] = []
+    if not dir_path.is_dir():
+        return removed
+    for item in dir_path.iterdir():
+        if item.is_file() and item.name.startswith(_INTERMEDIATE_FILE_PREFIXES):
+            item.unlink()
+            removed.append(str(item))
+    return removed
 
 
 def onelinefasta(fastafilepath):
@@ -1235,6 +1278,8 @@ def prepare_picrust2_input(analysis_dir: str) -> None:
     for item in analysis_dir.rglob("*"):
         if item.is_file():
             if picrust2_inputs_dir in item.parents:
+                continue
+            if item.name.startswith(_INTERMEDIATE_FILE_PREFIXES):
                 continue
             if _EXPLICIT_LEVEL_SUFFIX_RE.search(item.name):
                 continue

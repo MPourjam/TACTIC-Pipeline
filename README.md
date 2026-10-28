@@ -55,12 +55,12 @@ All outputs are automatically generated in a timestamped analysis directory insi
 my_project/
 ├── fastqs/
 ├── Analysis_20261015_080000/
-│   ├── Output files explanation.txt  # Overview of all output files and folder structure
+│   ├── Output files explanation.html # Overview of all output files and folder structure (opens in any browser)
 │   ├── README_Taxonomy_Levels.txt    # Explanation of standard vs 7-level/8-level taxonomy outputs
 │   ├── Pipeline_log.txt              # Complete preprocessing parameters and log
 │   ├── Analysis_log.txt              # Detailed clustering and taxonomy log
 │   ├── TIC_Pipeline/
-│   │   ├── Output files explanation.txt # Guide explaining each TIC output file and its usage
+│   │   ├── Output files explanation.html # Guide explaining each TIC output file and its usage
 │   │   ├── SOTUs-Table-TIC.tab       # Final abundance table for TIC (classic 7 levels)
 │   │   ├── SOTUs-Table-TIC-8Levels.tab # Final abundance table with SILVA 144+ Kingdom (8 levels)
 │   │   ├── SOTUs-Krona.html          # Interactive Krona taxonomy plot
