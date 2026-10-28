@@ -1,3 +1,4 @@
+*.git-credentials
 *.pyc
 **/*.pyc
 # test artifacts
@@ -9,3 +10,4 @@ image.tar*
 # cpython
 *cpython*
 *__pycache__*
+.git-credentials
