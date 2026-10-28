@@ -163,6 +163,7 @@ def check_expected_preprocessed_files(preprocessed_dir: str, args: ArgumentSet) 
     ```
     .
     ├── spike_stat_mapping_file.csv  # Must be there
+    ├── spike_counts.tsv  # Must be there
     ├── TACTICPipeline_args.yml  # Must be there
     ├── taxed_ZOTUs.fasta  # Must be there
     ├── silva_start_end.txt  # Must be there
@@ -195,6 +196,7 @@ def check_expected_preprocessed_files(preprocessed_dir: str, args: ArgumentSet) 
         re.compile(r"aligned_.*\.fasta\.tar\.gz"),
         re.compile(r"text\.krona\.html"),  # also in zip file
         re.compile(r".*\.udb"),
+        re.compile(r"spike_counts\.tsv"),
         # NOTE below are some files which could not get produced if some R packages are not installed
         # re.compile(r"div_metrics\.tab"),
         # re.compile(r"other\.non16rRNA\.fasta"),
@@ -208,7 +210,8 @@ def check_expected_preprocessed_files(preprocessed_dir: str, args: ArgumentSet) 
             re.compile(r"R1-per_base_quality\.png"),  # also in zip file
             re.compile(r"R2-per_base_quality\.png"),
             re.compile(r"reads_report\.txt"),
-            re.compile(r"sorted\.fasta")
+            re.compile(r"sorted\.fasta"),
+            re.compile(r"spike_counts\.tsv")
         ]
     existing_files_list = []
     # Checking the format of analysis folder and if it's a zip file we assert that file exist in the zip file
@@ -463,7 +466,12 @@ def check_otutable_format(otu_table: str, argument_set: ArgumentSet, run_dir: st
     return True
 
 
-def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Optional[str]]]) -> None:
+def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Optional[str]]]) -> str:
+    """
+    Runs the pipeline on the file structure created by setup_file_structure and checks its outputs.
+    Returns the path to the analysis folder created by the run ("" if analysis was skipped).
+    """
+    latest_analysis_folder = ""
     # set up a temporary directory to run the pipeline
     with contextlib.nullcontext(tempfile.mkdtemp()) as run_dir:
         print("run_dir =", run_dir)
@@ -584,6 +592,8 @@ def run_container(setup_file_structure: Callable[[str], Tuple[Optional[str], Opt
             assert file_set_complete, "No analysis or preprocessing was done"
             assert result.returncode == 169, f"Command failed with return code {result.returncode}, expected return code is 169 for skipped preprocessing and analysis"
 
+    return latest_analysis_folder
+
 
 def copy_initial_files(run_dir: str, max_reads: Optional[int] = None) -> None:
     """
@@ -617,6 +627,95 @@ def copy_spikes_dir(run_dir: str) -> None:
     The data directory is expected to be in the same directory as this script.
     """
     subprocess.run(["cp", "-r", data + "/custom_spikes", run_dir + "/custom_spikes"])
+
+
+# Only truncSRR13005987_S2_L001 of the test data contains spike reads
+SPIKED_SAMPLE = "truncSRR13005987_S2_L001"
+SPIKED_SAMPLE_COPY = "truncSRR13005987-Copy_S3_L001"
+NOT_SPIKED_SAMPLE = "truncSRR13005876_S1_L001"
+SPIKE_REFERENCES_CANDIDATES = [
+    CURRENT_DIR.parents[2] / "spikesidx" / "CFM_spikes.fasta",
+    Path("/base/spikesidx/CFM_spikes.fasta"),
+]
+
+
+def copy_spiked_sample(run_dir: str) -> None:
+    """
+    Copies the spiked test sample under SPIKED_SAMPLE_COPY so that a run has two samples with spike reads.
+    """
+    for read in ("R1", "R2"):
+        shutil.copy(
+            os.path.join(data, "truncated", f"{SPIKED_SAMPLE}_{read}_001.fastq.gz"),
+            os.path.join(run_dir, f"{SPIKED_SAMPLE_COPY}_{read}_001.fastq.gz")
+        )
+
+
+def read_count_table(table_file: str) -> Tuple[List[str], dict]:
+    """
+    Reads an (Z)OTU table with OTU IDs in the first and taxonomy in the last column.
+    Returns the sample names and a dict of {otu_id: {sample: count}}.
+    """
+    with open(table_file, "r") as f:
+        header = f.readline().rstrip("\n").split("\t")
+        samples = header[1:-1]
+        counts = {}
+        for line in f:
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) != len(header):
+                continue
+            counts[fields[0]] = {sample: float(value) for sample, value in zip(samples, fields[1:-1])}
+    return samples, counts
+
+
+def read_fasta_sequences(fasta_file: str) -> dict:
+    sequences = {}
+    seq_id = None
+    with open(fasta_file, "r") as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith(">"):
+                seq_id = line[1:].split()[0]
+                sequences[seq_id] = ""
+            elif seq_id:
+                sequences[seq_id] += line.upper().replace("U", "T")
+    return sequences
+
+
+def read_spike_stats(fastq_dir: str, sample_id: str) -> Tuple[int, float, float, dict]:
+    """
+    Reads the spike stats of a preprocessed sample.
+    Returns (spike_reads, weight, spike_amount, per_spike_counts).
+    """
+    processed_dirs = sorted(glob.glob(os.path.join(fastq_dir, f"{sample_id}__processed", "*", "spike_counts.tsv")))
+    assert processed_dirs, f"No preprocessed folder with spike_counts.tsv found for {sample_id}"
+    processed_dir = os.path.dirname(processed_dirs[-1])
+    with open(os.path.join(processed_dir, "spike_stat_mapping_file.csv"), "r") as f:
+        row = list(csv.DictReader(f, delimiter="\t"))[0]
+    with open(os.path.join(processed_dir, "spike_counts.tsv"), "r") as f:
+        per_spike = {row_c["#Spike"]: int(row_c["Reads"]) for row_c in csv.DictReader(f, delimiter="\t")}
+    return int(row["SpikeReads"]), float(row["spikes_total_weight_in_g"]), float(row["spike_amount"]), per_spike
+
+
+def is_spike_derived(sequence: str, spike_kmers: set, k: int = 32, min_shared: float = 0.9) -> bool:
+    """
+    A sequence is considered spike derived if most of its k-mers occur in the spike references. Natural
+    16S sequences share only the conserved regions with the spikes and stay well below min_shared.
+    """
+    seq_kmers = {sequence[i:i + k] for i in range(len(sequence) - k + 1)}
+    if not seq_kmers:
+        return False
+    return len(seq_kmers & spike_kmers) / len(seq_kmers) >= min_shared
+
+
+def spike_reference_kmers(k: int = 32) -> set:
+    spikes_fasta = next((p for p in SPIKE_REFERENCES_CANDIDATES if p.is_file()), None)
+    assert spikes_fasta, f"Spike references not found in {SPIKE_REFERENCES_CANDIDATES}"
+    complement = str.maketrans("ACGTN", "TGCAN")
+    kmers = set()
+    for seq in read_fasta_sequences(str(spikes_fasta)).values():
+        for strand in (seq, seq.translate(complement)[::-1]):
+            kmers.update(strand[i:i + k] for i in range(len(strand) - k + 1))
+    return kmers
 
 
 @pytest.mark.xfail(reason="check_otutable_format() checks complete processing only by existence of spike_mapping_file.csv")
@@ -1089,6 +1188,95 @@ def test_targeted_fastq_lookup_with_mapping_file(build_image):
             assert "Gathering sequence files in" not in log_content
         finally:
             shutil.rmtree(run_dir, ignore_errors=True)
+
+
+@pytest.mark.pre_publish
+def test_spike_normalization(build_image):
+    """
+    Two samples with identical reads (the spiked test sample and its copy), the same spike amount and
+    sample weights of 1 g and 2 g. The Spike normalized ZOTU table must follow
+    raw * mean_spike_reads / spike_reads * spike_amount / (6 * weight), so the copy must show exactly
+    half of the values of the original sample.
+    """
+    samples_weights = {SPIKED_SAMPLE: 1.0, SPIKED_SAMPLE_COPY: 2.0}
+
+    def setup_file_structure(run_dir: str):
+        copy_initial_files(run_dir)
+        copy_spiked_sample(run_dir)
+        mapping = MappingFile([
+            MappingFile.Entry(sample_id, weight, 6, "") for sample_id, weight in samples_weights.items()
+        ])
+        mapping.write(os.path.join(run_dir, "mapping_file.csv"))
+        args_set = ArgumentSet("", "")
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.analysis_mode = "ZOTU"
+        args_set.yml_file = "TACTICPipeline_args_test.yml"
+        return args_set
+
+    analysis_folder = run_container(setup_file_structure)
+    fastq_dir = os.path.dirname(analysis_folder)
+
+    # Spike reads are counted after quality filtering and reported per spike
+    spike_stats = {sample_id: read_spike_stats(fastq_dir, sample_id) for sample_id in samples_weights}
+    for sample_id, (spike_reads, weight, spike_amount, per_spike) in spike_stats.items():
+        assert spike_reads > 0, f"No spike reads counted for {sample_id}"
+        assert spike_reads == sum(per_spike.values()), f"SpikeReads of {sample_id} differs from the sum of spike_counts.tsv"
+        assert weight == samples_weights[sample_id] and spike_amount == 6.0
+    assert spike_stats[SPIKED_SAMPLE][0] == spike_stats[SPIKED_SAMPLE_COPY][0], "Identical samples got different spike counts"
+
+    # Spike reads must be removed before clustering
+    spike_kmers = spike_reference_kmers()
+    zotu_seqs = read_fasta_sequences(os.path.join(analysis_folder, "ZOTU_Pipeline", "ZOTUs-Seqs.fasta"))
+    spike_zotus = [zotu_id for zotu_id, seq in zotu_seqs.items() if is_spike_derived(seq, spike_kmers)]
+    assert not spike_zotus, f"Spike derived ZOTUs found in ZOTUs-Seqs.fasta: {spike_zotus}"
+
+    raw_table = os.path.join(analysis_folder, "ZOTU_Pipeline", "ZOTUs-Table.tab")
+    spike_table = os.path.join(analysis_folder, "ZOTU_Pipeline", "Spike_Normalized-ZOTUs-Table.tab")
+    assert os.path.isfile(spike_table), "Spike_Normalized-ZOTUs-Table.tab was not created"
+    _, raw_counts = read_count_table(raw_table)
+    norm_samples, norm_counts = read_count_table(spike_table)
+    assert set(norm_samples) == set(samples_weights), f"Unexpected samples in Spike normalized table: {norm_samples}"
+    assert set(norm_counts) == set(raw_counts), "Spike normalized table has different ZOTUs than the raw table"
+
+    mean_spike_reads = sum(stats[0] for stats in spike_stats.values()) / len(spike_stats)
+    for zotu_id, raw_row in raw_counts.items():
+        for sample_id, (spike_reads, weight, spike_amount, _) in spike_stats.items():
+            expected = raw_row[sample_id] * mean_spike_reads / spike_reads * spike_amount / (6 * weight)
+            assert norm_counts[zotu_id][sample_id] == pytest.approx(expected, rel=1e-4, abs=1e-4), (
+                f"{zotu_id}/{sample_id}: expected {expected}, got {norm_counts[zotu_id][sample_id]}"
+            )
+        # Identical reads and spikes but double weight -> half the abundance per gram
+        assert raw_row[SPIKED_SAMPLE] == raw_row[SPIKED_SAMPLE_COPY], f"{zotu_id}: identical samples got different raw counts"
+        assert norm_counts[zotu_id][SPIKED_SAMPLE_COPY] == pytest.approx(norm_counts[zotu_id][SPIKED_SAMPLE] / 2, rel=1e-4, abs=1e-4)
+
+
+@pytest.mark.pre_publish
+def test_spike_normalization_mixed_spiking_disabled(build_image):
+    """
+    One sample without spike reads mixed with a spiked sample: Spike normalization must be disabled for
+    the whole run (guard against mixing spiked and not spiked projects) while other normalizations still run.
+    """
+    def setup_file_structure(run_dir: str):
+        copy_initial_files(run_dir)
+        mapping = MappingFile([
+            MappingFile.Entry(NOT_SPIKED_SAMPLE, 1.0, 6, ""),
+            MappingFile.Entry(SPIKED_SAMPLE, 1.0, 6, ""),
+        ])
+        mapping.write(os.path.join(run_dir, "mapping_file.csv"))
+        args_set = ArgumentSet("", "")
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.analysis_mode = "ZOTU"
+        args_set.yml_file = "TACTICPipeline_args_test.yml"
+        return args_set
+
+    analysis_folder = run_container(setup_file_structure)
+    fastq_dir = os.path.dirname(analysis_folder)
+
+    assert read_spike_stats(fastq_dir, NOT_SPIKED_SAMPLE)[0] == 0
+    assert read_spike_stats(fastq_dir, SPIKED_SAMPLE)[0] > 0
+    spike_tables = glob.glob(os.path.join(analysis_folder, "**", "Spike_Normalized-*"), recursive=True)
+    assert not spike_tables, f"Spike normalized tables must not be created for mixed spiking: {spike_tables}"
+    assert os.path.isfile(os.path.join(analysis_folder, "ZOTU_Pipeline", "SampleMinCount_Normalized-ZOTUs-Table.tab"))
 
 
 @pytest.mark.pre_publish

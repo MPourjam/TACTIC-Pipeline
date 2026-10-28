@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*'
+  # Manual runs build the image and run the end-to-end tests in docker mode without publishing
+  workflow_dispatch:
 
 jobs:
 
@@ -13,7 +15,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -64,6 +66,7 @@ jobs:
         SILVA_SOURCE=ftp pytest -v -m pre_publish tactic_pipeline/test/end_to_end/test_pipeline.py
 
     - name: Push to registry
+      if: startsWith(github.ref, 'refs/tags/')
       uses: docker/build-push-action@v5
       with:
         context: .
@@ -77,6 +80,7 @@ jobs:
           GIT_TAG=${{ github.ref_name }}
 
     - name: Build and export archive
+      if: startsWith(github.ref, 'refs/tags/')
       uses: docker/build-push-action@v5
       with:
         context: .
@@ -89,6 +93,7 @@ jobs:
           GIT_TAG=${{ github.ref_name }}
 
     - name: Compress image tar
+      if: startsWith(github.ref, 'refs/tags/')
       run: gzip image.tar
 
     - name: Create Github Release
