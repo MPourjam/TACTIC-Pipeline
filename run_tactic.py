@@ -13,12 +13,13 @@ import sys
 import logging
 from os import symlink, chdir
 from tactic_pipeline.processing_job import main_processing as preprocessing
+from tactic_pipeline.processing_job import SPIKE_COUNTS_FILE
 from tactic_pipeline.analysis.analysis import main as main_analysis
 from tactic_pipeline.version import get_version
 from collections import namedtuple
 import tactic_pipeline.processing_helper as proc_helper
 from tactic_pipeline.processing_helper import (
-    gzip_to_fastq, calc_spikes, slice_list,
+    gzip_to_fastq, slice_list,
     index_spikes_fasta_dir
 )
 from multiprocessing import cpu_count, Queue, Process
@@ -74,6 +75,9 @@ USEARCH_11_BIN = Path(PurePath("/base/binaries/usearch11.0.667_i86linux64"))
 HEALTHY_PROC_FILES = [
     DEFAULT_ARG_FILE_NAME,
     SPIKE_STAT_FILE_NAME,
+    # Spike reads are counted after quality filtering. Samples processed before that change
+    # lack this file and get reprocessed.
+    SPIKE_COUNTS_FILE,
     # TRIMMED_READS_FILE,
     # FILTERED_READS_FILE,
     DEREP_FILE_NAME,
@@ -85,6 +89,8 @@ BOWTIE2 = BIN_DIR + "bowtie2/bowtie2"
 SPIKESIDX_PREFIX = "bowtie2_spike_indices/spike"
 SPIKESIDX_PARENT = "/base/spikesidx/"
 SPIKESIDX = SPIKESIDX_PARENT + SPIKESIDX_PREFIX
+# index_spikes_fasta_dir() writes the merged spike references next to the bowtie2 indices
+SPIKES_MERGED_FASTA_SUFFIX = "_merged_by_TACTIC.fasta"
 
 
 def parse_analysis_modes(analysis_mode_arg) -> List[str]:
@@ -694,68 +700,39 @@ def parse_mapping_file(mapping_file_path: str = "", files_tups: list = None):
     return mapping_lines
 
 
-def remove_spikes(
-        files_paths: list,
+def write_spike_stat(
+        sample_dir: Path,
         sample_id: str,
+        spike_reads_c: int,
         sample_weight: float,  # in gram
         spike_amount: float,
-        logger_obj: logging.Logger = None):
+        logger_obj: logging.Logger = None) -> Path:
     """
-    It remove spikes from a sample and adds the number of spikes to a mapping file given.
-     the column name should be "SpikeReads". The format of spike_stat_mapping_path must be
-     like below:
-     #SampleID\tSpikeReads\tspikes_total_weight_in_g\tspike_amount\n'
+    It writes the number of spike reads of a sample to its spike_stat file.
+     Spike reads are counted and removed during preprocessing (after quality filtering).
+     The format of spike_stat_mapping_path must be like below:
+     #SampleID\tSpikeReads\tspikes_total_weight_in_g\tspike_amount\tparent_path\n'
 
     Arguments:
-        - files_path: list = list of files on which spike removal should be applied
+        - sample_dir: Path = preprocessing directory of the sample
         - sample_id: str = sample identifier to be reported in spike_stat_mapping_path
+        - spike_reads_c: int = number of spike reads found in the quality filtered reads
         - sample_weight: float = sample weight sent for sequencing in gram
         - spike_amount: float = amount of spike in nanogram
 
+    Returns the path to the spike_stat file.
     """
     logger_obj = logger_obj if logger_obj else PREP_LOG
-    header_rgx = re.compile(SPIKE_STAT_HEADER)
-    files_paths_abs = [Path(PurePath(fi_pa)) for fi_pa in files_paths if Path(PurePath(fi_pa)).is_file()]
-    spike_stat_mapping_path = files_paths_abs[0].parent.joinpath(SPIKE_STAT_FILE_NAME)
-    # NOTE calc_spikes() only works with fastq files. After this step the path to files would change
-    logger_obj.info(f'# Spike Removal and Counting: {sample_id}')
-    # It's important to continue downstream analysis with new files.
-    fastq_files_abs_path = gzip_to_fastq(*files_paths_abs)
-    # Preparing default output
-    out_tup = (0, spike_stat_mapping_path, tuple(fastq_files_abs_path))
-    if len(files_paths) != len(fastq_files_abs_path):
-        msg = "Some given files for spike removal do not exist!"
-        logger_obj.error(msg)
-        raise ValueError(msg)
-    # Writing header
-    header_existing = SPIKE_STAT_HEADER + "\n"
-    with open(spike_stat_mapping_path, 'w') as stats_h:
-        stats_h.write(header_existing)
-    # Adding rows to spike stat file.
-    header_line_mo = header_rgx.match(header_existing)
-    if not header_line_mo:
-        msg = f"Existing spike_stat_file: {spike_stat_mapping_path} does not have correct format of : {SPIKE_STAT_HEADER}"
-        logger_obj.error(msg)
-        raise ValueError(msg)
-
-    # putting parent path into the spike_mapping_file
-    parent_path = Path(PurePath(files_paths_abs[0])).parent.relative_to(FASTQ_DIR)
-
-    # postponing file opening to avoid race condition if ran parallelly
-    # We coerce the spike_amount to be non-negative and non-zero to remove always spikes
+    sample_dir = Path(PurePath(sample_dir)).absolute()
+    spike_stat_mapping_path = sample_dir.joinpath(SPIKE_STAT_FILE_NAME)
     if spike_amount <= 0.0 or math.isnan(spike_amount):
         logger_obj.info(f"Sample '{sample_id}': Non-positive or NaN spike amount ({spike_amount}).")
-    spike_amount_coerced = 1.0
-    real_reads_c, spike_reads_c = calc_spikes(
-        *fastq_files_abs_path,
-        spike_amount=spike_amount_coerced,
-        bowtie2=BOWTIE2,
-        spikes_indices=SPIKESIDX,
-        logger_obj=logger_obj
-    )
-    logger_obj.info(f"Sample '{sample_id}': {spike_reads_c} spike reads removed from {real_reads_c + spike_reads_c} total reads.")
-    out_tup = (spike_reads_c, spike_stat_mapping_path, tuple(fastq_files_abs_path))
-    with open(spike_stat_mapping_path, 'a') as stats_h:
+    logger_obj.info(f"Sample '{sample_id}': {spike_reads_c} spike reads removed from quality filtered reads.")
+
+    # putting parent path into the spike_mapping_file
+    parent_path = sample_dir.relative_to(FASTQ_DIR)
+    with open(spike_stat_mapping_path, 'w') as stats_h:
+        stats_h.write(SPIKE_STAT_HEADER + "\n")
         # appending
         new_row = [
             str(sample_id),
@@ -766,7 +743,7 @@ def remove_spikes(
         ]
         stats_h.write("\t".join(new_row) + "\n")
 
-    return out_tup
+    return spike_stat_mapping_path
 
 
 def _cleanup_failed_preprocessing_dir(sample_dir_path):
@@ -852,16 +829,10 @@ def run_preprocessing(
                 PREPPROC_LOG.info(f"Copying {sfi} to {new_path}")
                 shutil.copy2(str(sfi), str(new_path))
 
-        # We do spike removal if necessary and add a line to spike_stats file for spike normalization
         # We only carry valid files in fastq_files_tuple
         new_paths = [el for el in new_paths if bool(el)]
-        # removing spikes and decompressing files below
-        spike_reads_c, spike_stat_mapping_path, fastq_files_tuple = remove_spikes(
-            new_paths,
-            sample_id,
-            sample_weight,
-            spike_amount
-        )
+        # Decompressing files. It's important to continue downstream analysis with new files.
+        fastq_files_tuple = tuple(gzip_to_fastq(*new_paths))
         # Copying the argument file to sample directory
         sample_arg_file = sample_dir.joinpath(DEFAULT_ARG_FILE_NAME)
         try:
@@ -870,19 +841,30 @@ def run_preprocessing(
             pass
         except Exception as exc:
             raise exc
-        # Running preprocessing
-        sample_dir = preprocessing(
+        # Running preprocessing. Spikes are always removed (regardless of spike_amount) after quality filtering
+        # and their count is added to the spike_stat file for spike normalization.
+        sample_dir, spike_reads_c = preprocessing(
             input_dir=sample_dir,
             forward_file=fastq_files_tuple[0],
             reverse_file=fastq_files_tuple[1] if len(fastq_files_tuple) == 2 else "",
             input_id=sample_id,
             args_file_path=sample_arg_file,
-            spike_amount=0.0,  # We run it always with 0 as we remove spikes before if there is
+            spike_amount=spike_amount,
             usearch_11_bin=usearch_11_bin,
             logger_obj=PREPPROC_LOG,
             minimum_preprocessing=False if individual_zotus else True,
             skip_non_bacterial_filter=skip_non_bacterial_filter,
-            dbs_dir=dbs_dir
+            dbs_dir=dbs_dir,
+            spikes_fasta=SPIKESIDX + SPIKES_MERGED_FASTA_SUFFIX
+        )
+        sample_dir = Path(PurePath(sample_dir))
+        write_spike_stat(
+            sample_dir,
+            sample_id,
+            spike_reads_c,
+            sample_weight,
+            spike_amount,
+            logger_obj=PREPPROC_LOG
         )
     except MemoryError as mem_exc:
         err_msg = f"{mem_exc}"

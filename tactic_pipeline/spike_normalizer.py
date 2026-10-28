@@ -40,7 +40,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
     observed_weights = []
     observed_amounts = []
     observed_counts = []
-    sum = 0
+    spike_reads_sum = 0
     n = 0
     with open(spikes_stats_path, 'r') as stats_h:
         for line in stats_h:
@@ -87,7 +87,7 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
                     spike_nrom_validity = SpikeNormValidity.PS
                 # Collecting observed valid values for spike normalization
                 if spike_reads > 0:
-                    sum += spike_reads
+                    spike_reads_sum += spike_reads
                     n += 1
                     observed_counts.append(spike_reads)
                 if not (math.isclose(amount, 0, abs_tol=1e-5) or math.isnan(amount)):
@@ -116,19 +116,20 @@ def normalize_otu_table(otu_table_path: str, spikes_stats_path: str, norm_method
             " for spike normalization. Possible mixture of spiked and non-spiked samples!")
         norm_methods.discard("Spike")
     # Raise index error if not all otu_tables columns are in samples
-    # Do not include the first and last column in the check
-    if not all([col in samples for col in otu_table.columns[1:-1]]):
+    # The first column (OTU IDs) is the index; do not include the last column (taxonomy) in the check
+    if not all([col in samples for col in otu_table.columns[:-1]]):
         raise IndexError(f"Columns in OTU table {otu_table_path.name} are not in spike stats file {spikes_stats_path.name}")
     factor = 1
     norm_methods_to_return = set()
     for norm_method in norm_methods:
         otu_table_copy = otu_table.copy()
         try:
-            for file_id, values in samples.items():
-                count, weight, amount, spike_norm_validity = values
+            # Iterate over OTU table samples; spike stats may contain samples absent from the table
+            for file_id in otu_table.columns[:-1]:
+                count, weight, amount, spike_norm_validity = samples[file_id]
                 factor = None
                 if norm_method == "Spike":
-                    thismean = sum / n  # mean of spike reads
+                    thismean = spike_reads_sum / n  # mean of spike reads
                     # Interpolation of missing values for weight and amount
                     if math.isnan(amount):
                         amount = statistics.median(observed_amounts)

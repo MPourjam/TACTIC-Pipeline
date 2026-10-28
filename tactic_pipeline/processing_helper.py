@@ -13,7 +13,7 @@ import threading
 import tempfile
 import requests
 from hashlib import md5
-from os import getcwd, makedirs, listdir, access, X_OK
+from os import getcwd, makedirs, access, X_OK
 from collections import namedtuple
 from datetime import datetime as dt
 from collections.abc import MutableMapping
@@ -477,8 +477,9 @@ def calc_spikes(
                 "--end-to-end",
                 "-x", spikes_indices,
                 "-U", fastqs_abs_paths[0],
-                "--al-conc", fastq_aligned,
-                "--un-conc", fastq_unaligned
+                # --al/--un are the unpaired counterparts of --al-conc/--un-conc
+                "--al", fastq_aligned,
+                "--un", fastq_unaligned
             ]
             # system(" ".join(cmd))
             sys_sub_args = {
@@ -490,17 +491,16 @@ def calc_spikes(
             call_out = system_sub(
                 **sys_sub_args
             )
-            files_inspike = listdir(str(spike_res_dir))
             spike_counter = 0
-            for fi in [f for f in files_inspike if re.search(fastq_aligned, ospath.abspath(f))]:
-                with open(fi, 'r') as fastq_al:
+            if Path(fastq_aligned).is_file():
+                with open(fastq_aligned, 'r') as fastq_al:
                     for _ in fastq_al:
                         spike_counter += 1
             spike_counter = spike_counter // 4
             # Check if the unaligned file is empty
             if spike_counter != 0:
                 remove(fastqs_abs_paths[0])
-                replace(fastq_unaligned + ".1", fastqs_abs_paths[0])
+                replace(fastq_unaligned, fastqs_abs_paths[0])
 
         # Checking the status of bowtie2 run
         if call_out.returncode != 0:

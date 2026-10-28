@@ -8,8 +8,8 @@ from .processing_helper import (
     TACTICArgsParser,
     gimmelogger,
     calc_covered_region,
-    calc_spikes,
-    onelinefasta)
+    onelinefasta,
+    SpikeRemovalException)
 from .processing_helper import system_sub as sys_sub
 from .analysis.analysis_helper import (
     build_kingdom_lookup_from_sina_csv,
@@ -24,7 +24,6 @@ import shutil
 import glob
 import logging
 import zipfile
-import math
 
 
 BIN_DIR = "/base/binaries/"
@@ -40,10 +39,11 @@ SINA_ARB = DBS_DIR + 'SILVA.arb'
 ref16RNAdb_1 = DBS_DIR + "silva-bac-16s-id90.fasta"
 ref16RNAdb_2 = DBS_DIR + "silva-arc-16s-id95.fasta"
 USEARCH_TAIL = '> /dev/null 2>&1'
-bowtie2 = BIN_DIR + "bowtie2/bowtie2"
 krona_importtext = BIN_DIR + "Krona/KronaTools/scripts/ImportText.pl"
-SPIKESIDX = "/base/spikesidx/bowtie2_spike_indices/spike"
 S_FLAT_LOCATION = '/base/s_flat.txt'
+# Global identity for assigning filtered reads to spike references (Tourlousse et al. 2017, NAR, e23)
+SPIKE_MATCH_ID = 0.90
+SPIKE_COUNTS_FILE = "spike_counts.tsv"
 
 
 PREPPROC_LOG = gimmelogger()
@@ -270,6 +270,61 @@ def run_FastQC(forward_file, reverse_file):
         clean_FastQC(input_file=forward_file, reverse_file=reverse_file)
     else:
         clean_FastQC(input_file=forward_file)
+
+
+def remove_spikes_from_filtered(spikes_fasta: str) -> int:
+    """
+    Counts and removes spike reads from quality filtered reads (filtered2.fasta) so that spike reads
+    pass the same merging and filtering steps as the reads ending up in the OTU tables.
+    Per-spike read counts are written to SPIKE_COUNTS_FILE.
+
+    Returns the number of spike reads.
+    """
+    if not spikes_fasta or not path.isfile(spikes_fasta):
+        raise SpikeRemovalException(f"Spike references fasta file not found: {spikes_fasta}")
+    hits_file = "spike_hits.tsv"
+    nospike_file = "filtered2_nospike.fasta"
+    system_sub(
+        [
+            *list(USEARCH_11_BIN.split(" ")),
+            "-usearch_global",
+            "filtered2.fasta",
+            "-db",
+            spikes_fasta,
+            "-id",
+            str(SPIKE_MATCH_ID),
+            "-userout",
+            hits_file,
+            "-userfields",
+            "query+target",
+            "-notmatched",
+            nospike_file
+        ],
+        force_log=True
+    )
+    # Per-spike counts; spikes without any hit are reported with 0 reads
+    spike_counts = Counter()
+    with open(spikes_fasta) as spikes_h:
+        for line in spikes_h:
+            if line.startswith(">"):
+                spike_counts[line[1:].strip().split()[0]] = 0
+    if path.isfile(hits_file):
+        with open(hits_file) as hits_h:
+            for line in hits_h:
+                fields = line.rstrip("\n").split("\t")
+                if len(fields) == 2:
+                    spike_counts[fields[1].split()[0]] += 1
+        remove(hits_file)
+    with open(SPIKE_COUNTS_FILE, "w") as counts_h:
+        counts_h.write("#Spike\tReads\n")
+        for spike_id, reads_c in spike_counts.items():
+            counts_h.write(f"{spike_id}\t{reads_c}\n")
+    spike_reads_c = sum(spike_counts.values())
+    if spike_reads_c != 0:
+        shutil.move(nospike_file, "filtered2.fasta")
+    elif path.isfile(nospike_file):
+        remove(nospike_file)
+    return spike_reads_c
 
 
 def dereplicate_seqs():
@@ -900,7 +955,14 @@ def main_processing(
         logger_obj: logging.Logger = None,
         minimum_preprocessing: bool = False,
         skip_non_bacterial_filter: bool = False,
-        dbs_dir: str = DBS_DIR):
+        dbs_dir: str = DBS_DIR,
+        spikes_fasta: str = "") -> tuple:
+    """
+    Runs the preprocessing of one sample. If spikes_fasta is given, spike reads are counted
+    and removed after quality filtering.
+
+    Returns (input_dir, spike_reads_count).
+    """
     global PREPPROC_LOG, USEARCH_11_BIN, ref16RNAdb_1, ref16RNAdb_2, SINA_ARB
     SINA_ARB = str(path.join(dbs_dir, "SILVA.arb"))
     ref16RNAdb_1 = str(path.join(dbs_dir, "silva-bac-16s-id90.fasta"))
@@ -920,7 +982,6 @@ def main_processing(
     paired = "Yes" if reverse_file else "No"
     forward_file = path.join(input_dir, forward_file) if forward_file else ""
     reverse_file = path.join(input_dir, reverse_file) if reverse_file else ""
-    files_paths = [forward_file, reverse_file]
     # We define the related TaskPickle object here and make it avialble globally as we need the
     # TaskPickle file to stay closed while processing
     global pko
@@ -963,19 +1024,7 @@ def main_processing(
         else:
             pko = TaskPickle(pk_file)
         chdir(input_dir)
-        # spike_amount should not be negative
-        if math.isclose(spike_amount, 0.0, abs_tol=1e-5) or spike_amount <= 0.0 or math.isnan(spike_amount):
-            spike_amount = 0.0
-        if float(spike_amount) > 0.0:
-            # default threads value for bowtie2 used in calc_spikes is 1
-            PREPPROC_LOG.info('# Spike Removal and Counting')
-            real_reads_c, spike_reads_c = calc_spikes(
-                *files_paths,
-                spike_amount=spike_amount,
-                bowtie2=bowtie2,
-                spikes_indices=SPIKESIDX
-            )
-            PREPPROC_LOG.info("Actual_reads:{}\tSpike_reads:{}".format(str(real_reads_c), str(spike_reads_c)))
+        spike_reads_c = 0
 
         PREPPROC_LOG.info('# FastQC')
         run_FastQC(forward_file, reverse_file)
@@ -992,6 +1041,12 @@ def main_processing(
             trim_one_side(forward_file)
             PREPPROC_LOG.info('# Filter Amplicons')
             filter_merged_one_side(forward_file)
+        if spikes_fasta:
+            # Spikes are counted after merging and filtering so that they share the read losses of the
+            # reads in the OTU tables. Spikes are always removed regardless of the given spike amount.
+            PREPPROC_LOG.info('# Spike Removal and Counting')
+            spike_reads_c = remove_spikes_from_filtered(spikes_fasta)
+            PREPPROC_LOG.info(f"Spike_reads:{spike_reads_c}")
         PREPPROC_LOG.info('# Dereplication')
         dereped_read_n = dereplicate_seqs()
         read_report = write_reads_report(
@@ -1059,4 +1114,4 @@ def main_processing(
         PREPPROC_LOG.info("# Finished Preprocessing")
         update_task_pko("Done", "Process Completed Successfully")
 
-    return input_dir
+    return input_dir, spike_reads_c
