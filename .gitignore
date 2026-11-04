@@ -11,3 +11,4 @@ image.tar*
 *cpython*
 *__pycache__*
 .git-credentials
+.git-ignore
