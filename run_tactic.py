@@ -804,6 +804,12 @@ def run_preprocessing(
         sample_dir, shall_preprocess = should_trigger_processing(base_path_dir, args_yml_path, str(spike_amount), logger_obj=PREPPROC_LOG)
         sample_dir = Path(PurePath(sample_dir)) if sample_dir else ""
         if not shall_preprocess and not force_preprocess:
+            # Reused sample: the weight may have been corrected in the mapping file since then
+            if proc_helper.update_spike_stat_values(
+                    Path(sample_dir).joinpath(SPIKE_STAT_FILE_NAME), sample_weight, spike_amount):
+                PREPPROC_LOG.info(
+                    f"Sample '{sample_id}': updated weight ({sample_weight}) and spike amount"
+                    f" ({spike_amount}) in the spike_stat file of the reused processed sample.")
             return sample_dir
         if force_preprocess and not shall_preprocess:  # renew the sample_dir not to overwrite the existing one
             sample_dir = Path(sample_dir).parent.joinpath(proc_helper.generate_timestamp())

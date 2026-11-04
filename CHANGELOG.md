@@ -5,6 +5,12 @@ All notable changes to the TACTIC pipeline will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **Corrected sample weights are now used in spike normalization**: a processed sample is reused in later runs when its settings and spike amount are unchanged. Its stored weight was reused with it, so a weight corrected in the mapping file never reached `Spike_Normalized-*` tables. The weight and spike amount of reused samples are now updated from the current mapping file.
+- **`SampleMinCount_Normalized-*` description**: the output explanation pages described these tables as rarefied (randomly subsampled). They are scaled: each sample's counts are multiplied so that its total equals the smallest sample's total. The pages now say so, and recommend rarefying raw counts downstream for richness comparisons.
+
 ## [1.0.0] - 2026-10-23
 
 ### Taxonomy & SILVA 144+ Support (Dual-Level Resolution)

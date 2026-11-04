@@ -805,3 +805,23 @@ def test_find_reverse_file_case_insensitive_fallback(tmp_path):
 
 
 
+
+
+def test_update_spike_stat_values_rewrites_weight_and_keeps_spike_reads(tmp_path):
+    stat_file = tmp_path / "spike_stat_mapping_file.csv"
+    header = "#SampleID\tSpikeReads\tspikes_total_weight_in_g\tspike_amount\tparent_path"
+    stat_file.write_text(f"{header}\nSampleA\t1234\t0.5\t6.0\tSampleA__processed/20250101\n")
+
+    assert processing_helper.update_spike_stat_values(stat_file, 0.025, 6.0) is True
+    expected = f"{header}\nSampleA\t1234\t0.025\t6.0\tSampleA__processed/20250101\n"
+    assert stat_file.read_text() == expected
+
+    # Same values again: nothing to change
+    assert processing_helper.update_spike_stat_values(stat_file, 0.025, 6.0) is False
+    # Unknown weight is written the same way as by write_spike_stat
+    assert processing_helper.update_spike_stat_values(stat_file, float("nan"), 6.0) is True
+    assert "\tnan\t6.0\t" in stat_file.read_text()
+
+
+def test_update_spike_stat_values_missing_file(tmp_path):
+    assert processing_helper.update_spike_stat_values(tmp_path / "missing.csv", 1.0, 6.0) is False

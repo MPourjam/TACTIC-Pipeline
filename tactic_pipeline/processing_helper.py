@@ -2538,3 +2538,34 @@ def gunzip_sortmerna_fasta_file(
         if not check_md5sum(str(target_file), expected_md5):
             raise ValueError(f"MD5 checksum verification failed for {target_file}")
         logger_obj.info(f"MD5 checksum verification passed for {target_file}")
+
+
+def update_spike_stat_values(spike_stat_path, sample_weight: float, spike_amount: float) -> bool:
+    """
+    Writes the given sample weight and spike amount into an existing per-sample spike_stat file.
+    The spike read count and parent path are kept.
+
+    A processed sample is reused in later runs as long as its argument set and spike amount are
+    unchanged.
+    The sample weight is not part of that decision, so without this update a corrected weight in the
+    mapping file would never reach the spike normalization.
+
+    Returns True if the file was changed.
+    """
+    spike_stat_path = Path(spike_stat_path)
+    if not spike_stat_path.is_file():
+        return False
+    lines = spike_stat_path.read_text().splitlines()
+    new_lines = []
+    for line in lines:
+        fields = line.split("\t")
+        if line.startswith("#") or len(fields) < 4:
+            new_lines.append(line)
+            continue
+        fields[2] = str(sample_weight)
+        fields[3] = str(spike_amount)
+        new_lines.append("\t".join(fields))
+    if new_lines == lines:
+        return False
+    spike_stat_path.write_text("\n".join(new_lines) + "\n")
+    return True
