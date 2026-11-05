@@ -15,8 +15,9 @@ _SILVA_PATH_VERSION_RE = re.compile(
 )
 _EXPLICIT_LEVEL_SUFFIX_RE = re.compile(r"-[78]Levels\.(?:tab|fasta|html)$", re.IGNORECASE)
 # Intermediate files written into pipeline folders: SINA outputs (test_*), tree building inputs
-# (shortened_algn_*) and abundance filtering leftovers. They are not pipeline outputs.
-_INTERMEDIATE_FILE_PREFIXES = ("test_", "shortened_algn_", "filtered_by_abundance_")
+# (shortened_algn_*), abundance filtering leftovers and the length-sorted clustering input of TAC and
+# TIC (sorted_length.fasta; ticlust writes it into the working folder). They are not pipeline outputs.
+_INTERMEDIATE_FILE_PREFIXES = ("test_", "shortened_algn_", "filtered_by_abundance_", "sorted_length.")
 # Output explanations are written as <stem>.html, or as <stem>.txt if the HTML page cannot be created
 EXPLANATION_FILE_STEM = "Output files explanation"
 README_LOG = logging.getLogger("run_tactic.analysis.readme")
@@ -830,12 +831,7 @@ def get_pipeline_readme_content(pipeline_type: str) -> str:
             "  - What it is: A two-column mapping table that connects each original ZOTU\n"
             "    identifier to the TAC OTU cluster it was assigned to.\n"
             "  - What it is used for: Full traceability. Use this file if you need to know\n"
-            "    which exact sequence variants (ZOTUs) were merged into a given TAC OTU.\n\n"
-            "• sorted_length.fasta [Complementary]\n"
-            "  - What it is: The ZOTU sequences sorted from longest to shortest. It is the input\n"
-            "    of the TAC clustering, which needs the sequences in this order.\n"
-            "  - What it is used for: Checking which sequences went into the TAC clustering.\n"
-            "    It holds the same sequences as ZOTUs-Seqs.fasta, so do not use it for analysis.\n\n\n"
+            "    which exact sequence variants (ZOTUs) were merged into a given TAC OTU.\n\n\n"
             "3. Phylogenetic Trees\n"
             "---------------------\n"
             "• OTUs-Tree-nj-TAC.tre [Downstream analysis]\n"
@@ -938,12 +934,7 @@ def get_pipeline_readme_content(pipeline_type: str) -> str:
             "    sequences that could not be assigned valid 16S taxonomy).\n"
             "  - What it is used for: Quality control. Inspect this file to see which reads\n"
             "    were filtered out and ensure your primers did not amplify off-target DNA.\n\n"
-            "• sorted_length.fasta (present only in some versions) [Complementary]\n"
-            "  - What it is: The ZOTU sequences sorted from longest to shortest, as needed by\n"
-            "    the clustering step.\n"
-            "  - What it is used for: Checking which sequences went into the clustering. It\n"
-            "    holds the same sequences as the ZOTU sequence file, so do not use it for\n"
-            "    analysis.\n\n\n"
+
             "3. Hierarchical Mapping Tables\n"
             "------------------------------\n"
             "• Map-SOTU-ZOTU.tab [Complementary]\n"

@@ -74,7 +74,6 @@ def test_get_pipeline_readme_content_tac():
     assert "OTUs-Table-TAC.tab" in content
     assert "OTUs-Seqs-TAC.fasta" in content
     assert "Map-ZOTUs-OTUs-TAC.tab" in content
-    assert "• sorted_length.fasta [Complementary]" in content
     assert "OTUs-Tree-nj-TAC.tre" in content
     assert "OTUs-Krona.html" in content
 
@@ -88,7 +87,6 @@ def test_get_pipeline_readme_content_tic():
     assert "Map-GOTU-SOTU.tab" in content
     assert "Map-FOTU-GOTU.tab" in content
     assert "Invalid-Tax-Seqs-TIC.fasta" in content
-    assert "• sorted_length.fasta (present only in some versions) [Complementary]" in content
     assert "ZOTU-Table-OnlyBacteria-FullTaxonomy.tab" in content
     assert "ZOTU-Table-All-FullTaxonomy.tab" in content
 
@@ -304,11 +302,13 @@ def test_render_readme_html_escapes_text():
 
 def test_remove_intermediate_files(tmp_path):
     for name in ["test_ZOTUs-Seqs.fasta", "test_ZOTUs-Seqs.csv", "shortened_algn_test_ZOTUs-Seqs.fasta",
-                 "ZOTUs-Seqs.fasta", "ZOTUs-Table.tab"]:
+                 "sorted_length.fasta", "sorted_size.fasta", "ZOTUs-Seqs.fasta", "ZOTUs-Table.tab"]:
         (tmp_path / name).write_text("x", encoding="utf-8")
     removed = sorted(Path(p).name for p in remove_intermediate_files(str(tmp_path)))
-    assert removed == ["shortened_algn_test_ZOTUs-Seqs.fasta", "test_ZOTUs-Seqs.csv", "test_ZOTUs-Seqs.fasta"]
-    assert sorted(p.name for p in tmp_path.iterdir()) == ["ZOTUs-Seqs.fasta", "ZOTUs-Table.tab"]
+    assert removed == ["shortened_algn_test_ZOTUs-Seqs.fasta", "sorted_length.fasta", "test_ZOTUs-Seqs.csv",
+                       "test_ZOTUs-Seqs.fasta"]
+    # sorted_size.fasta (Shared/) is an output, not an intermediate file
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["ZOTUs-Seqs.fasta", "ZOTUs-Table.tab", "sorted_size.fasta"]
     assert remove_intermediate_files(str(tmp_path / "missing")) == []
 
 
