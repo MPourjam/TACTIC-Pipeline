@@ -316,7 +316,7 @@ Parameters in `TACTICPipeline_args.yml` allow fine-grained control over read pro
 - **`ClusterZOTUsArgs`** (UNOISE3):
   - `minsize`: Minimum abundance threshold; amplicons with fewer reads are filtered out (default: `2`).
   - `match_id`: Identity threshold for read assignment (default: `0.99`).
-  - `abund_limit`: Minimum relative abundance threshold across all samples (default: `0.000`).
+  - `abund_limit`: Minimum relative abundance; a ZOTU is kept if it reaches this threshold in at least one sample (default: `0.0025`, i.e. 0.25 %, as recommended by [Reitmeier et al. 2021](https://doi.org/10.1038/s43705-021-00033-z)).
 - **`ComplexTICArgs`** (Taxonomy-Informed Clustering):
   - `family_sim`: Similarity cutoff for family-level grouping (default: `0.90`).
   - `genus_sim`: Similarity cutoff for genus-level grouping (default: `0.95`).
