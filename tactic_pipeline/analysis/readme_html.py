@@ -6,7 +6,8 @@ single source of the explanations.
 Recognized text layout:
     ====== / title / ======          page title ("TACTIC Pipeline — <Title>")
     Heading + line of '-'            section
-    • <file name> (<note>)           file entry; consecutive '•' lines share the description below
+    • <file name> (<note>) [<tag>]   file entry; consecutive '•' lines share the description below.
+                                     <tag>: 'Downstream analysis' or 'Complementary' (see FILE_TAGS)
       - What it is: ...              labeled description (continuation lines indented by 4)
             command ...              code line (indented by 6 or more)
     1. Step title + indented text    numbered step
@@ -22,6 +23,8 @@ from urllib.parse import quote
 
 _RULE_RE = re.compile(r"^\s*([=-])\1{3,}\s*$")
 _FIELD_RE = re.compile(r"^(What (?:it is|they are)(?: used for)?):\s*(.*)$")
+FILE_TAGS = {"Downstream analysis": "tag-down", "Complementary": "tag-comp"}
+_TAG_RE = re.compile(r"\s*\[(" + "|".join(FILE_TAGS) + r")\]$")
 _NAME_NOTE_RE = re.compile(r"^(.*?\S)\s+\(((?:present|if)\b.*)\)$")
 _STEP_RE = re.compile(r"^(\d+)\.\s+(.*)$")
 _INNER_ITEM_RE = re.compile(r"^\s+(•|\d+\.)\s+(.*)$")
@@ -78,12 +81,15 @@ def _parse_file_entry(lines: List[str]) -> Dict:
             names[-1] = _join([names[-1], stripped])
     files = []
     for name in names:
+        tag_match = _TAG_RE.search(name)
+        tag = tag_match.group(1) if tag_match else ""
+        name = name[:tag_match.start()] if tag_match else name
         note_match = _NAME_NOTE_RE.match(name)
         if note_match:
             note = note_match.group(2)
-            files.append({"name": note_match.group(1), "note": note[:1].upper() + note[1:]})
+            files.append({"name": note_match.group(1), "note": note[:1].upper() + note[1:], "tag": tag})
         else:
-            files.append({"name": name, "note": ""})
+            files.append({"name": name, "note": "", "tag": tag})
     return {"kind": "files", "files": files, "fields": fields}
 
 
@@ -223,7 +229,7 @@ def _find_in_folder(name: str, output_dir: Optional[Path]) -> List[Dict]:
 def _render_files(block: Dict, output_dir: Optional[Path]) -> str:
     file_type = _file_type(block["files"][0]["name"]) if block["files"] else "doc"
     search_text = " ".join(
-        [f["name"] for f in block["files"]] + [f["text"] for f in block["fields"]]
+        [f"{f['name']} {f['tag']}" for f in block["files"]] + [f["text"] for f in block["fields"]]
     ).lower()
     name_rows = []
     for file_entry in block["files"]:
@@ -237,9 +243,13 @@ def _render_files(block: Dict, output_dir: Optional[Path]) -> str:
                 f'<li><a href="{m["href"]}">{html.escape(m["label"])}</a></li>' for m in matches
             ) + "</ul>"
         note = f'<span class="pill">{html.escape(file_entry["note"])}</span>' if file_entry["note"] else ""
+        tag = (
+            f'<span class="tag {FILE_TAGS[file_entry["tag"]]}">{html.escape(file_entry["tag"])}</span>'
+            if file_entry["tag"] else ""
+        )
         name_rows.append(
             f'<div class="name-row"><code class="fname">{html.escape(file_entry["name"])}</code>'
-            f'{note}{open_links}</div>'
+            f'{tag}{note}{open_links}</div>'
         )
     field_rows = []
     unlabeled = []
@@ -340,6 +350,8 @@ border-radius:6px;align-self:start;color:var(--surface);white-space:nowrap}
 .t-log{background:var(--t-log)}.t-doc{background:var(--t-doc)}
 .name-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:4px}
 .fname{font-weight:600;font-size:.95em;background:none;padding:0}
+.tag{font-size:.78rem;font-weight:600;padding:.15em .6em;border-radius:999px;border:1px solid currentColor}
+.tag-down{color:var(--t-tree)}.tag-comp{color:var(--muted)}
 .pill{background:var(--pill);color:var(--pill-text);font-size:.78rem;padding:.15em .6em;border-radius:999px}
 .open{font-size:.82rem;font-weight:600;text-decoration:none;border:1px solid var(--accent);border-radius:999px;
 padding:.05em .7em}

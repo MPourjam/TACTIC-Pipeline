@@ -38,6 +38,34 @@ def test_get_pipeline_readme_content_zotu():
     assert "SampleMinCount_Normalized-ZOTUs-Table.tab" in content
     assert "Spike_Normalized-ZOTUs-Table.tab" in content
     assert "*-8Levels.*" in content
+    assert "• zotus.fasta [Complementary]" in content
+
+
+@pytest.mark.parametrize("pipeline_type", ["otu", "zotu", "tac", "tic"])
+def test_every_pipeline_file_is_tagged(pipeline_type):
+    file_lines = [line for line in get_pipeline_readme_content(pipeline_type).splitlines() if line.startswith("• ")]
+    assert file_lines
+    untagged = [
+        line for line in file_lines
+        if not line.endswith(("[Downstream analysis]", "[Complementary]"))
+    ]
+    assert not untagged
+
+
+def test_render_readme_html_shows_file_tags():
+    content = (
+        "====\nTACTIC Pipeline — Test\n====\n\n"
+        "Files\n-----\n"
+        "• a.tab (present only if spike-ins were used) [Downstream analysis]\n"
+        "• b.fasta [Complementary]\n"
+        "  - What it is: x\n"
+        "====\n"
+    )
+    page = render_readme_html(content)
+    assert '<code class="fname">a.tab</code><span class="tag tag-down">Downstream analysis</span>' in page
+    assert '<span class="pill">Present only if spike-ins were used</span>' in page
+    assert '<code class="fname">b.fasta</code><span class="tag tag-comp">Complementary</span>' in page
+    assert "[Complementary]" not in page
 
 
 def test_get_pipeline_readme_content_tac():
@@ -46,6 +74,7 @@ def test_get_pipeline_readme_content_tac():
     assert "OTUs-Table-TAC.tab" in content
     assert "OTUs-Seqs-TAC.fasta" in content
     assert "Map-ZOTUs-OTUs-TAC.tab" in content
+    assert "• sorted_length.fasta [Complementary]" in content
     assert "OTUs-Tree-nj-TAC.tre" in content
     assert "OTUs-Krona.html" in content
 
@@ -59,6 +88,7 @@ def test_get_pipeline_readme_content_tic():
     assert "Map-GOTU-SOTU.tab" in content
     assert "Map-FOTU-GOTU.tab" in content
     assert "Invalid-Tax-Seqs-TIC.fasta" in content
+    assert "• sorted_length.fasta (present only in some versions) [Complementary]" in content
     assert "ZOTU-Table-OnlyBacteria-FullTaxonomy.tab" in content
     assert "ZOTU-Table-All-FullTaxonomy.tab" in content
 
@@ -183,7 +213,10 @@ def test_prepare_picrust2_input_creates_picrust2_readme(tmp_path):
 def test_html_readme_documents_every_file_of_text_readme(pipeline_type):
     content = get_pipeline_readme_content(pipeline_type)
     page = render_readme_html(content)
-    file_names = [line[2:].split(" (")[0].strip() for line in content.splitlines() if line.startswith("• ")]
+    file_names = [
+        line[2:].split(" (")[0].split(" [")[0].strip()
+        for line in content.splitlines() if line.startswith("• ")
+    ]
     assert file_names
     for name in file_names:
         assert html.escape(name, quote=False) in page, f"{name} missing in HTML of {pipeline_type}"

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Output explanation pages tag each file**: in the OTU, ZOTU, TAC and TIC pages, every file is tagged *Downstream analysis* (the results to analyse) or *Complementary* (files to check, trace or explore them). `zotus.fasta` in `ZOTU_Pipeline/` (the unfiltered denoising output) and `sorted_length.fasta` in `TAC_Pipeline/` and `TIC_Pipeline/` (the length-sorted input of the clustering) are now explained. The pages say that `ZOTU-Table-OnlyBacteria-FullTaxonomy.tab` and `ZOTU-Table-All-FullTaxonomy.tab` (TIC) are for analyses at ZOTU level with full taxonomy.
+
 ### Fixed
 - **Corrected sample weights are now used in spike normalization**: a processed sample is reused in later runs when its settings and spike amount are unchanged. Its stored weight was reused with it, so a weight corrected in the mapping file never reached `Spike_Normalized-*` tables. The weight and spike amount of reused samples are now updated from the current mapping file.
 - **`SampleMinCount_Normalized-*` description**: the output explanation pages described these tables as rarefied (randomly subsampled). They are scaled: each sample's counts are multiplied so that its total equals the smallest sample's total. The pages now say so, and recommend rarefying raw counts downstream for richness comparisons.
