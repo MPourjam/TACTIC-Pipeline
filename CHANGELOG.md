@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **vsearch as an alternative to USEARCH**: set `SequenceToolArgs: tool: vsearch` in `TACTICPipeline_args.yml` to run merging, primer trimming, quality filtering, spike removal, dereplication, denoising, zOTU/OTU tables, de novo OTUs and TAC clustering with vsearch 2 (the binary shipped with `ticlust`) instead of USEARCH 11. The default stays `usearch`. Changing the tool reprocesses the samples; the tool used is written to `Pipeline_log.txt`, `Analysis_log.txt` and each sample's log. vsearch merges far fewer read pairs when the reverse reads are of poor quality, and de novo OTUs differ slightly because vsearch has no UPARSE; see the README.
+
 ### Fixed
+- **Analysis crashed when a sample had no reads in a table** ("float division by zero" in the abundance filter): the small number added to avoid dividing by zero was rounded away. Such samples now get abundance 0.
+- **Settings of one arguments file leaking into the next**: `PreprocessingArgsParser` and `AnalysisArgsParser` updated a shared default dictionary, so values from one YAML file were carried into later parses in the same process. This could hide differences between a sample's stored settings and the current ones.
 - **Corrected sample weights are now used in spike normalization**: a processed sample is reused in later runs when its settings and spike amount are unchanged. Its stored weight was reused with it, so a weight corrected in the mapping file never reached `Spike_Normalized-*` tables. The weight and spike amount of reused samples are now updated from the current mapping file.
 - **`SampleMinCount_Normalized-*` description**: the output explanation pages described these tables as rarefied (randomly subsampled). They are scaled: each sample's counts are multiplied so that its total equals the smallest sample's total. The pages now say so, and recommend rarefying raw counts downstream for richness comparisons.
 

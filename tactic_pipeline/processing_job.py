@@ -11,6 +11,8 @@ from .processing_helper import (
     onelinefasta,
     SpikeRemovalException)
 from .processing_helper import system_sub as sys_sub
+from .processing_helper import default_vsearch_bin, seq_tool_name
+from . import vsearch_commands as vs
 from .analysis.analysis_helper import (
     build_kingdom_lookup_from_sina_csv,
     is_silva_144_or_newer,
@@ -44,6 +46,8 @@ S_FLAT_LOCATION = '/base/s_flat.txt'
 # Global identity for assigning filtered reads to spike references (Tourlousse et al. 2017, NAR, e23)
 SPIKE_MATCH_ID = 0.90
 SPIKE_COUNTS_FILE = "spike_counts.tsv"
+# Set in main_processing when SequenceToolArgs.tool is "vsearch"; empty means USEARCH is used.
+VSEARCH_BIN = ""
 
 
 PREPPROC_LOG = gimmelogger()
@@ -52,6 +56,11 @@ PREPPROC_LOG = gimmelogger()
 # overwriting system to run it with subprocess.run
 def system_sub(*args, **kwargs):
     return sys_sub(*args, logger_obj=PREPPROC_LOG, **kwargs)
+
+
+def run_cmds(cmds):
+    for cmd in cmds:
+        system_sub(cmd, force_log=True)
 
 
 def seqFileStats(seqFileName):
@@ -169,6 +178,15 @@ def filter_truncqual(
 
 
 def merge_pairs(forward_file, reverse_file):
+    if VSEARCH_BIN:
+        run_cmds(vs.merge_pairs(
+            VSEARCH_BIN, forward_file, reverse_file, "merged.fastq",
+            maxdiffs=ARGS_CLS.merge_pairs.fastq_maxdiffs,
+            pctid=ARGS_CLS.merge_pairs.fastq_pctid,
+            minmergelen=ARGS_CLS.merge_pairs.fastq_minmergelen,
+            maxmergelen=ARGS_CLS.merge_pairs.fastq_maxmergelen,
+        ))
+        return
     # cmd_0 = USEARCH_11_BIN + " -fastq_mergepairs " + forward_file + ' -reverse ' + reverse_file
     # cmd_1 = " -fastq_maxdiffs " + str(ARGS_CLS.merge_pairs.fastq_maxdiffs)
     # cmd_1 += " -fastq_pctid " + str(ARGS_CLS.merge_pairs.fastq_pctid) + " -fastqout merged.fastq"
@@ -197,6 +215,13 @@ def merge_pairs(forward_file, reverse_file):
 
 
 def trim_sides():
+    if VSEARCH_BIN:
+        run_cmds(vs.strip_ends(
+            VSEARCH_BIN, "merged.fastq", "filtered1.fastq",
+            stripleft=ARGS_CLS.trim_both_sides.stripleft,
+            stripright=ARGS_CLS.trim_both_sides.stripright,
+        ))
+        return
     # cmd_0 = USEARCH_11_BIN + " -fastx_truncate merged.fastq -stripright " + str(ARGS_CLS.trim_both_sides.stripright)
     # cmd_1 = " -stripleft " + str(ARGS_CLS.trim_both_sides.stripleft) + " -fastqout filtered1.fastq >/dev/null 2>/dev/null"
     # system_sub(cmd_0 + cmd_1)
@@ -217,6 +242,13 @@ def trim_sides():
 
 
 def filter_merged_reads():
+    if VSEARCH_BIN:
+        run_cmds(vs.quality_filter(
+            VSEARCH_BIN, "filtered1.fastq", "filtered2.fasta",
+            maxee_rate=ARGS_CLS.filter_merged.fastq_maxee_rate,
+            minlen=ARGS_CLS.merge_pairs.fastq_minmergelen,
+        ))
+        return
     # cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_maxee_rate " + str(ARGS_CLS.filter_merged.fastq_maxee_rate)
     # cmd_1 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
     # system_sub(cmd_0 + cmd_1)
@@ -284,24 +316,29 @@ def remove_spikes_from_filtered(spikes_fasta: str) -> int:
         raise SpikeRemovalException(f"Spike references fasta file not found: {spikes_fasta}")
     hits_file = "spike_hits.tsv"
     nospike_file = "filtered2_nospike.fasta"
-    system_sub(
-        [
-            *list(USEARCH_11_BIN.split(" ")),
-            "-usearch_global",
-            "filtered2.fasta",
-            "-db",
-            spikes_fasta,
-            "-id",
-            str(SPIKE_MATCH_ID),
-            "-userout",
-            hits_file,
-            "-userfields",
-            "query+target",
-            "-notmatched",
-            nospike_file
-        ],
-        force_log=True
-    )
+    if VSEARCH_BIN:
+        run_cmds(vs.search_spikes(
+            VSEARCH_BIN, "filtered2.fasta", spikes_fasta, SPIKE_MATCH_ID, hits_file, nospike_file
+        ))
+    else:
+        system_sub(
+            [
+                *list(USEARCH_11_BIN.split(" ")),
+                "-usearch_global",
+                "filtered2.fasta",
+                "-db",
+                spikes_fasta,
+                "-id",
+                str(SPIKE_MATCH_ID),
+                "-userout",
+                hits_file,
+                "-userfields",
+                "query+target",
+                "-notmatched",
+                nospike_file
+            ],
+            force_log=True
+        )
     # Per-spike counts; spikes without any hit are reported with 0 reads
     spike_counts = Counter()
     with open(spikes_fasta) as spikes_h:
@@ -333,18 +370,21 @@ def dereplicate_seqs():
     # cmd_0 = USEARCH_11_BIN + " -fastx_uniques filtered2.fasta -fastaout derep.fasta "
     # cmd_1 = SIZE_ARGS + USEARCH_TAIL
     # system_sub(cmd_0 + cmd_1)
-    system_sub(
-        [
-            *list(USEARCH_11_BIN.split(" ")),
-            "-fastx_uniques",
-            "filtered2.fasta",
-            "-fastaout",
-            "derep.fasta",
-            "-sizein",
-            "-sizeout"
-        ],
-        force_log=True
-    )
+    if VSEARCH_BIN:
+        run_cmds(vs.dereplicate(VSEARCH_BIN, "filtered2.fasta", "derep.fasta"))
+    else:
+        system_sub(
+            [
+                *list(USEARCH_11_BIN.split(" ")),
+                "-fastx_uniques",
+                "filtered2.fasta",
+                "-fastaout",
+                "derep.fasta",
+                "-sizein",
+                "-sizeout"
+            ],
+            force_log=True
+        )
     line_n = 0
     with open('derep.fasta') as derep:
         line = derep.readline()
@@ -356,6 +396,9 @@ def dereplicate_seqs():
 
 
 def sort_seqs():
+    if VSEARCH_BIN:
+        run_cmds(vs.sort_by_size(VSEARCH_BIN, "derep.fasta", "sorted.fasta"))
+        return
     # cmd_0 = USEARCH_11_BIN + ' -sortbysize derep.fasta -fastaout sorted.fasta'
     # cmd_1 = ' ' + USEARCH_TAIL
     # system_sub(cmd_0 + cmd_1)
@@ -373,6 +416,12 @@ def sort_seqs():
 
 
 def trim_one_side(forward_file):
+    if VSEARCH_BIN:
+        run_cmds(vs.strip_ends(
+            VSEARCH_BIN, forward_file, "filtered1.fastq",
+            stripleft=ARGS_CLS.trim_one_side.stripleft,
+        ))
+        return
     # cmd_0 = USEARCH_11_BIN + " -fastx_truncate " + forward_file + " -stripleft " + str(ARGS_CLS.trim_one_side.stripleft)
     # cmd_1 = " -fastqout filtered1.fastq >/dev/null 2>/dev/null"
     # system_sub(cmd_0 + cmd_1)
@@ -393,6 +442,13 @@ def trim_one_side(forward_file):
 def filter_merged_one_side(forward_file):
     curr_mean, curr_sd = seqFileStats(forward_file)
     minLength = int(curr_mean - int(0.1 * curr_mean) - 5)  # remove the primer trimming size plus 10% of the mean size
+    if VSEARCH_BIN:
+        run_cmds(vs.quality_filter(
+            VSEARCH_BIN, "filtered1.fastq", "filtered2.fasta",
+            maxee_rate=ARGS_CLS.filter_single_reads.fastq_maxee_rate,
+            trunclen=minLength,
+        ))
+        return
     # cmd_0 = USEARCH_11_BIN + " -fastq_filter filtered1.fastq -fastq_truncqual " + str(ARGS_CLS.filter_single_reads.fastq_truncqual)
     # cmd_1 = " -fastq_maxee_rate " + str(ARGS_CLS.filter_single_reads.fastq_maxee_rate) + " -fastq_trunclen " + str(minLength)
     # cmd_2 = " -fastaout filtered2.fasta >/dev/null 2>/dev/null"
@@ -419,6 +475,15 @@ def filter_merged_one_side(forward_file):
 
 # cluster sequences to OTUs
 def clusterZOTUs():
+    if VSEARCH_BIN:
+        centroids_tmp = "unoise_centroids.fasta"
+        run_cmds(vs.denoise(
+            VSEARCH_BIN, "sorted.fasta", "zotus.fasta",
+            minsize=ARGS_CLS.individual_sample_cluster_zotus.minsize,
+            centroids_tmp=centroids_tmp,
+        ))
+        remove(centroids_tmp)
+        return
     # cmd_part_0 = USEARCH_11_BIN + " -unoise3 sorted.fasta -minsize " + str(ARGS_CLS.cluster_zotus.minsize) + " -zotus zotus.fasta"
     # cmd_part_1 = ' -tabbedout denoising.tab'
     # cmd_part_2 = ' ' + USEARCH_TAIL
@@ -507,6 +572,14 @@ def prepare_zotus():
 
 
 def build_ZOTU_table():
+    if VSEARCH_BIN:
+        run_cmds(vs.otu_table(
+            VSEARCH_BIN, "derep.fasta", "good_ZOTUs.fa", "zotu_table.txt",
+            identity=round(float(ARGS_CLS.build_zotus_table.match_id), 4),
+        ))
+        # One sample per table; vsearch may split it by read label
+        vs.merge_otutab_columns("zotu_table.txt")
+        return
     # cmd_0 = USEARCH_11_BIN + ' -otutab derep.fasta -zotus good_ZOTUs.fa'
     # cmd_1 = " -otutabout zotu_table.txt -id " + str(ARGS_CLS.build_zotus_table.id) + " "
     # # cmd_1 += " -mapout map.txt -notmatched unmapped.fa -dbmatched otus_with_sizes.fa -sizeout "  # for debugging
@@ -550,6 +623,10 @@ def filter_zotu_abundance():
 
 
 def select_zotu_seqs():
+    if VSEARCH_BIN:
+        # vsearch 2.29 has no -fastx_getseqs
+        vs.select_fasta_records("good_ZOTUs.fa", "abundant_zotus_table.txt", "ZOTUs-Seqs.fasta")
+        return
     # cmd_0 = USEARCH_11_BIN + ' -fastx_getseqs good_ZOTUs.fa -labels abundant_zotus_table.txt'
     # cmd_1 = ' -fastaout ZOTUs-Seqs.fasta '
     # system_sub(cmd_0 + cmd_1 + USEARCH_TAIL)
@@ -756,6 +833,9 @@ def create_zip(input_id):
 
 
 def create_udb(input_id):
+    if VSEARCH_BIN:
+        run_cmds(vs.make_udb(VSEARCH_BIN, "taxed_ZOTUs.fasta", f"{input_id}.udb"))
+        return
     # cmd_0 = USEARCH_11_BIN + ' -makeudb_ublast taxed_ZOTUs.fasta -output ' + str(input_id) + '.udb '
     # system_sub(cmd_0 + USEARCH_TAIL)
     system_sub(
@@ -963,7 +1043,7 @@ def main_processing(
 
     Returns (input_dir, spike_reads_count).
     """
-    global PREPPROC_LOG, USEARCH_11_BIN, ref16RNAdb_1, ref16RNAdb_2, SINA_ARB
+    global PREPPROC_LOG, USEARCH_11_BIN, VSEARCH_BIN, ref16RNAdb_1, ref16RNAdb_2, SINA_ARB
     SINA_ARB = str(path.join(dbs_dir, "SILVA.arb"))
     ref16RNAdb_1 = str(path.join(dbs_dir, "silva-bac-16s-id90.fasta"))
     ref16RNAdb_2 = str(path.join(dbs_dir, "silva-arc-16s-id95.fasta"))
@@ -992,6 +1072,8 @@ def main_processing(
     # are loaded
     global ARGS_CLS
     ARGS_CLS = TACTICArgsParser(config_yaml=args_file_path).preproc_args
+    VSEARCH_BIN = default_vsearch_bin() if seq_tool_name(ARGS_CLS) == vs.VSEARCH else ""
+    PREPPROC_LOG.info(f"Sequence tool: {vs.tool_description(VSEARCH_BIN)}")
     try:
         if not path.exists(pk_file):
             # Creation of TaskPickle instance for the run

@@ -975,6 +975,31 @@ def test_full_TIC_analysis_no_iz(build_image):
     run_container(setup_file_structure)
 
 
+@pytest.mark.pre_publish
+def test_full_analysis_with_vsearch(build_image):
+    """All analysis modes and the per-sample zOTU tables (-iz) with vsearch instead of USEARCH."""
+    def setup_file_structure(run_dir: str):
+        copy_initial_files(run_dir, max_reads=1000)
+        with open(os.path.join(run_dir, "TACTICPipeline_args_test.yml"), "a") as yml_h:
+            yml_h.write("\nSequenceToolArgs:\n  tool: vsearch\n")
+        args_set = ArgumentSet("", "")
+        mapping_file = os.path.join(run_dir, "mapping_file.csv")
+        samples = [
+            MappingFile.Entry("truncSRR13005876_S1_L001", 1.0, 6, ""),
+            MappingFile.Entry("truncSRR13005987_S2_L001", 2.0, 6, ""),
+        ]
+        MappingFile(samples).write(mapping_file)
+        args_set.mapping_file = "mapping_file.csv"
+        args_set.analysis_mode = ["OTU", "TAC", "TIC"]
+        args_set.individual_zotus = True
+        args_set.yml_file = "TACTICPipeline_args_test.yml"
+        return args_set
+
+    analysis_folder = run_container(setup_file_structure)
+    with open(os.path.join(analysis_folder, "Analysis_log.txt")) as log_h:
+        assert "Sequence tool: vsearch" in log_h.read()
+
+
 def test_full_TIC_analysis_iz(build_image):
     def setup_file_structure(run_dir: str):
         copy_initial_files(run_dir)

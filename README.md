@@ -268,6 +268,7 @@ options:
                         Path to compiled spike statistics file.
   -ut USEARCH_BIN, --usearch-bin USEARCH_BIN
                         Path to USEARCH v11 binary. (Default: bundled 64-bit binary).
+                        Not used with `SequenceToolArgs: tool: vsearch` in the YAML file.
   -db DB_DIRECTORY, --db-directory DB_DIRECTORY
                         Path to directory containing reference databases
                         (SILVA, SortMeRNA). (Default: /databases).
@@ -295,6 +296,16 @@ options:
 ## ⚙️ Configuration File Details (`TACTICPipeline_args.yml`)
 
 Parameters in `TACTICPipeline_args.yml` allow fine-grained control over read processing and clustering:
+
+### 0. USEARCH or vsearch (`SequenceToolArgs`)
+- **`tool`**: program used for merging, filtering, dereplication, denoising and clustering (default: `usearch`).
+  - `usearch`: USEARCH 11 (bundled in the image).
+  - `vsearch`: the open-source [vsearch](https://github.com/torognes/vsearch) 2, which ships with `ticlust`.
+- From the same reads, zOTUs, the zOTU table and the TAC clusters were the same with both tools on the test data. Differences:
+  - **Read merging**: vsearch rejects many more pairs whose reverse read is of poor quality. Reads left after quality filtering, vsearch vs USEARCH: -9 % for one test sample, but -65 % for a sample with poor reverse reads. Check `reads_report.txt` and the read counts in your tables before switching.
+  - vsearch has no UPARSE, so de novo OTUs (`OTU` mode) are made by 97 % clustering plus chimera removal and differ slightly.
+  - USEARCH `-fastq_pctid` has no vsearch counterpart; `100 - fastq_pctid` is used as vsearch `--fastq_maxdiffpct`.
+- Changing the tool reprocesses all samples. `Analysis_log.txt` records which tool was used.
 
 ### 1. Read Merging (`MergePairsArgs`)
 - **`fastq_maxdiffs`**: Maximum alignment mismatches allowed in overlapping region (default: `50`).

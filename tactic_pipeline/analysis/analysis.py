@@ -11,6 +11,8 @@ from multiprocessing import cpu_count, Pool
 from processing_helper import TACTICArgsParser, gimmelogger, MyCounter
 from processing_helper import system_sub as sys_sub
 from spike_normalizer import normalize_otu_table
+from processing_helper import default_vsearch_bin, seq_tool_name
+import vsearch_commands as vs
 from pathlib import Path, PurePath
 from .analysis_helper import (
     build_cluster_id_kingdom_map,
@@ -65,6 +67,8 @@ FILTERED_READS_FILE = "filtered2.fasta"
 DEREP_FILE_NAME = "sorted.fasta"
 max_pool = int(cpu_count() * 0.7)
 DEREP_NEW_LABEL = "Uniq"
+# Set in main() when SequenceToolArgs.tool is "vsearch"; empty means USEARCH is used.
+VSEARCH_BIN = ""
 global POOL_SIZE
 POOL_SIZE = max_pool if max_pool > 0 else 1
 global ANA_LOG
@@ -77,6 +81,11 @@ def system_sub(*args, **kwargs):
     return sys_sub(*args, logger_obj=ANA_LOG, **kwargs)
 
 
+def run_cmds(cmds):
+    for cmd in cmds:
+        system_sub(cmd, force_log=True)
+
+
 def read_file(filename):
     with open(filename) as f:
         content = f.readlines()
@@ -84,7 +93,8 @@ def read_file(filename):
     return content
 
 
-def relabel_fasta(fasta_file: str, new_label: str):
+def relabel_fasta(fasta_file: str, new_label: str, vsearch_bin: str = ""):
+    """vsearch_bin: use vsearch instead of USEARCH (an argument, as this runs in a process pool)."""
     work_dir = Path("./relabeling").resolve()
     # make work_dir even if it exists
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -101,6 +111,13 @@ def relabel_fasta(fasta_file: str, new_label: str):
     dataset_name = f"{new_label}"
     new_file_fasta = work_dir.joinpath(f"{dataset_name}_relabeled.fasta")
     new_file_fastq = work_dir.joinpath(f"{dataset_name}_relabeled.fastq")
+    if vsearch_bin:
+        run_cmds(vs.relabel_with_sample(
+            vsearch_bin, seq_fasta_path, dataset_name, new_file_fasta,
+            out_fastq=None if str(seq_fasta_path).endswith(".fasta") else new_file_fastq,
+        ))
+        onelinefasta(str(new_file_fasta))
+        return str(new_file_fasta), str(new_file_fastq)
     cmd_to_call_list = [
         USEARCH_11_BIN,
         '-fastx_relabel',
@@ -172,7 +189,7 @@ def gather_samples_files(map_lines: list, file_to_gather: str):
         result = relabel_pool.starmap_async(
             relabel_fasta,
             [
-                (str(seq_file), sam_id)
+                (str(seq_file), sam_id, VSEARCH_BIN)
                 for seq_file, sam_id in sample_seq_files_path
             ]
         )
@@ -256,6 +273,12 @@ def dereplication(reads_file, with_taxonomy=True) -> str:
     # cmd_part_0 += " > /dev/null 2>/dev/null"
     # system_sub(cmd_part_0)
     dereped_reads_file = "derep.fasta"
+    if VSEARCH_BIN:
+        run_cmds(vs.dereplicate(
+            VSEARCH_BIN, reads_file, dereped_reads_file, relabel=DEREP_NEW_LABEL
+        ))
+        onelinefasta(dereped_reads_file)
+        return dereped_reads_file
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-fastx_uniques",
@@ -284,7 +307,10 @@ def sort_seqs(to_sort_fasta: str, by: str = 'size') -> str:
     to_sort_path = os.path.abspath(to_sort_fasta)
     dir_path, file_name = os.path.split(to_sort_path)
     sorted_fasta_file = os.path.join(dir_path, "sorted_" + str(by) + ".fasta")
-    if by == 'size':
+    if VSEARCH_BIN and by in ('size', 'length'):
+        sort_cmd = vs.sort_by_size if by == 'size' else vs.sort_by_length
+        run_cmds(sort_cmd(VSEARCH_BIN, to_sort_path, sorted_fasta_file))
+    elif by == 'size':
         cmd_to_call_list = [
             USEARCH_11_BIN,
             "-sortbysize",
@@ -315,6 +341,15 @@ def sort_seqs(to_sort_fasta: str, by: str = 'size') -> str:
 
 # cluster sequences to OTUs
 def clusterZOTUs(sorted_uniques_file: str, minsize: int):
+    if VSEARCH_BIN:
+        centroids_tmp = "unoise_centroids.fasta"
+        run_cmds(vs.denoise(
+            VSEARCH_BIN, sorted_uniques_file, "zotus.fasta", minsize,
+            centroids_tmp=centroids_tmp, threads=POOL_SIZE,
+        ))
+        os.remove(centroids_tmp)
+        onelinefasta("zotus.fasta")
+        return
 
     cmd_to_call_list = [
         USEARCH_11_BIN,
@@ -387,6 +422,16 @@ def clusterOTUs(
     # clusering of seq in OTUs (clustered)
     # system_sub(cmd_part_0 + cmd_part_1 + cmd_part_2)
     sorted_uniques_file = os.path.abspath(sorted_uniques_file)
+    if VSEARCH_BIN:
+        abundant_tmp, centroids_tmp = "otus_abundant.fasta", "otus_centroids.fasta"
+        run_cmds(vs.cluster_otus(
+            VSEARCH_BIN, sorted_uniques_file, "otus1.fa", minsize,
+            abundant_tmp=abundant_tmp, centroids_tmp=centroids_tmp, threads=POOL_SIZE,
+        ))
+        os.remove(abundant_tmp)
+        os.remove(centroids_tmp)
+        onelinefasta("otus1.fa")
+        return
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-cluster_otus",
@@ -418,6 +463,12 @@ def build_ZOTU_table(raw_seq_file: str, zotu_seq_file: str, match_id: float) -> 
     raw_seq_file_path = Path(raw_seq_file).absolute()
     zotu_seq_file_path = Path(zotu_seq_file).absolute()
     otu_tab = Path("ZOTUs-Table.tab").absolute()
+    if VSEARCH_BIN:
+        run_cmds(vs.otu_table(
+            VSEARCH_BIN, raw_seq_file_path, zotu_seq_file_path, otu_tab,
+            identity=round(float(match_id), 4), threads=POOL_SIZE,
+        ))
+        return str(otu_tab)
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-otutab",
@@ -447,6 +498,12 @@ def build_OTU_table(raw_seq_file: str, otu_seq_file: str) -> None:
     raw_seq_file_path = Path(raw_seq_file).absolute()
     otu_seq_file_path = Path(otu_seq_file).absolute()
     otu_tab = Path("OTUs-Table.tab").absolute()
+    if VSEARCH_BIN:
+        run_cmds(vs.otu_table(
+            VSEARCH_BIN, raw_seq_file_path, otu_seq_file_path, otu_tab,
+            identity=0.97, threads=POOL_SIZE,
+        ))
+        return str(otu_tab)
     cmd_to_call_list = [
         USEARCH_11_BIN,
         "-otutab",
@@ -817,7 +874,10 @@ def filter_otus_by_abundance(
             rem_sotu = True
             curr_abundances = list()
             for j in range(len(sample_sizes)):
-                abundance = round(float(line_list[j + 1]) / unf_tot_sizes[j], 5)
+                # A sample without any reads in this table has total 0 (the 1e-7 added in
+                # get_samples_sizes is rounded away); its abundances are 0
+                tot_size = unf_tot_sizes[j]
+                abundance = round(float(line_list[j + 1]) / tot_size, 5) if tot_size else 0.0
                 curr_sizes.append(line_list[j + 1])
                 curr_abundances.append(abundance)
             # if sample_wise_corr_flag:
@@ -1187,6 +1247,12 @@ def uclust(
     sorted_seq_file = sort_seqs(str(input_fasta_path), by="length")
     centroids_file = input_fasta_path.parent.joinpath("cluster_centroids.fasta")
     uc_file = input_fasta_path.parent.joinpath("otu_clusters.uc")
+    if VSEARCH_BIN:
+        run_cmds(vs.cluster_smallmem(
+            VSEARCH_BIN, sorted_seq_file, centroids_file, uc_file, round(float(cluster_id), 4)
+        ))
+        onelinefasta(centroids_file)
+        return str(uc_file), str(centroids_file)
     cmd_to_call = [
         USEARCH_11_BIN,
         "-cluster_smallmem",
@@ -1592,7 +1658,8 @@ def main(
      each samples' sequence file which is going to be combined with other samples passed to analysis.
     analysis_dir: The destination directory to save results
     """
-    global USEARCH_11_BIN, POOL_SIZE, ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC, ARGS_PREC
+    global USEARCH_11_BIN, VSEARCH_BIN, POOL_SIZE, ANALYSIS_DIR, ARGS_CLS, ANA_LOG, DB_LOC
+    global ARGS_PREC
     # updating USEARCH_11_BIN
     USEARCH_11_BIN = usearch_11_bin
     spike_stat_file = Path(PurePath(spike_stat_file))
@@ -1659,6 +1726,8 @@ def main(
 
     ARGS_CLS = TACTICArgsParser(config_yaml=args_file_path).analysis_args
     ARGS_PREC = TACTICArgsParser(config_yaml=args_file_path).preproc_args
+    VSEARCH_BIN = default_vsearch_bin() if seq_tool_name(ARGS_PREC) == vs.VSEARCH else ""
+    ANA_LOG.info(f"Sequence tool: {vs.tool_description(VSEARCH_BIN)}")
     # Parsing spike_stat_file
     try:
         parsed_spike_stat_file_path = ANALYSIS_DIR / 'spike_mapping_file.csv'

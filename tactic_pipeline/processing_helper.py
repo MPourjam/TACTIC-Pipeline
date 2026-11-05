@@ -1263,6 +1263,66 @@ class Usearch(FileUtil):
         return f"Usearch {self.desired_version}" if self.binfile else "Usearch"
 
 
+def default_vsearch_bin() -> str:
+    """
+    The vsearch binary that ticlust ships (and uses for TIC). Falls back to a vsearch on PATH.
+    Returns "" if none is found.
+    """
+    try:
+        from ticlust.ticlust_helper.config import tic_configs
+        ticlust_vsearch = Path(tic_configs["VSEARCH_BIN_PATH"])
+        if ticlust_vsearch.is_file():
+            return str(ticlust_vsearch)
+    except Exception:
+        pass
+    return shutil.which("vsearch") or ""
+
+
+def seq_tool_name(preproc_args) -> str:
+    """The sequence tool chosen in SequenceToolArgs, lower case ("usearch" or "vsearch")."""
+    return str(preproc_args.seq_tool.tool).strip().lower()
+
+
+class Vsearch:
+    """Checks the vsearch binary used when SequenceToolArgs.tool is 'vsearch'."""
+    desired_version = "vsearch v2"
+
+    def __init__(self, file: str = ""):
+        self.file = str(file) if file else default_vsearch_bin()
+        self.binfile = ""
+
+    def version(self) -> str:
+        try:
+            out = subprocess.run(
+                [self.file, "--version"], capture_output=True, text=True, timeout=60
+            )
+        except Exception:
+            return ""
+        # vsearch prints its version to stderr
+        lines = ((out.stderr or "") + (out.stdout or "")).strip().splitlines()
+        return lines[0] if lines else ""
+
+    def check_or_get_bin(self) -> tuple:
+        """
+        Returns (0, path) if the binary runs and is vsearch 2.x, (161, "") if it is missing or not
+        executable and (162, "") if it reports another version.
+        """
+        if not self.file or not Path(self.file).is_file():
+            return (161, "")
+        if not FileUtil.is_executable(self.file):
+            try:
+                FileUtil.change_mode(self.file, 0o755)
+            except Exception:
+                return (161, "")
+        version = self.version()
+        if not version:
+            return (161, "")
+        if self.desired_version not in version:
+            return (162, "")
+        self.binfile = self.file
+        return (0, self.file)
+
+
 class TaskPickle:
     status_keys_num = ["download",
                        "run"]
@@ -1631,6 +1691,14 @@ class SpikeRemovalArgs(ArgsParserUtil):
     }
 
 
+class SequenceToolArgs(ArgsParserUtil):
+    default_args = {
+        # Program for merging, filtering, dereplication, denoising and clustering:
+        # "usearch" (USEARCH 11, default) or "vsearch"
+        "tool": "usearch",
+    }
+
+
 class MergePairsArgs(ArgsParserUtil):
     default_args = {
         # "fastq_mergepairs": [FORWARD_FILE],
@@ -1806,6 +1874,8 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
         """
         yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml) if config_yaml else {}
         yml_args_dict = flatten_dict(yml_args_dict, sep=ArgsParserUtil.dict_flatt_sep)
+        # Copy: updating the shared default {} would carry values of one YAML file into later parses
+        config_dict = dict(config_dict) if config_dict else {}
         try:
             # NOTE values of the yaml file would overwrite values of config_dict
             config_dict.update(yml_args_dict)
@@ -1814,6 +1884,8 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
             raise ArgsetException("Error in updating the config_dict with yaml file.")
 
         # Updating attributes of class instance
+        # Part of the preprocessing arguments so that switching the tool reprocesses the samples
+        self.seq_tool = SequenceToolArgs(config_dict)
         self.merge_pairs = MergePairsArgs(config_dict)
         self.trim_both_sides = TrimBothSidesArgs(config_dict)
         self.trim_one_side = TrimOneSideArgs(config_dict)
@@ -1830,6 +1902,7 @@ class PreprocessingArgsParser(ArgsParserDunderUtil):
         if not isinstance(other, self.__class__):
             return False
         eq_tests = [
+            self.seq_tool == other.seq_tool,
             self.merge_pairs == other.merge_pairs,
             self.trim_both_sides == other.trim_both_sides,
             self.trim_one_side == other.trim_one_side,
@@ -1861,6 +1934,7 @@ class AnalysisArgsParser(ArgsParserDunderUtil):
         """
         yml_args_dict = ArgsParserUtil.parse_yaml(config_yaml) if config_yaml else {}
         yml_args_dict = flatten_dict(yml_args_dict, sep=ArgsParserUtil.dict_flatt_sep)
+        config_dict = dict(config_dict) if config_dict else {}
         try:
             config_dict.update(yml_args_dict)
         except Exception as e:

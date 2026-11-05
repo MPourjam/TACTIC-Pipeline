@@ -14,6 +14,7 @@ import logging
 from os import symlink, chdir
 from tactic_pipeline.processing_job import main_processing as preprocessing
 from tactic_pipeline.processing_job import SPIKE_COUNTS_FILE
+from tactic_pipeline.vsearch_commands import SUPPORTED_SEQ_TOOLS, VSEARCH
 from tactic_pipeline.analysis.analysis import main as main_analysis
 from tactic_pipeline.version import get_version
 from collections import namedtuple
@@ -1128,11 +1129,34 @@ def run_tactic(
     FASTQ_DIR = Path(PurePath(fastq_file_dir)).absolute()
     POOL_SIZE = threads
 
-    ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
-    if ret_code != 0:
-        PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")
-        sys.exit(ret_code)
-    USEARCH_11_BIN = str(Path(PurePath(usearch_bin_path)).absolute())
+    # USEARCH (default) or vsearch, chosen with SequenceToolArgs in the arguments file
+    try:
+        args_yml_path = str(Path(PurePath(args_yml_file)).absolute())
+        seq_tool = proc_helper.seq_tool_name(
+            proc_helper.TACTICArgsParser(config_yaml=args_yml_path).preproc_args
+        )
+    except proc_helper.ArgsetException as argset_exc:
+        PREP_LOG.error(f"Could not read the arguments file: {argset_exc}")
+        sys.exit(164)
+    if seq_tool not in SUPPORTED_SEQ_TOOLS:
+        PREP_LOG.error(
+            f"SequenceToolArgs: tool must be one of {', '.join(SUPPORTED_SEQ_TOOLS)}, "
+            f"not '{seq_tool}'."
+        )
+        sys.exit(164)
+    if seq_tool == VSEARCH:
+        ret_code, vsearch_bin_path = proc_helper.Vsearch().check_or_get_bin()
+        if ret_code != 0:
+            PREP_LOG.error("Failed to find a working vsearch (version 2) binary.")
+            sys.exit(ret_code)
+        PREP_LOG.info(f"Sequence tool: vsearch ({vsearch_bin_path})")
+    else:
+        ret_code, usearch_bin_path = proc_helper.Usearch(usearch_11_bin).check_or_get_bin()
+        if ret_code != 0:
+            PREP_LOG.error(f"Failed to find usearch binary: {usearch_11_bin}")
+            sys.exit(ret_code)
+        USEARCH_11_BIN = str(Path(PurePath(usearch_bin_path)).absolute())
+        PREP_LOG.info(f"Sequence tool: usearch ({USEARCH_11_BIN})")
     fastq_file_dir = Path(PurePath(fastq_file_dir)).absolute()
     args_yml_file = Path(PurePath(args_yml_file)).absolute()
     dbs_dir = Path(PurePath(dbs_dir)).absolute()
@@ -1389,7 +1413,8 @@ if __name__ == "__main__":
         "-ut", "--usearch-bin",
         type=str,
         default=str(USEARCH_11_BIN),
-        help="Path to binary of usearch version 11. Default is usearch11.0.667_i86linux64."
+        help="Path to binary of usearch version 11. Default is usearch11.0.667_i86linux64. "
+        "Not used when 'SequenceToolArgs: tool: vsearch' is set in the YAML file."
     )
     parser.add_argument(
         "-db", "--db-directory",

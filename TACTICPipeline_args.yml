@@ -5,6 +5,14 @@
 #####################
 ### Preprocessing ###
 #####################
+SequenceToolArgs:
+  # Program for merging, filtering, dereplication, denoising and clustering.
+  # usearch: USEARCH 11 (default). vsearch: open-source alternative (vsearch 2, as shipped with ticlust).
+  # zOTUs and TAC clusters from the same reads were the same on the test data, but vsearch merges
+  # far fewer read pairs when reverse reads are of poor quality, and de novo OTUs differ slightly
+  # (vsearch has no UPARSE). See the README before switching.
+  # Changing the tool reprocesses all samples.
+  tool: usearch
 MergePairsArgs:  ## Adjustable from GUI's expert mode
   fastq_maxdiffs: 50
   fastq_pctid: 50
